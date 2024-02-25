@@ -29,9 +29,7 @@ fn main() {
     fs::write(
         &dest_path,
         format!(
-            "use crate::hit::Hit;
-
-         pub fn get_all() -> Vec<Hit> {{
+            "pub fn get_all() -> Vec<Hit> {{
             vec![{}]
          }}
         ",

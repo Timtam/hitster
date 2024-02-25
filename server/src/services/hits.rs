@@ -1,13 +1,11 @@
-use crate::{hit::Hit, hits};
+use crate::hits::{get_all, Hit};
 
-pub struct HitsService {
+pub struct HitService {
     hits: Vec<Hit>,
 }
 
-impl HitsService {
+impl HitService {
     pub fn new() -> Self {
-        Self {
-            hits: hits::get_all(),
-        }
+        Self { hits: get_all() }
     }
 }

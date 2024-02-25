@@ -1,28 +1,26 @@
-mod hit;
 mod hits;
+mod routes;
 mod services;
+mod users;
 
-use rocket_okapi::{settings::UrlObject, okapi::{schemars, schemars::JsonSchema}, openapi, openapi_get_routes, rapidoc::*, swagger_ui::*};
-use services::HitsService;
+use rocket::response::Redirect;
+use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
+use routes::users as users_routes;
+use services::{HitService, UserService};
 
 #[macro_use]
 extern crate rocket;
 
-#[openapi(tag = "Users")]
 #[get("/")]
-fn index() -> &'static str {
-    "Hello, world!"
+fn index() -> Redirect {
+    Redirect::to("/swagger-ui")
 }
 
 #[launch]
 fn rocket() -> _ {
     rocket::build()
-        .mount(
-            "/",
-            openapi_get_routes![
-                index,
-            ],
-        )
+        .mount("/", routes![index,])
+        .mount("/", openapi_get_routes![users_routes::create_user])
         .mount(
             "/swagger-ui/",
             make_swagger_ui(&SwaggerUIConfig {
@@ -45,5 +43,6 @@ fn rocket() -> _ {
                 ..Default::default()
             }),
         )
-        .manage(HitsService::new())
+        .manage(HitService::new())
+        .manage(UserService::new())
 }
