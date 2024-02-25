@@ -35,4 +35,8 @@ impl UserService {
 
         user
     }
+
+    pub fn get_all(&self) -> Vec<User> {
+        self.data.lock().unwrap().users.clone()
+    }
 }

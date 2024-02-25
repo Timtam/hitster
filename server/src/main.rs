@@ -20,7 +20,10 @@ fn index() -> Redirect {
 fn rocket() -> _ {
     rocket::build()
         .mount("/", routes![index,])
-        .mount("/", openapi_get_routes![users_routes::create_user])
+        .mount(
+            "/",
+            openapi_get_routes![users_routes::create_user, users_routes::get_all_users],
+        )
         .mount(
             "/swagger-ui/",
             make_swagger_ui(&SwaggerUIConfig {
