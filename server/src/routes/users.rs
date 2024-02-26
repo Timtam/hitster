@@ -1,16 +1,13 @@
+use crate::responses::{ErrorResponse, UsersResponse};
 use crate::services::UserService;
 use crate::users::User;
-use rocket::{serde::json::Json, State};
-use rocket_okapi::{
-    okapi::{schemars, schemars::JsonSchema},
-    openapi,
-};
-use serde::{Deserialize, Serialize};
+use rocket::{response::status::NotFound, serde::json::Json, State};
+use rocket_okapi::openapi;
 
-#[derive(Serialize, Deserialize, JsonSchema)]
-pub struct UsersResponse {
-    pub users: Vec<User>,
-}
+/// Create a new user
+///
+/// The username will be auto-generated for you. It is planned to be able to change it later.
+/// For now the id returned by this API call will need to be stored to use this user later.
 
 #[openapi(tag = "Users")]
 #[post("/users")]
@@ -18,12 +15,37 @@ pub fn create_user(users: &State<UserService>) -> Json<User> {
     Json(users.add())
 }
 
+/// Retrieve a list of all users
+///
+/// The object returned contains all users currently known by the server.
+
 #[openapi(tag = "Users")]
 #[get("/users")]
 pub fn get_all_users(users: &State<UserService>) -> Json<UsersResponse> {
     Json(UsersResponse {
         users: users.get_all(),
     })
+}
+
+/// Get all info about a certain user
+///
+/// Retrieve all known info about a specific user. user_id must be identical to a user's id, either returned by POST /users, or by GET /users.
+/// The info here is currently identical with what you get with GET /users, but that might change later.
+///
+/// This call will return a 404 error if the user_id provided doesn't exist.
+
+#[openapi(tag = "Users")]
+#[get("/users/<user_id>")]
+pub fn get_user(
+    user_id: u64,
+    users: &State<UserService>,
+) -> Result<Json<User>, NotFound<Json<ErrorResponse>>> {
+    match users.get(user_id) {
+        Some(u) => Ok(Json(u)),
+        None => Err(NotFound(Json(ErrorResponse {
+            error: "user id not found".into(),
+        }))),
+    }
 }
 
 #[cfg(test)]
@@ -64,6 +86,26 @@ mod tests {
                 user1.into_json::<User>().unwrap(),
                 user2.into_json::<User>().unwrap()
             ]
+        );
+    }
+
+    #[test]
+    fn cause_error_when_retrieving_invalid_user() {
+        let client = Client::tracked(rocket()).expect("valid rocket instance");
+        let response = client.get(uri!("/users/1")).dispatch();
+        assert_eq!(response.status(), Status::NotFound);
+    }
+
+    #[test]
+    fn can_get_single_user() {
+        let client = Client::tracked(rocket()).expect("valid rocket instance");
+        let user = client.post(uri!("/users")).dispatch();
+        let response = client.get(uri!("/users/1")).dispatch();
+
+        assert_eq!(response.status(), Status::Ok);
+        assert_eq!(
+            response.into_json::<User>().unwrap(),
+            user.into_json::<User>().unwrap()
         );
     }
 }

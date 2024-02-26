@@ -1,8 +1,10 @@
+use super::users::User;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
-pub struct User {
+pub struct Game {
     pub id: u64,
-    pub name: String,
+    pub creator: User,
+    pub players: Vec<User>,
 }

@@ -1,12 +1,14 @@
+mod games;
 mod hits;
+mod responses;
 mod routes;
 mod services;
 mod users;
 
 use rocket::response::Redirect;
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
-use routes::users as users_routes;
-use services::{HitService, UserService};
+use routes::{games as games_routes, users as users_routes};
+use services::{GameService, HitService, UserService};
 
 #[macro_use]
 extern crate rocket;
@@ -22,7 +24,13 @@ fn rocket() -> _ {
         .mount("/", routes![index,])
         .mount(
             "/",
-            openapi_get_routes![users_routes::create_user, users_routes::get_all_users],
+            openapi_get_routes![
+                users_routes::create_user,
+                users_routes::get_all_users,
+                users_routes::get_user,
+                games_routes::create_game,
+                games_routes::get_all_games
+            ],
         )
         .mount(
             "/swagger-ui/",
@@ -46,6 +54,7 @@ fn rocket() -> _ {
                 ..Default::default()
             }),
         )
+        .manage(GameService::new())
         .manage(HitService::new())
         .manage(UserService::new())
 }

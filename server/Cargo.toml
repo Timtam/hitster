@@ -8,7 +8,6 @@ edition = "2021"
 [dependencies]
 names = "0.14.0"
 rocket = { version = "0.5.0", features = ["json"]}
-rocket-jwt = "0.5.2"
 rocket_okapi = { version = "0.8.0", features = ["swagger", "rapidoc"]}
 serde = { version = "1.0.197", features = ["derive"]}
 

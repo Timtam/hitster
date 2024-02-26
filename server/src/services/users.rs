@@ -4,7 +4,7 @@ use std::sync::Mutex;
 
 struct UserServiceData {
     users: Vec<User>,
-    id: u32,
+    id: u64,
 }
 
 pub struct UserService {
@@ -38,5 +38,15 @@ impl UserService {
 
     pub fn get_all(&self) -> Vec<User> {
         self.data.lock().unwrap().users.clone()
+    }
+
+    pub fn get(&self, id: u64) -> Option<User> {
+        self.data
+            .lock()
+            .unwrap()
+            .users
+            .iter()
+            .find(|u| u.id == id)
+            .cloned()
     }
 }
