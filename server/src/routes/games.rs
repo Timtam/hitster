@@ -1,7 +1,11 @@
 use crate::games::Game;
 use crate::responses::{ErrorResponse, GamesResponse};
 use crate::services::{GameService, UserService};
-use rocket::{response::status::NotFound, serde::json::Json, State};
+use rocket::{
+    response::status::{Created, NotFound},
+    serde::json::Json,
+    State,
+};
 use rocket_okapi::openapi;
 
 /// Create a new game
@@ -15,9 +19,13 @@ pub fn create_game(
     user_id: u64,
     users: &State<UserService>,
     games: &State<GameService>,
-) -> Result<Json<Game>, NotFound<Json<ErrorResponse>>> {
+) -> Result<Created<Json<Game>>, NotFound<Json<ErrorResponse>>> {
     match users.get(user_id) {
-        Some(u) => Ok(Json(games.add(u))),
+        Some(u) => {
+            let game = games.add(u);
+
+            Ok(Created::new(format!("/games/{}", game.id)).body(Json(game)))
+        }
         None => Err(NotFound(Json(ErrorResponse {
             error: "user id not found".into(),
         }))),
@@ -40,23 +48,23 @@ pub fn get_all_games(games: &State<GameService>) -> Json<GamesResponse> {
 #[cfg(test)]
 mod tests {
     use super::GamesResponse;
-    use crate::{games::Game, rocket, users::User};
+    use crate::{games::Game, rocket};
     use rocket::{http::Status, local::blocking::Client};
 
     #[test]
     fn can_create_game() {
         let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let response = client.post(uri!("/users")).dispatch();
+        client.post(uri!("/users")).dispatch();
         let game = client.post(uri!("/games/1")).dispatch();
 
-        assert_eq!(game.status(), Status::Ok);
+        assert_eq!(game.status(), Status::Created);
         assert!(game.into_json::<Game>().is_some());
     }
 
     #[test]
     fn each_game_gets_individual_ids() {
         let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let user = client.post(uri!("/users")).dispatch();
+        client.post(uri!("/users")).dispatch();
         let game1 = client.post(uri!("/games/1")).dispatch();
         let game2 = client.post(uri!("/games/1")).dispatch();
         assert_ne!(
@@ -75,7 +83,7 @@ mod tests {
     #[test]
     fn can_read_all_games() {
         let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let user = client.post(uri!("/users")).dispatch();
+        client.post(uri!("/users")).dispatch();
         let game1 = client.post(uri!("/games/1")).dispatch();
         let game2 = client.post(uri!("/games/1")).dispatch();
         let games = client.get(uri!("/games")).dispatch();

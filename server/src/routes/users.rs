@@ -1,7 +1,11 @@
 use crate::responses::{ErrorResponse, UsersResponse};
 use crate::services::UserService;
 use crate::users::User;
-use rocket::{response::status::NotFound, serde::json::Json, State};
+use rocket::{
+    response::status::{Created, NotFound},
+    serde::json::Json,
+    State,
+};
 use rocket_okapi::openapi;
 
 /// Create a new user
@@ -11,8 +15,10 @@ use rocket_okapi::openapi;
 
 #[openapi(tag = "Users")]
 #[post("/users")]
-pub fn create_user(users: &State<UserService>) -> Json<User> {
-    Json(users.add())
+pub fn create_user(users: &State<UserService>) -> Created<Json<User>> {
+    let user = users.add();
+
+    Created::new(format!("/users/{}", user.id)).body(Json(user))
 }
 
 /// Retrieve a list of all users
@@ -58,7 +64,7 @@ mod tests {
     fn can_create_user() {
         let client = Client::tracked(rocket()).expect("valid rocket instance");
         let response = client.post(uri!("/users")).dispatch();
-        assert_eq!(response.status(), Status::Ok);
+        assert_eq!(response.status(), Status::Created);
         assert!(response.into_json::<User>().is_some());
     }
 

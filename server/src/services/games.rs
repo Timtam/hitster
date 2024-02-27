@@ -1,4 +1,4 @@
-use crate::games::Game;
+use crate::games::{Game, GameState};
 use crate::users::User;
 use std::sync::Mutex;
 
@@ -29,6 +29,7 @@ impl GameService {
             id: data.id,
             creator: creator.clone(),
             players: vec![creator.clone()],
+            state: GameState::Open,
         };
 
         data.games.push(game.clone());
