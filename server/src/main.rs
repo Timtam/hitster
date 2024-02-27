@@ -5,13 +5,35 @@ mod routes;
 mod services;
 mod users;
 
-use rocket::response::Redirect;
+use rocket::{
+    fairing::{self, AdHoc},
+    response::Redirect,
+    Build, Rocket,
+};
+use rocket_db_pools::{sqlx, Database};
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
 use routes::{games as games_routes, users as users_routes};
 use services::{GameService, HitService, UserService};
 
 #[macro_use]
 extern crate rocket;
+
+#[derive(Database)]
+#[database("hitster_config")]
+struct HitsterConfig(sqlx::SqlitePool);
+
+async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
+    match HitsterConfig::fetch(&rocket) {
+        Some(db) => match sqlx::migrate!().run(&**db).await {
+            Ok(_) => Ok(rocket),
+            Err(e) => {
+                error!("Failed to run database migrations: {}", e);
+                Err(rocket)
+            }
+        },
+        None => Err(rocket),
+    }
+}
 
 #[get("/")]
 fn index() -> Redirect {
@@ -20,7 +42,11 @@ fn index() -> Redirect {
 
 #[launch]
 fn rocket() -> _ {
+    let migrations_fairing = AdHoc::try_on_ignite("SQLx Migrations", run_migrations);
+
     rocket::build()
+        .attach(HitsterConfig::init())
+        .attach(migrations_fairing)
         .mount("/", routes![index,])
         .mount(
             "/",
