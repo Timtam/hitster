@@ -56,62 +56,62 @@ pub fn get_user(
 
 #[cfg(test)]
 mod tests {
-    use super::UsersResponse;
-    use crate::{rocket, users::User};
-    use rocket::{http::Status, local::blocking::Client};
+    use crate::responses::UsersResponse;
+    use crate::{test::mocked_client, users::User};
+    use rocket::http::Status;
 
-    #[test]
-    fn can_create_user() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let response = client.post(uri!("/users")).dispatch();
+    #[sqlx::test]
+    async fn can_create_user() {
+        let client = mocked_client().await;
+        let response = client.post(uri!("/users")).dispatch().await;
         assert_eq!(response.status(), Status::Created);
-        assert!(response.into_json::<User>().is_some());
+        assert!(response.into_json::<User>().await.is_some());
     }
 
-    #[test]
-    fn each_user_gets_individual_ids() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let user1 = client.post(uri!("/users")).dispatch();
-        let user2 = client.post(uri!("/users")).dispatch();
+    #[sqlx::test]
+    async fn each_user_gets_individual_ids() {
+        let client = mocked_client().await;
+        let user1 = client.post(uri!("/users")).dispatch().await;
+        let user2 = client.post(uri!("/users")).dispatch().await;
         assert_ne!(
-            user1.into_json::<User>().unwrap().id,
-            user2.into_json::<User>().unwrap().id
+            user1.into_json::<User>().await.unwrap().id,
+            user2.into_json::<User>().await.unwrap().id
         );
     }
 
-    #[test]
-    fn can_read_all_users() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let user1 = client.post(uri!("/users")).dispatch();
-        let user2 = client.post(uri!("/users")).dispatch();
-        let users = client.get(uri!("/users")).dispatch();
+    #[sqlx::test]
+    async fn can_read_all_users() {
+        let client = mocked_client().await;
+        let user1 = client.post(uri!("/users")).dispatch().await;
+        let user2 = client.post(uri!("/users")).dispatch().await;
+        let users = client.get(uri!("/users")).dispatch().await;
         assert_eq!(users.status(), Status::Ok);
         assert_eq!(
-            users.into_json::<UsersResponse>().unwrap().users,
+            users.into_json::<UsersResponse>().await.unwrap().users,
             vec![
-                user1.into_json::<User>().unwrap(),
-                user2.into_json::<User>().unwrap()
+                user1.into_json::<User>().await.unwrap(),
+                user2.into_json::<User>().await.unwrap()
             ]
         );
     }
 
-    #[test]
-    fn cause_error_when_retrieving_invalid_user() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let response = client.get(uri!("/users/1")).dispatch();
+    #[sqlx::test]
+    async fn cause_error_when_retrieving_invalid_user() {
+        let client = mocked_client().await;
+        let response = client.get(uri!("/users/1")).dispatch().await;
         assert_eq!(response.status(), Status::NotFound);
     }
 
-    #[test]
-    fn can_get_single_user() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let user = client.post(uri!("/users")).dispatch();
-        let response = client.get(uri!("/users/1")).dispatch();
+    #[sqlx::test]
+    async fn can_get_single_user() {
+        let client = mocked_client().await;
+        let user = client.post(uri!("/users")).dispatch().await;
+        let response = client.get(uri!("/users/1")).dispatch().await;
 
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(
-            response.into_json::<User>().unwrap(),
-            user.into_json::<User>().unwrap()
+            response.into_json::<User>().await.unwrap(),
+            user.into_json::<User>().await.unwrap()
         );
     }
 }

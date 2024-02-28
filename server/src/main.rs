@@ -7,8 +7,9 @@ mod users;
 
 use rocket::{
     fairing::{self, AdHoc},
+    figment::Figment,
     response::Redirect,
-    Build, Rocket,
+    Build, Config, Rocket,
 };
 use rocket_db_pools::{sqlx, Database};
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
@@ -40,11 +41,10 @@ fn index() -> Redirect {
     Redirect::to("/swagger-ui")
 }
 
-#[launch]
-fn rocket() -> _ {
+fn rocket_from_config(figment: Figment) -> Rocket<Build> {
     let migrations_fairing = AdHoc::try_on_ignite("SQLx Migrations", run_migrations);
 
-    rocket::build()
+    rocket::custom(figment)
         .attach(HitsterConfig::init())
         .attach(migrations_fairing)
         .mount("/", routes![index,])
@@ -83,4 +83,33 @@ fn rocket() -> _ {
         .manage(GameService::new())
         .manage(HitService::new())
         .manage(UserService::new())
+}
+
+#[launch]
+fn rocket() -> _ {
+    rocket_from_config(Config::figment())
+}
+
+#[cfg(test)]
+mod test {
+    use super::rocket_from_config;
+    use rocket::{
+        figment::{util::map, value::Map},
+        local::asynchronous::Client,
+    };
+
+    pub async fn mocked_client() -> Client {
+        let db_config: Map<_, String> = map! {
+          "url" => "sqlite::memory:".into(),
+        };
+
+        let figment =
+            rocket::Config::figment().merge(("databases", map!["hitster_config" => db_config]));
+
+        let client = Client::tracked(rocket_from_config(figment))
+            .await
+            .expect("valid rocket instance");
+
+        return client;
+    }
 }

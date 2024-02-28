@@ -47,52 +47,51 @@ pub fn get_all_games(games: &State<GameService>) -> Json<GamesResponse> {
 
 #[cfg(test)]
 mod tests {
-    use super::GamesResponse;
-    use crate::{games::Game, rocket};
-    use rocket::{http::Status, local::blocking::Client};
+    use crate::{games::Game, responses::GamesResponse, test::mocked_client};
+    use rocket::http::Status;
 
-    #[test]
-    fn can_create_game() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        client.post(uri!("/users")).dispatch();
-        let game = client.post(uri!("/games/1")).dispatch();
+    #[sqlx::test]
+    async fn can_create_game() {
+        let client = mocked_client().await;
+        client.post(uri!("/users")).dispatch().await;
+        let game = client.post(uri!("/games/1")).dispatch().await;
 
         assert_eq!(game.status(), Status::Created);
-        assert!(game.into_json::<Game>().is_some());
+        assert!(game.into_json::<Game>().await.is_some());
     }
 
-    #[test]
-    fn each_game_gets_individual_ids() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        client.post(uri!("/users")).dispatch();
-        let game1 = client.post(uri!("/games/1")).dispatch();
-        let game2 = client.post(uri!("/games/1")).dispatch();
+    #[sqlx::test]
+    async fn each_game_gets_individual_ids() {
+        let client = mocked_client().await;
+        client.post(uri!("/users")).dispatch().await;
+        let game1 = client.post(uri!("/games/1")).dispatch().await;
+        let game2 = client.post(uri!("/games/1")).dispatch().await;
         assert_ne!(
-            game1.into_json::<Game>().unwrap().id,
-            game2.into_json::<Game>().unwrap().id
+            game1.into_json::<Game>().await.unwrap().id,
+            game2.into_json::<Game>().await.unwrap().id
         );
     }
 
-    #[test]
-    fn creating_a_game_with_invalid_user_causes_errors() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        let game = client.post(uri!("/games/1")).dispatch();
+    #[sqlx::test]
+    async fn creating_a_game_with_invalid_user_causes_errors() {
+        let client = mocked_client().await;
+        let game = client.post(uri!("/games/1")).dispatch().await;
         assert_eq!(game.status(), Status::NotFound);
     }
 
-    #[test]
-    fn can_read_all_games() {
-        let client = Client::tracked(rocket()).expect("valid rocket instance");
-        client.post(uri!("/users")).dispatch();
-        let game1 = client.post(uri!("/games/1")).dispatch();
-        let game2 = client.post(uri!("/games/1")).dispatch();
-        let games = client.get(uri!("/games")).dispatch();
+    #[sqlx::test]
+    async fn can_read_all_games() {
+        let client = mocked_client().await;
+        client.post(uri!("/users")).dispatch().await;
+        let game1 = client.post(uri!("/games/1")).dispatch().await;
+        let game2 = client.post(uri!("/games/1")).dispatch().await;
+        let games = client.get(uri!("/games")).dispatch().await;
         assert_eq!(games.status(), Status::Ok);
         assert_eq!(
-            games.into_json::<GamesResponse>().unwrap().games,
+            games.into_json::<GamesResponse>().await.unwrap().games,
             vec![
-                game1.into_json::<Game>().unwrap(),
-                game2.into_json::<Game>().unwrap()
+                game1.into_json::<Game>().await.unwrap(),
+                game2.into_json::<Game>().await.unwrap()
             ]
         );
     }
