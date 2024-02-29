@@ -6,12 +6,14 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dotenvy = "0.15.7"
 names = "0.14.0"
 rocket = { version = "0.5.0", features = ["json", "secrets"]}
 rocket_db_pools = { version = "0.1.0", default-features = false, features = ["sqlx_sqlite" ]}
 rocket_okapi = { version = "0.8.0", default-features = false, features = ["swagger", "rapidoc", "secrets", "rocket_db_pools"]}
 serde = { version = "1.0.197", features = ["derive"]}
 serde_json = "1.0.114"
+sha3 = "0.10.8"
 sqlx = { version = "0.7.3", default-features = false, features = ["migrate", "macros"] }
 
 [build-dependencies]

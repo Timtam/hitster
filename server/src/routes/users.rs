@@ -16,6 +16,7 @@ use rocket_db_pools::{
 };
 use rocket_okapi::openapi;
 use serde_json;
+use sha3::{Digest, Sha3_512};
 
 /// Create a new user
 ///
@@ -63,11 +64,15 @@ pub fn get_user(
 #[openapi(tag = "Users")]
 #[post("/users/login", format = "json", data = "<credentials>")]
 pub async fn user_login(
-    credentials: Json<UserLoginPayload>,
+    mut credentials: Json<UserLoginPayload>,
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     users: &State<UserService>,
 ) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
+    let mut hasher = Sha3_512::new();
+    hasher.update(credentials.password.as_bytes());
+    credentials.password = format!("{:x?}", hasher.finalize());
+
     if let Some(user) = users.get_by_username(credentials.username.as_str()) {
         if user.password == credentials.password {
             cookies.add_private(Cookie::new(

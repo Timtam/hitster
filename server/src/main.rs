@@ -5,9 +5,10 @@ mod routes;
 mod services;
 mod users;
 
+use dotenvy::dotenv;
 use rocket::{
     fairing::{self, AdHoc},
-    figment::Figment,
+    figment::{util::map, Figment},
     response::Redirect,
     Build, Config, Rocket,
 };
@@ -15,6 +16,7 @@ use rocket_db_pools::{sqlx, Database};
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
 use routes::{games as games_routes, users as users_routes};
 use services::{GameService, HitService, UserService};
+use std::env;
 
 #[macro_use]
 extern crate rocket;
@@ -87,7 +89,23 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
 
 #[launch]
 fn rocket() -> _ {
-    rocket_from_config(Config::figment())
+    let _ = dotenv();
+
+    rocket_from_config(
+        Config::figment()
+            .merge((
+                "databases",
+                map![
+                "hitster_config" => map![
+                "url" => env::var("DATABASE_URL").expect("DATABASE_URL required"),
+                ],
+                    ],
+            ))
+            .merge((
+                "secret_key",
+                env::var("SECRET_KEY").expect("SECRET_KEY is required"),
+            )),
+    )
 }
 
 #[cfg(test)]
