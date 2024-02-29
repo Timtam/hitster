@@ -1,10 +1,8 @@
 use crate::users::User;
-use names::Generator;
 use std::sync::Mutex;
 
 struct UserServiceData {
     users: Vec<User>,
-    id: u64,
 }
 
 pub struct UserService {
@@ -14,39 +12,36 @@ pub struct UserService {
 impl UserService {
     pub fn new() -> Self {
         Self {
-            data: Mutex::new(UserServiceData {
-                id: 0,
-                users: vec![],
-            }),
+            data: Mutex::new(UserServiceData { users: vec![] }),
         }
     }
 
-    pub fn add(&self) -> User {
-        let mut gen = Generator::default();
+    pub fn add(&self, user: User) {
         let mut data = self.data.lock().unwrap();
-        data.id += 1;
-
-        let user = User {
-            id: data.id,
-            name: gen.next().unwrap(),
-        };
-
-        data.users.push(user.clone());
-
-        user
+        data.users.push(user);
     }
 
     pub fn get_all(&self) -> Vec<User> {
         self.data.lock().unwrap().users.clone()
     }
 
-    pub fn get(&self, id: u64) -> Option<User> {
+    pub fn get_by_id(&self, id: u32) -> Option<User> {
         self.data
             .lock()
             .unwrap()
             .users
             .iter()
             .find(|u| u.id == id)
+            .cloned()
+    }
+
+    pub fn get_by_username<'r>(&self, username: &'r str) -> Option<User> {
+        self.data
+            .lock()
+            .unwrap()
+            .users
+            .iter()
+            .find(|u| u.username == username)
             .cloned()
     }
 }

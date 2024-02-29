@@ -9,8 +9,9 @@ pub struct GamesResponse {
 }
 
 #[derive(Serialize, Deserialize, JsonSchema)]
-pub struct ErrorResponse {
-    pub error: String,
+pub struct MessageResponse {
+    pub r#type: String,
+    pub message: String,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema)]

@@ -1,25 +1,26 @@
-use crate::responses::{ErrorResponse, UsersResponse};
-use crate::services::UserService;
-use crate::users::User;
+use crate::{
+    responses::{MessageResponse, UsersResponse},
+    services::UserService,
+    users::{User, UserLoginPayload},
+    HitsterConfig,
+};
 use rocket::{
+    http::{Cookie, CookieJar},
     response::status::{Created, NotFound},
     serde::json::Json,
     State,
 };
+use rocket_db_pools::{
+    sqlx::{self, Row},
+    Connection,
+};
 use rocket_okapi::openapi;
+use serde_json;
 
 /// Create a new user
 ///
 /// The username will be auto-generated for you. It is planned to be able to change it later.
 /// For now the id returned by this API call will need to be stored to use this user later.
-
-#[openapi(tag = "Users")]
-#[post("/users")]
-pub fn create_user(users: &State<UserService>) -> Created<Json<User>> {
-    let user = users.add();
-
-    Created::new(format!("/users/{}", user.id)).body(Json(user))
-}
 
 /// Retrieve a list of all users
 ///
@@ -43,14 +44,80 @@ pub fn get_all_users(users: &State<UserService>) -> Json<UsersResponse> {
 #[openapi(tag = "Users")]
 #[get("/users/<user_id>")]
 pub fn get_user(
-    user_id: u64,
+    user_id: u32,
     users: &State<UserService>,
-) -> Result<Json<User>, NotFound<Json<ErrorResponse>>> {
-    match users.get(user_id) {
+) -> Result<Json<User>, NotFound<Json<MessageResponse>>> {
+    match users.get_by_id(user_id) {
         Some(u) => Ok(Json(u)),
-        None => Err(NotFound(Json(ErrorResponse {
-            error: "user id not found".into(),
+        None => Err(NotFound(Json(MessageResponse {
+            message: "user id not found".into(),
+            r#type: "error".into(),
         }))),
+    }
+}
+
+/// User login
+///
+/// The user will log in with the provided username and password
+
+#[openapi(tag = "Users")]
+#[post("/users/login", format = "json", data = "<credentials>")]
+pub async fn user_login(
+    credentials: Json<UserLoginPayload>,
+    mut db: Connection<HitsterConfig>,
+    cookies: &CookieJar<'_>,
+    users: &State<UserService>,
+) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
+    if let Some(user) = users.get_by_username(credentials.username.as_str()) {
+        if user.password == credentials.password {
+            cookies.add_private(Cookie::new(
+                "login",
+                serde_json::to_string(&*credentials).unwrap(),
+            ));
+
+            Ok(Json(MessageResponse {
+                message: "logged in successfully".into(),
+                r#type: "success".into(),
+            }))
+        } else {
+            Err(NotFound(Json(MessageResponse {
+                message: "incorrect user credentials".into(),
+                r#type: "error".into(),
+            })))
+        }
+    } else {
+        let user = sqlx::query("SELECT * FROM users where username = ?1 AND password = ?2")
+            .bind(credentials.username.as_str())
+            .bind(credentials.password.as_str())
+            .fetch_optional(&mut **db)
+            .await
+            .unwrap();
+
+        match user {
+            Some(user) => {
+                if users.get_by_id(user.get("id")).is_none() {
+                    users.add(User {
+                        id: user.get::<u32, &str>("id"),
+                        username: user.get::<String, &str>("username"),
+                        password: user.get::<String, &str>("password"),
+                    });
+                }
+
+                cookies.add_private(Cookie::new(
+                    "login",
+                    serde_json::to_string(&*credentials).unwrap(),
+                ));
+
+                Ok(Json(MessageResponse {
+                    message: "logged in successfully".into(),
+                    r#type: "success".into(),
+                }))
+            }
+            None => Err(NotFound(Json(MessageResponse {
+                message: "incorrect user credentials".into(),
+                r#type: "error".into(),
+            }))),
+        }
     }
 }
 

@@ -1,6 +1,8 @@
-use crate::games::Game;
-use crate::responses::{ErrorResponse, GamesResponse};
-use crate::services::{GameService, UserService};
+use crate::{
+    games::Game,
+    responses::{GamesResponse, MessageResponse},
+    services::{GameService, UserService},
+};
 use rocket::{
     response::status::{Created, NotFound},
     serde::json::Json,
@@ -16,18 +18,19 @@ use rocket_okapi::openapi;
 #[openapi(tag = "Games")]
 #[post("/games/<user_id>")]
 pub fn create_game(
-    user_id: u64,
+    user_id: u32,
     users: &State<UserService>,
     games: &State<GameService>,
-) -> Result<Created<Json<Game>>, NotFound<Json<ErrorResponse>>> {
-    match users.get(user_id) {
+) -> Result<Created<Json<Game>>, NotFound<Json<MessageResponse>>> {
+    match users.get_by_id(user_id) {
         Some(u) => {
             let game = games.add(u);
 
             Ok(Created::new(format!("/games/{}", game.id)).body(Json(game)))
         }
-        None => Err(NotFound(Json(ErrorResponse {
-            error: "user id not found".into(),
+        None => Err(NotFound(Json(MessageResponse {
+            message: "user id not found".into(),
+            r#type: "error".into(),
         }))),
     }
 }
