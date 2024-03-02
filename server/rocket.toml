@@ -1,2 +1,0 @@
-[default.databases.hitster_config]
-url = "./hitster.sqlite"

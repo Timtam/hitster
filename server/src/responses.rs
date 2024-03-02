@@ -8,7 +8,7 @@ pub struct GamesResponse {
     pub games: Vec<Game>,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, Deserialize, JsonSchema, Debug)]
 pub struct MessageResponse {
     pub r#type: String,
     pub message: String,

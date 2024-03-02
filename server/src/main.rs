@@ -56,6 +56,8 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 users_routes::get_all_users,
                 users_routes::get_user,
                 users_routes::user_login,
+                users_routes::user_logout,
+                users_routes::user_signup,
                 games_routes::create_game,
                 games_routes::get_all_games
             ],

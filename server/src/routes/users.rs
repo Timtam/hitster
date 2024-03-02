@@ -4,9 +4,10 @@ use crate::{
     users::{User, UserLoginPayload},
     HitsterConfig,
 };
+use hex;
 use rocket::{
     http::{Cookie, CookieJar},
-    response::status::{Created, NotFound},
+    response::status::NotFound,
     serde::json::Json,
     State,
 };
@@ -71,7 +72,7 @@ pub async fn user_login(
 ) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
     let mut hasher = Sha3_512::new();
     hasher.update(credentials.password.as_bytes());
-    credentials.password = format!("{:x?}", hasher.finalize());
+    credentials.password = format!("{:?}", hex::encode(hasher.finalize()));
 
     if let Some(user) = users.get_by_username(credentials.username.as_str()) {
         if user.password == credentials.password {
@@ -126,44 +127,209 @@ pub async fn user_login(
     }
 }
 
+/// Register a new user
+///
+/// Register a new user with a given username and password
+
+#[openapi(tag = "Users")]
+#[post("/users/signup", format = "json", data = "<credentials>")]
+pub async fn user_signup(
+    mut credentials: Json<UserLoginPayload>,
+    users: &State<UserService>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
+    let mut hasher = Sha3_512::new();
+    hasher.update(credentials.password.as_bytes());
+    credentials.password = format!("{:?}", hex::encode(hasher.finalize()));
+
+    if sqlx::query("SELECT * FROM users WHERE username = ?")
+        .bind(credentials.username.as_str())
+        .fetch_optional(&mut **db)
+        .await
+        .unwrap()
+        .is_some()
+    {
+        Err(NotFound(Json(MessageResponse {
+            message: "username is already in use".into(),
+            r#type: "error".into(),
+        })))
+    } else {
+        if let Ok(result) = sqlx::query("INSERT INTO users (username, password) VALUES (?1, ?2)")
+            .bind(credentials.username.as_str())
+            .bind(credentials.password.as_str())
+            .execute(&mut **db)
+            .await
+        {
+            users.add(User {
+                id: result.last_insert_rowid() as u32,
+                username: credentials.username.clone(),
+                password: credentials.password.clone(),
+            });
+
+            Ok(Json(MessageResponse {
+                message: "user created".into(),
+                r#type: "success".into(),
+            }))
+        } else {
+            Err(NotFound(Json(MessageResponse {
+                message: "error while creating a database entry".into(),
+                r#type: "error".into(),
+            })))
+        }
+    }
+}
+
+/// Logout user
+///
+/// Logout user and clear cookies.
+
+#[openapi(tag = "Users")]
+#[post("/users/logout")]
+pub async fn user_logout(
+    user: User,
+    users: &State<UserService>,
+    cookies: &CookieJar<'_>,
+) -> Json<MessageResponse> {
+    cookies.remove_private("login");
+    users.remove(user.id);
+
+    Json(MessageResponse {
+        message: "logged out".into(),
+        r#type: "success".into(),
+    })
+}
+
 #[cfg(test)]
 mod tests {
-    use crate::responses::UsersResponse;
-    use crate::{test::mocked_client, users::User};
-    use rocket::http::Status;
+    use crate::{
+        responses::UsersResponse,
+        test::mocked_client,
+        users::{User, UserLoginPayload},
+    };
+    use rocket::{
+        http::{ContentType, Cookie, Status},
+        local::asynchronous::Client,
+    };
+    use serde_json;
+    use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
+
+    pub async fn create_test_users(client: &Client) {
+        client
+            .post(uri!("/users/signup"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+        client
+            .post(uri!("/users/signup"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser2".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+    }
 
     #[sqlx::test]
     async fn can_create_user() {
         let client = mocked_client().await;
-        let response = client.post(uri!("/users")).dispatch().await;
-        assert_eq!(response.status(), Status::Created);
-        assert!(response.into_json::<User>().await.is_some());
+        let response = client
+            .post(uri!("/users/signup"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser".into(),
+                    password: "123abcd".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+        assert_eq!(
+            response.status(),
+            Status::Ok,
+            "returned {}",
+            response.into_string().await.unwrap()
+        );
     }
 
     #[sqlx::test]
-    async fn each_user_gets_individual_ids() {
+    async fn each_user_gets_individual_ids(
+        _pool_opt: SqlitePoolOptions,
+        _conn_opt: SqliteConnectOptions,
+    ) -> sqlx::Result<()> {
         let client = mocked_client().await;
-        let user1 = client.post(uri!("/users")).dispatch().await;
-        let user2 = client.post(uri!("/users")).dispatch().await;
+
+        create_test_users(&client).await;
+
+        client
+            .post(uri!("/users/login"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+        client
+            .post(uri!("/users/login"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser2".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let users = client
+            .get(uri!("/users"))
+            .dispatch()
+            .await
+            .into_json::<UsersResponse>()
+            .await
+            .unwrap();
+
         assert_ne!(
-            user1.into_json::<User>().await.unwrap().id,
-            user2.into_json::<User>().await.unwrap().id
+            users.users.get(0).unwrap().id,
+            users.users.get(1).unwrap().id
         );
+
+        Ok(())
     }
 
     #[sqlx::test]
     async fn can_read_all_users() {
         let client = mocked_client().await;
-        let user1 = client.post(uri!("/users")).dispatch().await;
-        let user2 = client.post(uri!("/users")).dispatch().await;
-        let users = client.get(uri!("/users")).dispatch().await;
-        assert_eq!(users.status(), Status::Ok);
+
+        create_test_users(&client).await;
+
+        let response = client.get(uri!("/users")).dispatch().await;
+
+        assert_eq!(response.status(), Status::Ok);
         assert_eq!(
-            users.into_json::<UsersResponse>().await.unwrap().users,
-            vec![
-                user1.into_json::<User>().await.unwrap(),
-                user2.into_json::<User>().await.unwrap()
-            ]
+            response
+                .into_json::<UsersResponse>()
+                .await
+                .unwrap()
+                .users
+                .len(),
+            2
         );
     }
 
@@ -177,13 +343,115 @@ mod tests {
     #[sqlx::test]
     async fn can_get_single_user() {
         let client = mocked_client().await;
-        let user = client.post(uri!("/users")).dispatch().await;
+
+        create_test_users(&client).await;
+
         let response = client.get(uri!("/users/1")).dispatch().await;
 
         assert_eq!(response.status(), Status::Ok);
+
+        let user = response.into_json::<User>().await.unwrap();
+
+        assert_eq!(user.username, "testuser1".to_string(),);
+    }
+
+    #[sqlx::test]
+    async fn can_login() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let response = client
+            .post(uri!("/users/login"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        assert_eq!(response.status(), Status::Ok);
+    }
+
+    #[sqlx::test]
+    async fn wrong_credentials_on_login_cause_an_error() {
+        let client = mocked_client().await;
+
+        let response = client
+            .post(uri!("/users/login"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "".into(),
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        assert_eq!(response.status(), Status::NotFound);
+    }
+
+    #[sqlx::test]
+    async fn can_logout() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let response = client
+            .post(uri!("/users/login"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(),
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
         assert_eq!(
-            response.into_json::<User>().await.unwrap(),
-            user.into_json::<User>().await.unwrap()
+            client
+                .post(uri!("/users/logout"))
+                .private_cookie(response.cookies().get_private("login").unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Ok
+        );
+    }
+
+    #[sqlx::test]
+    async fn cannot_logout_if_not_logged_in() {
+        let client = mocked_client().await;
+
+        assert_eq!(
+            client.post(uri!("/users/logout")).dispatch().await.status(),
+            Status::Unauthorized
+        );
+    }
+
+    #[sqlx::test]
+    async fn wrong_cookie_causes_authorization_errors() {
+        let client = mocked_client().await;
+
+        assert_eq!(
+            client
+                .post(uri!("/users/logout"))
+                .private_cookie(Cookie::new(
+                    "login",
+                    "this is totally not the expected payload"
+                ))
+                .dispatch()
+                .await
+                .status(),
+            Status::Unauthorized
         );
     }
 }
