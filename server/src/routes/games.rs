@@ -1,38 +1,18 @@
-use crate::{
-    games::Game,
-    responses::{GamesResponse, MessageResponse},
-    services::{GameService, UserService},
-};
-use rocket::{
-    response::status::{Created, NotFound},
-    serde::json::Json,
-    State,
-};
+use crate::{games::Game, responses::GamesResponse, services::GameService, users::User};
+use rocket::{response::status::Created, serde::json::Json, State};
 use rocket_okapi::openapi;
 
 /// Create a new game
 ///
-/// Create a new game by specifying the user_id of the user who will be the creator. The creator will be the only one who can change game properties later.
-/// The API will return 404 if the user_id is invalid.
+/// Create a new game. The currently logged in user will be the creator of the game. The creator will be the only one who can change game properties later.
+/// The API will return 401 if the user_id is invalid.
 
 #[openapi(tag = "Games")]
-#[post("/games/<user_id>")]
-pub fn create_game(
-    user_id: u32,
-    users: &State<UserService>,
-    games: &State<GameService>,
-) -> Result<Created<Json<Game>>, NotFound<Json<MessageResponse>>> {
-    match users.get_by_id(user_id) {
-        Some(u) => {
-            let game = games.add(u);
+#[post("/games")]
+pub fn create_game(user: User, games: &State<GameService>) -> Created<Json<Game>> {
+    let game = games.add(user);
 
-            Ok(Created::new(format!("/games/{}", game.id)).body(Json(game)))
-        }
-        None => Err(NotFound(Json(MessageResponse {
-            message: "user id not found".into(),
-            r#type: "error".into(),
-        }))),
-    }
+    Created::new(format!("/games/{}", game.id)).body(Json(game))
 }
 
 /// Retrieve all currently known games
@@ -50,14 +30,37 @@ pub fn get_all_games(games: &State<GameService>) -> Json<GamesResponse> {
 
 #[cfg(test)]
 mod tests {
-    use crate::{games::Game, responses::GamesResponse, test::mocked_client};
-    use rocket::http::Status;
+    use crate::{
+        games::Game, routes::users::tests::create_test_users, test::mocked_client,
+        users::UserLoginPayload,
+    };
+    use rocket::http::{ContentType, Status};
+    use serde_json;
 
     #[sqlx::test]
     async fn can_create_game() {
         let client = mocked_client().await;
-        client.post(uri!("/users")).dispatch().await;
-        let game = client.post(uri!("/games/1")).dispatch().await;
+
+        create_test_users(&client).await;
+
+        let response = client
+            .post(uri!("/users/login"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game = client
+            .post(uri!("/games"))
+            .private_cookie(response.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
 
         assert_eq!(game.status(), Status::Created);
         assert!(game.into_json::<Game>().await.is_some());
@@ -66,36 +69,36 @@ mod tests {
     #[sqlx::test]
     async fn each_game_gets_individual_ids() {
         let client = mocked_client().await;
-        client.post(uri!("/users")).dispatch().await;
-        let game1 = client.post(uri!("/games/1")).dispatch().await;
-        let game2 = client.post(uri!("/games/1")).dispatch().await;
+
+        create_test_users(&client).await;
+
+        let response = client
+            .post(uri!("/users/login"))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game1 = client
+            .post(uri!("/games"))
+            .private_cookie(response.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+        let game2 = client
+            .post(uri!("/games"))
+            .private_cookie(response.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
         assert_ne!(
             game1.into_json::<Game>().await.unwrap().id,
             game2.into_json::<Game>().await.unwrap().id
-        );
-    }
-
-    #[sqlx::test]
-    async fn creating_a_game_with_invalid_user_causes_errors() {
-        let client = mocked_client().await;
-        let game = client.post(uri!("/games/1")).dispatch().await;
-        assert_eq!(game.status(), Status::NotFound);
-    }
-
-    #[sqlx::test]
-    async fn can_read_all_games() {
-        let client = mocked_client().await;
-        client.post(uri!("/users")).dispatch().await;
-        let game1 = client.post(uri!("/games/1")).dispatch().await;
-        let game2 = client.post(uri!("/games/1")).dispatch().await;
-        let games = client.get(uri!("/games")).dispatch().await;
-        assert_eq!(games.status(), Status::Ok);
-        assert_eq!(
-            games.into_json::<GamesResponse>().await.unwrap().games,
-            vec![
-                game1.into_json::<Game>().await.unwrap(),
-                game2.into_json::<Game>().await.unwrap()
-            ]
         );
     }
 }

@@ -200,7 +200,7 @@ pub async fn user_logout(
 }
 
 #[cfg(test)]
-mod tests {
+pub mod tests {
     use crate::{
         responses::UsersResponse,
         test::mocked_client,
