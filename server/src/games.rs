@@ -1,4 +1,3 @@
-use super::users::User;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
 
@@ -11,8 +10,8 @@ pub enum GameState {
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 pub struct Game {
-    pub id: u64,
-    pub creator: User,
-    pub players: Vec<User>,
+    pub id: u32,
+    pub creator: u32,
+    pub players: Vec<u32>,
     pub state: GameState,
 }
