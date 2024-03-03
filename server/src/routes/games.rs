@@ -1,13 +1,9 @@
 use crate::{
-    responses::{GameResponse, GamesResponse, MessageResponse},
+    responses::{GameResponse, GamesResponse, JoinGameError, MessageResponse},
     services::{GameService, UserService},
     users::User,
 };
-use rocket::{
-    response::status::{Created, NotFound},
-    serde::json::Json,
-    State,
-};
+use rocket::{response::status::Created, serde::json::Json, State};
 use rocket_okapi::openapi;
 
 /// Create a new game
@@ -69,23 +65,23 @@ pub async fn join_game(
     game_id: u32,
     user: User,
     games: &State<GameService>,
-) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
+) -> Result<Json<MessageResponse>, JoinGameError> {
     if let Some(game) = games.get(game_id) {
         match games.join(game.id, user.id) {
             Ok(_) => Ok(Json(MessageResponse {
                 message: "joined the game successfully".into(),
                 r#type: "success".into(),
             })),
-            Err(e) => Err(NotFound(Json(MessageResponse {
+            Err(e) => Err(JoinGameError {
                 message: e.into(),
-                r#type: "error".into(),
-            }))),
+                http_status_code: 409,
+            }),
         }
     } else {
-        Err(NotFound(Json(MessageResponse {
+        Err(JoinGameError {
             message: "game not found".into(),
-            r#type: "error".into(),
-        })))
+            http_status_code: 404,
+        })
     }
 }
 
