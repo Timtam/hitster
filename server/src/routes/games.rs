@@ -92,7 +92,9 @@ pub async fn join_game(
 #[cfg(test)]
 mod tests {
     use crate::{
-        responses::GameResponse, routes::users::tests::create_test_users, test::mocked_client,
+        responses::GameResponse,
+        routes::users::{self as user_routes, tests::create_test_users},
+        test::mocked_client,
         users::UserLoginPayload,
     };
     use rocket::http::{ContentType, Status};
@@ -105,7 +107,7 @@ mod tests {
         create_test_users(&client).await;
 
         let response = client
-            .post(uri!("/users/login"))
+            .post(uri!(user_routes::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -118,7 +120,7 @@ mod tests {
             .await;
 
         let game = client
-            .post(uri!("/games"))
+            .post(uri!(super::create_game))
             .private_cookie(response.cookies().get_private("login").unwrap())
             .dispatch()
             .await;
@@ -134,7 +136,7 @@ mod tests {
         create_test_users(&client).await;
 
         let response = client
-            .post(uri!("/users/login"))
+            .post(uri!(user_routes::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -147,12 +149,12 @@ mod tests {
             .await;
 
         let game1 = client
-            .post(uri!("/games"))
+            .post(uri!(super::create_game))
             .private_cookie(response.cookies().get_private("login").unwrap())
             .dispatch()
             .await;
         let game2 = client
-            .post(uri!("/games"))
+            .post(uri!(super::create_game))
             .private_cookie(response.cookies().get_private("login").unwrap())
             .dispatch()
             .await;
@@ -170,7 +172,7 @@ mod tests {
         create_test_users(&client).await;
 
         let response = client
-            .post(uri!("/users/login"))
+            .post(uri!(user_routes::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -183,13 +185,13 @@ mod tests {
             .await;
 
         let game = client
-            .post(uri!("/games"))
+            .post(uri!(super::create_game))
             .private_cookie(response.cookies().get_private("login").unwrap())
             .dispatch()
             .await;
 
         let response = client
-            .post(uri!("/users/login"))
+            .post(uri!(user_routes::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -203,10 +205,9 @@ mod tests {
 
         assert_eq!(
             client
-                .patch(format!(
-                    "/games/{}/join",
-                    game.into_json::<GameResponse>().await.unwrap().id
-                ))
+                .patch(uri!(super::join_game(
+                    game_id = game.into_json::<GameResponse>().await.unwrap().id
+                )))
                 .private_cookie(response.cookies().get_private("login").unwrap())
                 .dispatch()
                 .await
@@ -222,7 +223,7 @@ mod tests {
         create_test_users(&client).await;
 
         let response = client
-            .post(uri!("/users/login"))
+            .post(uri!(user_routes::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -235,17 +236,16 @@ mod tests {
             .await;
 
         let game = client
-            .post(uri!("/games"))
+            .post(uri!(super::create_game))
             .private_cookie(response.cookies().get_private("login").unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .patch(format!(
-                    "/games/{}/join",
-                    game.into_json::<GameResponse>().await.unwrap().id
-                ))
+                .patch(uri!(super::join_game(
+                    game_id = game.into_json::<GameResponse>().await.unwrap().id
+                )))
                 .private_cookie(response.cookies().get_private("login").unwrap())
                 .dispatch()
                 .await

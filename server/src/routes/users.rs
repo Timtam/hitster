@@ -215,7 +215,7 @@ pub mod tests {
 
     pub async fn create_test_users(client: &Client) {
         client
-            .post(uri!("/users/signup"))
+            .post(uri!(super::user_signup))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -227,7 +227,7 @@ pub mod tests {
             .dispatch()
             .await;
         client
-            .post(uri!("/users/signup"))
+            .post(uri!(super::user_signup))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -244,7 +244,7 @@ pub mod tests {
     async fn can_create_user() {
         let client = mocked_client().await;
         let response = client
-            .post(uri!("/users/signup"))
+            .post(uri!(super::user_signup))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -273,7 +273,7 @@ pub mod tests {
         create_test_users(&client).await;
 
         client
-            .post(uri!("/users/login"))
+            .post(uri!(super::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -285,7 +285,7 @@ pub mod tests {
             .dispatch()
             .await;
         client
-            .post(uri!("/users/login"))
+            .post(uri!(super::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -298,7 +298,7 @@ pub mod tests {
             .await;
 
         let users = client
-            .get(uri!("/users"))
+            .get(uri!(super::get_all_users))
             .dispatch()
             .await
             .into_json::<UsersResponse>()
@@ -319,7 +319,7 @@ pub mod tests {
 
         create_test_users(&client).await;
 
-        let response = client.get(uri!("/users")).dispatch().await;
+        let response = client.get(uri!(super::get_all_users)).dispatch().await;
 
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(
@@ -336,7 +336,10 @@ pub mod tests {
     #[sqlx::test]
     async fn cause_error_when_retrieving_invalid_user() {
         let client = mocked_client().await;
-        let response = client.get(uri!("/users/1")).dispatch().await;
+        let response = client
+            .get(uri!(super::get_user(user_id = 1)))
+            .dispatch()
+            .await;
         assert_eq!(response.status(), Status::NotFound);
     }
 
@@ -346,7 +349,10 @@ pub mod tests {
 
         create_test_users(&client).await;
 
-        let response = client.get(uri!("/users/1")).dispatch().await;
+        let response = client
+            .get(uri!(super::get_user(user_id = 1)))
+            .dispatch()
+            .await;
 
         assert_eq!(response.status(), Status::Ok);
 
@@ -362,7 +368,7 @@ pub mod tests {
         create_test_users(&client).await;
 
         let response = client
-            .post(uri!("/users/login"))
+            .post(uri!(super::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -382,7 +388,7 @@ pub mod tests {
         let client = mocked_client().await;
 
         let response = client
-            .post(uri!("/users/login"))
+            .post(uri!(super::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -404,7 +410,7 @@ pub mod tests {
         create_test_users(&client).await;
 
         let response = client
-            .post(uri!("/users/login"))
+            .post(uri!(super::user_login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -418,7 +424,7 @@ pub mod tests {
 
         assert_eq!(
             client
-                .post(uri!("/users/logout"))
+                .post(uri!(super::user_logout))
                 .private_cookie(response.cookies().get_private("login").unwrap())
                 .dispatch()
                 .await
@@ -432,7 +438,11 @@ pub mod tests {
         let client = mocked_client().await;
 
         assert_eq!(
-            client.post(uri!("/users/logout")).dispatch().await.status(),
+            client
+                .post(uri!(super::user_logout))
+                .dispatch()
+                .await
+                .status(),
             Status::Unauthorized
         );
     }
@@ -443,7 +453,7 @@ pub mod tests {
 
         assert_eq!(
             client
-                .post(uri!("/users/logout"))
+                .post(uri!(super::user_logout))
                 .private_cookie(Cookie::new(
                     "login",
                     "this is totally not the expected payload"
