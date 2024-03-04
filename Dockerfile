@@ -1,7 +1,8 @@
 FROM rust:1.76-slim-bookworm as build
 
 # create a new empty shell project
-RUN USER=root cargo new --bin hitster
+RUN apt -y install libssl-dev && \
+    USER=root cargo new --bin hitster
 WORKDIR /hitster
 
 # copy over your manifests
