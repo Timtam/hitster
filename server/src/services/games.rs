@@ -64,4 +64,27 @@ impl GameService {
             Err("game not found")
         }
     }
+
+    pub fn leave(&self, game_id: u32, user_id: u32) -> Result<(), &'static str> {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(game) = data.games.get_mut(&game_id) {
+            if !game.players.contains(&user_id) {
+                Err("user is not part of this game")
+            } else {
+                game.players
+                    .swap_remove(game.players.iter().position(|u| *u == user_id).unwrap());
+
+                if game.players.len() == 0 {
+                    data.games.remove(&game_id);
+                } else if game.creator == user_id {
+                    game.creator = *game.players.first().unwrap();
+                }
+
+                Ok(())
+            }
+        } else {
+            Err("game not found")
+        }
+    }
 }

@@ -41,7 +41,7 @@ impl OpenApiResponderInner for JoinGameError {
             "409".to_string(),
             RefOr::Object(OpenApiResponse {
                 description: "\
-                # [409 Conflicted](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
+                # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
                 That user is already part of this game.\
                 "
                 .to_string(),
@@ -64,6 +64,65 @@ impl std::fmt::Display for JoinGameError {
 impl std::error::Error for JoinGameError {}
 
 impl<'r> Responder<'r, 'static> for JoinGameError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct LeaveGameError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for LeaveGameError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                A game with that ID doesn't exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "409".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
+                That user isn't part of this game.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for LeaveGameError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Join game error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for LeaveGameError {}
+
+impl<'r> Responder<'r, 'static> for LeaveGameError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         // Convert object to json
         let body = serde_json::to_string(&self).unwrap();

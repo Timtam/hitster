@@ -1,6 +1,6 @@
 use crate::{
     responses::{MessageResponse, UsersResponse},
-    services::UserService,
+    services::{GameService, UserService},
     users::{User, UserLoginPayload},
     HitsterConfig,
 };
@@ -69,7 +69,7 @@ pub async fn user_login(
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     users: &State<UserService>,
-) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
+) -> Result<Json<User>, NotFound<Json<MessageResponse>>> {
     let mut hasher = Sha3_512::new();
     hasher.update(credentials.password.as_bytes());
     credentials.password = format!("{:?}", hex::encode(hasher.finalize()));
@@ -81,10 +81,7 @@ pub async fn user_login(
                 serde_json::to_string(&*credentials).unwrap(),
             ));
 
-            Ok(Json(MessageResponse {
-                message: "logged in successfully".into(),
-                r#type: "success".into(),
-            }))
+            Ok(Json(user))
         } else {
             Err(NotFound(Json(MessageResponse {
                 message: "incorrect user credentials".into(),
@@ -101,23 +98,20 @@ pub async fn user_login(
 
         match user {
             Some(user) => {
-                if users.get_by_id(user.get("id")).is_none() {
-                    users.add(User {
-                        id: user.get::<u32, &str>("id"),
-                        username: user.get::<String, &str>("username"),
-                        password: user.get::<String, &str>("password"),
-                    });
-                }
+                let u = User {
+                    id: user.get::<u32, &str>("id"),
+                    username: user.get::<String, &str>("username"),
+                    password: user.get::<String, &str>("password"),
+                };
+
+                users.add(u.clone());
 
                 cookies.add_private(Cookie::new(
                     "login",
                     serde_json::to_string(&*credentials).unwrap(),
                 ));
 
-                Ok(Json(MessageResponse {
-                    message: "logged in successfully".into(),
-                    r#type: "success".into(),
-                }))
+                Ok(Json(u))
             }
             None => Err(NotFound(Json(MessageResponse {
                 message: "incorrect user credentials".into(),
@@ -188,8 +182,13 @@ pub async fn user_signup(
 pub async fn user_logout(
     user: User,
     users: &State<UserService>,
+    games: &State<GameService>,
     cookies: &CookieJar<'_>,
 ) -> Json<MessageResponse> {
+    for game in games.get_all().iter() {
+        let _ = games.leave(game.id, user.id);
+    }
+
     cookies.remove_private("login");
     users.remove(user.id);
 
@@ -202,7 +201,8 @@ pub async fn user_logout(
 #[cfg(test)]
 pub mod tests {
     use crate::{
-        responses::UsersResponse,
+        responses::{GameResponse, GamesResponse, UsersResponse},
+        routes::games as games_routes,
         test::mocked_client,
         users::{User, UserLoginPayload},
     };
@@ -462,6 +462,204 @@ pub mod tests {
                 .await
                 .status(),
             Status::Unauthorized
+        );
+    }
+
+    #[sqlx::test]
+    async fn leave_game_when_logging_out() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let user1 = client
+            .post(uri!(super::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(),
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let user2 = client
+            .post(uri!(super::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser2".into(),
+                    password: "abc1234".into(),
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game = client
+            .post(uri!(games_routes::create_game))
+            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!(games_routes::join_game(
+                game_id = game.into_json::<GameResponse>().await.unwrap().id
+            )))
+            .private_cookie(user2.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .get(uri!(games_routes::get_all_games))
+                .dispatch()
+                .await
+                .into_json::<GamesResponse>()
+                .await
+                .unwrap()
+                .games
+                .get(0)
+                .unwrap()
+                .players
+                .len(),
+            2
+        );
+
+        client
+            .post(uri!(super::user_logout))
+            .private_cookie(user2.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .get(uri!(games_routes::get_all_games))
+                .dispatch()
+                .await
+                .into_json::<GamesResponse>()
+                .await
+                .unwrap()
+                .games
+                .get(0)
+                .unwrap()
+                .players
+                .len(),
+            1
+        );
+    }
+
+    #[sqlx::test]
+    async fn select_new_game_creator_after_logging_out() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let user1 = client
+            .post(uri!(super::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(),
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let user2 = client
+            .post(uri!(super::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser2".into(),
+                    password: "abc1234".into(),
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game = client
+            .post(uri!(games_routes::create_game))
+            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!(games_routes::join_game(
+                game_id = game.into_json::<GameResponse>().await.unwrap().id
+            )))
+            .private_cookie(user2.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        client
+            .post(uri!(super::user_logout))
+            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .get(uri!(games_routes::get_all_games))
+                .dispatch()
+                .await
+                .into_json::<GamesResponse>()
+                .await
+                .unwrap()
+                .games
+                .get(0)
+                .unwrap()
+                .creator,
+            user2.into_json::<User>().await.unwrap()
+        );
+    }
+
+    #[sqlx::test]
+    async fn delete_game_after_last_player_logs_out() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let user = client
+            .post(uri!(super::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(),
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        client
+            .post(uri!(games_routes::create_game))
+            .private_cookie(user.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        client
+            .post(uri!(super::user_logout))
+            .private_cookie(user.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .get(uri!(games_routes::get_all_games))
+                .dispatch()
+                .await
+                .into_json::<GamesResponse>()
+                .await
+                .unwrap()
+                .games
+                .len(),
+            0
         );
     }
 }

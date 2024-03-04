@@ -61,6 +61,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 games_routes::create_game,
                 games_routes::get_all_games,
                 games_routes::join_game,
+                games_routes::leave_game,
             ],
         )
         .mount(

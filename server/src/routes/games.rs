@@ -1,5 +1,5 @@
 use crate::{
-    responses::{GameResponse, GamesResponse, JoinGameError, MessageResponse},
+    responses::{GameResponse, GamesResponse, JoinGameError, LeaveGameError, MessageResponse},
     services::{GameService, UserService},
     users::User,
 };
@@ -79,6 +79,32 @@ pub async fn join_game(
         }
     } else {
         Err(JoinGameError {
+            message: "game not found".into(),
+            http_status_code: 404,
+        })
+    }
+}
+
+#[openapi(tag = "Games")]
+#[patch("/games/<game_id>/leave")]
+pub async fn leave_game(
+    game_id: u32,
+    user: User,
+    games: &State<GameService>,
+) -> Result<Json<MessageResponse>, LeaveGameError> {
+    if let Some(game) = games.get(game_id) {
+        match games.leave(game.id, user.id) {
+            Ok(_) => Ok(Json(MessageResponse {
+                message: "left the game successfully".into(),
+                r#type: "success".into(),
+            })),
+            Err(e) => Err(LeaveGameError {
+                message: e.into(),
+                http_status_code: 409,
+            }),
+        }
+    } else {
+        Err(LeaveGameError {
             message: "game not found".into(),
             http_status_code: 404,
         })
@@ -246,7 +272,146 @@ mod tests {
                 .dispatch()
                 .await
                 .status(),
+            Status::Conflict
+        );
+    }
+
+    #[sqlx::test]
+    async fn can_leave_game() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let user = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game = client
+            .post(uri!(super::create_game))
+            .private_cookie(user.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .patch(uri!(super::leave_game(
+                    game_id = game.into_json::<GameResponse>().await.unwrap().id
+                )))
+                .private_cookie(user.cookies().get_private("login").unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Ok
+        );
+    }
+
+    #[sqlx::test]
+    async fn cannot_leave_game_twice() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let user = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game_id = client
+            .post(uri!(super::create_game))
+            .private_cookie(user.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap()
+            .id;
+
+        assert_eq!(
+            client
+                .patch(uri!(super::leave_game(game_id = game_id)))
+                .private_cookie(user.cookies().get_private("login").unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Ok
+        );
+
+        assert_eq!(
+            client
+                .patch(uri!(super::leave_game(game_id = game_id)))
+                .private_cookie(user.cookies().get_private("login").unwrap())
+                .dispatch()
+                .await
+                .status(),
             Status::NotFound
+        );
+    }
+
+    #[sqlx::test]
+    async fn cannot_leave_game_without_joining() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let response = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game = client
+            .post(uri!(super::create_game))
+            .private_cookie(response.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        let response = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser2".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .patch(uri!(super::leave_game(
+                    game_id = game.into_json::<GameResponse>().await.unwrap().id
+                )))
+                .private_cookie(response.cookies().get_private("login").unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Conflict
         );
     }
 }
