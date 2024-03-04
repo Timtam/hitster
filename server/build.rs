@@ -13,17 +13,24 @@ fn main() {
 
     for result in csv_reader.records() {
         let record = result.unwrap();
-        file_content += format!(
-            "Hit {{
+
+        if record.get(3).unwrap() != "" {
+            file_content += format!(
+                "Hit {{
             interpret: \"{}\".into(),
             title: \"{}\".into(),
             year: {},
+            yt_url: \"{}\".into(),
+            playback_offset: {},
         }},",
-            record.get(0).unwrap(),
-            record.get(2).unwrap(),
-            record.get(1).unwrap()
-        )
-        .as_str();
+                record.get(0).unwrap(),
+                record.get(2).unwrap(),
+                record.get(1).unwrap(),
+                record.get(3).unwrap(),
+                record.get(4).unwrap_or("0"),
+            )
+            .as_str();
+        }
     }
 
     fs::write(

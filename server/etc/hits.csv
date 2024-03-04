@@ -1,50 +1,50 @@
-Interpret;Jahr;Titel
-O-Zone;2003;Dragostea Din Tei
-Dr. Alban;1993;Sing Hallelujah!
-Sister Sledge;1979;We Are Family
-Spider Murphy Gang;1987;So a Nacht
-Jennifer Lopez;1999;If You Had My Love
-Gebrüder Blattschuss;1978;Kreuzberger Nächte
-Andrea Jürgens;1990;Wir tanzen Lambada
-Culture Beat;1993;Mr. Vain
-The Bangles;1986;Manic Monday
-Udo Jürgens;1965;Siebzehn Jahr, blondes Haar
-U96;1992;Das Boot
-Hans Kröger;1988;Der blonde Hans
-Andrea Jürgens;1991;Santa Catarina
-Wencke Myhre;1970;Er hat ein knallrotes Gummiboot
-Fats Domino;1955;Ain't That A Shame
-Drafi Deutscher;1965;Marmor, Stein und Eisen bricht
-Juli;2004;Perfekte Welle
-Duffy;2008;Mercy
-Sigrid & Marina;2010;Zwei Senoritas
-Chicago;1976;If You Leave Me Right Now
-Ben Zucker;2018;Der Sonne entgegen
-P!nk (feat. Nate Reuss);2013;Just Give Me A Reason
-Michael Holm;1974;Tränen lügen nicht
-Maite Kelly;2016;Sieben Leben für dich
-Stefan Raab;1999;Maschen-Draht-Zaun
-Stefan Waggershausen, Viktor Lazlo;1990;Das erste Mal tat's noch weh
-Oliver Haidt;1996;Lebenslänglich Du
-The Kinks;1970;Lola
-Nelly (feat.Kelly Rowland);2002;Dilemma
-Demis Roussos;1973;Schönes Mädchen aus Arcadia
-Dschinghis Khan;1979;Moskau
-Liane ;2014;Ich lass' nur noch Sonne in mein Herz
-Gitti und Erica;1977;Heidi
-Connie Francis;1964;Schöner fremder Mann
-Wildecker Herzbuben;1990;Herzilein
-Carly Simon;1972;You're So Vain
-Farank Lars;2010;Ich kann nicht ohne dich
-Glenn Miller;1939;In The Mood
-Brunner & Brunner;1994;Für dich
-Die Toten Hosen;2012;Tage wie diese
-Christoff;2012;Ich Hab Alain Delon geseh'n
-Bill Medley & Jennifer Warnes;1987;(I've Had) The Time Of My Life
-Ibo;1998;Ein Himmelbett im Internet
-Klostertaler;1997;Ha-Le-Lu-Ja
-Freddy Quinn;1956;Heimweh (Dort wo die Blumen blüh'n)
-Oliver Pocher;2006;Schwarz und weiss
-Wolkenfrei;2014;Ich versprech Dir nichts und geb' Dir alles
-Eurythmics;1983;Sweet Dreams (Are Made Of This)
-Peter Wackel;2005;Oberammergau
+﻿Interpret;Jahr;Titel;Yutube-Link;Abspiel-Beginn (in Sekunden)
+O-Zone;2003;Dragostea Din Tei;https://www.youtube.com/watch?v=YnopHCL1Jk8;53
+Dr. Alban;1993;Sing Hallelujah!;https://www.youtube.com/watch?v=pKxJca7LLNM;0
+Sister Sledge;1979;We Are Family;https://www.youtube.com/watch?v=uyGY2NfYpeE;0
+Spider Murphy Gang;1987;So a Nacht;https://www.youtube.com/watch?v=sox_-1x-VGw;0
+Jennifer Lopez;1999;If You Had My Love;https://www.youtube.com/watch?v=lYfkl-HXfuU;35
+Gebrüder Blattschuss;1978;Kreuzberger Nächte;https://www.youtube.com/watch?v=GNTo1LWnFjg;18
+Andrea Jürgens;1990;Wir tanzen Lambada;;
+Culture Beat;1993;Mr. Vain;;
+The Bangles;1986;Manic Monday;;
+Udo Jürgens;1965;Siebzehn Jahr, blondes Haar;;
+U96;1992;Das Boot;;
+Hans Kröger;1988;Der blonde Hans;;
+Andrea Jürgens;1991;Santa Catarina;;
+Wencke Myhre;1970;Er hat ein knallrotes Gummiboot;;
+Fats Domino;1955;Ain't That A Shame;;
+Drafi Deutscher;1965;Marmor, Stein und Eisen bricht;;
+Juli;2004;Perfekte Welle;;
+Duffy;2008;Mercy;;
+Sigrid & Marina;2010;Zwei Senoritas;;
+Chicago;1976;If You Leave Me Right Now;;
+Ben Zucker;2018;Der Sonne entgegen;;
+P!nk (feat. Nate Reuss);2013;Just Give Me A Reason;;
+Michael Holm;1974;Tränen lügen nicht;;
+Maite Kelly;2016;Sieben Leben für dich;;
+Stefan Raab;1999;Maschen-Draht-Zaun;;
+Stefan Waggershausen, Viktor Lazlo;1990;Das erste Mal tat's noch weh;;
+Oliver Haidt;1996;Lebenslänglich Du;;
+The Kinks;1970;Lola;;
+Nelly (feat.Kelly Rowland);2002;Dilemma;;
+Demis Roussos;1973;Schönes Mädchen aus Arcadia;;
+Dschinghis Khan;1979;Moskau;;
+Liane ;2014;Ich lass' nur noch Sonne in mein Herz;;
+Gitti und Erica;1977;Heidi;;
+Connie Francis;1964;Schöner fremder Mann;;
+Wildecker Herzbuben;1990;Herzilein;;
+Carly Simon;1972;You're So Vain;;
+Farank Lars;2010;Ich kann nicht ohne dich;;
+Glenn Miller;1939;In The Mood;;
+Brunner & Brunner;1994;Für dich;;
+Die Toten Hosen;2012;Tage wie diese;;
+Christoff;2012;Ich Hab Alain Delon geseh'n;;
+Bill Medley & Jennifer Warnes;1987;(I've Had) The Time Of My Life;;
+Ibo;1998;Ein Himmelbett im Internet;;
+Klostertaler;1997;Ha-Le-Lu-Ja;;
+Freddy Quinn;1956;Heimweh (Dort wo die Blumen blüh'n);;
+Oliver Pocher;2006;Schwarz und weiss;;
+Wolkenfrei;2014;Ich versprech Dir nichts und geb' Dir alles;;
+Eurythmics;1983;Sweet Dreams (Are Made Of This);;
+Peter Wackel;2005;Oberammergau;;

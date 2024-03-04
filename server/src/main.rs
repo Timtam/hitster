@@ -6,6 +6,7 @@ mod services;
 mod users;
 
 use dotenvy::dotenv;
+use hits::HitsterDownloader;
 use rocket::{
     fairing::{self, AdHoc},
     figment::{util::map, Figment},
@@ -49,6 +50,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
     rocket::custom(figment)
         .attach(HitsterConfig::init())
         .attach(migrations_fairing)
+        .attach(HitsterDownloader::default())
         .mount("/", routes![index,])
         .mount(
             "/",
