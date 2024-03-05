@@ -28,7 +28,7 @@ FROM debian:bookworm-slim
 # prepare the OS
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install --no-install-recommends libssl-dev ca-certificates && \
+    apt-get -y install --no-install-recommends libssl-dev ca-certificates ffmpeg && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
