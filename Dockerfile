@@ -1,7 +1,7 @@
 FROM rust:1.76-slim-bookworm as build
 
 # create a new empty shell project
-RUN apt -y install libssl-dev && \
+RUN apt-get update && apt-get -y install libssl-dev pkg-config && \
     USER=root cargo new --bin hitster
 WORKDIR /hitster
 
@@ -24,6 +24,13 @@ RUN cargo build --release
 
 # our final base
 FROM debian:bookworm-slim
+
+# prepare the OS
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    apt-get -y install --no-install-recommends libssl-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # copy the build artifact from the build stage
 COPY --from=build /hitster/target/release/hitster-server ./hitster
