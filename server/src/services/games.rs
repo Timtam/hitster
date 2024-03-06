@@ -1,4 +1,8 @@
-use crate::games::{Game, GameState};
+use crate::{
+    games::{Game, GameState},
+    responses::{JoinGameError, LeaveGameError, StartGameError},
+};
+use rand::prelude::{thread_rng, SliceRandom};
 use std::{collections::HashMap, sync::Mutex};
 
 pub struct GameServiceData {
@@ -29,6 +33,7 @@ impl GameService {
             creator: creator,
             players: vec![creator],
             state: GameState::Open,
+            turn_player: 0,
         };
 
         data.games.insert(game.id, game.clone());
@@ -50,27 +55,36 @@ impl GameService {
         self.data.lock().unwrap().games.get(&id).cloned()
     }
 
-    pub fn join(&self, game_id: u32, user_id: u32) -> Result<(), &'static str> {
+    pub fn join(&self, game_id: u32, user_id: u32) -> Result<(), JoinGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(&game_id) {
             if game.players.contains(&user_id) {
-                Err("user is already part of this game")
+                Err(JoinGameError {
+                    message: "user is already part of this game".into(),
+                    http_status_code: 409,
+                })
             } else {
                 game.players.push(user_id);
                 Ok(())
             }
         } else {
-            Err("game not found")
+            Err(JoinGameError {
+                message: "game not found".into(),
+                http_status_code: 404,
+            })
         }
     }
 
-    pub fn leave(&self, game_id: u32, user_id: u32) -> Result<(), &'static str> {
+    pub fn leave(&self, game_id: u32, user_id: u32) -> Result<(), LeaveGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(&game_id) {
             if !game.players.contains(&user_id) {
-                Err("user is not part of this game")
+                Err(LeaveGameError {
+                    message: "user is not part of this game".into(),
+                    http_status_code: 409,
+                })
             } else {
                 game.players
                     .swap_remove(game.players.iter().position(|u| *u == user_id).unwrap());
@@ -84,7 +98,46 @@ impl GameService {
                 Ok(())
             }
         } else {
-            Err("game not found")
+            Err(LeaveGameError {
+                message: "game not found".into(),
+                http_status_code: 404,
+            })
+        }
+    }
+
+    pub fn start(&self, game_id: u32, user_id: u32) -> Result<(), StartGameError> {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(game) = data.games.get_mut(&game_id) {
+            if game.players.len() < 2 {
+                Err(StartGameError {
+                    message: "you need at least two players to start a game".into(),
+                    http_status_code: 409,
+                })
+            } else if game.state != GameState::Open {
+                Err(StartGameError {
+                    http_status_code: 409,
+                    message: "the game is already running".into(),
+                })
+            } else if game.creator != user_id {
+                Err(StartGameError {
+                    http_status_code: 403,
+                    message: "only the creator can start a game".into(),
+                })
+            } else {
+                let mut rng = thread_rng();
+
+                game.players.shuffle(&mut rng);
+
+                game.turn_player = *game.players.get(0).unwrap();
+                game.state = GameState::Guessing;
+                Ok(())
+            }
+        } else {
+            Err(StartGameError {
+                message: "game not found".into(),
+                http_status_code: 404,
+            })
         }
     }
 }

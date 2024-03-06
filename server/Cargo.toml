@@ -10,6 +10,7 @@ dotenvy = "0.15.7"
 ffmpeg-cli = "0.1.0"
 hex = "0.4.3"
 names = "0.14.0"
+rand = "0.8.5"
 regex = "1.10.3"
 rocket = { version = "0.5.0", features = ["json", "secrets"]}
 rocket_db_pools = { version = "0.1.0", default-features = false, features = ["sqlx_sqlite" ]}

@@ -1,5 +1,7 @@
 use crate::{
-    responses::{GameResponse, GamesResponse, JoinGameError, LeaveGameError, MessageResponse},
+    responses::{
+        GameResponse, GamesResponse, JoinGameError, LeaveGameError, MessageResponse, StartGameError,
+    },
     services::{GameService, UserService},
     users::User,
 };
@@ -66,23 +68,12 @@ pub async fn join_game(
     user: User,
     games: &State<GameService>,
 ) -> Result<Json<MessageResponse>, JoinGameError> {
-    if let Some(game) = games.get(game_id) {
-        match games.join(game.id, user.id) {
-            Ok(_) => Ok(Json(MessageResponse {
-                message: "joined the game successfully".into(),
-                r#type: "success".into(),
-            })),
-            Err(e) => Err(JoinGameError {
-                message: e.into(),
-                http_status_code: 409,
-            }),
-        }
-    } else {
-        Err(JoinGameError {
-            message: "game not found".into(),
-            http_status_code: 404,
+    games.join(game_id, user.id).map(|_| {
+        Json(MessageResponse {
+            message: "joined the game successfully".into(),
+            r#type: "success".into(),
         })
-    }
+    })
 }
 
 #[openapi(tag = "Games")]
@@ -92,23 +83,29 @@ pub async fn leave_game(
     user: User,
     games: &State<GameService>,
 ) -> Result<Json<MessageResponse>, LeaveGameError> {
-    if let Some(game) = games.get(game_id) {
-        match games.leave(game.id, user.id) {
-            Ok(_) => Ok(Json(MessageResponse {
-                message: "left the game successfully".into(),
-                r#type: "success".into(),
-            })),
-            Err(e) => Err(LeaveGameError {
-                message: e.into(),
-                http_status_code: 409,
-            }),
-        }
-    } else {
-        Err(LeaveGameError {
-            message: "game not found".into(),
-            http_status_code: 404,
+    games.leave(game_id, user.id).map(|_| {
+        Json(MessageResponse {
+            message: "left the game successfully".into(),
+            r#type: "success".into(),
         })
-    }
+    })
+}
+
+/// Start the game
+
+#[openapi(tag = "Games")]
+#[patch("/games/<game_id>/start")]
+pub async fn start_game(
+    game_id: u32,
+    user: User,
+    games: &State<GameService>,
+) -> Result<Json<MessageResponse>, StartGameError> {
+    games.start(game_id, user.id).map(|_| {
+        Json(MessageResponse {
+            message: "started game".into(),
+            r#type: "success".into(),
+        })
+    })
 }
 
 #[cfg(test)]
@@ -408,6 +405,229 @@ mod tests {
                     game_id = game.into_json::<GameResponse>().await.unwrap().id
                 )))
                 .private_cookie(response.cookies().get_private("login").unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Conflict
+        );
+    }
+
+    #[sqlx::test]
+    async fn can_start_game() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let user1 = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game_id = client
+            .post(uri!(super::create_game))
+            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap()
+            .id;
+
+        let user2 = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser2".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!(super::join_game(game_id = game_id)))
+            .private_cookie(user2.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .patch(uri!(super::start_game(game_id = game_id)))
+                .private_cookie(user1.cookies().get_private("login").unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Ok
+        );
+    }
+
+    #[sqlx::test]
+    async fn only_creators_can_start_games() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let user1 = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game_id = client
+            .post(uri!(super::create_game))
+            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap()
+            .id;
+
+        let user2 = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser2".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!(super::join_game(game_id = game_id)))
+            .private_cookie(user2.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .patch(uri!(super::start_game(game_id = game_id)))
+                .private_cookie(user2.cookies().get_private("login").unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Forbidden
+        );
+    }
+
+    #[sqlx::test]
+    async fn cannot_start_game_with_too_few_players() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let user = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game_id = client
+            .post(uri!(super::create_game))
+            .private_cookie(user.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap()
+            .id;
+
+        assert_eq!(
+            client
+                .patch(uri!(super::start_game(game_id = game_id)))
+                .private_cookie(user.cookies().get_private("login").unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Conflict
+        );
+    }
+
+    #[sqlx::test]
+    async fn cannot_start_game_that_is_already_running() {
+        let client = mocked_client().await;
+
+        create_test_users(&client).await;
+
+        let user1 = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser1".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        let game_id = client
+            .post(uri!(super::create_game))
+            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap()
+            .id;
+
+        let user2 = client
+            .post(uri!(user_routes::user_login))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser2".into(),
+                    password: "abc1234".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!(super::join_game(game_id = game_id)))
+            .private_cookie(user2.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!(super::start_game(game_id = game_id)))
+            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .patch(uri!(super::start_game(game_id = game_id)))
+                .private_cookie(user1.cookies().get_private("login").unwrap())
                 .dispatch()
                 .await
                 .status(),
