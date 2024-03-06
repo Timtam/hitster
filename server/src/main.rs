@@ -57,9 +57,9 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
             openapi_get_routes![
                 users_routes::get_all_users,
                 users_routes::get_user,
-                users_routes::user_login,
-                users_routes::user_logout,
-                users_routes::user_signup,
+                users_routes::login,
+                users_routes::logout,
+                users_routes::signup,
                 games_routes::create_game,
                 games_routes::get_all_games,
                 games_routes::join_game,

@@ -112,35 +112,20 @@ pub async fn start_game(
 mod tests {
     use crate::{
         responses::GameResponse,
-        routes::users::{self as user_routes, tests::create_test_users},
+        routes::users::tests::create_test_users,
         test::mocked_client,
-        users::UserLoginPayload,
     };
-    use rocket::http::{ContentType, Status};
-    use serde_json;
+    use rocket::http::Status;
 
     #[sqlx::test]
     async fn can_create_game() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let response = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game = client
             .post(uri!(super::create_game))
-            .private_cookie(response.cookies().get_private("login").unwrap())
+            .private_cookie(cookie.clone())
             .dispatch()
             .await;
 
@@ -152,29 +137,16 @@ mod tests {
     async fn each_game_gets_individual_ids() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let response = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game1 = client
             .post(uri!(super::create_game))
-            .private_cookie(response.cookies().get_private("login").unwrap())
+            .private_cookie(cookie.clone())
             .dispatch()
             .await;
         let game2 = client
             .post(uri!(super::create_game))
-            .private_cookie(response.cookies().get_private("login").unwrap())
+            .private_cookie(cookie.clone())
             .dispatch()
             .await;
 
@@ -188,37 +160,11 @@ mod tests {
     async fn can_join_game() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let response = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookies = create_test_users(&client, 2).await;
 
         let game = client
             .post(uri!(super::create_game))
-            .private_cookie(response.cookies().get_private("login").unwrap())
-            .dispatch()
-            .await;
-
-        let response = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser2".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
+            .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await;
 
@@ -227,7 +173,7 @@ mod tests {
                 .patch(uri!(super::join_game(
                     game_id = game.into_json::<GameResponse>().await.unwrap().id
                 )))
-                .private_cookie(response.cookies().get_private("login").unwrap())
+                .private_cookie(cookies.get(1).cloned().unwrap())
                 .dispatch()
                 .await
                 .status(),
@@ -239,24 +185,11 @@ mod tests {
     async fn cannot_join_game_twice() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let response = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game = client
             .post(uri!(super::create_game))
-            .private_cookie(response.cookies().get_private("login").unwrap())
+            .private_cookie(cookie.clone())
             .dispatch()
             .await;
 
@@ -265,7 +198,7 @@ mod tests {
                 .patch(uri!(super::join_game(
                     game_id = game.into_json::<GameResponse>().await.unwrap().id
                 )))
-                .private_cookie(response.cookies().get_private("login").unwrap())
+                .private_cookie(cookie)
                 .dispatch()
                 .await
                 .status(),
@@ -277,24 +210,11 @@ mod tests {
     async fn can_leave_game() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let user = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game = client
             .post(uri!(super::create_game))
-            .private_cookie(user.cookies().get_private("login").unwrap())
+            .private_cookie(cookie.clone())
             .dispatch()
             .await;
 
@@ -303,7 +223,7 @@ mod tests {
                 .patch(uri!(super::leave_game(
                     game_id = game.into_json::<GameResponse>().await.unwrap().id
                 )))
-                .private_cookie(user.cookies().get_private("login").unwrap())
+                .private_cookie(cookie)
                 .dispatch()
                 .await
                 .status(),
@@ -315,24 +235,11 @@ mod tests {
     async fn cannot_leave_game_twice() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let user = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game_id = client
             .post(uri!(super::create_game))
-            .private_cookie(user.cookies().get_private("login").unwrap())
+            .private_cookie(cookie.clone())
             .dispatch()
             .await
             .into_json::<GameResponse>()
@@ -343,7 +250,7 @@ mod tests {
         assert_eq!(
             client
                 .patch(uri!(super::leave_game(game_id = game_id)))
-                .private_cookie(user.cookies().get_private("login").unwrap())
+                .private_cookie(cookie.clone())
                 .dispatch()
                 .await
                 .status(),
@@ -353,7 +260,7 @@ mod tests {
         assert_eq!(
             client
                 .patch(uri!(super::leave_game(game_id = game_id)))
-                .private_cookie(user.cookies().get_private("login").unwrap())
+                .private_cookie(cookie)
                 .dispatch()
                 .await
                 .status(),
@@ -365,37 +272,11 @@ mod tests {
     async fn cannot_leave_game_without_joining() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let response = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookies = create_test_users(&client, 2).await;
 
         let game = client
             .post(uri!(super::create_game))
-            .private_cookie(response.cookies().get_private("login").unwrap())
-            .dispatch()
-            .await;
-
-        let response = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser2".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
+            .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await;
 
@@ -404,7 +285,7 @@ mod tests {
                 .patch(uri!(super::leave_game(
                     game_id = game.into_json::<GameResponse>().await.unwrap().id
                 )))
-                .private_cookie(response.cookies().get_private("login").unwrap())
+                .private_cookie(cookies.get(1).cloned().unwrap())
                 .dispatch()
                 .await
                 .status(),
@@ -416,24 +297,11 @@ mod tests {
     async fn can_start_game() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let user1 = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookies = create_test_users(&client, 2).await;
 
         let game_id = client
             .post(uri!(super::create_game))
-            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
             .into_json::<GameResponse>()
@@ -441,29 +309,16 @@ mod tests {
             .unwrap()
             .id;
 
-        let user2 = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser2".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
-
         client
             .patch(uri!(super::join_game(game_id = game_id)))
-            .private_cookie(user2.cookies().get_private("login").unwrap())
+            .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
                 .patch(uri!(super::start_game(game_id = game_id)))
-                .private_cookie(user1.cookies().get_private("login").unwrap())
+                .private_cookie(cookies.get(0).cloned().unwrap())
                 .dispatch()
                 .await
                 .status(),
@@ -475,24 +330,11 @@ mod tests {
     async fn only_creators_can_start_games() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let user1 = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookies = create_test_users(&client, 2).await;
 
         let game_id = client
             .post(uri!(super::create_game))
-            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
             .into_json::<GameResponse>()
@@ -500,29 +342,16 @@ mod tests {
             .unwrap()
             .id;
 
-        let user2 = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser2".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
-
         client
             .patch(uri!(super::join_game(game_id = game_id)))
-            .private_cookie(user2.cookies().get_private("login").unwrap())
+            .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
                 .patch(uri!(super::start_game(game_id = game_id)))
-                .private_cookie(user2.cookies().get_private("login").unwrap())
+                .private_cookie(cookies.get(1).cloned().unwrap())
                 .dispatch()
                 .await
                 .status(),
@@ -534,24 +363,11 @@ mod tests {
     async fn cannot_start_game_with_too_few_players() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let user = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game_id = client
             .post(uri!(super::create_game))
-            .private_cookie(user.cookies().get_private("login").unwrap())
+            .private_cookie(cookie.clone())
             .dispatch()
             .await
             .into_json::<GameResponse>()
@@ -562,7 +378,7 @@ mod tests {
         assert_eq!(
             client
                 .patch(uri!(super::start_game(game_id = game_id)))
-                .private_cookie(user.cookies().get_private("login").unwrap())
+                .private_cookie(cookie)
                 .dispatch()
                 .await
                 .status(),
@@ -574,24 +390,11 @@ mod tests {
     async fn cannot_start_game_that_is_already_running() {
         let client = mocked_client().await;
 
-        create_test_users(&client).await;
-
-        let user1 = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser1".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
+        let cookies = create_test_users(&client, 2).await;
 
         let game_id = client
             .post(uri!(super::create_game))
-            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
             .into_json::<GameResponse>()
@@ -599,35 +402,22 @@ mod tests {
             .unwrap()
             .id;
 
-        let user2 = client
-            .post(uri!(user_routes::user_login))
-            .header(ContentType::JSON)
-            .body(
-                serde_json::to_string(&UserLoginPayload {
-                    username: "testuser2".into(),
-                    password: "abc1234".into(), // don't do this in practice!
-                })
-                .unwrap(),
-            )
-            .dispatch()
-            .await;
-
         client
             .patch(uri!(super::join_game(game_id = game_id)))
-            .private_cookie(user2.cookies().get_private("login").unwrap())
+            .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
             .await;
 
         client
             .patch(uri!(super::start_game(game_id = game_id)))
-            .private_cookie(user1.cookies().get_private("login").unwrap())
+            .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
                 .patch(uri!(super::start_game(game_id = game_id)))
-                .private_cookie(user1.cookies().get_private("login").unwrap())
+                .private_cookie(cookies.get(0).cloned().unwrap())
                 .dispatch()
                 .await
                 .status(),
