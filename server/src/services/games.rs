@@ -33,7 +33,8 @@ impl GameService {
             creator: creator,
             players: vec![creator],
             state: GameState::Open,
-            turn_player: 0,
+            guessing_player: 0,
+            confirming_player: 0,
         };
 
         data.games.insert(game.id, game.clone());
@@ -86,13 +87,35 @@ impl GameService {
                     http_status_code: 409,
                 })
             } else {
-                game.players
-                    .swap_remove(game.players.iter().position(|u| *u == user_id).unwrap());
+                let mut pos = game.players.iter().position(|u| *u == user_id).unwrap();
+                game.players.remove(pos);
 
                 if game.players.len() == 0 {
                     data.games.remove(&game_id);
-                } else if game.creator == user_id {
-                    game.creator = *game.players.first().unwrap();
+                } else {
+                    if pos >= game.players.len() {
+                        pos = 0;
+                    }
+                    if game.creator == user_id {
+                        game.creator = *game.players.get(pos).unwrap();
+                    }
+
+                    if game.players.len() == 1 {
+                        drop(data);
+                        self.stop(game_id);
+                    } else {
+                        if game.guessing_player == user_id {
+                            game.guessing_player = *game.players.get(pos).unwrap();
+                        }
+                        game.confirming_player = *game
+                            .players
+                            .iter()
+                            .chain(game.players.iter())
+                            .filter(|u| **u != game.guessing_player)
+                            .skip(pos)
+                            .next()
+                            .unwrap();
+                    }
                 }
 
                 Ok(())
@@ -129,7 +152,8 @@ impl GameService {
 
                 game.players.shuffle(&mut rng);
 
-                game.turn_player = *game.players.get(0).unwrap();
+                game.guessing_player = *game.players.get(0).unwrap();
+                game.confirming_player = *game.players.get(1).unwrap();
                 game.state = GameState::Guessing;
                 Ok(())
             }
@@ -138,6 +162,16 @@ impl GameService {
                 message: "game not found".into(),
                 http_status_code: 404,
             })
+        }
+    }
+
+    pub fn stop(&self, game_id: u32) {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(game) = data.games.get_mut(&game_id) {
+            game.state = GameState::Open;
+            game.guessing_player = 0;
+            game.confirming_player = 0;
         }
     }
 }

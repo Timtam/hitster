@@ -18,6 +18,8 @@ pub struct Game {
     pub creator: u32,
     pub players: Vec<u32>,
     pub state: GameState,
-    /// 0
-    pub turn_player: u32,
+    /// the player who has to guess the next hit
+    pub guessing_player: u32,
+    /// the player who'll confirm the correctness of title and interpret
+    pub confirming_player: u32,
 }
