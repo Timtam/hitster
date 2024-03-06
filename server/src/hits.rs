@@ -10,14 +10,23 @@ use std::{
     fs::{create_dir_all, remove_file},
     path::Path,
     process::Stdio,
+    str::FromStr,
 };
+use strum::EnumString;
 
 include!(concat!(env!("OUT_DIR"), "/hits.rs"));
+
+#[derive(EnumString, Eq, PartialEq, Debug)]
+pub enum Pack {
+    Basic,
+    Schlagerparty,
+}
 
 pub struct Hit {
     pub interpret: String,
     pub title: String,
     pub year: u32,
+    pub pack: Pack,
     pub yt_url: String,
     pub playback_offset: u16,
 }
@@ -51,7 +60,7 @@ impl Fairing for HitsterDownloader {
                 let id = &caps[7];
 
                 if !Path::new(&download_dir)
-                    .join(format!("{}.opus", id))
+                    .join(format!("{}.mp3", id))
                     .is_file()
                 {
                     let options = VideoOptions {
