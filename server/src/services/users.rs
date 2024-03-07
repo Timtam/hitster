@@ -37,7 +37,7 @@ impl UserService {
         self.data.lock().unwrap().users.get(&id).cloned()
     }
 
-    pub fn get_by_username<'r>(&self, username: &'r str) -> Option<User> {
+    pub fn get_by_username(&self, username: &str) -> Option<User> {
         self.data
             .lock()
             .unwrap()

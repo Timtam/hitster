@@ -1,4 +1,3 @@
-use csv;
 use std::{env, fs, path::Path};
 
 fn main() {
@@ -36,7 +35,7 @@ fn main() {
     }
 
     fs::write(
-        &dest_path,
+        dest_path,
         format!(
             "pub fn get_all() -> Vec<Hit> {{
             vec![{}]

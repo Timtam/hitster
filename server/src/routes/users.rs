@@ -147,29 +147,27 @@ pub async fn signup(
             message: "username is already in use".into(),
             r#type: "error".into(),
         })))
-    } else {
-        if let Ok(result) = sqlx::query("INSERT INTO users (username, password) VALUES (?1, ?2)")
-            .bind(credentials.username.as_str())
-            .bind(credentials.password.as_str())
-            .execute(&mut **db)
-            .await
-        {
-            users.add(User {
-                id: result.last_insert_rowid() as u32,
-                username: credentials.username.clone(),
-                password: credentials.password.clone(),
-            });
+    } else if let Ok(result) = sqlx::query("INSERT INTO users (username, password) VALUES (?1, ?2)")
+        .bind(credentials.username.as_str())
+        .bind(credentials.password.as_str())
+        .execute(&mut **db)
+        .await
+    {
+        users.add(User {
+            id: result.last_insert_rowid() as u32,
+            username: credentials.username.clone(),
+            password: credentials.password.clone(),
+        });
 
-            Ok(Json(MessageResponse {
-                message: "user created".into(),
-                r#type: "success".into(),
-            }))
-        } else {
-            Err(NotFound(Json(MessageResponse {
-                message: "error while creating a database entry".into(),
-                r#type: "error".into(),
-            })))
-        }
+        Ok(Json(MessageResponse {
+            message: "user created".into(),
+            r#type: "success".into(),
+        }))
+    } else {
+        Err(NotFound(Json(MessageResponse {
+            message: "error while creating a database entry".into(),
+            r#type: "error".into(),
+        })))
     }
 }
 

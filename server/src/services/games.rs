@@ -30,7 +30,7 @@ impl GameService {
 
         let game = Game {
             id: data.id,
-            creator: creator,
+            creator,
             players: vec![creator],
             state: GameState::Open,
             guessing_player: 0,
@@ -90,7 +90,7 @@ impl GameService {
                 let mut pos = game.players.iter().position(|u| *u == user_id).unwrap();
                 game.players.remove(pos);
 
-                if game.players.len() == 0 {
+                if game.players.is_empty() {
                     data.games.remove(&game_id);
                 } else {
                     if pos >= game.players.len() {
@@ -112,8 +112,7 @@ impl GameService {
                             .iter()
                             .chain(game.players.iter())
                             .filter(|u| **u != game.guessing_player)
-                            .skip(pos)
-                            .next()
+                            .nth(pos)
                             .unwrap();
                     }
                 }
@@ -152,7 +151,7 @@ impl GameService {
 
                 game.players.shuffle(&mut rng);
 
-                game.guessing_player = *game.players.get(0).unwrap();
+                game.guessing_player = *game.players.first().unwrap();
                 game.confirming_player = *game.players.get(1).unwrap();
                 game.state = GameState::Guessing;
                 Ok(())

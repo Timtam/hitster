@@ -11,7 +11,6 @@ use rocket_okapi::{
     request::{OpenApiFromRequest, RequestHeaderInput},
 };
 use serde::{Deserialize, Serialize};
-use serde_json;
 
 #[derive(Deserialize, Serialize, JsonSchema)]
 pub struct UserLoginPayload {

@@ -14,7 +14,6 @@ use rocket_okapi::{
     OpenApiError,
 };
 use serde::{Deserialize, Serialize};
-use serde_json;
 
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct JoinGameError {
