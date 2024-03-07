@@ -15,7 +15,7 @@ regex = "1.10.3"
 rocket = { version = "0.5.0", features = ["json", "secrets"]}
 rocket_db_pools = { version = "0.1.0", default-features = false, features = ["sqlx_sqlite" ]}
 rocket_okapi = { version = "0.8.0", default-features = false, features = ["swagger", "rapidoc", "secrets", "rocket_db_pools"]}
-rusty_ytdl = "0.6.6"
+rusty_ytdl = "=0.6.6"
 serde = { version = "1.0.197", features = ["derive"]}
 serde_json = "1.0.114"
 sha3 = "0.10.8"
