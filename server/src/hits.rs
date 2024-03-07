@@ -77,35 +77,37 @@ impl Fairing for HitsterDownloader {
                         id
                     );
 
-                    video
+                    if let Ok(_) = video
                         .download(format!("{}/{}.opus", download_dir.as_str(), id))
                         .await
-                        .unwrap();
+                    {
+                        println!("Post-processing opus to mp3...");
 
-                    println!("Post-processing opus to mp3...");
+                        let in_file = format!("{}/{}.opus", download_dir.as_str(), id);
+                        let out_file = format!("{}/{}.mp3", download_dir.as_str(), id);
+                        let offset = format!("{}", hit.playback_offset);
 
-                    let in_file = format!("{}/{}.opus", download_dir.as_str(), id);
-                    let out_file = format!("{}/{}.mp3", download_dir.as_str(), id);
-                    let offset = format!("{}", hit.playback_offset);
+                        let builder = FfmpegBuilder::new()
+                            .stderr(Stdio::piped())
+                            .option(Parameter::Single("nostdin"))
+                            .option(Parameter::Single("y"))
+                            .input(File::new(in_file.as_str()))
+                            .output(
+                                File::new(out_file.as_str())
+                                    .option(Parameter::KeyValue("ss", offset.as_str()))
+                                    .option(Parameter::Single("vn"))
+                                    .option(Parameter::Single("sn"))
+                                    .option(Parameter::Single("dn")),
+                            );
 
-                    let builder = FfmpegBuilder::new()
-                        .stderr(Stdio::piped())
-                        .option(Parameter::Single("nostdin"))
-                        .option(Parameter::Single("y"))
-                        .input(File::new(in_file.as_str()))
-                        .output(
-                            File::new(out_file.as_str())
-                                .option(Parameter::KeyValue("ss", offset.as_str()))
-                                .option(Parameter::Single("vn"))
-                                .option(Parameter::Single("sn"))
-                                .option(Parameter::Single("dn")),
-                        );
+                        let ffmpeg = builder.run().await.unwrap();
 
-                    let ffmpeg = builder.run().await.unwrap();
+                        ffmpeg.process.wait_with_output().unwrap();
 
-                    ffmpeg.process.wait_with_output().unwrap();
-
-                    remove_file(in_file.as_str()).unwrap();
+                        remove_file(in_file.as_str()).unwrap();
+                    } else {
+                        println!("Unable to download video.");
+                    }
                 }
             }
         }

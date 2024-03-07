@@ -111,9 +111,7 @@ pub async fn start_game(
 #[cfg(test)]
 mod tests {
     use crate::{
-        responses::GameResponse,
-        routes::users::tests::create_test_users,
-        test::mocked_client,
+        responses::GameResponse, routes::users::tests::create_test_users, test::mocked_client,
     };
     use rocket::http::Status;
 

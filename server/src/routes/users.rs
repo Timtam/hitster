@@ -215,37 +215,37 @@ pub mod tests {
     use sqlx::sqlite::{SqliteConnectOptions, SqlitePoolOptions};
 
     pub async fn create_test_users<'a, 'b>(client: &'a Client, amount: u8) -> Vec<Cookie<'b>> {
-        join_all((1..=amount)
-            .into_iter()
-            .map(|i| async move {
-                client
-                    .post(uri!(super::signup))
-                    .header(ContentType::JSON)
-                    .body(
-                        serde_json::to_string(&UserLoginPayload {
-                            username: format!("testuser{}", i),
-                            password: "abc1234".into(), // don't do this in practice!
-                        })
-                        .unwrap(),
-                    )
-                    .dispatch()
-                    .await;
+        join_all((1..=amount).into_iter().map(|i| async move {
+            client
+                .post(uri!(super::signup))
+                .header(ContentType::JSON)
+                .body(
+                    serde_json::to_string(&UserLoginPayload {
+                        username: format!("testuser{}", i),
+                        password: "abc1234".into(), // don't do this in practice!
+                    })
+                    .unwrap(),
+                )
+                .dispatch()
+                .await;
 
-                client
-                    .post(uri!(super::login))
-                    .header(ContentType::JSON)
-                    .body(
-                        serde_json::to_string(&UserLoginPayload {
-                            username: format!("testuser{}", i),
-                            password: "abc1234".into(), // don't do this in practice!
-                        })
-                        .unwrap(),
-                    )
-                    .dispatch()
-                    .await
-                    .cookies()
-                    .get_private("login").unwrap()
-            })).await
+            client
+                .post(uri!(super::login))
+                .header(ContentType::JSON)
+                .body(
+                    serde_json::to_string(&UserLoginPayload {
+                        username: format!("testuser{}", i),
+                        password: "abc1234".into(), // don't do this in practice!
+                    })
+                    .unwrap(),
+                )
+                .dispatch()
+                .await
+                .cookies()
+                .get_private("login")
+                .unwrap()
+        }))
+        .await
     }
 
     #[sqlx::test]
@@ -535,7 +535,8 @@ pub mod tests {
                 .games
                 .get(0)
                 .unwrap()
-                .creator.id,
+                .creator
+                .id,
             2
         );
     }
