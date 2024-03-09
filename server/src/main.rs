@@ -10,6 +10,7 @@ use hits::HitsterDownloader;
 use rocket::{
     fairing::{self, AdHoc},
     figment::{util::map, Figment},
+    fs::NamedFile,
     response::Redirect,
     Build, Config, Rocket,
 };
@@ -17,7 +18,7 @@ use rocket_db_pools::{sqlx, Database};
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
 use routes::{games as games_routes, users as users_routes};
 use services::{GameService, HitService, UserService};
-use std::env;
+use std::{path::{Path, PathBuf}, env};
 
 #[macro_use]
 extern crate rocket;
@@ -40,8 +41,22 @@ async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
 }
 
 #[get("/")]
-fn index() -> Redirect {
-    Redirect::to("/swagger-ui")
+async fn index() -> std::io::Result<NamedFile> {
+  let page_directory_path = 
+  format!("{}/../client/dist", env::var("CARGO_MANIFEST_DIR").unwrap());
+  NamedFile::open(Path::new(&page_directory_path).join("index.html")).await
+}
+
+#[get("/")]
+async fn api_index() -> Redirect {
+  Redirect::to("/swagger-ui")
+}
+
+#[get("/<file..>")]
+async fn files(file: PathBuf) -> std::io::Result<NamedFile> {
+  let page_directory_path = 
+  format!("{}/../client/dist", env!("CARGO_MANIFEST_DIR"));
+  NamedFile::open(Path::new(&page_directory_path).join(file)).await
 }
 
 fn rocket_from_config(figment: Figment) -> Rocket<Build> {
@@ -51,9 +66,10 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .attach(HitsterConfig::init())
         .attach(migrations_fairing)
         .attach(HitsterDownloader::default())
-        .mount("/", routes![index,])
+        .mount("/", routes![index, files,])
+        .mount("/api/", routes![api_index,])
         .mount(
-            "/",
+            "/api/",
             openapi_get_routes![
                 users_routes::get_all_users,
                 users_routes::get_user,
@@ -70,7 +86,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .mount(
             "/swagger-ui/",
             make_swagger_ui(&SwaggerUIConfig {
-                url: "../openapi.json".to_owned(),
+                url: "../api/openapi.json".to_owned(),
                 ..Default::default()
             }),
         )
@@ -78,7 +94,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
             "/rapidoc/",
             make_rapidoc(&RapiDocConfig {
                 general: GeneralConfig {
-                    spec_urls: vec![UrlObject::new("General", "../openapi.json")],
+                    spec_urls: vec![UrlObject::new("General", "../api/openapi.json")],
                     ..Default::default()
                 },
                 hide_show: HideShowConfig {

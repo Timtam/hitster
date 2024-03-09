@@ -1,4 +1,12 @@
-FROM rust:1.76-slim-bookworm as build
+FROM node:20 AS CLIENT_BUILD_IMAGE
+
+WORKDIR /app
+
+COPY ./client /app
+
+RUN npm install && npm run build
+
+FROM rust:1.76-slim-bookworm as SERVER_CLIENT_IMAGE
 
 # create a new empty shell project
 RUN apt-get update && apt-get -y install libssl-dev pkg-config && \
@@ -25,6 +33,8 @@ RUN cargo build --release
 # our final base
 FROM debian:bookworm-slim
 
+WORKDIR /hitster
+
 # prepare the OS
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
@@ -33,7 +43,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # copy the build artifact from the build stage
-COPY --from=build /hitster/target/release/hitster-server ./hitster
+COPY --from=SERVER_BUILD_IMAGE /hitster/target/release/hitster-server /hitster/server/hitster
+COPY --from=CLIENT_BUILD_IMAGE /app/dist /hitster/client/dist
 
 # set the startup command to run your binary
-CMD ["./hitster"]
+CMD ["/hitster/server/hitster"]
