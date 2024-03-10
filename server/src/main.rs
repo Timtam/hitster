@@ -18,7 +18,10 @@ use rocket_db_pools::{sqlx, Database};
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
 use routes::{games as games_routes, users as users_routes};
 use services::{GameService, HitService, UserService};
-use std::{path::{Path, PathBuf}, env};
+use std::{
+    env,
+    path::{Path, PathBuf},
+};
 
 #[macro_use]
 extern crate rocket;
@@ -42,21 +45,25 @@ async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
 
 #[get("/")]
 async fn index() -> std::io::Result<NamedFile> {
-  let page_directory_path = 
-  format!("{}/../client/dist", env::var("CARGO_MANIFEST_DIR").unwrap());
-  NamedFile::open(Path::new(&page_directory_path).join("index.html")).await
+    let page_directory_path = env::var("CLIENT_DIRECTORY").unwrap_or(format!(
+        "{}/../client/dist",
+        env::var("CARGO_MANIFEST_DIR").unwrap_or("./".to_string())
+    ));
+    NamedFile::open(Path::new(&page_directory_path).join("index.html")).await
 }
 
 #[get("/")]
 async fn api_index() -> Redirect {
-  Redirect::to("/swagger-ui")
+    Redirect::to("/swagger-ui")
 }
 
 #[get("/<file..>")]
 async fn files(file: PathBuf) -> std::io::Result<NamedFile> {
-  let page_directory_path = 
-  format!("{}/../client/dist", env!("CARGO_MANIFEST_DIR"));
-  NamedFile::open(Path::new(&page_directory_path).join(file)).await
+    let page_directory_path = env::var("CLIENT_DIRECTORY").unwrap_or(format!(
+        "{}/../client/dist",
+        env::var("CARGO_MANIFEST_DIR").unwrap_or("./".to_string())
+    ));
+    NamedFile::open(Path::new(&page_directory_path).join(file)).await
 }
 
 fn rocket_from_config(figment: Figment) -> Rocket<Build> {

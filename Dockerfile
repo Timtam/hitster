@@ -35,6 +35,8 @@ FROM debian:bookworm-slim
 
 WORKDIR /hitster
 
+ENV CLIENT_DIRECTORY=/hitster/client
+
 # prepare the OS
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
@@ -44,7 +46,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 
 # copy the build artifact from the build stage
 COPY --from=server_build_image /hitster/target/release/hitster-server /hitster/server/hitster
-COPY --from=client_build_image /app/dist /hitster/client/dist
+COPY --from=client_build_image /app/dist /hitster/client
 
 # set the startup command to run your binary
 CMD ["/hitster/server/hitster"]
