@@ -81,6 +81,12 @@ pub async fn login(
                 serde_json::to_string(&*credentials).unwrap(),
             ));
 
+            let mut logged_in = Cookie::new("logged_in", serde_json::to_string(&user).unwrap());
+
+            logged_in.set_http_only(None);
+
+            cookies.add(logged_in);
+
             Ok(Json(user))
         } else {
             Err(NotFound(Json(MessageResponse {
@@ -110,6 +116,12 @@ pub async fn login(
                     "login",
                     serde_json::to_string(&*credentials).unwrap(),
                 ));
+
+                let mut logged_in = Cookie::new("logged_in", serde_json::to_string(&u).unwrap());
+
+                logged_in.set_http_only(None);
+
+                cookies.add(logged_in);
 
                 Ok(Json(u))
             }
@@ -188,6 +200,7 @@ pub async fn logout(
     }
 
     cookies.remove_private("login");
+    cookies.remove("logged_in");
     users.remove(user.id);
 
     Json(MessageResponse {
@@ -375,6 +388,47 @@ pub mod tests {
             .await;
 
         assert_eq!(response.status(), Status::Ok);
+    }
+
+    #[sqlx::test]
+    async fn can_access_non_private_logged_in_cookie() {
+        let client = mocked_client().await;
+
+        client
+            .post(uri!("/api", super::signup))
+            .header(ContentType::JSON)
+            .body(
+                serde_json::to_string(&UserLoginPayload {
+                    username: "testuser".into(),
+                    password: "123abcd".into(), // don't do this in practice!
+                })
+                .unwrap(),
+            )
+            .dispatch()
+            .await;
+        assert_eq!(
+            serde_json::from_str::<User>(
+                client
+                    .post(uri!("/api", super::login))
+                    .header(ContentType::JSON)
+                    .body(
+                        serde_json::to_string(&UserLoginPayload {
+                            username: "testuser".into(),
+                            password: "123abcd".into(), // don't do this in practice!
+                        })
+                        .unwrap(),
+                    )
+                    .dispatch()
+                    .await
+                    .cookies()
+                    .get("logged_in")
+                    .unwrap()
+                    .value()
+            )
+            .unwrap()
+            .username,
+            "testuser"
+        );
     }
 
     #[sqlx::test]

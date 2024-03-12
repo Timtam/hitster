@@ -6,7 +6,7 @@ import { useCookies } from "react-cookie"
 import { Link } from "react-router-dom"
 
 export default function Navigation() {
-    let [cookies] = useCookies(["login"])
+    let [cookies] = useCookies(["logged_in"])
 
     return (
         <Container>
@@ -18,8 +18,14 @@ export default function Navigation() {
                             Game Lobby
                         </Nav.Link>
                     </Nav.Item>
-                    {cookies.login !== undefined ? (
-                        <Navbar.Text>Logout</Navbar.Text>
+                    {cookies.logged_in !== undefined ? (
+                        <NavDropdown
+                            title={"Logged in as " + cookies.logged_in.username}
+                        >
+                            <NavDropdown.Item as="div">
+                                <Navbar.Text>Logout</Navbar.Text>
+                            </NavDropdown.Item>
+                        </NavDropdown>
                     ) : (
                         <NavDropdown title="Not logged in">
                             <NavDropdown.Item as="div">
