@@ -1,12 +1,11 @@
-import "primereact/resources/themes/lara-light-indigo/theme.css" //theme
-import "primereact/resources/primereact.min.css" //core css
-import "primeicons/primeicons.css" //icons
-import "primeflex/primeflex.css" // flex
+import "bootstrap/dist/css/bootstrap.min.css"
 import { Outlet } from "react-router-dom"
+import Navigation from "./navigation"
 
 export default function Layout() {
     return (
         <>
+            <Navigation />
             <Outlet />
         </>
     )

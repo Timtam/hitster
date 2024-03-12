@@ -1,7 +1,7 @@
 import { Helmet } from "react-helmet-async"
+import { useLoaderData } from "react-router-dom"
 import { Game } from "./entities"
 import GameService from "./services/games.service"
-import { useLoaderData } from "react-router-dom"
 
 export async function loader(): Promise<Game[]> {
     let gs = new GameService()

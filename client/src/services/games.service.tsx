@@ -1,4 +1,4 @@
-import { GamesResponse, Game } from "../entities"
+import { Game, GamesResponse } from "../entities"
 
 export default class GameService {
     async getAll(): Promise<Game[]> {

@@ -1,12 +1,13 @@
-import { HelmetProvider } from "react-helmet-async"
-import ErrorPage from "./error-page"
-import Layout from "./layout"
 import React from "react"
+import { CookiesProvider } from "react-cookie"
 import ReactDOM from "react-dom/client"
-import { Lobby, loader as LobbyLoader } from "./lobby"
-import { PrimeReactProvider } from "primereact/api"
+import { HelmetProvider } from "react-helmet-async"
+import { RouterProvider, createBrowserRouter } from "react-router-dom"
+import ErrorPage from "./error-page"
 import "./index.css"
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
+import Layout from "./layout"
+import { Lobby, loader as LobbyLoader } from "./lobby"
+import { Registration, action as RegistrationAction } from "./registration"
 
 const router = createBrowserRouter([
     {
@@ -17,6 +18,11 @@ const router = createBrowserRouter([
                 path: "/",
                 loader: LobbyLoader,
             },
+            {
+                element: <Registration />,
+                path: "/register",
+                action: RegistrationAction,
+            },
         ],
         errorElement: <ErrorPage />,
     },
@@ -25,9 +31,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <HelmetProvider>
-            <PrimeReactProvider>
+            <CookiesProvider defaultSetOptions={{ path: "/" }}>
                 <RouterProvider router={router} />
-            </PrimeReactProvider>
+            </CookiesProvider>
         </HelmetProvider>
     </React.StrictMode>,
 )
