@@ -63,7 +63,9 @@ async fn files(file: PathBuf) -> std::io::Result<NamedFile> {
         "{}/../client/dist",
         env::var("CARGO_MANIFEST_DIR").unwrap_or("./".to_string())
     ));
-    NamedFile::open(Path::new(&page_directory_path).join(file)).await
+    NamedFile::open(Path::new(&page_directory_path).join(file))
+        .await
+        .or(NamedFile::open(Path::new(&page_directory_path).join("index.html")).await)
 }
 
 fn rocket_from_config(figment: Figment) -> Rocket<Build> {
