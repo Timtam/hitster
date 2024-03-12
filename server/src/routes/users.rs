@@ -215,7 +215,7 @@ pub mod tests {
     pub async fn create_test_users<'a, 'b>(client: &'a Client, amount: u8) -> Vec<Cookie<'b>> {
         join_all((1..=amount).into_iter().map(|i| async move {
             client
-                .post(uri!(super::signup))
+                .post(uri!("/api", super::signup))
                 .header(ContentType::JSON)
                 .body(
                     serde_json::to_string(&UserLoginPayload {
@@ -228,7 +228,7 @@ pub mod tests {
                 .await;
 
             client
-                .post(uri!(super::login))
+                .post(uri!("/api", super::login))
                 .header(ContentType::JSON)
                 .body(
                     serde_json::to_string(&UserLoginPayload {
@@ -250,7 +250,7 @@ pub mod tests {
     async fn can_create_user() {
         let client = mocked_client().await;
         let response = client
-            .post(uri!(super::signup))
+            .post(uri!("/api", super::signup))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -279,7 +279,7 @@ pub mod tests {
         create_test_users(&client, 2).await;
 
         let users = client
-            .get(uri!(super::get_all_users))
+            .get(uri!("/api", super::get_all_users))
             .dispatch()
             .await
             .into_json::<UsersResponse>()
@@ -300,7 +300,10 @@ pub mod tests {
 
         create_test_users(&client, 2).await;
 
-        let response = client.get(uri!(super::get_all_users)).dispatch().await;
+        let response = client
+            .get(uri!("/api", super::get_all_users))
+            .dispatch()
+            .await;
 
         assert_eq!(response.status(), Status::Ok);
         assert_eq!(
@@ -318,7 +321,7 @@ pub mod tests {
     async fn cause_error_when_retrieving_invalid_user() {
         let client = mocked_client().await;
         let response = client
-            .get(uri!(super::get_user(user_id = 1)))
+            .get(uri!("/api", super::get_user(user_id = 1)))
             .dispatch()
             .await;
         assert_eq!(response.status(), Status::NotFound);
@@ -331,7 +334,7 @@ pub mod tests {
         create_test_users(&client, 1).await;
 
         let response = client
-            .get(uri!(super::get_user(user_id = 1)))
+            .get(uri!("/api", super::get_user(user_id = 1)))
             .dispatch()
             .await;
 
@@ -347,7 +350,7 @@ pub mod tests {
         let client = mocked_client().await;
 
         client
-            .post(uri!(super::signup))
+            .post(uri!("/api", super::signup))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -359,7 +362,7 @@ pub mod tests {
             .dispatch()
             .await;
         let response = client
-            .post(uri!(super::login))
+            .post(uri!("/api", super::login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -379,7 +382,7 @@ pub mod tests {
         let client = mocked_client().await;
 
         let response = client
-            .post(uri!(super::login))
+            .post(uri!("/api", super::login))
             .header(ContentType::JSON)
             .body(
                 serde_json::to_string(&UserLoginPayload {
@@ -400,7 +403,7 @@ pub mod tests {
 
         assert_eq!(
             client
-                .post(uri!(super::logout))
+                .post(uri!("/api", super::logout))
                 .private_cookie(create_test_users(&client, 1).await.get(0).cloned().unwrap())
                 .dispatch()
                 .await
@@ -414,7 +417,11 @@ pub mod tests {
         let client = mocked_client().await;
 
         assert_eq!(
-            client.post(uri!(super::logout)).dispatch().await.status(),
+            client
+                .post(uri!("/api", super::logout))
+                .dispatch()
+                .await
+                .status(),
             Status::Unauthorized
         );
     }
@@ -425,7 +432,7 @@ pub mod tests {
 
         assert_eq!(
             client
-                .post(uri!(super::logout))
+                .post(uri!("/api", super::logout))
                 .private_cookie(Cookie::new(
                     "login",
                     "this is totally not the expected payload"
@@ -444,22 +451,25 @@ pub mod tests {
         let cookies = create_test_users(&client, 2).await;
 
         let game = client
-            .post(uri!(games_routes::create_game))
+            .post(uri!("/api", games_routes::create_game))
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await;
 
         client
-            .patch(uri!(games_routes::join_game(
-                game_id = game.into_json::<GameResponse>().await.unwrap().id
-            )))
+            .patch(uri!(
+                "/api",
+                games_routes::join_game(
+                    game_id = game.into_json::<GameResponse>().await.unwrap().id
+                )
+            ))
             .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .get(uri!(games_routes::get_all_games))
+                .get(uri!("/api", games_routes::get_all_games))
                 .dispatch()
                 .await
                 .into_json::<GamesResponse>()
@@ -474,14 +484,14 @@ pub mod tests {
         );
 
         client
-            .post(uri!(super::logout))
+            .post(uri!("/api", super::logout))
             .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .get(uri!(games_routes::get_all_games))
+                .get(uri!("/api", games_routes::get_all_games))
                 .dispatch()
                 .await
                 .into_json::<GamesResponse>()
@@ -503,28 +513,31 @@ pub mod tests {
         let cookies = create_test_users(&client, 2).await;
 
         let game = client
-            .post(uri!(games_routes::create_game))
+            .post(uri!("/api", games_routes::create_game))
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await;
 
         client
-            .patch(uri!(games_routes::join_game(
-                game_id = game.into_json::<GameResponse>().await.unwrap().id
-            )))
+            .patch(uri!(
+                "/api",
+                games_routes::join_game(
+                    game_id = game.into_json::<GameResponse>().await.unwrap().id
+                )
+            ))
             .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
             .await;
 
         client
-            .post(uri!(super::logout))
+            .post(uri!("/api", super::logout))
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .get(uri!(games_routes::get_all_games))
+                .get(uri!("/api", games_routes::get_all_games))
                 .dispatch()
                 .await
                 .into_json::<GamesResponse>()
@@ -546,20 +559,20 @@ pub mod tests {
         let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         client
-            .post(uri!(games_routes::create_game))
+            .post(uri!("/api", games_routes::create_game))
             .private_cookie(cookie.clone())
             .dispatch()
             .await;
 
         client
-            .post(uri!(super::logout))
+            .post(uri!("/api", super::logout))
             .private_cookie(cookie)
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .get(uri!(games_routes::get_all_games))
+                .get(uri!("/api", games_routes::get_all_games))
                 .dispatch()
                 .await
                 .into_json::<GamesResponse>()

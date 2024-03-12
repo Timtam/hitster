@@ -122,7 +122,7 @@ mod tests {
         let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookie.clone())
             .dispatch()
             .await;
@@ -138,12 +138,12 @@ mod tests {
         let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game1 = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookie.clone())
             .dispatch()
             .await;
         let game2 = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookie.clone())
             .dispatch()
             .await;
@@ -161,16 +161,17 @@ mod tests {
         let cookies = create_test_users(&client, 2).await;
 
         let game = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .patch(uri!(super::join_game(
-                    game_id = game.into_json::<GameResponse>().await.unwrap().id
-                )))
+                .patch(uri!(
+                    "/api",
+                    super::join_game(game_id = game.into_json::<GameResponse>().await.unwrap().id)
+                ))
                 .private_cookie(cookies.get(1).cloned().unwrap())
                 .dispatch()
                 .await
@@ -186,16 +187,17 @@ mod tests {
         let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookie.clone())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .patch(uri!(super::join_game(
-                    game_id = game.into_json::<GameResponse>().await.unwrap().id
-                )))
+                .patch(uri!(
+                    "/api",
+                    super::join_game(game_id = game.into_json::<GameResponse>().await.unwrap().id)
+                ))
                 .private_cookie(cookie)
                 .dispatch()
                 .await
@@ -211,16 +213,17 @@ mod tests {
         let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookie.clone())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .patch(uri!(super::leave_game(
-                    game_id = game.into_json::<GameResponse>().await.unwrap().id
-                )))
+                .patch(uri!(
+                    "/api",
+                    super::leave_game(game_id = game.into_json::<GameResponse>().await.unwrap().id)
+                ))
                 .private_cookie(cookie)
                 .dispatch()
                 .await
@@ -236,7 +239,7 @@ mod tests {
         let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game_id = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookie.clone())
             .dispatch()
             .await
@@ -247,7 +250,7 @@ mod tests {
 
         assert_eq!(
             client
-                .patch(uri!(super::leave_game(game_id = game_id)))
+                .patch(uri!("/api", super::leave_game(game_id = game_id)))
                 .private_cookie(cookie.clone())
                 .dispatch()
                 .await
@@ -257,7 +260,7 @@ mod tests {
 
         assert_eq!(
             client
-                .patch(uri!(super::leave_game(game_id = game_id)))
+                .patch(uri!("/api", super::leave_game(game_id = game_id)))
                 .private_cookie(cookie)
                 .dispatch()
                 .await
@@ -273,16 +276,17 @@ mod tests {
         let cookies = create_test_users(&client, 2).await;
 
         let game = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .patch(uri!(super::leave_game(
-                    game_id = game.into_json::<GameResponse>().await.unwrap().id
-                )))
+                .patch(uri!(
+                    "/api",
+                    super::leave_game(game_id = game.into_json::<GameResponse>().await.unwrap().id)
+                ))
                 .private_cookie(cookies.get(1).cloned().unwrap())
                 .dispatch()
                 .await
@@ -298,7 +302,7 @@ mod tests {
         let cookies = create_test_users(&client, 2).await;
 
         let game_id = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
@@ -308,14 +312,14 @@ mod tests {
             .id;
 
         client
-            .patch(uri!(super::join_game(game_id = game_id)))
+            .patch(uri!("/api", super::join_game(game_id = game_id)))
             .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .patch(uri!(super::start_game(game_id = game_id)))
+                .patch(uri!("/api", super::start_game(game_id = game_id)))
                 .private_cookie(cookies.get(0).cloned().unwrap())
                 .dispatch()
                 .await
@@ -331,7 +335,7 @@ mod tests {
         let cookies = create_test_users(&client, 2).await;
 
         let game_id = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
@@ -341,14 +345,14 @@ mod tests {
             .id;
 
         client
-            .patch(uri!(super::join_game(game_id = game_id)))
+            .patch(uri!("/api", super::join_game(game_id = game_id)))
             .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .patch(uri!(super::start_game(game_id = game_id)))
+                .patch(uri!("/api", super::start_game(game_id = game_id)))
                 .private_cookie(cookies.get(1).cloned().unwrap())
                 .dispatch()
                 .await
@@ -364,7 +368,7 @@ mod tests {
         let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
 
         let game_id = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookie.clone())
             .dispatch()
             .await
@@ -375,7 +379,7 @@ mod tests {
 
         assert_eq!(
             client
-                .patch(uri!(super::start_game(game_id = game_id)))
+                .patch(uri!("/api", super::start_game(game_id = game_id)))
                 .private_cookie(cookie)
                 .dispatch()
                 .await
@@ -391,7 +395,7 @@ mod tests {
         let cookies = create_test_users(&client, 2).await;
 
         let game_id = client
-            .post(uri!(super::create_game))
+            .post(uri!("/api", super::create_game))
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
@@ -401,20 +405,20 @@ mod tests {
             .id;
 
         client
-            .patch(uri!(super::join_game(game_id = game_id)))
+            .patch(uri!("/api", super::join_game(game_id = game_id)))
             .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
             .await;
 
         client
-            .patch(uri!(super::start_game(game_id = game_id)))
+            .patch(uri!("/api", super::start_game(game_id = game_id)))
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await;
 
         assert_eq!(
             client
-                .patch(uri!(super::start_game(game_id = game_id)))
+                .patch(uri!("/api", super::start_game(game_id = game_id)))
                 .private_cookie(cookies.get(0).cloned().unwrap())
                 .dispatch()
                 .await
