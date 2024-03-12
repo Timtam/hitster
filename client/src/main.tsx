@@ -7,6 +7,7 @@ import ErrorPage from "./error-page"
 import "./index.css"
 import Layout from "./layout"
 import { Lobby, loader as LobbyLoader } from "./lobby"
+import { Login, action as LoginAction } from "./login"
 import { Registration, action as RegistrationAction } from "./registration"
 
 const router = createBrowserRouter([
@@ -22,6 +23,11 @@ const router = createBrowserRouter([
                 element: <Registration />,
                 path: "/register",
                 action: RegistrationAction,
+            },
+            {
+                element: <Login />,
+                path: "/login",
+                action: LoginAction,
             },
         ],
         errorElement: <ErrorPage />,

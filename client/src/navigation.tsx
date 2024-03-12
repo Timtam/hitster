@@ -23,7 +23,9 @@ export default function Navigation() {
                     ) : (
                         <NavDropdown title="Not logged in">
                             <NavDropdown.Item as="div">
-                                <Navbar.Text>Login</Navbar.Text>
+                                <Nav.Link as={Link} to="/login">
+                                    Login
+                                </Nav.Link>
                             </NavDropdown.Item>
                             <NavDropdown.Item as="div">
                                 <Nav.Link as={Link} to="/register">

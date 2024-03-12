@@ -2,7 +2,7 @@ import { useState } from "react"
 import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
 import type { ActionFunction } from "react-router"
-import { Form, useActionData } from "react-router-dom"
+import { Form, Link, useActionData } from "react-router-dom"
 
 export const action: ActionFunction = async ({ request }) => {
     let formData = await request.formData()
@@ -35,7 +35,7 @@ export function Registration() {
             {response && response.success === true ? (
                 <p>
                     You've been registered successfully. You can now move on to
-                    login.
+                    <Link to="/login">login</Link>.
                 </p>
             ) : (
                 <>
