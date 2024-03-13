@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
+import { Helmet } from "react-helmet-async"
 import type { ActionFunction } from "react-router"
 import { Form, redirect, useActionData } from "react-router-dom"
 
@@ -31,6 +32,9 @@ export function Login() {
 
     return (
         <>
+            <Helmet>
+                <title>Login - Hitster</title>
+            </Helmet>
             {response && response.success === false ? (
                 <p>
                     An error occurred while logging in:{" "}

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
+import { Helmet } from "react-helmet-async"
 import type { ActionFunction } from "react-router"
 import { Form, Link, useActionData } from "react-router-dom"
 
@@ -32,6 +33,9 @@ export function Registration() {
 
     return (
         <>
+            <Helmet>
+                <title>Register - Hitster</title>
+            </Helmet>
             {response && response.success === true ? (
                 <p>
                     You've been registered successfully. You can now move on to
