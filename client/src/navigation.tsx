@@ -3,10 +3,11 @@ import Nav from "react-bootstrap/Nav"
 import NavDropdown from "react-bootstrap/NavDropdown"
 import Navbar from "react-bootstrap/Navbar"
 import { useCookies } from "react-cookie"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function Navigation() {
     let [cookies] = useCookies(["logged_in"])
+    let navigate = useNavigate()
 
     return (
         <Container>
@@ -23,7 +24,25 @@ export default function Navigation() {
                             title={"Logged in as " + cookies.logged_in.username}
                         >
                             <NavDropdown.Item as="div">
-                                <Navbar.Text>Logout</Navbar.Text>
+                                <Nav.Link
+                                    onClick={async () => {
+                                        let res = await fetch(
+                                            "/api/users/logout",
+                                            {
+                                                method: "POST",
+                                                credentials: "include",
+                                            },
+                                        )
+
+                                        if (res.status === 200)
+                                            navigate("", { replace: true })
+                                    }}
+                                >
+                                    Logout
+                                </Nav.Link>
+                            </NavDropdown.Item>
+                            <NavDropdown.Item as="div">
+                                <Navbar.Text>Delete account</Navbar.Text>
                             </NavDropdown.Item>
                         </NavDropdown>
                     ) : (

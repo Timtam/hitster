@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
 import { Helmet } from "react-helmet-async"
 import type { ActionFunction } from "react-router"
-import { Form, redirect, useActionData } from "react-router-dom"
+import { Form, useActionData, useNavigate } from "react-router-dom"
 
 export const action: ActionFunction = async ({ request }) => {
     let formData = await request.formData()
@@ -18,7 +18,7 @@ export const action: ActionFunction = async ({ request }) => {
         }),
     })
 
-    if (res.status === 200) return redirect("/")
+    if (res.status === 200) return { success: true }
     return { success: false, message: await res.text() }
 }
 
@@ -29,6 +29,9 @@ export function Login() {
     }
     let [username, setUsername] = useState("")
     let [password, setPassword] = useState("")
+    let navigate = useNavigate()
+
+    if (response && response.success === true) navigate(-1)
 
     return (
         <>
