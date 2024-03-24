@@ -3,10 +3,10 @@ on:
     branches: main
 
 jobs:
-  if: "!contains(github.event.head_commit.message, '[skip ci]')"
   push_to_registry:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
     steps:
       - 
         name: Checkout
