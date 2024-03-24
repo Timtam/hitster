@@ -4,7 +4,10 @@ use crate::{
     users::{User, UserLoginPayload},
     HitsterConfig,
 };
-use hex;
+use argon2::{
+    password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
+    Argon2,
+};
 use rocket::{
     http::{Cookie, CookieJar},
     response::status::NotFound,
@@ -17,7 +20,6 @@ use rocket_db_pools::{
 };
 use rocket_okapi::openapi;
 use serde_json;
-use sha3::{Digest, Sha3_512};
 use time::{Duration, OffsetDateTime};
 
 /// Create a new user
@@ -66,17 +68,17 @@ pub fn get_user(
 #[openapi(tag = "Users")]
 #[post("/users/login", format = "json", data = "<credentials>")]
 pub async fn login(
-    mut credentials: Json<UserLoginPayload>,
+    credentials: Json<UserLoginPayload>,
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     users: &State<UserService>,
 ) -> Result<Json<User>, NotFound<Json<MessageResponse>>> {
-    let mut hasher = Sha3_512::new();
-    hasher.update(credentials.password.as_bytes());
-    credentials.password = format!("{:?}", hex::encode(hasher.finalize()));
-
     if let Some(user) = users.get_by_username(credentials.username.as_str()) {
-        if user.password == credentials.password {
+        let password_hash = PasswordHash::new(&user.password).unwrap();
+        if Argon2::default()
+            .verify_password(credentials.password.as_bytes(), &password_hash)
+            .is_ok()
+        {
             cookies.add_private(Cookie::new(
                 "login",
                 serde_json::to_string(&*credentials).unwrap(),
@@ -95,41 +97,45 @@ pub async fn login(
             })))
         }
     } else {
-        let user = sqlx::query("SELECT * FROM users where username = ?1 AND password = ?2")
+        sqlx::query("SELECT * FROM users where username = ?")
             .bind(credentials.username.as_str())
-            .bind(credentials.password.as_str())
             .fetch_optional(&mut **db)
             .await
-            .unwrap();
-
-        match user {
-            Some(user) => {
+            .unwrap()
+            .and_then(|user| {
                 let u = User {
                     id: user.get::<u32, &str>("id"),
                     username: user.get::<String, &str>("username"),
                     password: user.get::<String, &str>("password"),
                 };
 
-                users.add(u.clone());
+                let password_hash = PasswordHash::new(&u.password).unwrap();
+                if Argon2::default()
+                    .verify_password(credentials.password.as_bytes(), &password_hash)
+                    .is_ok()
+                {
+                    users.add(u.clone());
 
-                cookies.add_private(Cookie::new(
-                    "login",
-                    serde_json::to_string(&*credentials).unwrap(),
-                ));
+                    cookies.add_private(Cookie::new(
+                        "login",
+                        serde_json::to_string(&*credentials).unwrap(),
+                    ));
 
-                cookies.add(
-                    Cookie::build(("logged_in", serde_json::to_string(&u).unwrap()))
-                        .http_only(false)
-                        .expires(OffsetDateTime::now_utc() + Duration::days(7)),
-                );
+                    cookies.add(
+                        Cookie::build(("logged_in", serde_json::to_string(&u).unwrap()))
+                            .http_only(false)
+                            .expires(OffsetDateTime::now_utc() + Duration::days(7)),
+                    );
 
-                Ok(Json(u))
-            }
-            None => Err(NotFound(Json(MessageResponse {
+                    Some(Json(u))
+                } else {
+                    None
+                }
+            })
+            .ok_or(NotFound(Json(MessageResponse {
                 message: "incorrect user credentials".into(),
                 r#type: "error".into(),
-            }))),
-        }
+            })))
     }
 }
 
@@ -144,9 +150,12 @@ pub async fn signup(
     users: &State<UserService>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
-    let mut hasher = Sha3_512::new();
-    hasher.update(credentials.password.as_bytes());
-    credentials.password = format!("{:?}", hex::encode(hasher.finalize()));
+    let salt = SaltString::generate(&mut OsRng);
+    let argon2 = Argon2::default();
+    credentials.password = argon2
+        .hash_password(credentials.password.as_bytes(), &salt)
+        .unwrap()
+        .to_string();
 
     if sqlx::query("SELECT * FROM users WHERE username = ?")
         .bind(credentials.username.as_str())

@@ -32,40 +32,21 @@ impl<'r> FromRequest<'r> for User {
 
     async fn from_request(req: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
         let cookies = req.guard::<&CookieJar>().await.unwrap();
+        let users = req.guard::<&State<UserService>>().await.unwrap();
 
-        if let Some(cookie) = cookies.get_private("login") {
-            let users = req.guard::<&State<UserService>>().await.unwrap();
-
-            if let Ok(user) = serde_json::from_str::<UserLoginPayload>(cookie.value()) {
-                if let Some(u) = users.get_by_username(user.username.as_str()) {
-                    Outcome::Success(u)
-                } else {
-                    Outcome::Error((
-                        Status::Unauthorized,
-                        Json(MessageResponse {
-                            message: "not logged in".into(),
-                            r#type: "error".into(),
-                        }),
-                    ))
-                }
-            } else {
-                Outcome::Error((
-                    Status::Unauthorized,
-                    Json(MessageResponse {
-                        message: "not logged in".into(),
-                        r#type: "error".into(),
-                    }),
-                ))
-            }
-        } else {
-            Outcome::Error((
+        cookies
+            .get_private("login")
+            .and_then(|cookie| serde_json::from_str::<UserLoginPayload>(cookie.value()).ok())
+            .and_then(|user| users.get_by_username(user.username.as_str()))
+            .and_then(|u| Some(Outcome::Success(u)))
+            .or(Some(Outcome::Error((
                 Status::Unauthorized,
                 Json(MessageResponse {
                     message: "not logged in".into(),
                     r#type: "error".into(),
                 }),
-            ))
-        }
+            ))))
+            .unwrap()
     }
 }
 

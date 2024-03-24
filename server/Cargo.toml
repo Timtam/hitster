@@ -6,9 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+argon2 = "0.5.3"
 dotenvy = "0.15.7"
 ffmpeg-cli = "0.1.0"
-hex = "0.4.3"
 names = "0.14.0"
 rand = "0.8.5"
 regex = "1.10.3"
@@ -18,7 +18,6 @@ rocket_okapi = { version = "0.8.0", default-features = false, features = ["swagg
 rusty_ytdl = "0.7.0"
 serde = { version = "1.0.197", features = ["derive"]}
 serde_json = "1.0.114"
-sha3 = "0.10.8"
 sqlx = { version = "0.7.3", default-features = false, features = ["migrate", "macros"] }
 strum = { version = "0.26.1", features = ["strum_macros", "derive"]}
 time = "0.3.34"
