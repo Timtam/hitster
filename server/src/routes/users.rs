@@ -18,6 +18,7 @@ use rocket_db_pools::{
 use rocket_okapi::openapi;
 use serde_json;
 use sha3::{Digest, Sha3_512};
+use time::{Duration, OffsetDateTime};
 
 /// Create a new user
 ///
@@ -81,12 +82,11 @@ pub async fn login(
                 serde_json::to_string(&*credentials).unwrap(),
             ));
 
-            let mut logged_in = Cookie::new("logged_in", serde_json::to_string(&user).unwrap());
-
-            logged_in.set_http_only(None);
-
-            cookies.add(logged_in);
-
+            cookies.add(
+                Cookie::build(("logged_in", serde_json::to_string(&user).unwrap()))
+                    .http_only(false)
+                    .expires(OffsetDateTime::now_utc() + Duration::days(7)),
+            );
             Ok(Json(user))
         } else {
             Err(NotFound(Json(MessageResponse {
@@ -117,11 +117,11 @@ pub async fn login(
                     serde_json::to_string(&*credentials).unwrap(),
                 ));
 
-                let mut logged_in = Cookie::new("logged_in", serde_json::to_string(&u).unwrap());
-
-                logged_in.set_http_only(None);
-
-                cookies.add(logged_in);
+                cookies.add(
+                    Cookie::build(("logged_in", serde_json::to_string(&u).unwrap()))
+                        .http_only(false)
+                        .expires(OffsetDateTime::now_utc() + Duration::days(7)),
+                );
 
                 Ok(Json(u))
             }
