@@ -34,6 +34,7 @@ pub fn create_game(
             .into_iter()
             .map(|id| users.get_by_id(id).unwrap())
             .collect::<_>(),
+        state: game.state,
     }))
 }
 
@@ -60,6 +61,7 @@ pub fn get_all_games(
                     .into_iter()
                     .map(|id| users.get_by_id(id).unwrap())
                     .collect::<_>(),
+                state: game.state,
             })
             .collect::<_>(),
     })
@@ -134,7 +136,8 @@ pub fn get_game(
                 .players
                 .into_iter()
                 .map(|p| users.get_by_id(p).unwrap())
-                .collect::<Vec<_>>(),
+                .collect::<_>(),
+            state: g.state,
         })),
         None => Err(NotFound(Json(MessageResponse {
             message: "game id not found".into(),

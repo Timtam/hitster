@@ -1,3 +1,6 @@
+import Button from "react-bootstrap/Button"
+import Table from "react-bootstrap/Table"
+import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
 import type { LoaderFunction } from "react-router"
 import { json, useLoaderData } from "react-router-dom"
@@ -21,14 +24,40 @@ export const loader: LoaderFunction = async ({
 }
 
 export function Game() {
+    let [cookies] = useCookies()
     let game = useLoaderData() as GameEntity
 
     return (
         <>
             <Helmet>
-                <title>{`Game ${game.id} - Hitster`}</title>
+                <title>{`${game.id} - Game - Hitster`}</title>
             </Helmet>
-            <p>Game ID: {game.id}</p>
+            <h2>
+                Game ID: {game.id}, State: {game.state}
+            </h2>
+            <p>Game Actions:</p>
+            <Button disabled={cookies.logged_in === undefined}>
+                {cookies === undefined
+                    ? "You need to be logged in to participate in a game"
+                    : game.players.some((p) => p.id === cookies.logged_in.id)
+                      ? "Leave game"
+                      : "Join game"}
+            </Button>
+            <h3>Players</h3>
+            <Table responsive>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {game.players.map((p) => (
+                        <tr>
+                            <td>{p.username}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </Table>
         </>
     )
 }
