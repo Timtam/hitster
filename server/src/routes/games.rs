@@ -5,7 +5,11 @@ use crate::{
     services::{GameService, UserService},
     users::User,
 };
-use rocket::{response::status::Created, serde::json::Json, State};
+use rocket::{
+    response::status::{Created, NotFound},
+    serde::json::Json,
+    State,
+};
 use rocket_okapi::openapi;
 
 /// Create a new game
@@ -108,6 +112,37 @@ pub async fn start_game(
     })
 }
 
+/// Get all info about a certain game
+///
+/// Retrieve all known info about a specific game. game_id must be identical to a game's id, either returned by POST /games, or by GET /games.
+/// The info here is currently identical with what you get with GET /games, but that might change later.
+///
+/// This call will return a 404 error if the game_id provided doesn't exist.
+
+#[openapi(tag = "Games")]
+#[get("/games/<game_id>")]
+pub fn get_game(
+    game_id: u32,
+    games: &State<GameService>,
+    users: &State<UserService>,
+) -> Result<Json<GameResponse>, NotFound<Json<MessageResponse>>> {
+    match games.get(game_id) {
+        Some(g) => Ok(Json(GameResponse {
+            id: g.id,
+            creator: users.get_by_id(g.creator).unwrap(),
+            players: g
+                .players
+                .into_iter()
+                .map(|p| users.get_by_id(p).unwrap())
+                .collect::<Vec<_>>(),
+        })),
+        None => Err(NotFound(Json(MessageResponse {
+            message: "game id not found".into(),
+            r#type: "error".into(),
+        }))),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{
@@ -129,6 +164,29 @@ mod tests {
 
         assert_eq!(game.status(), Status::Created);
         assert!(game.into_json::<GameResponse>().await.is_some());
+    }
+
+    #[sqlx::test]
+    async fn can_read_single_game() {
+        let client = mocked_client().await;
+
+        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
+
+        let game = client
+            .post(uri!("/api", super::create_game))
+            .private_cookie(cookie.clone())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap();
+
+        let response = client
+            .get(uri!("/api", super::get_game(game_id = game.id)))
+            .dispatch()
+            .await;
+
+        assert_eq!(response.status(), Status::Ok);
     }
 
     #[sqlx::test]
