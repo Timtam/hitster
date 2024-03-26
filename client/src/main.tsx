@@ -4,6 +4,7 @@ import ReactDOM from "react-dom/client"
 import { HelmetProvider } from "react-helmet-async"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import ErrorPage from "./error-page"
+import { Game, loader as GameLoader } from "./game"
 import "./index.css"
 import Layout from "./layout"
 import { Lobby, loader as LobbyLoader } from "./lobby"
@@ -28,6 +29,11 @@ const router = createBrowserRouter([
                 element: <Login />,
                 path: "/login",
                 action: LoginAction,
+            },
+            {
+                element: <Game />,
+                path: "/game/:gameId",
+                loader: GameLoader,
             },
         ],
         errorElement: <ErrorPage />,

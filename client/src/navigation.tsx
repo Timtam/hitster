@@ -3,7 +3,8 @@ import Nav from "react-bootstrap/Nav"
 import NavDropdown from "react-bootstrap/NavDropdown"
 import Navbar from "react-bootstrap/Navbar"
 import { useCookies } from "react-cookie"
-import { Link, useNavigate } from "react-router-dom"
+import { LinkContainer } from "react-router-bootstrap"
+import { useNavigate } from "react-router-dom"
 
 export default function Navigation() {
     let [cookies] = useCookies(["logged_in"])
@@ -15,9 +16,9 @@ export default function Navigation() {
             <Navbar className="fixed-top" bg="light" variant="light">
                 <Navbar.Collapse>
                     <Nav.Item>
-                        <Nav.Link as={Link} to="/" active>
-                            Game Lobby
-                        </Nav.Link>
+                        <LinkContainer to="/">
+                            <Nav.Link>Game Lobby</Nav.Link>
+                        </LinkContainer>
                     </Nav.Item>
                     {cookies.logged_in !== undefined ? (
                         <NavDropdown
@@ -48,14 +49,14 @@ export default function Navigation() {
                     ) : (
                         <NavDropdown title="Not logged in">
                             <NavDropdown.Item as="div">
-                                <Nav.Link as={Link} to="/login">
-                                    Login
-                                </Nav.Link>
+                                <LinkContainer to="/login">
+                                    <Nav.Link>Login</Nav.Link>
+                                </LinkContainer>
                             </NavDropdown.Item>
                             <NavDropdown.Item as="div">
-                                <Nav.Link as={Link} to="/register">
-                                    Register
-                                </Nav.Link>
+                                <LinkContainer to="/register">
+                                    <Nav.Link>Register</Nav.Link>
+                                </LinkContainer>
                             </NavDropdown.Item>
                         </NavDropdown>
                     )}

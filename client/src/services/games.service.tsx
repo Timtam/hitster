@@ -7,4 +7,13 @@ export default class GameService {
         })
         return GamesResponse.parse(await res.json()).games
     }
+
+    async get(game_id: number): Promise<Game | undefined> {
+        let res = await fetch(`/api/games/${game_id}`, {
+            method: "GET",
+        })
+
+        if (res.status == 200) return Game.parse(await res.json())
+        return undefined
+    }
 }
