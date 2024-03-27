@@ -13,10 +13,17 @@ export enum GameState {
     Confirming = "Confirming",
 }
 
+export const Player = z.object({
+    id: z.number(),
+    name: z.string(),
+})
+
+export type Player = z.infer<typeof Player>
+
 export const Game = z.object({
     id: z.number(),
-    creator: User,
-    players: z.array(User),
+    creator: Player,
+    players: z.array(Player),
     state: z.nativeEnum(GameState),
 })
 

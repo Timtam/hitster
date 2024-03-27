@@ -2,7 +2,7 @@ use crate::{
     responses::{
         GameResponse, GamesResponse, JoinGameError, LeaveGameError, MessageResponse, StartGameError,
     },
-    services::{GameService, UserService},
+    services::GameService,
     users::User,
 };
 use rocket::{
@@ -19,21 +19,13 @@ use rocket_okapi::openapi;
 
 #[openapi(tag = "Games")]
 #[post("/games")]
-pub fn create_game(
-    user: User,
-    games: &State<GameService>,
-    users: &State<UserService>,
-) -> Created<Json<GameResponse>> {
-    let game = games.add(user.id);
+pub fn create_game(user: User, games: &State<GameService>) -> Created<Json<GameResponse>> {
+    let game = games.add(&user);
 
     Created::new(format!("/games/{}", game.id)).body(Json(GameResponse {
         id: game.id,
-        creator: users.get_by_id(game.creator).unwrap(),
-        players: game
-            .players
-            .into_iter()
-            .map(|id| users.get_by_id(id).unwrap())
-            .collect::<_>(),
+        creator: game.players.get(game.creator).cloned().unwrap(),
+        players: game.players,
         state: game.state,
     }))
 }
@@ -45,22 +37,15 @@ pub fn create_game(
 
 #[openapi(tag = "Games")]
 #[get("/games")]
-pub fn get_all_games(
-    games: &State<GameService>,
-    users: &State<UserService>,
-) -> Json<GamesResponse> {
+pub fn get_all_games(games: &State<GameService>) -> Json<GamesResponse> {
     Json(GamesResponse {
         games: games
             .get_all()
             .into_iter()
             .map(|game| GameResponse {
                 id: game.id,
-                creator: users.get_by_id(game.creator).unwrap(),
-                players: game
-                    .players
-                    .into_iter()
-                    .map(|id| users.get_by_id(id).unwrap())
-                    .collect::<_>(),
+                creator: game.players.get(game.creator).cloned().unwrap(),
+                players: game.players,
                 state: game.state,
             })
             .collect::<_>(),
@@ -74,7 +59,7 @@ pub async fn join_game(
     user: User,
     games: &State<GameService>,
 ) -> Result<Json<MessageResponse>, JoinGameError> {
-    games.join(game_id, user.id).map(|_| {
+    games.join(game_id, &user).map(|_| {
         Json(MessageResponse {
             message: "joined the game successfully".into(),
             r#type: "success".into(),
@@ -89,7 +74,7 @@ pub async fn leave_game(
     user: User,
     games: &State<GameService>,
 ) -> Result<Json<MessageResponse>, LeaveGameError> {
-    games.leave(game_id, user.id).map(|_| {
+    games.leave(game_id, &user).map(|_| {
         Json(MessageResponse {
             message: "left the game successfully".into(),
             r#type: "success".into(),
@@ -106,7 +91,7 @@ pub async fn start_game(
     user: User,
     games: &State<GameService>,
 ) -> Result<Json<MessageResponse>, StartGameError> {
-    games.start(game_id, user.id).map(|_| {
+    games.start(game_id, &user).map(|_| {
         Json(MessageResponse {
             message: "started game".into(),
             r#type: "success".into(),
@@ -126,17 +111,12 @@ pub async fn start_game(
 pub fn get_game(
     game_id: u32,
     games: &State<GameService>,
-    users: &State<UserService>,
 ) -> Result<Json<GameResponse>, NotFound<Json<MessageResponse>>> {
     match games.get(game_id) {
         Some(g) => Ok(Json(GameResponse {
             id: g.id,
-            creator: users.get_by_id(g.creator).unwrap(),
-            players: g
-                .players
-                .into_iter()
-                .map(|p| users.get_by_id(p).unwrap())
-                .collect::<_>(),
+            creator: g.players.get(g.creator).cloned().unwrap(),
+            players: g.players,
             state: g.state,
         })),
         None => Err(NotFound(Json(MessageResponse {

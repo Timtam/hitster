@@ -205,7 +205,7 @@ pub async fn logout(
     cookies: &CookieJar<'_>,
 ) -> Json<MessageResponse> {
     for game in games.get_all().iter() {
-        let _ = games.leave(game.id, user.id);
+        let _ = games.leave(game.id, &user);
     }
 
     cookies.remove_private("login");

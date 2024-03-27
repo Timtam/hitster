@@ -53,7 +53,7 @@ export function Game() {
                 <tbody>
                     {game.players.map((p) => (
                         <tr>
-                            <td>{p.username}</td>
+                            <td>{p.name}</td>
                         </tr>
                     ))}
                 </tbody>

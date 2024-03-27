@@ -1,4 +1,7 @@
-use crate::{games::GameState, users::User};
+use crate::{
+    games::{GameState, Player},
+    users::User,
+};
 use rocket::{
     http::{ContentType, Status},
     request::Request,
@@ -211,8 +214,8 @@ pub struct GamesResponse {
 #[derive(Serialize, Deserialize, JsonSchema)]
 pub struct GameResponse {
     pub id: u32,
-    pub creator: User,
-    pub players: Vec<User>,
+    pub creator: Player,
+    pub players: Vec<Player>,
     pub state: GameState,
 }
 
