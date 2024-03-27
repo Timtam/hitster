@@ -1,7 +1,7 @@
 use crate::users::User;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
-use std::convert::From;
+use std::{convert::From, default::Default};
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 #[serde(rename_all_fields = "snake_case")]
@@ -37,6 +37,26 @@ impl From<&User> for Player {
         Self {
             id: u.id,
             name: u.username.clone(),
+        }
+    }
+}
+
+#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+pub struct GameEvent {
+    #[serde(skip)]
+    pub game_id: u32,
+    pub event: String,
+    pub player: Option<Player>,
+    pub state: Option<GameState>,
+}
+
+impl Default for GameEvent {
+    fn default() -> Self {
+        Self {
+            game_id: 0,
+            event: "".into(),
+            player: None,
+            state: None,
         }
     }
 }

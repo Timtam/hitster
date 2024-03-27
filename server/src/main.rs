@@ -6,12 +6,14 @@ mod services;
 mod users;
 
 use dotenvy::dotenv;
+use games::GameEvent;
 use hits::HitsterDownloader;
 use rocket::{
     fairing::{self, AdHoc},
     figment::{util::map, Figment},
     fs::NamedFile,
     response::Redirect,
+    tokio::sync::broadcast::channel,
     Build, Config, Rocket,
 };
 use rocket_db_pools::{sqlx, Database};
@@ -76,7 +78,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .attach(migrations_fairing)
         .attach(HitsterDownloader::default())
         .mount("/", routes![index, files,])
-        .mount("/api/", routes![api_index,])
+        .mount("/api/", routes![api_index, games_routes::events])
         .mount(
             "/api/",
             openapi_get_routes![
@@ -118,6 +120,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .manage(GameService::new())
         .manage(HitService::new())
         .manage(UserService::new())
+        .manage(channel::<GameEvent>(1024).0)
 }
 
 #[launch]

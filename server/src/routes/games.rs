@@ -1,4 +1,5 @@
 use crate::{
+    games::{GameEvent, GameState},
     responses::{
         GameResponse, GamesResponse, JoinGameError, LeaveGameError, MessageResponse, StartGameError,
     },
@@ -6,11 +7,19 @@ use crate::{
     users::User,
 };
 use rocket::{
-    response::status::{Created, NotFound},
+    response::{
+        status::{Created, NotFound},
+        stream::{Event, EventStream},
+    },
     serde::json::Json,
-    State,
+    tokio::{
+        select,
+        sync::broadcast::{error::RecvError, Sender},
+    },
+    Shutdown, State,
 };
 use rocket_okapi::openapi;
+use std::default::Default;
 
 /// Create a new game
 ///
@@ -90,12 +99,20 @@ pub async fn start_game(
     game_id: u32,
     user: User,
     games: &State<GameService>,
+    queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, StartGameError> {
-    games.start(game_id, &user).map(|_| {
-        Json(MessageResponse {
+    games.start(game_id, &user).and_then(|_| {
+        let _ = queue.send(GameEvent {
+            game_id,
+            event: "change_state".into(),
+            state: Some(GameState::Guessing),
+            ..Default::default()
+        });
+
+        Ok(Json(MessageResponse {
             message: "started game".into(),
             r#type: "success".into(),
-        })
+        }))
     })
 }
 
@@ -126,12 +143,43 @@ pub fn get_game(
     }
 }
 
+#[get("/games/<game_id>/events")]
+pub async fn events(
+    game_id: u32,
+    queue: &State<Sender<GameEvent>>,
+    mut end: Shutdown,
+) -> EventStream![] {
+    let mut rx = queue.subscribe();
+    EventStream! {
+        loop {
+            let msg = select! {
+                msg = rx.recv() => match msg {
+                    Ok(msg) => msg,
+                    Err(RecvError::Closed) => break,
+                    Err(RecvError::Lagged(_)) => continue,
+                },
+                _ = &mut end => break,
+            };
+
+            if msg.game_id == game_id {
+                yield Event::json(&msg);
+            }
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use crate::{
-        responses::GameResponse, routes::users::tests::create_test_users, test::mocked_client,
+        games::{GameEvent, GameState},
+        responses::GameResponse,
+        routes::users::tests::create_test_users,
+        test::mocked_client,
     };
-    use rocket::http::Status;
+    use rocket::{
+        http::Status,
+        tokio::io::{AsyncBufReadExt, BufReader},
+    };
 
     #[sqlx::test]
     async fn can_create_game() {
@@ -466,5 +514,52 @@ mod tests {
                 .status(),
             Status::Conflict
         );
+    }
+
+    #[sqlx::test]
+    async fn can_read_event_when_starting_game() {
+        let client = mocked_client().await;
+
+        let cookies = create_test_users(&client, 2).await;
+
+        let game_id = client
+            .post(uri!("/api", super::create_game))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap()
+            .id;
+
+        client
+            .patch(uri!("/api", super::join_game(game_id = game_id)))
+            .private_cookie(cookies.get(1).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        let response = client
+            .get(uri!("/api", super::events(game_id = game_id)))
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!("/api", super::start_game(game_id = game_id)))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        let mut reader = BufReader::new(response).lines();
+        while let Ok(Some(line)) = reader.next_line().await {
+            if !line.starts_with("data:") {
+                continue;
+            }
+
+            let data: GameEvent = serde_json::from_str(&line[5..]).expect("message JSON");
+
+            assert_eq!(data.event, "change_state");
+            assert_eq!(data.state, Some(GameState::Guessing));
+            break;
+        }
     }
 }
