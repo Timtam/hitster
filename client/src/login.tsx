@@ -4,6 +4,7 @@ import BsForm from "react-bootstrap/Form"
 import { Helmet } from "react-helmet-async"
 import type { ActionFunction } from "react-router"
 import { Form, redirect, useActionData } from "react-router-dom"
+import Error from "./error"
 
 export const action: ActionFunction = async ({ request }) => {
     let formData = await request.formData()
@@ -35,14 +36,13 @@ export function Login() {
             <Helmet>
                 <title>Login - Hitster</title>
             </Helmet>
-            {response && response.success === false ? (
-                <p>
-                    An error occurred while logging in:{" "}
-                    {JSON.parse(response.message).message}{" "}
-                </p>
-            ) : (
-                ""
-            )}
+            <Error
+                text={
+                    response?.success === false
+                        ? JSON.parse(response.message).message
+                        : undefined
+                }
+            />
             <Form method="post">
                 <BsForm.Group controlId="basicFormUsername">
                     <BsForm.Label>Username</BsForm.Label>
