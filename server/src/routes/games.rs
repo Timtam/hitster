@@ -67,12 +67,19 @@ pub async fn join_game(
     game_id: u32,
     user: User,
     games: &State<GameService>,
+    queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, JoinGameError> {
-    games.join(game_id, &user).map(|_| {
-        Json(MessageResponse {
+    games.join(game_id, &user).and_then(|_| {
+        let _ = queue.send(GameEvent {
+            game_id,
+            event: "join".into(),
+            players: Some(games.get(game_id).unwrap().players),
+            ..Default::default()
+        });
+        Ok(Json(MessageResponse {
             message: "joined the game successfully".into(),
             r#type: "success".into(),
-        })
+        }))
     })
 }
 
@@ -82,12 +89,19 @@ pub async fn leave_game(
     game_id: u32,
     user: User,
     games: &State<GameService>,
+    queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, LeaveGameError> {
-    games.leave(game_id, &user).map(|_| {
-        Json(MessageResponse {
+    games.leave(game_id, &user).and_then(|_| {
+        let _ = queue.send(GameEvent {
+            game_id,
+            event: "leave".into(),
+            players: games.get(game_id).and_then(|g| Some(g.players)),
+            ..Default::default()
+        });
+        Ok(Json(MessageResponse {
             message: "left the game successfully".into(),
             r#type: "success".into(),
-        })
+        }))
     })
 }
 

@@ -1,10 +1,12 @@
+import { useEffect } from "react"
 import Button from "react-bootstrap/Button"
 import Table from "react-bootstrap/Table"
 import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
 import type { LoaderFunction } from "react-router"
-import { json, useLoaderData } from "react-router-dom"
-import { Game as GameEntity } from "./entities"
+import { json, useLoaderData, useNavigate } from "react-router-dom"
+import { useImmer } from "use-immer"
+import { Game as GameEntity, GameEvent, GameState, Player } from "./entities"
 import GameService from "./services/games.service"
 
 export const loader: LoaderFunction = async ({
@@ -25,7 +27,41 @@ export const loader: LoaderFunction = async ({
 
 export function Game() {
     let [cookies] = useCookies()
-    let game = useLoaderData() as GameEntity
+    let [game, setGame] = useImmer(useLoaderData() as GameEntity)
+    let navigate = useNavigate()
+
+    useEffect(() => {
+        const eventSource = new EventSource(`/api/games/${game.id}/events`)
+        eventSource.onmessage = (e) => {
+            let ge = GameEvent.parse(e)
+
+            switch (ge.event) {
+                case "change_state": {
+                    setGame((g) => {
+                        g.state = ge.state as GameState
+                    })
+                    break
+                }
+                case "join": {
+                    setGame((g) => {
+                        g.players = ge.players as Player[]
+                    })
+                    break
+                }
+                case "leave": {
+                    if (ge.players !== undefined)
+                        setGame((g) => {
+                            g.players = ge.players as Player[]
+                        })
+                    else navigate("/")
+                    break
+                }
+            }
+        }
+        return () => {
+            eventSource.close()
+        }
+    }, [])
 
     return (
         <>

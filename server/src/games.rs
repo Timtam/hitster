@@ -46,7 +46,7 @@ pub struct GameEvent {
     #[serde(skip)]
     pub game_id: u32,
     pub event: String,
-    pub player: Option<Player>,
+    pub players: Option<Vec<Player>>,
     pub state: Option<GameState>,
 }
 
@@ -55,7 +55,7 @@ impl Default for GameEvent {
         Self {
             game_id: 0,
             event: "".into(),
-            player: None,
+            players: None,
             state: None,
         }
     }
