@@ -36,7 +36,6 @@ export const GamesResponse = z.object({
 export type GamesResponse = z.infer<typeof GamesResponse>
 
 export const GameEvent = z.object({
-    event: z.string(),
     state: z.optional(z.nativeEnum(GameState)),
     players: z.optional(z.array(Player)),
 })

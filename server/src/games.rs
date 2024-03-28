@@ -45,6 +45,7 @@ impl From<&User> for Player {
 pub struct GameEvent {
     #[serde(skip)]
     pub game_id: u32,
+    #[serde(skip)]
     pub event: String,
     pub players: Option<Vec<Player>>,
     pub state: Option<GameState>,

@@ -176,7 +176,7 @@ pub async fn events(
             };
 
             if msg.game_id == game_id {
-                yield Event::json(&msg);
+                yield Event::json(&msg).event(msg.event);
             }
         }
     }

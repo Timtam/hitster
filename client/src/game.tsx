@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
 import Table from "react-bootstrap/Table"
 import { useCookies } from "react-cookie"
@@ -26,38 +26,37 @@ export const loader: LoaderFunction = async ({
 }
 
 export function Game() {
+    let gameService = useMemo(() => new GameService(), [])
     let [cookies] = useCookies()
     let [game, setGame] = useImmer(useLoaderData() as GameEntity)
     let navigate = useNavigate()
 
     useEffect(() => {
-        const eventSource = new EventSource(`/api/games/${game.id}/events`)
-        eventSource.onmessage = (e) => {
+        let eventSource = new EventSource(`/api/games/${game.id}/events`)
+
+        eventSource.addEventListener("change_state", (e) => {
             let ge = GameEvent.parse(e)
 
-            switch (ge.event) {
-                case "change_state": {
-                    setGame((g) => {
-                        g.state = ge.state as GameState
-                    })
-                    break
-                }
-                case "join": {
-                    setGame((g) => {
-                        g.players = ge.players as Player[]
-                    })
-                    break
-                }
-                case "leave": {
-                    if (ge.players !== undefined)
-                        setGame((g) => {
-                            g.players = ge.players as Player[]
-                        })
-                    else navigate("/")
-                    break
-                }
-            }
-        }
+            setGame((g) => {
+                g.state = ge.state as GameState
+            })
+        })
+
+        eventSource.addEventListener("join", (e) => {
+            let ge = GameEvent.parse(e)
+            setGame((g) => {
+                g.players = ge.players as Player[]
+            })
+        })
+
+        eventSource.addEventListener("leave", (e) => {
+            let ge = GameEvent.parse(e)
+            if (ge.players !== undefined)
+                setGame((g) => {
+                    g.players = ge.players as Player[]
+                })
+            else navigate("/")
+        })
         return () => {
             eventSource.close()
         }
@@ -72,7 +71,16 @@ export function Game() {
                 Game ID: {game.id}, State: {game.state}
             </h2>
             <p>Game Actions:</p>
-            <Button disabled={cookies.logged_in === undefined}>
+            <Button
+                disabled={cookies.logged_in === undefined}
+                onClick={async () => {
+                    if (
+                        game.players.some((p) => p.id === cookies.logged_in?.id)
+                    )
+                        await gameService.leave(game.id)
+                    else await gameService.join(game.id)
+                }}
+            >
                 {cookies === undefined
                     ? "You need to be logged in to participate in a game"
                     : game.players.some((p) => p.id === cookies.logged_in.id)
