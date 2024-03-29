@@ -47,7 +47,9 @@ pub struct GameEvent {
     pub game_id: u32,
     #[serde(skip)]
     pub event: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub players: Option<Vec<Player>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub state: Option<GameState>,
 }
 

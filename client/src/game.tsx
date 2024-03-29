@@ -35,7 +35,7 @@ export function Game() {
         let eventSource = new EventSource(`/api/games/${game.id}/events`)
 
         eventSource.addEventListener("change_state", (e) => {
-            let ge = GameEvent.parse(e)
+            let ge = GameEvent.parse(JSON.parse(e.data))
 
             setGame((g) => {
                 g.state = ge.state as GameState
@@ -43,14 +43,14 @@ export function Game() {
         })
 
         eventSource.addEventListener("join", (e) => {
-            let ge = GameEvent.parse(e)
+            let ge = GameEvent.parse(JSON.parse(e.data))
             setGame((g) => {
                 g.players = ge.players as Player[]
             })
         })
 
         eventSource.addEventListener("leave", (e) => {
-            let ge = GameEvent.parse(e)
+            let ge = GameEvent.parse(JSON.parse(e.data))
             if (ge.players !== undefined)
                 setGame((g) => {
                     g.players = ge.players as Player[]
