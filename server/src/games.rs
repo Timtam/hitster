@@ -1,4 +1,4 @@
-use crate::users::User;
+use crate::{hits::Hit, users::User};
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
 use std::{convert::From, default::Default};
@@ -20,6 +20,7 @@ pub struct Game {
     pub creator: usize,
     pub players: Vec<Player>,
     pub state: GameState,
+    pub hits_remaining: Vec<Hit>,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]

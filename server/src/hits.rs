@@ -9,7 +9,7 @@ use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
 use std::{
     env,
     fs::{create_dir_all, remove_file},
-    path::Path,
+    path::{Path, PathBuf},
     process::Stdio,
     str::FromStr,
 };
@@ -17,12 +17,13 @@ use strum::EnumString;
 
 include!(concat!(env!("OUT_DIR"), "/hits.rs"));
 
-#[derive(EnumString, Eq, PartialEq, Debug)]
+#[derive(EnumString, Eq, PartialEq, Debug, Clone)]
 pub enum Pack {
     Basic,
     Schlagerparty,
 }
 
+#[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Hit {
     pub interpret: String,
     pub title: String,
@@ -48,14 +49,13 @@ impl Hit {
         env::var("DOWNLOAD_DIRECTORY").unwrap_or("./hits".to_string())
     }
 
-    pub fn exists(&self) -> bool {
+    pub fn file(&self) -> Option<PathBuf> {
         self.yt_id()
-            .map(|id| {
-                Path::new(&Hit::download_dir())
-                    .join(format!("{}.mp3", id))
-                    .is_file()
-            })
-            .unwrap_or(false)
+            .map(|id| Path::new(&Hit::download_dir()).join(format!("{}.mp3", id)))
+    }
+
+    pub fn exists(&self) -> bool {
+        self.file().map(|p| p.is_file()).unwrap_or(false)
     }
 }
 

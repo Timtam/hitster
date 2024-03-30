@@ -1,7 +1,8 @@
 use crate::{
     games::{GameEvent, GameState},
     responses::{
-        GameResponse, GamesResponse, JoinGameError, LeaveGameError, MessageResponse, StartGameError,
+        CurrentHitError, GameResponse, GamesResponse, JoinGameError, LeaveGameError,
+        MessageResponse, StartGameError,
     },
     services::ServiceStore,
     users::User,
@@ -9,7 +10,7 @@ use crate::{
 use rocket::{
     fs::NamedFile,
     response::{
-        status::{Created, Forbidden, NotFound},
+        status::{Created, NotFound},
         stream::{Event, EventStream},
     },
     serde::json::Json,
@@ -197,15 +198,22 @@ pub async fn events(
     }
 }
 
-/*
 #[openapi(tag = "Games")]
 #[get("/games/<game_id>/hit")]
-pub async fn hit(
-    game_id: u32,
-    games: &State<GameService>,
-) -> Result<NamedFile, Forbidden<Json<MessageResponse>>> {
+pub async fn hit(game_id: u32, serv: &State<ServiceStore>) -> Result<NamedFile, CurrentHitError> {
+    let hit = serv.game_service().lock().get_current_hit(game_id);
+
+    if hit.is_ok() {
+        return NamedFile::open(&hit.unwrap().file().unwrap())
+            .await
+            .or(Err(CurrentHitError {
+                message: "hit file couldn't be found".into(),
+                http_status_code: 404,
+            }));
+    }
+
+    Err(hit.err().unwrap())
 }
-*/
 
 #[cfg(test)]
 mod tests {
@@ -599,5 +607,43 @@ mod tests {
             assert_eq!(data.state, Some(GameState::Guessing));
             break;
         }
+    }
+
+    #[sqlx::test]
+    async fn can_read_hit_after_starting_game() {
+        let client = mocked_client().await;
+
+        let cookies = create_test_users(&client, 2).await;
+
+        let game_id = client
+            .post(uri!("/api", super::create_game))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap()
+            .id;
+
+        client
+            .patch(uri!("/api", super::join_game(game_id = game_id)))
+            .private_cookie(cookies.get(1).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!("/api", super::start_game(game_id = game_id)))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .get(uri!("/api", super::hit(game_id = game_id)))
+                .dispatch()
+                .await
+                .status(),
+            Status::Ok
+        );
     }
 }

@@ -10,4 +10,8 @@ impl HitService {
             hits: get_all().into_iter().filter(|h| h.exists()).collect::<_>(),
         }
     }
+
+    pub fn get_all(&self) -> Vec<Hit> {
+        self.hits.clone()
+    }
 }

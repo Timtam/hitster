@@ -1,6 +1,7 @@
 use crate::{
     games::{Game, GameState, PlayerState},
-    responses::{JoinGameError, LeaveGameError, StartGameError},
+    hits::Hit,
+    responses::{CurrentHitError, JoinGameError, LeaveGameError, StartGameError},
     services::{HitService, ServiceHandle},
     users::User,
 };
@@ -37,6 +38,7 @@ impl GameService {
             creator: 0,
             players: vec![creator.into()],
             state: GameState::Open,
+            hits_remaining: vec![],
         };
 
         data.games.insert(game.id, game.clone());
@@ -148,6 +150,8 @@ impl GameService {
 
                 game.state = GameState::Guessing;
                 game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
+                game.hits_remaining = self.hit_service.lock().get_all();
+                game.hits_remaining.shuffle(&mut rng);
                 Ok(())
             }
         } else {
@@ -163,10 +167,31 @@ impl GameService {
 
         if let Some(game) = data.games.get_mut(&game_id) {
             game.state = GameState::Open;
+            game.hits_remaining = vec![];
 
             for p in game.players.iter_mut() {
                 p.state = PlayerState::Waiting;
             }
+        }
+    }
+
+    pub fn get_current_hit(&self, game_id: u32) -> Result<Hit, CurrentHitError> {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(game) = data.games.get_mut(&game_id) {
+            if game.state == GameState::Open {
+                Err(CurrentHitError {
+                    message: "game currently isn't running".into(),
+                    http_status_code: 409,
+                })
+            } else {
+                Ok(game.hits_remaining.first().cloned().unwrap())
+            }
+        } else {
+            Err(CurrentHitError {
+                message: "game not found".into(),
+                http_status_code: 404,
+            })
         }
     }
 }
