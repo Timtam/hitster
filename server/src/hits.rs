@@ -41,7 +41,7 @@ impl Hit {
 
         yt_id
             .captures(self.yt_url.as_str())
-            .and_then(|caps| Some(caps[7].to_string()))
+            .map(|caps| caps[7].to_string())
     }
 
     pub fn download_dir() -> String {
@@ -50,12 +50,10 @@ impl Hit {
 
     pub fn exists(&self) -> bool {
         self.yt_id()
-            .and_then(|id| {
-                Some(
-                    Path::new(&Hit::download_dir())
-                        .join(format!("{}.mp3", id))
-                        .is_file(),
-                )
+            .map(|id| {
+                Path::new(&Hit::download_dir())
+                    .join(format!("{}.mp3", id))
+                    .is_file()
             })
             .unwrap_or(false)
     }

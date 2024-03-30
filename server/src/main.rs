@@ -19,7 +19,7 @@ use rocket::{
 use rocket_db_pools::{sqlx, Database};
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
 use routes::{games as games_routes, users as users_routes};
-use services::{GameService, UserService};
+use services::ServiceStore;
 use std::{
     env,
     path::{Path, PathBuf},
@@ -117,8 +117,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 ..Default::default()
             }),
         )
-        .manage(GameService::new())
-        .manage(UserService::new())
+        .manage(ServiceStore::default())
         .manage(channel::<GameEvent>(1024).0)
 }
 

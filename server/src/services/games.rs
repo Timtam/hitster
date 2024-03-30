@@ -1,6 +1,7 @@
 use crate::{
     games::{Game, GameState, PlayerState},
     responses::{JoinGameError, LeaveGameError, StartGameError},
+    services::{HitService, ServiceHandle},
     users::User,
 };
 use rand::prelude::{thread_rng, SliceRandom};
@@ -13,11 +14,13 @@ pub struct GameServiceData {
 
 pub struct GameService {
     data: Mutex<GameServiceData>,
+    hit_service: ServiceHandle<HitService>,
 }
 
 impl GameService {
-    pub fn new() -> Self {
+    pub fn new(hit_service: ServiceHandle<HitService>) -> Self {
         Self {
+            hit_service,
             data: Mutex::new(GameServiceData {
                 id: 0,
                 games: HashMap::new(),

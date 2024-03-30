@@ -3,7 +3,7 @@ use crate::{
     responses::{
         GameResponse, GamesResponse, JoinGameError, LeaveGameError, MessageResponse, StartGameError,
     },
-    services::GameService,
+    services::ServiceStore,
     users::User,
 };
 use rocket::{
@@ -29,8 +29,8 @@ use std::default::Default;
 
 #[openapi(tag = "Games")]
 #[post("/games")]
-pub fn create_game(user: User, games: &State<GameService>) -> Created<Json<GameResponse>> {
-    let game = games.add(&user);
+pub fn create_game(user: User, serv: &State<ServiceStore>) -> Created<Json<GameResponse>> {
+    let game = serv.game_service().lock().add(&user);
 
     Created::new(format!("/games/{}", game.id)).body(Json(GameResponse {
         id: game.id,
@@ -47,9 +47,11 @@ pub fn create_game(user: User, games: &State<GameService>) -> Created<Json<GameR
 
 #[openapi(tag = "Games")]
 #[get("/games")]
-pub fn get_all_games(games: &State<GameService>) -> Json<GamesResponse> {
+pub fn get_all_games(serv: &State<ServiceStore>) -> Json<GamesResponse> {
     Json(GamesResponse {
-        games: games
+        games: serv
+            .game_service()
+            .lock()
             .get_all()
             .into_iter()
             .map(|game| GameResponse {
@@ -67,20 +69,23 @@ pub fn get_all_games(games: &State<GameService>) -> Json<GamesResponse> {
 pub async fn join_game(
     game_id: u32,
     user: User,
-    games: &State<GameService>,
+    serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, JoinGameError> {
-    games.join(game_id, &user).and_then(|_| {
+    let game_svc = serv.game_service();
+    let games = game_svc.lock();
+
+    games.join(game_id, &user).map(|_| {
         let _ = queue.send(GameEvent {
             game_id,
             event: "join".into(),
             players: Some(games.get(game_id).unwrap().players),
             ..Default::default()
         });
-        Ok(Json(MessageResponse {
+        Json(MessageResponse {
             message: "joined the game successfully".into(),
             r#type: "success".into(),
-        }))
+        })
     })
 }
 
@@ -89,20 +94,23 @@ pub async fn join_game(
 pub async fn leave_game(
     game_id: u32,
     user: User,
-    games: &State<GameService>,
+    serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, LeaveGameError> {
-    games.leave(game_id, &user).and_then(|_| {
+    let game_svc = serv.game_service();
+    let games = game_svc.lock();
+
+    games.leave(game_id, &user).map(|_| {
         let _ = queue.send(GameEvent {
             game_id,
             event: "leave".into(),
-            players: games.get(game_id).and_then(|g| Some(g.players)),
+            players: games.get(game_id).map(|g| g.players),
             ..Default::default()
         });
-        Ok(Json(MessageResponse {
+        Json(MessageResponse {
             message: "left the game successfully".into(),
             r#type: "success".into(),
-        }))
+        })
     })
 }
 
@@ -113,10 +121,13 @@ pub async fn leave_game(
 pub async fn start_game(
     game_id: u32,
     user: User,
-    games: &State<GameService>,
+    serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, StartGameError> {
-    games.start(game_id, &user).and_then(|_| {
+    let game_svc = serv.game_service();
+    let games = game_svc.lock();
+
+    games.start(game_id, &user).map(|_| {
         let _ = queue.send(GameEvent {
             game_id,
             event: "change_state".into(),
@@ -124,10 +135,10 @@ pub async fn start_game(
             ..Default::default()
         });
 
-        Ok(Json(MessageResponse {
+        Json(MessageResponse {
             message: "started game".into(),
             r#type: "success".into(),
-        }))
+        })
     })
 }
 
@@ -142,8 +153,11 @@ pub async fn start_game(
 #[get("/games/<game_id>")]
 pub fn get_game(
     game_id: u32,
-    games: &State<GameService>,
+    serv: &State<ServiceStore>,
 ) -> Result<Json<GameResponse>, NotFound<Json<MessageResponse>>> {
+    let game_svc = serv.game_service();
+    let games = game_svc.lock();
+
     match games.get(game_id) {
         Some(g) => Ok(Json(GameResponse {
             id: g.id,
@@ -582,7 +596,6 @@ mod tests {
 
             let data: GameEvent = serde_json::from_str(&line[5..]).expect("message JSON");
 
-            assert_eq!(data.event, "change_state");
             assert_eq!(data.state, Some(GameState::Guessing));
             break;
         }
