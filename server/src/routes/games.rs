@@ -7,8 +7,9 @@ use crate::{
     users::User,
 };
 use rocket::{
+    fs::NamedFile,
     response::{
-        status::{Created, NotFound},
+        status::{Created, Forbidden, NotFound},
         stream::{Event, EventStream},
     },
     serde::json::Json,
@@ -181,6 +182,16 @@ pub async fn events(
         }
     }
 }
+
+/*
+#[openapi(tag = "Games")]
+#[get("/games/<game_id>/hit")]
+pub async fn hit(
+    game_id: u32,
+    games: &State<GameService>,
+) -> Result<NamedFile, Forbidden<Json<MessageResponse>>> {
+}
+*/
 
 #[cfg(test)]
 mod tests {

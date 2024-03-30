@@ -6,6 +6,8 @@ pub struct HitService {
 
 impl HitService {
     pub fn new() -> Self {
-        Self { hits: get_all() }
+        Self {
+            hits: get_all().into_iter().filter(|h| h.exists()).collect::<_>(),
+        }
     }
 }

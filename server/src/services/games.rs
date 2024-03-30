@@ -1,5 +1,5 @@
 use crate::{
-    games::{Game, GameState},
+    games::{Game, GameState, PlayerState},
     responses::{JoinGameError, LeaveGameError, StartGameError},
     users::User,
 };
@@ -34,8 +34,6 @@ impl GameService {
             creator: 0,
             players: vec![creator.into()],
             state: GameState::Open,
-            guessing_player: 0,
-            confirming_player: 0,
         };
 
         data.games.insert(game.id, game.clone());
@@ -89,6 +87,19 @@ impl GameService {
                 })
             } else {
                 let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+
+                if game.players.iter().find(|p| p.id == user.id).unwrap().state
+                    != PlayerState::Waiting
+                {
+                    for i in 0..game.players.len() {
+                        if (pos == game.players.len() - 1 && i == 0) || (i == pos + 1) {
+                            game.players.get_mut(i).unwrap().state = PlayerState::Guessing;
+                        } else {
+                            game.players.get_mut(i).unwrap().state = PlayerState::Waiting;
+                        }
+                    }
+                }
+
                 game.players.remove(pos);
 
                 if game.players.is_empty() {
@@ -96,15 +107,6 @@ impl GameService {
                 } else if game.players.len() == 1 {
                     drop(data);
                     self.stop(game_id);
-                } else {
-                    if game.guessing_player >= game.players.len() {
-                        game.guessing_player = 0;
-                    }
-                    game.confirming_player = game.guessing_player + 1;
-
-                    if game.confirming_player >= game.players.len() {
-                        game.confirming_player = 0;
-                    }
                 }
 
                 Ok(())
@@ -141,9 +143,8 @@ impl GameService {
 
                 game.players.shuffle(&mut rng);
 
-                game.guessing_player = 0;
-                game.confirming_player = 1;
                 game.state = GameState::Guessing;
+                game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
                 Ok(())
             }
         } else {
@@ -159,8 +160,10 @@ impl GameService {
 
         if let Some(game) = data.games.get_mut(&game_id) {
             game.state = GameState::Open;
-            game.guessing_player = 0;
-            game.confirming_player = 0;
+
+            for p in game.players.iter_mut() {
+                p.state = PlayerState::Waiting;
+            }
         }
     }
 }

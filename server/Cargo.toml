@@ -10,6 +10,7 @@ argon2 = "0.5.3"
 dotenvy = "0.15.7"
 ffmpeg-cli = "0.1.0"
 names = "0.14.0"
+parking_lot = "0.12.1"
 rand = "0.8.5"
 regex = "1.10.3"
 rocket = { version = "0.5.0", features = ["json", "secrets"]}

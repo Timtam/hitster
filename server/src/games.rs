@@ -20,16 +20,22 @@ pub struct Game {
     pub creator: usize,
     pub players: Vec<Player>,
     pub state: GameState,
-    /// the player who has to guess the next hit
-    pub guessing_player: usize,
-    /// the player who'll confirm the correctness of title and interpret
-    pub confirming_player: usize,
+}
+
+#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+#[serde(rename_all_fields = "snake_case")]
+pub enum PlayerState {
+    Waiting,
+    Guessing,
+    Intercepting,
+    Confirming,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 pub struct Player {
     pub id: u32,
     pub name: String,
+    pub state: PlayerState,
 }
 
 impl From<&User> for Player {
@@ -37,6 +43,7 @@ impl From<&User> for Player {
         Self {
             id: u.id,
             name: u.username.clone(),
+            state: PlayerState::Waiting,
         }
     }
 }

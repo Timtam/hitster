@@ -1,8 +1,9 @@
+use crate::services::HitService;
 use ffmpeg_cli::{FfmpegBuilder, File, Parameter};
 use regex::Regex;
 use rocket::{
-    fairing::{Fairing, Info, Kind},
-    Orbit, Rocket,
+    fairing::{self, Fairing, Info, Kind},
+    Build, Rocket,
 };
 use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
 use std::{
@@ -31,6 +32,35 @@ pub struct Hit {
     pub playback_offset: u16,
 }
 
+impl Hit {
+    pub fn yt_id(&self) -> Option<String> {
+        let yt_id: Regex = Regex::new(
+            r"^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*",
+        )
+        .unwrap();
+
+        yt_id
+            .captures(self.yt_url.as_str())
+            .and_then(|caps| Some(caps[7].to_string()))
+    }
+
+    pub fn download_dir() -> String {
+        env::var("DOWNLOAD_DIRECTORY").unwrap_or("./hits".to_string())
+    }
+
+    pub fn exists(&self) -> bool {
+        self.yt_id()
+            .and_then(|id| {
+                Some(
+                    Path::new(&Hit::download_dir())
+                        .join(format!("{}.mp3", id))
+                        .is_file(),
+                )
+            })
+            .unwrap_or(false)
+    }
+}
+
 #[derive(Default)]
 pub struct HitsterDownloader {}
 
@@ -38,42 +68,32 @@ pub struct HitsterDownloader {}
 impl Fairing for HitsterDownloader {
     fn info(&self) -> Info {
         Info {
-            kind: Kind::Liftoff,
+            kind: Kind::Ignite,
             name: "Download hits",
         }
     }
 
-    async fn on_liftoff(&self, _rocket: &Rocket<Orbit>) {
-        let yt_id: Regex = Regex::new(
-            r"^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*",
-        )
-        .unwrap();
-
-        let download_dir = env::var("DOWNLOAD_DIRECTORY").unwrap_or("./hits".to_string());
+    async fn on_ignite(&self, rocket: Rocket<Build>) -> fairing::Result {
+        let download_dir = Hit::download_dir();
 
         let _ = create_dir_all(download_dir.clone());
 
         println!("Starting download of missing hits. This may take a while...");
 
         for hit in get_all().iter() {
-            if let Some(caps) = yt_id.captures(hit.yt_url.as_str()) {
-                let id = &caps[7];
-
-                if !Path::new(&download_dir)
-                    .join(format!("{}.mp3", id))
-                    .is_file()
-                {
+            if let Some(id) = hit.yt_id() {
+                if !hit.exists() {
                     let options = VideoOptions {
                         quality: VideoQuality::HighestAudio,
                         filter: VideoSearchOptions::Audio,
                         ..Default::default()
                     };
-                    if let Ok(video) = Video::new_with_options(id, options) {
+                    if let Ok(video) = Video::new_with_options(id.as_str(), options) {
                         println!(
                             "Download {}: {} to {}.opus",
                             hit.interpret.as_str(),
                             hit.title.as_str(),
-                            id
+                            id.as_str()
                         );
 
                         if video
@@ -114,5 +134,7 @@ impl Fairing for HitsterDownloader {
         }
 
         println!("Download finished.");
+
+        Ok(rocket.manage(HitService::new()))
     }
 }
