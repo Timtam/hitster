@@ -37,4 +37,24 @@ export default class GameService {
         if (res.status == 200) return
         throw json({ message: (await res.json()).message, status: res.status })
     }
+
+    async start(game_id: number) {
+        let res = await fetch(`/api/games/${game_id}/start`, {
+            method: "PATCH",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
+
+    async stop(game_id: number) {
+        let res = await fetch(`/api/games/${game_id}/stop`, {
+            method: "PATCH",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
 }

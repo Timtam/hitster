@@ -2,7 +2,7 @@ use crate::{
     games::{GameEvent, GameState},
     responses::{
         CurrentHitError, GameResponse, GamesResponse, JoinGameError, LeaveGameError,
-        MessageResponse, StartGameError,
+        MessageResponse, StartGameError, StopGameError,
     },
     services::ServiceStore,
     users::User,
@@ -141,6 +141,32 @@ pub async fn start_game(
             r#type: "success".into(),
         })
     })
+}
+
+#[openapi(tag = "Games")]
+#[patch("/games/<game_id>/stop")]
+pub async fn stop_game(
+    game_id: u32,
+    user: User,
+    serv: &State<ServiceStore>,
+    queue: &State<Sender<GameEvent>>,
+) -> Result<Json<MessageResponse>, StopGameError> {
+    serv.game_service()
+        .lock()
+        .stop(game_id, Some(&user))
+        .map(|_| {
+            let _ = queue.send(GameEvent {
+                game_id,
+                event: "change_state".into(),
+                state: Some(GameState::Open),
+                ..Default::default()
+            });
+
+            Json(MessageResponse {
+                message: "stopped game".into(),
+                r#type: "success".into(),
+            })
+        })
 }
 
 /// Get all info about a certain game
@@ -465,6 +491,45 @@ mod tests {
     }
 
     #[sqlx::test]
+    async fn can_stop_game() {
+        let client = mocked_client().await;
+
+        let cookies = create_test_users(&client, 2).await;
+
+        let game_id = client
+            .post(uri!("/api", super::create_game))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap()
+            .id;
+
+        client
+            .patch(uri!("/api", super::join_game(game_id = game_id)))
+            .private_cookie(cookies.get(1).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!("/api", super::start_game(game_id = game_id)))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .patch(uri!("/api", super::stop_game(game_id = game_id)))
+                .private_cookie(cookies.get(0).cloned().unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Ok
+        );
+    }
+
+    #[sqlx::test]
     async fn only_creators_can_start_games() {
         let client = mocked_client().await;
 
@@ -489,6 +554,45 @@ mod tests {
         assert_eq!(
             client
                 .patch(uri!("/api", super::start_game(game_id = game_id)))
+                .private_cookie(cookies.get(1).cloned().unwrap())
+                .dispatch()
+                .await
+                .status(),
+            Status::Forbidden
+        );
+    }
+
+    #[sqlx::test]
+    async fn only_creators_can_stop_games() {
+        let client = mocked_client().await;
+
+        let cookies = create_test_users(&client, 2).await;
+
+        let game_id = client
+            .post(uri!("/api", super::create_game))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await
+            .into_json::<GameResponse>()
+            .await
+            .unwrap()
+            .id;
+
+        client
+            .patch(uri!("/api", super::join_game(game_id = game_id)))
+            .private_cookie(cookies.get(1).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!("/api", super::start_game(game_id = game_id)))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        assert_eq!(
+            client
+                .patch(uri!("/api", super::stop_game(game_id = game_id)))
                 .private_cookie(cookies.get(1).cloned().unwrap())
                 .dispatch()
                 .await

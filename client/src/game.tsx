@@ -62,6 +62,14 @@ export function Game() {
         }
     }, [])
 
+    const canStartOrStopGame = () => {
+        return (
+            cookies.logged_in !== undefined &&
+            game.creator.id === cookies.logged_in.id &&
+            game.players.length >= 2
+        )
+    }
+
     return (
         <>
             <Helmet>
@@ -86,6 +94,24 @@ export function Game() {
                     : game.players.some((p) => p.id === cookies.logged_in.id)
                       ? "Leave game"
                       : "Join game"}
+            </Button>
+            <Button
+                disabled={!canStartOrStopGame()}
+                onClick={async () => {
+                    if (game.state === GameState.Open)
+                        await gameService.start(game.id)
+                    else await gameService.stop(game.id)
+                }}
+            >
+                {canStartOrStopGame()
+                    ? game.state !== GameState.Open
+                        ? "Stop game"
+                        : "Start game"
+                    : cookies.logged_in === undefined
+                      ? "You must be logged in to start or stop a game"
+                      : game.players.length < 2
+                        ? "At least two players must be part of a game"
+                        : "Only the creator can start or stop a game"}
             </Button>
             <h3>Players</h3>
             <Table responsive>

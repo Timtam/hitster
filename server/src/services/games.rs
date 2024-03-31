@@ -1,7 +1,7 @@
 use crate::{
     games::{Game, GameState, PlayerState},
     hits::Hit,
-    responses::{CurrentHitError, JoinGameError, LeaveGameError, StartGameError},
+    responses::{CurrentHitError, JoinGameError, LeaveGameError, StartGameError, StopGameError},
     services::{HitService, ServiceHandle},
     users::User,
 };
@@ -111,7 +111,7 @@ impl GameService {
                     data.games.remove(&game_id);
                 } else if game.players.len() == 1 {
                     drop(data);
-                    self.stop(game_id);
+                    let _ = self.stop(game_id, None);
                 }
 
                 Ok(())
@@ -162,16 +162,47 @@ impl GameService {
         }
     }
 
-    pub fn stop(&self, game_id: u32) {
+    pub fn stop(&self, game_id: u32, user: Option<&User>) -> Result<(), StopGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(&game_id) {
+            if let Some(u) = user {
+                if game
+                    .players
+                    .iter()
+                    .enumerate()
+                    .find(|(_, p)| p.id == u.id)
+                    .unwrap()
+                    .0
+                    != game.creator
+                {
+                    return Err(StopGameError {
+                        http_status_code: 403,
+                        message: "you are not the creator of this game".into(),
+                    });
+                }
+            }
+
+            if game.state == GameState::Open {
+                return Err(StopGameError {
+                    http_status_code: 409,
+                    message: "the game isn't running".into(),
+                });
+            }
+
             game.state = GameState::Open;
             game.hits_remaining = vec![];
 
             for p in game.players.iter_mut() {
                 p.state = PlayerState::Waiting;
             }
+
+            Ok(())
+        } else {
+            Err(StopGameError {
+                http_status_code: 404,
+                message: "game with that id not found".into(),
+            })
         }
     }
 
