@@ -1,8 +1,8 @@
 use crate::{
-    games::{GameEvent, GameState},
+    games::{Game, GameEvent, GameState},
     responses::{
-        CurrentHitError, GameResponse, GamesResponse, JoinGameError, LeaveGameError,
-        MessageResponse, StartGameError, StopGameError,
+        CurrentHitError, GamesResponse, JoinGameError, LeaveGameError, MessageResponse,
+        StartGameError, StopGameError,
     },
     services::ServiceStore,
     users::User,
@@ -30,15 +30,10 @@ use std::default::Default;
 
 #[openapi(tag = "Games")]
 #[post("/games")]
-pub fn create_game(user: User, serv: &State<ServiceStore>) -> Created<Json<GameResponse>> {
+pub fn create_game(user: User, serv: &State<ServiceStore>) -> Created<Json<Game>> {
     let game = serv.game_service().lock().add(&user);
 
-    Created::new(format!("/games/{}", game.id)).body(Json(GameResponse {
-        id: game.id,
-        players: game.players,
-        state: game.state,
-        hit_duration: game.hit_duration,
-    }))
+    Created::new(format!("/games/{}", game.id)).body(Json(game))
 }
 
 /// Retrieve all currently known games
@@ -50,18 +45,7 @@ pub fn create_game(user: User, serv: &State<ServiceStore>) -> Created<Json<GameR
 #[get("/games")]
 pub fn get_all_games(serv: &State<ServiceStore>) -> Json<GamesResponse> {
     Json(GamesResponse {
-        games: serv
-            .game_service()
-            .lock()
-            .get_all()
-            .into_iter()
-            .map(|game| GameResponse {
-                id: game.id,
-                players: game.players,
-                state: game.state,
-                hit_duration: game.hit_duration,
-            })
-            .collect::<_>(),
+        games: serv.game_service().lock().get_all(),
     })
 }
 
@@ -148,11 +132,12 @@ pub async fn start_game(
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
-    games.start(game_id, &user).map(|_| {
+    games.start(game_id, &user).map(|g| {
         let _ = queue.send(GameEvent {
             game_id,
             event: "change_state".into(),
-            state: Some(GameState::Guessing),
+            state: Some(g.state),
+            players: Some(g.players),
             ..Default::default()
         });
 
@@ -201,17 +186,12 @@ pub async fn stop_game(
 pub fn get_game(
     game_id: u32,
     serv: &State<ServiceStore>,
-) -> Result<Json<GameResponse>, NotFound<Json<MessageResponse>>> {
+) -> Result<Json<Game>, NotFound<Json<MessageResponse>>> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
     match games.get(game_id) {
-        Some(g) => Ok(Json(GameResponse {
-            id: g.id,
-            players: g.players,
-            state: g.state,
-            hit_duration: g.hit_duration,
-        })),
+        Some(g) => Ok(Json(g)),
         None => Err(NotFound(Json(MessageResponse {
             message: "game id not found".into(),
             r#type: "error".into(),
@@ -264,8 +244,7 @@ pub async fn hit(game_id: u32, serv: &State<ServiceStore>) -> Result<NamedFile, 
 #[cfg(test)]
 mod tests {
     use crate::{
-        games::{GameEvent, GameState},
-        responses::GameResponse,
+        games::{Game, GameEvent, GameState},
         routes::users::tests::create_test_users,
         test::mocked_client,
     };
@@ -287,7 +266,7 @@ mod tests {
             .await;
 
         assert_eq!(game.status(), Status::Created);
-        assert!(game.into_json::<GameResponse>().await.is_some());
+        assert!(game.into_json::<Game>().await.is_some());
     }
 
     #[sqlx::test]
@@ -301,7 +280,7 @@ mod tests {
             .private_cookie(cookie.clone())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap();
 
@@ -331,8 +310,8 @@ mod tests {
             .await;
 
         assert_ne!(
-            game1.into_json::<GameResponse>().await.unwrap().id,
-            game2.into_json::<GameResponse>().await.unwrap().id
+            game1.into_json::<Game>().await.unwrap().id,
+            game2.into_json::<Game>().await.unwrap().id
         );
     }
 
@@ -352,7 +331,7 @@ mod tests {
             client
                 .patch(uri!(
                     "/api",
-                    super::join_game(game_id = game.into_json::<GameResponse>().await.unwrap().id)
+                    super::join_game(game_id = game.into_json::<Game>().await.unwrap().id)
                 ))
                 .private_cookie(cookies.get(1).cloned().unwrap())
                 .dispatch()
@@ -378,7 +357,7 @@ mod tests {
             client
                 .patch(uri!(
                     "/api",
-                    super::join_game(game_id = game.into_json::<GameResponse>().await.unwrap().id)
+                    super::join_game(game_id = game.into_json::<Game>().await.unwrap().id)
                 ))
                 .private_cookie(cookie)
                 .dispatch()
@@ -404,7 +383,7 @@ mod tests {
             client
                 .patch(uri!(
                     "/api",
-                    super::leave_game(game_id = game.into_json::<GameResponse>().await.unwrap().id)
+                    super::leave_game(game_id = game.into_json::<Game>().await.unwrap().id)
                 ))
                 .private_cookie(cookie)
                 .dispatch()
@@ -425,7 +404,7 @@ mod tests {
             .private_cookie(cookie.clone())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap()
             .id;
@@ -467,7 +446,7 @@ mod tests {
             client
                 .patch(uri!(
                     "/api",
-                    super::leave_game(game_id = game.into_json::<GameResponse>().await.unwrap().id)
+                    super::leave_game(game_id = game.into_json::<Game>().await.unwrap().id)
                 ))
                 .private_cookie(cookies.get(1).cloned().unwrap())
                 .dispatch()
@@ -488,7 +467,7 @@ mod tests {
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap()
             .id;
@@ -521,7 +500,7 @@ mod tests {
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap()
             .id;
@@ -560,7 +539,7 @@ mod tests {
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap()
             .id;
@@ -593,7 +572,7 @@ mod tests {
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap()
             .id;
@@ -632,7 +611,7 @@ mod tests {
             .private_cookie(cookie.clone())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap()
             .id;
@@ -659,7 +638,7 @@ mod tests {
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap()
             .id;
@@ -698,7 +677,7 @@ mod tests {
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap()
             .id;
@@ -744,7 +723,7 @@ mod tests {
             .private_cookie(cookies.get(0).cloned().unwrap())
             .dispatch()
             .await
-            .into_json::<GameResponse>()
+            .into_json::<Game>()
             .await
             .unwrap()
             .id;

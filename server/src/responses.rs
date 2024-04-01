@@ -1,7 +1,4 @@
-use crate::{
-    games::{GameState, Player},
-    users::User,
-};
+use crate::{games::Game, users::User};
 use rocket::{
     http::{ContentType, Status},
     request::Request,
@@ -348,15 +345,7 @@ impl<'r> Responder<'r, 'static> for CurrentHitError {
 
 #[derive(Serialize, Deserialize, JsonSchema)]
 pub struct GamesResponse {
-    pub games: Vec<GameResponse>,
-}
-
-#[derive(Serialize, Deserialize, JsonSchema)]
-pub struct GameResponse {
-    pub id: u32,
-    pub players: Vec<Player>,
-    pub state: GameState,
-    pub hit_duration: u8,
+    pub games: Vec<Game>,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug)]

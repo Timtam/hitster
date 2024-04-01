@@ -230,7 +230,8 @@ pub async fn logout(
 #[cfg(test)]
 pub mod tests {
     use crate::{
-        responses::{GameResponse, GamesResponse, UsersResponse},
+        games::Game,
+        responses::{GamesResponse, UsersResponse},
         routes::games as games_routes,
         test::mocked_client,
         users::{User, UserLoginPayload},
@@ -531,9 +532,7 @@ pub mod tests {
         client
             .patch(uri!(
                 "/api",
-                games_routes::join_game(
-                    game_id = game.into_json::<GameResponse>().await.unwrap().id
-                )
+                games_routes::join_game(game_id = game.into_json::<Game>().await.unwrap().id)
             ))
             .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()
@@ -593,9 +592,7 @@ pub mod tests {
         client
             .patch(uri!(
                 "/api",
-                games_routes::join_game(
-                    game_id = game.into_json::<GameResponse>().await.unwrap().id
-                )
+                games_routes::join_game(game_id = game.into_json::<Game>().await.unwrap().id)
             ))
             .private_cookie(cookies.get(1).cloned().unwrap())
             .dispatch()

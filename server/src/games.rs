@@ -14,13 +14,15 @@ pub enum GameState {
     Confirming,
 }
 
-#[derive(Clone, Eq, PartialEq, Debug)]
+#[derive(Clone, Eq, PartialEq, Debug, Deserialize, Serialize, JsonSchema)]
 pub struct Game {
     pub id: u32,
     pub players: Vec<Player>,
     pub state: GameState,
+    #[serde(skip)]
     pub hits_remaining: VecDeque<Hit>,
     pub hit_duration: u8,
+    pub start_tokens: u8,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -39,6 +41,7 @@ pub struct Player {
     pub state: PlayerState,
     pub creator: bool,
     pub hits: Vec<Hit>,
+    pub tokens: u8,
 }
 
 impl From<&User> for Player {
@@ -49,6 +52,7 @@ impl From<&User> for Player {
             state: PlayerState::Waiting,
             creator: false,
             hits: vec![],
+            tokens: 0,
         }
     }
 }

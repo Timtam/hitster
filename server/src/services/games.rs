@@ -45,6 +45,7 @@ impl GameService {
             state: GameState::Open,
             hits_remaining: VecDeque::new(),
             hit_duration: 20,
+            start_tokens: 2,
         };
 
         data.games.insert(game.id, game.clone());
@@ -145,7 +146,7 @@ impl GameService {
         }
     }
 
-    pub fn start(&self, game_id: u32, user: &User) -> Result<(), StartGameError> {
+    pub fn start(&self, game_id: u32, user: &User) -> Result<Game, StartGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(&game_id) {
@@ -182,14 +183,13 @@ impl GameService {
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
 
                 for i in 0..game.players.len() {
-                    game.players
-                        .get_mut(i)
-                        .unwrap()
-                        .hits
-                        .push(game.hits_remaining.pop_front().unwrap());
+                    let player = game.players.get_mut(i).unwrap();
+
+                    player.hits.push(game.hits_remaining.pop_front().unwrap());
+                    player.tokens = game.start_tokens;
                 }
 
-                Ok(())
+                Ok(game.clone())
             }
         } else {
             Err(StartGameError {

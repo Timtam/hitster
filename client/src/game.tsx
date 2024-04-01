@@ -41,6 +41,8 @@ export function Game() {
 
             setGame((g) => {
                 g.state = ge.state as GameState
+
+                if (ge.players !== undefined) g.players = ge.players
             })
 
             if (ge.state === GameState.Guessing) {
@@ -129,6 +131,7 @@ export function Game() {
                 <thead>
                     <tr>
                         <th>Name</th>
+                        <th>Tokens</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -138,6 +141,7 @@ export function Game() {
                                 {p.name +
                                     (p.creator === true ? " (creator)" : "")}
                             </td>
+                            <td>{p.tokens}</td>
                         </tr>
                     ))}
                 </tbody>
