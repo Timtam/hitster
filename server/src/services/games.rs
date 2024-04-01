@@ -39,6 +39,7 @@ impl GameService {
             players: vec![creator.into()],
             state: GameState::Open,
             hits_remaining: vec![],
+            hit_duration: 20,
         };
 
         data.games.insert(game.id, game.clone());

@@ -346,6 +346,7 @@ pub struct GameResponse {
     pub creator: Player,
     pub players: Vec<Player>,
     pub state: GameState,
+    pub hit_duration: u8,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug)]

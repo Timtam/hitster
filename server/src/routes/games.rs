@@ -38,6 +38,7 @@ pub fn create_game(user: User, serv: &State<ServiceStore>) -> Created<Json<GameR
         creator: game.players.get(game.creator).cloned().unwrap(),
         players: game.players,
         state: game.state,
+        hit_duration: game.hit_duration,
     }))
 }
 
@@ -60,6 +61,7 @@ pub fn get_all_games(serv: &State<ServiceStore>) -> Json<GamesResponse> {
                 creator: game.players.get(game.creator).cloned().unwrap(),
                 players: game.players,
                 state: game.state,
+                hit_duration: game.hit_duration,
             })
             .collect::<_>(),
     })
@@ -191,6 +193,7 @@ pub fn get_game(
             creator: g.players.get(g.creator).cloned().unwrap(),
             players: g.players,
             state: g.state,
+            hit_duration: g.hit_duration,
         })),
         None => Err(NotFound(Json(MessageResponse {
             message: "game id not found".into(),

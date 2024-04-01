@@ -21,6 +21,7 @@ pub struct Game {
     pub players: Vec<Player>,
     pub state: GameState,
     pub hits_remaining: Vec<Hit>,
+    pub hit_duration: u8,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]

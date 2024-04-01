@@ -7,6 +7,7 @@ import type { LoaderFunction } from "react-router"
 import { json, useLoaderData, useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
 import { Game as GameEntity, GameEvent, GameState, Player } from "./entities"
+import HitPlayer from "./hit-player"
 import GameService from "./services/games.service"
 
 export const loader: LoaderFunction = async ({
@@ -29,6 +30,7 @@ export function Game() {
     let gameService = useMemo(() => new GameService(), [])
     let [cookies] = useCookies()
     let [game, setGame] = useImmer(useLoaderData() as GameEntity)
+    let [hitSrc, setHitSrc] = useImmer("")
     let navigate = useNavigate()
 
     useEffect(() => {
@@ -40,6 +42,11 @@ export function Game() {
             setGame((g) => {
                 g.state = ge.state as GameState
             })
+
+            if (ge.state === GameState.Guessing) {
+                setHitSrc("")
+                setHitSrc(`/api/games/${game.id}/hit`)
+            }
         })
 
         eventSource.addEventListener("join", (e) => {
@@ -128,6 +135,7 @@ export function Game() {
                     ))}
                 </tbody>
             </Table>
+            <HitPlayer src={hitSrc} duration={game.hit_duration} />
         </>
     )
 }
