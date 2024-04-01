@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
+import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
 import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
@@ -31,6 +32,7 @@ export function Game() {
     let [cookies] = useCookies()
     let [game, setGame] = useImmer(useLoaderData() as GameEntity)
     let [hitSrc, setHitSrc] = useImmer("")
+    let [showHits, setShowHits] = useImmer<boolean[]>([])
     let navigate = useNavigate()
 
     useEffect(() => {
@@ -72,6 +74,10 @@ export function Game() {
             eventSource.close()
         }
     }, [])
+
+    useEffect(() => {
+        setShowHits(Array.from({ length: 5 }, () => false))
+    }, [game])
 
     const canStartOrStopGame = () => {
         return (
@@ -132,18 +138,84 @@ export function Game() {
                     <tr>
                         <th>Name</th>
                         <th>Tokens</th>
+                        <th>Hits</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {game.players.map((p) => (
-                        <tr>
-                            <td>
-                                {p.name +
-                                    (p.creator === true ? " (creator)" : "")}
-                            </td>
-                            <td>{p.tokens}</td>
-                        </tr>
-                    ))}
+                    {game.players.map((p, i) => {
+                        return (
+                            <tr>
+                                <td>
+                                    {p.name +
+                                        (p.creator === true
+                                            ? " (creator)"
+                                            : "")}
+                                </td>
+                                <td>{p.tokens}</td>
+                                <td>
+                                    <Button
+                                        disabled={p.hits.length === 0}
+                                        aria-expanded="false"
+                                        onClick={() =>
+                                            setShowHits((h) => {
+                                                h[i] = true
+                                            })
+                                        }
+                                    >{`Hits: ${p.hits.length}`}</Button>
+                                    <Modal
+                                        show={showHits[i]}
+                                        onHide={() =>
+                                            setShowHits((h) => {
+                                                h[i] = false
+                                            })
+                                        }
+                                    >
+                                        <Modal.Header
+                                            closeButton
+                                            closeLabel="Close"
+                                        >
+                                            <Modal.Title>
+                                                {"Hits for " + p.name}
+                                            </Modal.Title>
+                                        </Modal.Header>
+                                        <Modal.Body>
+                                            <Table responsive>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Interpret</th>
+                                                        <th>Title</th>
+                                                        <th>Year</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {p.hits
+                                                        .toSorted(
+                                                            (a, b) =>
+                                                                a.year - b.year,
+                                                        )
+                                                        .map((h) => (
+                                                            <tr>
+                                                                <td>
+                                                                    {
+                                                                        h.interpret
+                                                                    }
+                                                                </td>
+                                                                <td>
+                                                                    {h.title}
+                                                                </td>
+                                                                <td>
+                                                                    {h.year}
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                </tbody>
+                                            </Table>
+                                        </Modal.Body>
+                                    </Modal>
+                                </td>
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </Table>
             <HitPlayer src={hitSrc} duration={game.hit_duration} />

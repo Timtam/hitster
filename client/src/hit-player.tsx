@@ -13,7 +13,9 @@ export default function HitPlayer({
 }) {
     let player = createRef<AudioPlayer>()
     let [playing, setPlaying] = useState(false)
-    let [timer, setTimer] = useImmer<ReturnType<typeof setTimeout>>(0)
+    let [timer, setTimer] = useImmer<ReturnType<typeof setTimeout> | undefined>(
+        undefined,
+    )
 
     useEffect(() => {
         if (src !== "") {
@@ -34,7 +36,7 @@ export default function HitPlayer({
             )
         } else {
             clearTimeout(timer)
-            setTimer(0)
+            setTimer(undefined)
             player.current?.audio.current?.load()
         }
     }, [playing])
