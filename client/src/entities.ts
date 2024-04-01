@@ -15,6 +15,14 @@ export const Hit = z.object({
 
 export type Hit = z.infer<typeof Hit>
 
+export const Slot = z.object({
+    from_year: z.number(),
+    to_year: z.number(),
+    id: z.number(),
+})
+
+export type Slot = z.infer<typeof Slot>
+
 export enum GameState {
     Open = "Open",
     Guessing = "Guessing",
@@ -27,6 +35,7 @@ export const Player = z.object({
     creator: z.boolean(),
     hits: z.array(Hit),
     tokens: z.number(),
+    slots: z.array(Slot),
 })
 
 export type Player = z.infer<typeof Player>

@@ -42,6 +42,14 @@ pub struct Player {
     pub creator: bool,
     pub hits: Vec<Hit>,
     pub tokens: u8,
+    pub slots: Vec<Slot>,
+}
+
+#[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+pub struct Slot {
+    pub from_year: u32,
+    pub to_year: u32,
+    pub id: u8,
 }
 
 impl From<&User> for Player {
@@ -53,6 +61,7 @@ impl From<&User> for Player {
             creator: false,
             hits: vec![],
             tokens: 0,
+            slots: vec![],
         }
     }
 }

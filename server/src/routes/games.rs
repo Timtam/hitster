@@ -244,7 +244,7 @@ pub async fn hit(game_id: u32, serv: &State<ServiceStore>) -> Result<NamedFile, 
 #[cfg(test)]
 mod tests {
     use crate::{
-        games::{Game, GameEvent, GameState},
+        games::{Game, GameEvent, GameState, Slot},
         routes::users::tests::create_test_users,
         test::mocked_client,
     };
@@ -747,6 +747,63 @@ mod tests {
                 .await
                 .status(),
             Status::Ok
+        );
+    }
+
+    #[sqlx::test]
+    async fn can_read_slots_after_starting_game() {
+        let client = mocked_client().await;
+
+        let cookies = create_test_users(&client, 2).await;
+
+        let game_id = client
+            .post(uri!("/api", super::create_game))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await
+            .into_json::<Game>()
+            .await
+            .unwrap()
+            .id;
+
+        client
+            .patch(uri!("/api", super::join_game(game_id = game_id)))
+            .private_cookie(cookies.get(1).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        client
+            .patch(uri!("/api", super::start_game(game_id = game_id)))
+            .private_cookie(cookies.get(0).cloned().unwrap())
+            .dispatch()
+            .await;
+
+        let player = client
+            .get(uri!("/api", super::get_game(game_id = game_id)))
+            .dispatch()
+            .await
+            .into_json::<Game>()
+            .await
+            .unwrap()
+            .players
+            .into_iter()
+            .find(|p| p.id == 1)
+            .unwrap();
+
+        assert_eq!(
+            player.slots,
+            vec![
+                Slot {
+                    from_year: 0,
+                    to_year: player.hits.get(0).unwrap().year,
+                    id: 1,
+                },
+                Slot {
+                    from_year: player.hits.get(0).unwrap().year,
+                    to_year: 0,
+                    id: 2,
+                }
+            ]
         );
     }
 }

@@ -1,13 +1,14 @@
 use crate::{
-    games::{Game, GameState, Player, PlayerState},
+    games::{Game, GameState, Player, PlayerState, Slot},
     hits::Hit,
     responses::{CurrentHitError, JoinGameError, LeaveGameError, StartGameError, StopGameError},
     services::{HitService, ServiceHandle},
     users::User,
 };
+use itertools::sorted;
 use rand::prelude::{thread_rng, SliceRandom};
 use std::{
-    collections::{HashMap, VecDeque},
+    collections::{HashMap, HashSet, VecDeque},
     sync::Mutex,
 };
 
@@ -187,6 +188,7 @@ impl GameService {
 
                     player.hits.push(game.hits_remaining.pop_front().unwrap());
                     player.tokens = game.start_tokens;
+                    player.slots = self.get_slots(&player.hits);
                 }
 
                 Ok(game.clone())
@@ -260,5 +262,42 @@ impl GameService {
                 http_status_code: 404,
             })
         }
+    }
+
+    pub fn get_slots(&self, hits: &Vec<Hit>) -> Vec<Slot> {
+        let mut slots = vec![];
+        let years = sorted(
+            hits.iter()
+                .map(|h| h.year)
+                .collect::<HashSet<_>>()
+                .into_iter(),
+        )
+        .collect::<Vec<_>>();
+
+        for i in 0..years.len() {
+            if i == 0 {
+                slots.push(Slot {
+                    from_year: 0,
+                    to_year: *years.get(i).unwrap(),
+                    id: (slots.len() + 1) as u8,
+                });
+            }
+            if i < years.len() - 1 {
+                slots.push(Slot {
+                    from_year: *years.get(i).unwrap(),
+                    to_year: *years.get(i + 1).unwrap(),
+                    id: (slots.len() + 1) as u8,
+                });
+            }
+            if i == years.len() - 1 {
+                slots.push(Slot {
+                    from_year: *years.get(i).unwrap(),
+                    to_year: 0,
+                    id: (slots.len() + 1) as u8,
+                });
+            }
+        }
+
+        return slots;
     }
 }
