@@ -16,13 +16,13 @@ export enum GameState {
 export const Player = z.object({
     id: z.number(),
     name: z.string(),
+    creator: z.boolean(),
 })
 
 export type Player = z.infer<typeof Player>
 
 export const Game = z.object({
     id: z.number(),
-    creator: Player,
     players: z.array(Player),
     state: z.nativeEnum(GameState),
     hit_duration: z.number(),

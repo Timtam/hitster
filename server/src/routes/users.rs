@@ -618,9 +618,11 @@ pub mod tests {
                 .games
                 .get(0)
                 .unwrap()
-                .creator
-                .id,
-            2
+                .players
+                .get(0)
+                .unwrap()
+                .creator,
+            true
         );
     }
 

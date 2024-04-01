@@ -1,5 +1,5 @@
 use crate::{
-    games::{Game, GameState, PlayerState},
+    games::{Game, GameState, Player, PlayerState},
     hits::Hit,
     responses::{CurrentHitError, JoinGameError, LeaveGameError, StartGameError, StopGameError},
     services::{HitService, ServiceHandle},
@@ -32,11 +32,13 @@ impl GameService {
     pub fn add(&self, creator: &User) -> Game {
         let mut data = self.data.lock().unwrap();
         data.id += 1;
+        let mut player: Player = creator.into();
+
+        player.creator = true;
 
         let game = Game {
             id: data.id,
-            creator: 0,
-            players: vec![creator.into()],
+            players: vec![player],
             state: GameState::Open,
             hits_remaining: vec![],
             hit_duration: 20,
@@ -139,7 +141,14 @@ impl GameService {
                     http_status_code: 409,
                     message: "the game is already running".into(),
                 })
-            } else if game.players.get(game.creator).unwrap().id != user.id {
+            } else if game
+                .players
+                .iter()
+                .find(|p| p.id == user.id)
+                .map(|p| p.creator)
+                .unwrap_or(false)
+                == false
+            {
                 Err(StartGameError {
                     http_status_code: 403,
                     message: "only the creator can start a game".into(),
@@ -171,11 +180,10 @@ impl GameService {
                 if game
                     .players
                     .iter()
-                    .enumerate()
-                    .find(|(_, p)| p.id == u.id)
-                    .unwrap()
-                    .0
-                    != game.creator
+                    .find(|p| p.id == u.id)
+                    .map(|p| p.creator)
+                    .unwrap_or(false)
+                    == false
                 {
                     return Err(StopGameError {
                         http_status_code: 403,

@@ -17,7 +17,6 @@ pub enum GameState {
 #[derive(Clone, Eq, PartialEq, Debug)]
 pub struct Game {
     pub id: u32,
-    pub creator: usize,
     pub players: Vec<Player>,
     pub state: GameState,
     pub hits_remaining: Vec<Hit>,
@@ -38,6 +37,7 @@ pub struct Player {
     pub id: u32,
     pub name: String,
     pub state: PlayerState,
+    pub creator: bool,
 }
 
 impl From<&User> for Player {
@@ -46,6 +46,7 @@ impl From<&User> for Player {
             id: u.id,
             name: u.username.clone(),
             state: PlayerState::Waiting,
+            creator: false,
         }
     }
 }

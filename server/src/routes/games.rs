@@ -35,7 +35,6 @@ pub fn create_game(user: User, serv: &State<ServiceStore>) -> Created<Json<GameR
 
     Created::new(format!("/games/{}", game.id)).body(Json(GameResponse {
         id: game.id,
-        creator: game.players.get(game.creator).cloned().unwrap(),
         players: game.players,
         state: game.state,
         hit_duration: game.hit_duration,
@@ -58,7 +57,6 @@ pub fn get_all_games(serv: &State<ServiceStore>) -> Json<GamesResponse> {
             .into_iter()
             .map(|game| GameResponse {
                 id: game.id,
-                creator: game.players.get(game.creator).cloned().unwrap(),
                 players: game.players,
                 state: game.state,
                 hit_duration: game.hit_duration,
@@ -190,7 +188,6 @@ pub fn get_game(
     match games.get(game_id) {
         Some(g) => Ok(Json(GameResponse {
             id: g.id,
-            creator: g.players.get(g.creator).cloned().unwrap(),
             players: g.players,
             state: g.state,
             hit_duration: g.hit_duration,

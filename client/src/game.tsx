@@ -72,7 +72,9 @@ export function Game() {
     const canStartOrStopGame = () => {
         return (
             cookies.logged_in !== undefined &&
-            game.creator.id === cookies.logged_in.id &&
+            game.players.some(
+                (p) => p.id === cookies.logged_in.id && p.creator === true,
+            ) &&
             game.players.length >= 2
         )
     }
