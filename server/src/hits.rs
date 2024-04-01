@@ -5,7 +5,9 @@ use rocket::{
     fairing::{self, Fairing, Info, Kind},
     Build, Rocket,
 };
+use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
+use serde::{Deserialize, Serialize};
 use std::{
     env,
     fs::{create_dir_all, remove_file},
@@ -17,19 +19,21 @@ use strum::EnumString;
 
 include!(concat!(env!("OUT_DIR"), "/hits.rs"));
 
-#[derive(EnumString, Eq, PartialEq, Debug, Clone)]
+#[derive(EnumString, Eq, PartialEq, Debug, Clone, Serialize, Deserialize, JsonSchema)]
 pub enum Pack {
     Basic,
     Schlagerparty,
 }
 
-#[derive(Clone, PartialEq, Eq, Debug)]
+#[derive(Clone, PartialEq, Eq, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Hit {
     pub interpret: String,
     pub title: String,
     pub year: u32,
     pub pack: Pack,
+    #[serde(skip)]
     pub yt_url: String,
+    #[serde(skip)]
     pub playback_offset: u16,
 }
 

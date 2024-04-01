@@ -46,6 +46,8 @@ export function Game() {
             if (ge.state === GameState.Guessing) {
                 setHitSrc("")
                 setHitSrc(`/api/games/${game.id}/hit`)
+            } else if (ge.state === GameState.Open) {
+                setHitSrc("")
             }
         })
 
@@ -132,7 +134,10 @@ export function Game() {
                 <tbody>
                     {game.players.map((p) => (
                         <tr>
-                            <td>{p.name}</td>
+                            <td>
+                                {p.name +
+                                    (p.creator === true ? " (creator)" : "")}
+                            </td>
                         </tr>
                     ))}
                 </tbody>

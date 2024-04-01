@@ -6,7 +6,10 @@ use crate::{
     users::User,
 };
 use rand::prelude::{thread_rng, SliceRandom};
-use std::{collections::HashMap, sync::Mutex};
+use std::{
+    collections::{HashMap, VecDeque},
+    sync::Mutex,
+};
 
 pub struct GameServiceData {
     games: HashMap<u32, Game>,
@@ -40,7 +43,7 @@ impl GameService {
             id: data.id,
             players: vec![player],
             state: GameState::Open,
-            hits_remaining: vec![],
+            hits_remaining: VecDeque::new(),
             hit_duration: 20,
         };
 
@@ -67,7 +70,12 @@ impl GameService {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(&game_id) {
-            if game.players.iter().any(|p| p.id == user.id) {
+            if game.state != GameState::Open {
+                Err(JoinGameError {
+                    message: "the game is already running".into(),
+                    http_status_code: 403,
+                })
+            } else if game.players.iter().any(|p| p.id == user.id) {
                 Err(JoinGameError {
                     message: "user is already part of this game".into(),
                     http_status_code: 409,
@@ -96,9 +104,7 @@ impl GameService {
             } else {
                 let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
 
-                if game.players.iter().find(|p| p.id == user.id).unwrap().state
-                    != PlayerState::Waiting
-                {
+                if game.players.get(pos).unwrap().state != PlayerState::Waiting {
                     for i in 0..game.players.len() {
                         if (pos == game.players.len() - 1 && i == 0) || (i == pos + 1) {
                             game.players.get_mut(i).unwrap().state = PlayerState::Guessing;
@@ -106,15 +112,27 @@ impl GameService {
                             game.players.get_mut(i).unwrap().state = PlayerState::Waiting;
                         }
                     }
+
+                    game.hits_remaining.pop_front();
                 }
+
+                let creator = game.players.get(pos).unwrap().creator;
 
                 game.players.remove(pos);
 
                 if game.players.is_empty() {
                     data.games.remove(&game_id);
-                } else if game.players.len() == 1 {
-                    drop(data);
-                    let _ = self.stop(game_id, None);
+                } else {
+                    if creator == true {
+                        let idx = pos % game.players.len();
+
+                        game.players.get_mut(idx).unwrap().creator = true;
+                    }
+
+                    if game.players.len() == 1 {
+                        drop(data);
+                        let _ = self.stop(game_id, None);
+                    }
                 }
 
                 Ok(())
@@ -160,8 +178,17 @@ impl GameService {
 
                 game.state = GameState::Guessing;
                 game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
-                game.hits_remaining = self.hit_service.lock().get_all();
-                game.hits_remaining.shuffle(&mut rng);
+                game.hits_remaining = self.hit_service.lock().get_all().into_iter().collect::<_>();
+                game.hits_remaining.make_contiguous().shuffle(&mut rng);
+
+                for i in 0..game.players.len() {
+                    game.players
+                        .get_mut(i)
+                        .unwrap()
+                        .hits
+                        .push(game.hits_remaining.pop_front().unwrap());
+                }
+
                 Ok(())
             }
         } else {
@@ -200,7 +227,7 @@ impl GameService {
             }
 
             game.state = GameState::Open;
-            game.hits_remaining = vec![];
+            game.hits_remaining.clear();
 
             for p in game.players.iter_mut() {
                 p.state = PlayerState::Waiting;
@@ -225,7 +252,7 @@ impl GameService {
                     http_status_code: 409,
                 })
             } else {
-                Ok(game.hits_remaining.first().cloned().unwrap())
+                Ok(game.hits_remaining.front().cloned().unwrap())
             }
         } else {
             Err(CurrentHitError {

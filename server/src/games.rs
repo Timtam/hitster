@@ -1,7 +1,7 @@
 use crate::{hits::Hit, users::User};
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
-use std::{convert::From, default::Default};
+use std::{collections::VecDeque, convert::From, default::Default};
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 #[serde(rename_all_fields = "snake_case")]
@@ -19,7 +19,7 @@ pub struct Game {
     pub id: u32,
     pub players: Vec<Player>,
     pub state: GameState,
-    pub hits_remaining: Vec<Hit>,
+    pub hits_remaining: VecDeque<Hit>,
     pub hit_duration: u8,
 }
 
@@ -32,12 +32,13 @@ pub enum PlayerState {
     Confirming,
 }
 
-#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 pub struct Player {
     pub id: u32,
     pub name: String,
     pub state: PlayerState,
     pub creator: bool,
+    pub hits: Vec<Hit>,
 }
 
 impl From<&User> for Player {
@@ -47,11 +48,12 @@ impl From<&User> for Player {
             name: u.username.clone(),
             state: PlayerState::Waiting,
             creator: false,
+            hits: vec![],
         }
     }
 }
 
-#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+#[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 pub struct GameEvent {
     #[serde(skip)]
     pub game_id: u32,

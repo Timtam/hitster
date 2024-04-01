@@ -29,6 +29,17 @@ impl OpenApiResponderInner for JoinGameError {
     fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
         let mut responses = Map::new();
         responses.insert(
+            "403".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [403 Forbidden](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403)\n\
+                The game is already running.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
             "404".to_string(),
             RefOr::Object(OpenApiResponse {
                 description: "\
