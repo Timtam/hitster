@@ -233,6 +233,8 @@ impl GameService {
 
             for p in game.players.iter_mut() {
                 p.state = PlayerState::Waiting;
+                p.tokens = 0;
+                p.hits.clear();
             }
 
             Ok(())

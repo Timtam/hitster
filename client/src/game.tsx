@@ -103,9 +103,10 @@ export function Game() {
                 onClick={async () => {
                     if (
                         game.players.some((p) => p.id === cookies.logged_in?.id)
-                    )
+                    ) {
                         await gameService.leave(game.id)
-                    else await gameService.join(game.id)
+                        navigate("/")
+                    } else await gameService.join(game.id)
                 }}
             >
                 {cookies === undefined
