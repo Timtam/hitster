@@ -80,7 +80,7 @@ const SlotSelector = ({ game }: { game: GameType }) => {
             </p>
             <ButtonGroup>
                 {game.players
-                    .find((p) => p.state === PlayerState.Guessing)
+                    .find((p) => p.turn_player === true)
                     ?.slots.map((slot) => {
                         let text = ""
 

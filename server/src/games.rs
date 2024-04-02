@@ -43,6 +43,7 @@ pub struct Player {
     pub hits: Vec<Hit>,
     pub tokens: u8,
     pub slots: Vec<Slot>,
+    pub turn_player: bool,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -62,6 +63,7 @@ impl From<&User> for Player {
             hits: vec![],
             tokens: 0,
             slots: vec![],
+            turn_player: false,
         }
     }
 }

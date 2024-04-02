@@ -44,6 +44,7 @@ export const Player = z.object({
     hits: z.array(Hit),
     tokens: z.number(),
     slots: z.array(Slot),
+    turn_player: z.boolean(),
 })
 
 export type Player = z.infer<typeof Player>

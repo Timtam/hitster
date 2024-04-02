@@ -105,36 +105,37 @@ impl GameService {
                 })
             } else {
                 let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+                let creator = game.players.get(pos).unwrap().creator;
+                let turn_player = game.players.get(pos).unwrap().turn_player;
 
-                if game.players.get(pos).unwrap().state != PlayerState::Waiting {
-                    for i in 0..game.players.len() {
-                        if (pos == game.players.len() - 1 && i == 0) || (i == pos + 1) {
-                            game.players.get_mut(i).unwrap().state = PlayerState::Guessing;
-                        } else {
-                            game.players.get_mut(i).unwrap().state = PlayerState::Waiting;
-                        }
-                    }
+                let idx = (pos + 1) % game.players.len();
 
-                    game.hits_remaining.pop_front();
+                if creator == true {
+                    game.players.get_mut(idx).unwrap().creator = true;
                 }
 
-                let creator = game.players.get(pos).unwrap().creator;
+                if turn_player == true {
+                    game.players.get_mut(idx).unwrap().turn_player = true;
+                }
+
+                for i in 0..game.players.len() {
+                    if game.players.get(i).unwrap().turn_player {
+                        game.players.get_mut(i).unwrap().state = PlayerState::Guessing;
+                    } else {
+                        game.players.get_mut(i).unwrap().state = PlayerState::Waiting;
+                    }
+                }
+
+                game.state = GameState::Guessing;
+                game.hits_remaining.pop_front();
 
                 game.players.remove(pos);
 
                 if game.players.is_empty() {
                     data.games.remove(&game_id);
-                } else {
-                    if creator == true {
-                        let idx = pos % game.players.len();
-
-                        game.players.get_mut(idx).unwrap().creator = true;
-                    }
-
-                    if game.players.len() == 1 {
-                        drop(data);
-                        let _ = self.stop(game_id, None);
-                    }
+                } else if game.players.len() == 1 {
+                    drop(data);
+                    let _ = self.stop(game_id, None);
                 }
 
                 Ok(())
@@ -176,10 +177,9 @@ impl GameService {
             } else {
                 let mut rng = thread_rng();
 
-                game.players.shuffle(&mut rng);
-
                 game.state = GameState::Guessing;
                 game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
+                game.players.get_mut(0).unwrap().turn_player = true;
                 game.hits_remaining = self.hit_service.lock().get_all().into_iter().collect::<_>();
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
 
@@ -235,6 +235,7 @@ impl GameService {
                 p.state = PlayerState::Waiting;
                 p.tokens = 0;
                 p.hits.clear();
+                p.turn_player = false;
             }
 
             Ok(())
