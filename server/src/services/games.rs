@@ -1,7 +1,10 @@
 use crate::{
     games::{Game, GameState, Player, PlayerState, Slot},
     hits::Hit,
-    responses::{CurrentHitError, JoinGameError, LeaveGameError, StartGameError, StopGameError},
+    responses::{
+        CurrentHitError, GuessSlotError, JoinGameError, LeaveGameError, StartGameError,
+        StopGameError,
+    },
     services::{HitService, ServiceHandle},
     users::User,
 };
@@ -302,5 +305,103 @@ impl GameService {
         }
 
         return slots;
+    }
+
+    pub fn guess(&self, game_id: u32, user: &User, slot_id: u8) -> Result<Game, GuessSlotError> {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(game) = data.games.get_mut(&game_id) {
+            if !game.players.iter().any(|p| p.id == user.id) {
+                return Err(GuessSlotError {
+                    message: "user is not part of this game".into(),
+                    http_status_code: 409,
+                });
+            }
+
+            let turn_player_pos = game.players.iter().position(|p| p.turn_player).unwrap();
+            let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+
+            if game.players.get(pos).unwrap().state != PlayerState::Guessing
+                && game.players.get(pos).unwrap().state != PlayerState::Intercepting
+            {
+                return Err(GuessSlotError {
+                    message: "this player cannot guess right now".into(),
+                    http_status_code: 403,
+                });
+            } else if game
+                .players
+                .iter()
+                .any(|p| p.guess.as_ref().map(|s| s.id == slot_id).unwrap_or(false))
+            {
+                return Err(GuessSlotError {
+                    message: "this slot is already taken".into(),
+                    http_status_code: 409,
+                });
+            } else if game.players.get(pos).unwrap().guess.is_some() {
+                return Err(GuessSlotError {
+                    message: "you already submitted a guess".into(),
+                    http_status_code: 409,
+                });
+            } else if game.state == GameState::Intercepting
+                && game.players.get(pos).unwrap().tokens == 0
+            {
+                return Err(GuessSlotError {
+                    message: "this player doesn't have a token to intercept here".into(),
+                    http_status_code: 403,
+                });
+            } else if !game
+                .players
+                .get(turn_player_pos)
+                .unwrap()
+                .slots
+                .iter()
+                .any(|s| s.id == slot_id)
+            {
+                return Err(GuessSlotError {
+                    message: "a guess with that id doesn't exist for the current turn player"
+                        .into(),
+                    http_status_code: 409,
+                });
+            }
+
+            game.players.get_mut(pos).unwrap().guess = game
+                .players
+                .get(turn_player_pos)
+                .unwrap()
+                .slots
+                .iter()
+                .find(|s| s.id == slot_id)
+                .cloned();
+            game.players.get_mut(pos).unwrap().state = PlayerState::Waiting;
+
+            if game.state == GameState::Guessing {
+                game.state = GameState::Intercepting;
+
+                for i in 0..game.players.len() {
+                    if i != turn_player_pos {
+                        game.players.get_mut(i).unwrap().state = PlayerState::Intercepting;
+                    }
+                }
+            } else if game.state == GameState::Intercepting
+                && !game
+                    .players
+                    .iter()
+                    .any(|p| p.state == PlayerState::Intercepting)
+            {
+                let len = game.players.len();
+                game.state = GameState::Confirming;
+                game.players
+                    .get_mut((turn_player_pos + 1) % len)
+                    .unwrap()
+                    .state = PlayerState::Confirming;
+            }
+
+            Ok(game.clone())
+        } else {
+            Err(GuessSlotError {
+                message: "game not found".into(),
+                http_status_code: 404,
+            })
+        }
     }
 }

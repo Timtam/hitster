@@ -3,13 +3,14 @@ use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
 use std::{collections::VecDeque, convert::From, default::Default};
 
-#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Copy)]
 #[serde(rename_all_fields = "snake_case")]
 pub enum GameState {
     /// the game is currently accepting new players
     Open,
     /// the player has to guess, a song is currently available for playback
     Guessing,
+    Intercepting,
     /// a different player has to confirm the choices
     Confirming,
 }
@@ -44,6 +45,7 @@ pub struct Player {
     pub tokens: u8,
     pub slots: Vec<Slot>,
     pub turn_player: bool,
+    pub guess: Option<Slot>,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -64,6 +66,7 @@ impl From<&User> for Player {
             tokens: 0,
             slots: vec![],
             turn_player: false,
+            guess: None,
         }
     }
 }
@@ -78,6 +81,8 @@ pub struct GameEvent {
     pub players: Option<Vec<Player>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub state: Option<GameState>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hit: Option<Hit>,
 }
 
 impl Default for GameEvent {
@@ -87,6 +92,7 @@ impl Default for GameEvent {
             event: "".into(),
             players: None,
             state: None,
+            hit: None,
         }
     }
 }

@@ -26,6 +26,7 @@ export type Slot = z.infer<typeof Slot>
 export enum GameState {
     Open = "Open",
     Guessing = "Guessing",
+    Intercepting = "Intercepting",
     Confirming = "Confirming",
 }
 
@@ -45,6 +46,7 @@ export const Player = z.object({
     tokens: z.number(),
     slots: z.array(Slot),
     turn_player: z.boolean(),
+    guess: z.nullable(Slot),
 })
 
 export type Player = z.infer<typeof Player>
@@ -68,6 +70,7 @@ export type GamesResponse = z.infer<typeof GamesResponse>
 export const GameEvent = z.object({
     state: z.optional(z.nativeEnum(GameState)),
     players: z.optional(z.array(Player)),
+    hit: z.optional(Hit),
 })
 
 export type GameEvent = z.infer<typeof GameEvent>

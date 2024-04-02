@@ -1,8 +1,8 @@
 use crate::{
     games::{Game, GameEvent, GameState},
     responses::{
-        CurrentHitError, GamesResponse, JoinGameError, LeaveGameError, MessageResponse,
-        StartGameError, StopGameError,
+        CurrentHitError, GamesResponse, GuessSlotError, JoinGameError, LeaveGameError,
+        MessageResponse, StartGameError, StopGameError,
     },
     services::ServiceStore,
     users::User,
@@ -239,6 +239,63 @@ pub async fn hit(game_id: u32, serv: &State<ServiceStore>) -> Result<NamedFile, 
     }
 
     Err(hit.err().unwrap())
+}
+
+#[openapi(tag = "Games")]
+#[post("/games/<game_id>/guess/<slot_id>")]
+pub fn guess_slot(
+    game_id: u32,
+    slot_id: u8,
+    user: User,
+    serv: &State<ServiceStore>,
+    queue: &State<Sender<GameEvent>>,
+) -> Result<Json<MessageResponse>, GuessSlotError> {
+    let state = serv
+        .game_service()
+        .lock()
+        .get(game_id)
+        .map(|g| g.state)
+        .unwrap_or(GameState::Guessing);
+    serv.game_service()
+        .lock()
+        .guess(game_id, &user, slot_id)
+        .map(|game| {
+            let _ = queue.send(GameEvent {
+                game_id,
+                event: "guess".into(),
+                players: game
+                    .players
+                    .iter()
+                    .find(|p| p.id == user.id)
+                    .cloned()
+                    .map(|p| vec![p]),
+                ..Default::default()
+            });
+
+            if state != game.state {
+                let _ = queue.send(GameEvent {
+                    game_id,
+                    event: "change_state".into(),
+                    state: Some(game.state),
+                    players: Some(game.players),
+                    hit: Some(game.state)
+                        .map(|s| {
+                            if s == GameState::Confirming {
+                                game.hits_remaining.front().cloned()
+                            } else {
+                                None
+                            }
+                        })
+                        .flatten(),
+                    ..Default::default()
+                });
+            }
+
+            Json(MessageResponse {
+                message: "guess submitted successfully".into(),
+                r#type: "success".into(),
+            })
+        })
 }
 
 #[cfg(test)]
