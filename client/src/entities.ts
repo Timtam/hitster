@@ -29,9 +29,17 @@ export enum GameState {
     Confirming = "Confirming",
 }
 
+export enum PlayerState {
+    Waiting = "Waiting",
+    Guessing = "Guessing",
+    Intercepting = "Intercepting",
+    Confirming = "Confirming",
+}
+
 export const Player = z.object({
     id: z.number(),
     name: z.string(),
+    state: z.nativeEnum(PlayerState),
     creator: z.boolean(),
     hits: z.array(Hit),
     tokens: z.number(),

@@ -1,4 +1,3 @@
-use crate::services::HitService;
 use ffmpeg_cli::{FfmpegBuilder, File, Parameter};
 use regex::Regex;
 use rocket::{
@@ -137,6 +136,6 @@ impl Fairing for HitsterDownloader {
 
         println!("Download finished.");
 
-        Ok(rocket.manage(HitService::new()))
+        Ok(rocket)
     }
 }
