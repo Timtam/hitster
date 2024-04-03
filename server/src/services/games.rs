@@ -113,11 +113,11 @@ impl GameService {
 
                 let idx = (pos + 1) % game.players.len();
 
-                if creator == true {
+                if creator {
                     game.players.get_mut(idx).unwrap().creator = true;
                 }
 
-                if turn_player == true {
+                if turn_player {
                     game.players.get_mut(idx).unwrap().turn_player = true;
                 }
 
@@ -165,13 +165,12 @@ impl GameService {
                     http_status_code: 409,
                     message: "the game is already running".into(),
                 })
-            } else if game
+            } else if !game
                 .players
                 .iter()
                 .find(|p| p.id == user.id)
                 .map(|p| p.creator)
                 .unwrap_or(false)
-                == false
             {
                 Err(StartGameError {
                     http_status_code: 403,
@@ -209,13 +208,12 @@ impl GameService {
 
         if let Some(game) = data.games.get_mut(&game_id) {
             if let Some(u) = user {
-                if game
+                if !game
                     .players
                     .iter()
                     .find(|p| p.id == u.id)
                     .map(|p| p.creator)
                     .unwrap_or(false)
-                    == false
                 {
                     return Err(StopGameError {
                         http_status_code: 403,
@@ -270,15 +268,9 @@ impl GameService {
         }
     }
 
-    pub fn get_slots(&self, hits: &Vec<Hit>) -> Vec<Slot> {
+    pub fn get_slots(&self, hits: &[Hit]) -> Vec<Slot> {
         let mut slots = vec![];
-        let years = sorted(
-            hits.iter()
-                .map(|h| h.year)
-                .collect::<HashSet<_>>()
-                .into_iter(),
-        )
-        .collect::<Vec<_>>();
+        let years = sorted(hits.iter().map(|h| h.year).collect::<HashSet<_>>()).collect::<Vec<_>>();
 
         for i in 0..years.len() {
             if i == 0 {
@@ -304,10 +296,15 @@ impl GameService {
             }
         }
 
-        return slots;
+        slots
     }
 
-    pub fn guess(&self, game_id: u32, user: &User, slot_id: u8) -> Result<Game, GuessSlotError> {
+    pub fn guess(
+        &self,
+        game_id: u32,
+        user: &User,
+        slot_id: Option<u8>,
+    ) -> Result<Game, GuessSlotError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(&game_id) {
@@ -328,16 +325,19 @@ impl GameService {
                     message: "this player cannot guess right now".into(),
                     http_status_code: 403,
                 });
-            } else if game
-                .players
-                .iter()
-                .any(|p| p.guess.as_ref().map(|s| s.id == slot_id).unwrap_or(false))
+            } else if slot_id.is_some()
+                && game.players.iter().any(|p| {
+                    p.guess
+                        .as_ref()
+                        .map(|s| s.id == slot_id.unwrap())
+                        .unwrap_or(false)
+                })
             {
                 return Err(GuessSlotError {
                     message: "this slot is already taken".into(),
                     http_status_code: 409,
                 });
-            } else if game.players.get(pos).unwrap().guess.is_some() {
+            } else if slot_id.is_some() && game.players.get(pos).unwrap().guess.is_some() {
                 return Err(GuessSlotError {
                     message: "you already submitted a guess".into(),
                     http_status_code: 409,
@@ -349,40 +349,50 @@ impl GameService {
                     message: "this player doesn't have a token to intercept here".into(),
                     http_status_code: 403,
                 });
-            } else if !game
-                .players
-                .get(turn_player_pos)
-                .unwrap()
-                .slots
-                .iter()
-                .any(|s| s.id == slot_id)
+            } else if slot_id.is_some()
+                && !game
+                    .players
+                    .get(turn_player_pos)
+                    .unwrap()
+                    .slots
+                    .iter()
+                    .any(|s| s.id == slot_id.unwrap())
             {
                 return Err(GuessSlotError {
                     message: "a guess with that id doesn't exist for the current turn player"
                         .into(),
                     http_status_code: 409,
                 });
+            } else if game.state == GameState::Guessing && slot_id.is_none() {
+                return Err(GuessSlotError {
+                    message: "this player needs to send a guess".into(),
+                    http_status_code: 409,
+                });
             }
 
-            game.players.get_mut(pos).unwrap().guess = game
-                .players
-                .get(turn_player_pos)
-                .unwrap()
-                .slots
-                .iter()
-                .find(|s| s.id == slot_id)
-                .cloned();
+            if let Some(slot) = slot_id {
+                game.players.get_mut(pos).unwrap().guess = game
+                    .players
+                    .get(turn_player_pos)
+                    .unwrap()
+                    .slots
+                    .iter()
+                    .find(|s| s.id == slot)
+                    .cloned();
+            }
             game.players.get_mut(pos).unwrap().state = PlayerState::Waiting;
 
             if game.state == GameState::Guessing {
                 game.state = GameState::Intercepting;
 
                 for i in 0..game.players.len() {
-                    if i != turn_player_pos {
+                    if i != turn_player_pos && game.players.get(i).unwrap().tokens > 0 {
                         game.players.get_mut(i).unwrap().state = PlayerState::Intercepting;
                     }
                 }
-            } else if game.state == GameState::Intercepting
+            }
+
+            if game.state == GameState::Intercepting
                 && !game
                     .players
                     .iter()

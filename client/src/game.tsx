@@ -1,9 +1,9 @@
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
-import ButtonGroup from "react-bootstrap/ButtonGroup"
 import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
 import ToggleButton from "react-bootstrap/ToggleButton"
+import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
 import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
 import type { LoaderFunction } from "react-router"
@@ -37,6 +37,7 @@ export const loader: LoaderFunction = async ({
 }
 
 const SlotSelector = ({ game }: { game: GameType }) => {
+    const [selectedSlot, setSelectedSlot] = useImmer(0)
     const [cookies] = useCookies(["logged_in"])
     const actionRequired = (): PlayerState => {
         if (cookies.logged_in === undefined) return PlayerState.Waiting
@@ -71,14 +72,38 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                               .map((p) => p.name),
                       ) +
                       " to make their move."
-                    : "Finally, its your turn to guess!"}
+                    : actionRequired() === PlayerState.Guessing
+                      ? "Finally, its your turn to guess!"
+                      : actionRequired() === PlayerState.Intercepting
+                        ? "You can now step in and make another guess, but be aware, it'll cost you one token!"
+                        : "You now need to confirm if " +
+                          game.players.find((p) => p.turn_player)?.name +
+                          " guessed title and interpret of the song correctly. Be fair!"}
             </h2>
             <p>
-                {actionRequired() === PlayerState.Guessing
+                {actionRequired() === PlayerState.Guessing ||
+                actionRequired() === PlayerState.Intercepting
                     ? "Do you think this hit belongs..."
-                    : "These are the slots that are currently up for discussion:"}
+                    : "These are the chosen slots:"}
             </p>
-            <ButtonGroup>
+            <ToggleButtonGroup
+                name="selected-slot"
+                type="radio"
+                defaultValue="0"
+                onChange={(e) => setSelectedSlot(parseInt(e, 10))}
+            >
+                {actionRequired() === PlayerState.Intercepting ? (
+                    <ToggleButton
+                        id="0"
+                        value="0"
+                        checked={selectedSlot === 0}
+                        type="radio"
+                    >
+                        Don't intercept
+                    </ToggleButton>
+                ) : (
+                    ""
+                )}
                 {game.players
                     .find((p) => p.turn_player === true)
                     ?.slots.map((slot) => {
@@ -96,17 +121,57 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                                 id={slot.id.toString()}
                                 value={slot.id}
                                 disabled={
-                                    game.players.find(
-                                        (p) => p.id === cookies.logged_in.id,
-                                    )?.state !== PlayerState.Guessing
+                                    (actionRequired() !==
+                                        PlayerState.Guessing &&
+                                        actionRequired() !==
+                                            PlayerState.Intercepting) ||
+                                    game.players.some(
+                                        (p) => p.guess?.id === slot.id,
+                                    )
                                 }
                                 type="radio"
                             >
-                                {text}
+                                {text +
+                                    (game.players.some(
+                                        (p) => p.guess?.id === slot.id,
+                                    )
+                                        ? " (" +
+                                          game.players.find(
+                                              (p) => p.guess?.id === slot.id,
+                                          )?.name +
+                                          ")"
+                                        : "")}
                             </ToggleButton>
                         )
                     })}
-            </ButtonGroup>
+            </ToggleButtonGroup>
+            <Button
+                disabled={
+                    (selectedSlot === 0 &&
+                        actionRequired() === PlayerState.Guessing) ||
+                    actionRequired() === PlayerState.Waiting
+                }
+                onClick={async () => {
+                    try {
+                        let gs = new GameService()
+                        await gs.guess(
+                            game.id,
+                            selectedSlot > 0 ? selectedSlot : null,
+                        )
+                        setSelectedSlot(0)
+                    } catch (e) {
+                        console.log(e)
+                    }
+                }}
+            >
+                {actionRequired() === PlayerState.Guessing ||
+                actionRequired() === PlayerState.Intercepting
+                    ? actionRequired() === PlayerState.Intercepting ||
+                      selectedSlot > 0
+                        ? "Submit guess"
+                        : "Select a slot first"
+                    : "You cannot submit a guess right now"}
+            </Button>
         </>
     )
 }
@@ -154,6 +219,17 @@ export function Game() {
                 })
             else navigate("/")
         })
+
+        eventSource.addEventListener("guess", (e) => {
+            let ge = GameEvent.parse(JSON.parse(e.data))
+            setGame((g) => {
+                ge.players?.forEach((pe) => {
+                    let idx = g.players.findIndex((p) => p.id === pe.id)
+                    g.players[idx] = pe
+                })
+            })
+        })
+
         return () => {
             eventSource.close()
         }

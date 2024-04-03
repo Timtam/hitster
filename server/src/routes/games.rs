@@ -1,5 +1,5 @@
 use crate::{
-    games::{Game, GameEvent, GameState},
+    games::{Game, GameEvent, GameState, SlotPayload},
     responses::{
         CurrentHitError, GamesResponse, GuessSlotError, JoinGameError, LeaveGameError,
         MessageResponse, StartGameError, StopGameError,
@@ -242,10 +242,10 @@ pub async fn hit(game_id: u32, serv: &State<ServiceStore>) -> Result<NamedFile, 
 }
 
 #[openapi(tag = "Games")]
-#[post("/games/<game_id>/guess/<slot_id>")]
+#[post("/games/<game_id>/guess", format = "json", data = "<slot>")]
 pub fn guess_slot(
     game_id: u32,
-    slot_id: u8,
+    slot: Json<SlotPayload>,
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
@@ -258,7 +258,7 @@ pub fn guess_slot(
         .unwrap_or(GameState::Guessing);
     serv.game_service()
         .lock()
-        .guess(game_id, &user, slot_id)
+        .guess(game_id, &user, slot.id)
         .map(|game| {
             let _ = queue.send(GameEvent {
                 game_id,
@@ -278,16 +278,13 @@ pub fn guess_slot(
                     event: "change_state".into(),
                     state: Some(game.state),
                     players: Some(game.players),
-                    hit: Some(game.state)
-                        .map(|s| {
-                            if s == GameState::Confirming {
-                                game.hits_remaining.front().cloned()
-                            } else {
-                                None
-                            }
-                        })
-                        .flatten(),
-                    ..Default::default()
+                    hit: Some(game.state).and_then(|s| {
+                        if s == GameState::Confirming {
+                            game.hits_remaining.front().cloned()
+                        } else {
+                            None
+                        }
+                    }),
                 });
             }
 

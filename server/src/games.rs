@@ -3,6 +3,11 @@ use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
 use std::{collections::VecDeque, convert::From, default::Default};
 
+#[derive(Deserialize, Serialize, JsonSchema)]
+pub struct SlotPayload {
+    pub id: Option<u8>,
+}
+
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Copy)]
 #[serde(rename_all_fields = "snake_case")]
 pub enum GameState {

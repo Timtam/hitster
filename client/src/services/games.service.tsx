@@ -57,4 +57,20 @@ export default class GameService {
         if (res.status == 200) return
         throw json({ message: (await res.json()).message, status: res.status })
     }
+
+    async guess(game_id: number, slot_id: number | null) {
+        let res = await fetch(`/api/games/${game_id}/guess`, {
+            body: JSON.stringify({
+                id: slot_id,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
 }
