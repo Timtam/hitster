@@ -123,23 +123,25 @@ impl GameService {
                     game.players.get_mut(idx).unwrap().turn_player = true;
                 }
 
-                for i in 0..game.players.len() {
-                    game.players.get_mut(i).unwrap().guess = None;
-                    if game.players.get(i).unwrap().turn_player {
-                        game.players.get_mut(i).unwrap().state = PlayerState::Guessing;
-                    } else {
-                        game.players.get_mut(i).unwrap().state = PlayerState::Waiting;
+                if game.state != GameState::Open {
+                    for i in 0..game.players.len() {
+                        game.players.get_mut(i).unwrap().guess = None;
+                        if game.players.get(i).unwrap().turn_player {
+                            game.players.get_mut(i).unwrap().state = PlayerState::Guessing;
+                        } else {
+                            game.players.get_mut(i).unwrap().state = PlayerState::Waiting;
+                        }
                     }
-                }
 
-                game.state = GameState::Guessing;
-                game.hits_remaining.pop_front();
+                    game.state = GameState::Guessing;
+                    game.hits_remaining.pop_front();
+                }
 
                 game.players.remove(pos);
 
                 if game.players.is_empty() {
                     data.games.remove(&game_id);
-                } else if game.players.len() == 1 {
+                } else if game.players.len() == 1 && game.state != GameState::Open {
                     drop(data);
                     let _ = self.stop(game_id, None);
                 }
@@ -262,7 +264,10 @@ impl GameService {
                     http_status_code: 409,
                 })
             } else {
-                Ok(game.hits_remaining.front().cloned().unwrap())
+                game.hits_remaining.front().cloned().ok_or(CurrentHitError {
+                    message: "no hit found".into(),
+                    http_status_code: 500,
+                })
             }
         } else {
             Err(CurrentHitError {
@@ -450,18 +455,34 @@ impl GameService {
                 game.players.get_mut(turn_player_pos).unwrap().tokens += 1;
             }
 
-            if let Some((i, _)) = game.players.iter().enumerate().find(|(_, p)| {
-                p.guess
-                    .as_ref()
-                    .map(|s| {
-                        (s.from_year == 0 && game.hits_remaining.front().unwrap().year <= s.to_year)
-                            || (s.to_year == 0
-                                && game.hits_remaining.front().unwrap().year >= s.from_year)
-                            || (s.from_year <= game.hits_remaining.front().unwrap().year
+            let winners = game
+                .players
+                .iter()
+                .enumerate()
+                .filter(|(_, p)| {
+                    p.guess
+                        .as_ref()
+                        .map(|s| {
+                            (s.from_year == 0
                                 && game.hits_remaining.front().unwrap().year <= s.to_year)
-                    })
-                    .unwrap_or(false)
-            }) {
+                                || (s.to_year == 0
+                                    && game.hits_remaining.front().unwrap().year >= s.from_year)
+                                || (s.from_year <= game.hits_remaining.front().unwrap().year
+                                    && game.hits_remaining.front().unwrap().year <= s.to_year)
+                        })
+                        .unwrap_or(false)
+                })
+                .collect::<Vec<_>>();
+
+            if let Some(i) = winners.iter().find(|(_, p)| p.turn_player).map(|(i, _)| *i) {
+                let player = game.players.get_mut(i).unwrap();
+
+                player
+                    .hits
+                    .push(game.hits_remaining.front().cloned().unwrap());
+                player.slots = self.get_slots(&player.hits);
+            } else if winners.len() == 1 {
+                let i = winners.get(0).map(|(i, _)| *i).unwrap();
                 let player = game.players.get_mut(i).unwrap();
 
                 player

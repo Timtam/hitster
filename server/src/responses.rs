@@ -316,6 +316,17 @@ impl OpenApiResponderInner for CurrentHitError {
                 ..Default::default()
             }),
         );
+        responses.insert(
+            "500".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [500 Internal Server Error](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500)\n\
+                A hit couldn't be found or a different error occurred.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
         Ok(Responses {
             responses,
             ..Default::default()

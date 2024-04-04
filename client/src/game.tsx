@@ -424,11 +424,11 @@ export function Game() {
                 </tbody>
             </Table>
             <h2>What the hit?</h2>
-            <p>
+            <p aria-live="polite">
                 {game.state === GameState.Open ? (
                     "No game is currently running, so no hit for you!"
                 ) : game.hit === null ? (
-                    "The hit is currently hidden, you'll have to wait for it to be revealed."
+                    "The hit is currently unknown, you'll have to wait for it to be revealed."
                 ) : (
                     <>
                         You're currently listening to <b>{game.hit?.title}</b>{" "}
