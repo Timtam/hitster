@@ -26,7 +26,7 @@ pub enum Pack {
 
 #[derive(Clone, PartialEq, Eq, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Hit {
-    pub interpret: String,
+    pub artist: String,
     pub title: String,
     pub year: u32,
     pub pack: Pack,
@@ -92,7 +92,7 @@ impl Fairing for HitsterDownloader {
                     if let Ok(video) = Video::new_with_options(id.as_str(), options) {
                         println!(
                             "Download {}: {} to {}.opus",
-                            hit.interpret.as_str(),
+                            hit.artist.as_str(),
                             hit.title.as_str(),
                             id.as_str()
                         );

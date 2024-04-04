@@ -8,7 +8,7 @@ export const User = z.object({
 export type User = z.infer<typeof User>
 
 export const Hit = z.object({
-    interpret: z.string(),
+    artist: z.string(),
     title: z.string(),
     year: z.number(),
 })

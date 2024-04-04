@@ -104,7 +104,7 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                     <p>
                         {"Did " +
                             game.players.find((p) => p.turn_player)?.name +
-                            " guess interpret and title correctly?"}
+                            " guess artist and title correctly?"}
                     </p>
                     <Button onClick={async () => await confirm(false)}>
                         No
@@ -389,7 +389,7 @@ export function Game() {
                                             <Table responsive>
                                                 <thead>
                                                     <tr>
-                                                        <th>Interpret</th>
+                                                        <th>Artist</th>
                                                         <th>Title</th>
                                                         <th>Year</th>
                                                     </tr>
@@ -403,9 +403,7 @@ export function Game() {
                                                         .map((h) => (
                                                             <tr>
                                                                 <td>
-                                                                    {
-                                                                        h.interpret
-                                                                    }
+                                                                    {h.artist}
                                                                 </td>
                                                                 <td>
                                                                     {h.title}
@@ -427,17 +425,16 @@ export function Game() {
             </Table>
             <h2>What the hit?</h2>
             <p>
-                {game.state === GameState.Open
-                    ? "No game is currently running, so no hit for you!"
-                    : game.hit === null
-                      ? "The hit is currently hidden, you'll have to wait for it to be revealed."
-                      : "You're currently listening to " +
-                        game.hit?.title +
-                        " by " +
-                        game.hit?.interpret +
-                        " from " +
-                        game.hit?.year +
-                        (game.players.some((p) =>
+                {game.state === GameState.Open ? (
+                    "No game is currently running, so no hit for you!"
+                ) : game.hit === null ? (
+                    "The hit is currently hidden, you'll have to wait for it to be revealed."
+                ) : (
+                    <>
+                        You're currently listening to <b>{game.hit?.title}</b>{" "}
+                        by <b>{game.hit?.artist}</b> from{" "}
+                        <b>{game.hit?.year}</b>{" "}
+                        {game.players.some((p) =>
                             isSlotCorrect(game.hit, p.guess),
                         )
                             ? " and " +
@@ -445,7 +442,9 @@ export function Game() {
                                   isSlotCorrect(game.hit, p.guess),
                               )?.name +
                               " guessed it correctly."
-                            : " and noone guessed it correctly.")}
+                            : " and noone guessed it correctly."}
+                    </>
+                )}
             </p>
             <HitPlayer src={hitSrc} duration={game.hit_duration} />
             <SlotSelector game={game} />

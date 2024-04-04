@@ -16,7 +16,7 @@ fn main() {
         if record.get(4).unwrap() != "" {
             file_content += format!(
                 "Hit {{
-            interpret: \"{}\".into(),
+            artist: \"{}\".into(),
             title: \"{}\".into(),
             year: {},
             yt_url: \"{}\".into(),

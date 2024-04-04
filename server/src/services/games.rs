@@ -124,6 +124,7 @@ impl GameService {
                 }
 
                 for i in 0..game.players.len() {
+                    game.players.get_mut(i).unwrap().guess = None;
                     if game.players.get(i).unwrap().turn_player {
                         game.players.get_mut(i).unwrap().state = PlayerState::Guessing;
                     } else {
@@ -467,10 +468,6 @@ impl GameService {
                     .hits
                     .push(game.hits_remaining.front().cloned().unwrap());
                 player.slots = self.get_slots(&player.hits);
-
-                if i != turn_player_pos {
-                    player.tokens -= 1;
-                }
             }
 
             game.hits_remaining.pop_front();
@@ -486,6 +483,9 @@ impl GameService {
                 game = data.games.get_mut(&game_id).unwrap();
             } else {
                 for p in game.players.iter_mut() {
+                    if p.guess.is_some() && !p.turn_player {
+                        p.tokens -= 1;
+                    }
                     p.guess = None;
                     p.state = PlayerState::Waiting;
                 }
