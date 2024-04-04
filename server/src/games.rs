@@ -29,6 +29,7 @@ pub struct Game {
     pub hits_remaining: VecDeque<Hit>,
     pub hit_duration: u8,
     pub start_tokens: u8,
+    pub hit: Option<Hit>,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]

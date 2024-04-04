@@ -57,6 +57,7 @@ export const Game = z.object({
     state: z.nativeEnum(GameState),
     hit_duration: z.number(),
     start_tokens: z.number(),
+    hit: z.nullable(Hit),
 })
 
 export type Game = z.infer<typeof Game>

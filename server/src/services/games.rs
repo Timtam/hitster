@@ -50,6 +50,7 @@ impl GameService {
             hits_remaining: VecDeque::new(),
             hit_duration: 20,
             start_tokens: 2,
+            hit: None,
         };
 
         data.games.insert(game.id, game.clone());
@@ -400,6 +401,7 @@ impl GameService {
             {
                 let len = game.players.len();
                 game.state = GameState::Confirming;
+                game.hit = game.hits_remaining.front().cloned();
                 game.players
                     .get_mut((turn_player_pos + 1) % len)
                     .unwrap()

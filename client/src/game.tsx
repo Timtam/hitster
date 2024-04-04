@@ -39,6 +39,7 @@ export const loader: LoaderFunction = async ({
 const SlotSelector = ({ game }: { game: GameType }) => {
     const [selectedSlot, setSelectedSlot] = useImmer(0)
     const [cookies] = useCookies(["logged_in"])
+    const navigate = useNavigate()
     const actionRequired = (): PlayerState => {
         if (cookies.logged_in === undefined) return PlayerState.Waiting
         return (
@@ -57,6 +58,15 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                 parts[parts.length - 1]
             )
     }
+
+    useEffect(() => {
+        game.players.forEach((p) => {
+            if (p.guess?.id === selectedSlot) {
+                setSelectedSlot(0)
+                navigate("", { replace: true })
+            }
+        })
+    }, [game])
 
     if (game.state === GameState.Open)
         return <h2>The game hasn't started yet.</h2>
@@ -192,6 +202,7 @@ export function Game() {
 
             setGame((g) => {
                 g.state = ge.state as GameState
+                g.hit = ge.hit ?? null
 
                 if (ge.players !== undefined) g.players = ge.players
             })
@@ -379,6 +390,20 @@ export function Game() {
                     })}
                 </tbody>
             </Table>
+            <h2>What the hit?</h2>
+            <p>
+                {game.state === GameState.Open
+                    ? "No game is currently running, so no hit for you!"
+                    : game.hit === null
+                      ? "The hit is hit is currently hidden, you'll have to wait for it to be revealed."
+                      : "You're currently listening to " +
+                        game.hit?.title +
+                        " by " +
+                        game.hit?.interpret +
+                        " from " +
+                        game.hit?.year +
+                        "."}
+            </p>
             <HitPlayer src={hitSrc} duration={game.hit_duration} />
             <SlotSelector game={game} />
         </>
