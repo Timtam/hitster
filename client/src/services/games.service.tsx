@@ -73,4 +73,20 @@ export default class GameService {
         if (res.status == 200) return
         throw json({ message: (await res.json()).message, status: res.status })
     }
+
+    async confirm(game_id: number, confirmation: boolean) {
+        let res = await fetch(`/api/games/${game_id}/confirm`, {
+            body: JSON.stringify({
+                confirm: confirmation,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
 }

@@ -2,8 +2,8 @@ use crate::{
     games::{Game, GameState, Player, PlayerState, Slot},
     hits::Hit,
     responses::{
-        CurrentHitError, GuessSlotError, JoinGameError, LeaveGameError, StartGameError,
-        StopGameError,
+        ConfirmSlotError, CurrentHitError, GuessSlotError, JoinGameError, LeaveGameError,
+        StartGameError, StopGameError,
     },
     services::{HitService, ServiceHandle},
     users::User,
@@ -50,6 +50,7 @@ impl GameService {
             hits_remaining: VecDeque::new(),
             hit_duration: 20,
             start_tokens: 2,
+            goal: 10,
             hit: None,
         };
 
@@ -238,6 +239,7 @@ impl GameService {
                 p.tokens = 0;
                 p.hits.clear();
                 p.turn_player = false;
+                p.guess = None;
             }
 
             Ok(())
@@ -411,6 +413,109 @@ impl GameService {
             Ok(game.clone())
         } else {
             Err(GuessSlotError {
+                message: "game not found".into(),
+                http_status_code: 404,
+            })
+        }
+    }
+
+    pub fn confirm(
+        &self,
+        game_id: u32,
+        user: &User,
+        confirm: bool,
+    ) -> Result<Game, ConfirmSlotError> {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(mut game) = data.games.get_mut(&game_id) {
+            if !game.players.iter().any(|p| p.id == user.id) {
+                return Err(ConfirmSlotError {
+                    message: "user is not part of this game".into(),
+                    http_status_code: 409,
+                });
+            }
+
+            let turn_player_pos = game.players.iter().position(|p| p.turn_player).unwrap();
+            let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+
+            if game.players.get(pos).unwrap().state != PlayerState::Confirming {
+                return Err(ConfirmSlotError {
+                    message: "this player cannot confirm right now".into(),
+                    http_status_code: 403,
+                });
+            }
+
+            if confirm {
+                game.players.get_mut(turn_player_pos).unwrap().tokens += 1;
+            }
+
+            if let Some((i, _)) = game.players.iter().enumerate().find(|(_, p)| {
+                p.guess
+                    .as_ref()
+                    .map(|s| {
+                        (s.from_year == 0 && game.hits_remaining.front().unwrap().year <= s.to_year)
+                            || (s.to_year == 0
+                                && game.hits_remaining.front().unwrap().year >= s.from_year)
+                            || (s.from_year <= game.hits_remaining.front().unwrap().year
+                                && game.hits_remaining.front().unwrap().year <= s.to_year)
+                    })
+                    .unwrap_or(false)
+            }) {
+                let player = game.players.get_mut(i).unwrap();
+
+                player
+                    .hits
+                    .push(game.hits_remaining.front().cloned().unwrap());
+                player.slots = self.get_slots(&player.hits);
+
+                if i != turn_player_pos {
+                    player.tokens -= 1;
+                }
+            }
+
+            game.hits_remaining.pop_front();
+
+            if game
+                .players
+                .iter()
+                .any(|p| p.hits.len() >= game.goal as usize)
+            {
+                drop(data);
+                let _ = self.stop(game_id, None);
+                data = self.data.lock().unwrap();
+                game = data.games.get_mut(&game_id).unwrap();
+            } else {
+                for p in game.players.iter_mut() {
+                    p.guess = None;
+                    p.state = PlayerState::Waiting;
+                }
+
+                game.state = GameState::Guessing;
+                game.players.get_mut(turn_player_pos).unwrap().turn_player = false;
+
+                let len = game.players.len();
+
+                if let Some(p) = game.players.get_mut((turn_player_pos + 1) % len) {
+                    p.turn_player = true;
+                    p.state = PlayerState::Guessing;
+                }
+
+                if game.hits_remaining.len() == 0 {
+                    let mut rng = thread_rng();
+                    game.hits_remaining = self
+                        .hit_service
+                        .lock()
+                        .get_all()
+                        .into_iter()
+                        .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                        .collect::<VecDeque<_>>();
+                    game.hits_remaining.make_contiguous().shuffle(&mut rng);
+                }
+            }
+
+            Ok(game.clone())
+        } else {
+            Err(ConfirmSlotError {
                 message: "game not found".into(),
                 http_status_code: 404,
             })

@@ -9,7 +9,7 @@ import { Helmet } from "react-helmet-async"
 import type { LoaderFunction } from "react-router"
 import { json, useLoaderData, useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
-import type { Game as GameType } from "./entities"
+import type { Game as GameType, Hit, Slot } from "./entities"
 import {
     Game as GameEntity,
     GameEvent,
@@ -37,7 +37,7 @@ export const loader: LoaderFunction = async ({
 }
 
 const SlotSelector = ({ game }: { game: GameType }) => {
-    const [selectedSlot, setSelectedSlot] = useImmer(0)
+    const [selectedSlot, setSelectedSlot] = useImmer("0")
     const [cookies] = useCookies(["logged_in"])
     const navigate = useNavigate()
     const actionRequired = (): PlayerState => {
@@ -59,10 +59,19 @@ const SlotSelector = ({ game }: { game: GameType }) => {
             )
     }
 
+    const confirm = async (confirm: boolean) => {
+        try {
+            let gs = new GameService()
+            await gs.confirm(game.id, confirm)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     useEffect(() => {
         game.players.forEach((p) => {
-            if (p.guess?.id === selectedSlot) {
-                setSelectedSlot(0)
+            if (p.guess?.id === parseInt(selectedSlot, 10)) {
+                setSelectedSlot("0")
                 navigate("", { replace: true })
             }
         })
@@ -90,98 +99,116 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                           game.players.find((p) => p.turn_player)?.name +
                           " guessed title and interpret of the song correctly. Be fair!"}
             </h2>
-            <p>
-                {actionRequired() === PlayerState.Guessing ||
-                actionRequired() === PlayerState.Intercepting
-                    ? "Do you think this hit belongs..."
-                    : "These are the chosen slots:"}
-            </p>
-            <ToggleButtonGroup
-                name="selected-slot"
-                type="radio"
-                defaultValue="0"
-                onChange={(e) => setSelectedSlot(parseInt(e, 10))}
-            >
-                {actionRequired() === PlayerState.Intercepting ? (
-                    <ToggleButton
-                        id="0"
-                        value="0"
-                        checked={selectedSlot === 0}
+            {actionRequired() === PlayerState.Confirming ? (
+                <>
+                    <p>
+                        {"Did " +
+                            game.players.find((p) => p.turn_player)?.name +
+                            " guess interpret and title correctly?"}
+                    </p>
+                    <Button onClick={async () => await confirm(false)}>
+                        No
+                    </Button>
+                    <Button onClick={async () => await confirm(true)}>
+                        Yes
+                    </Button>
+                </>
+            ) : (
+                <>
+                    <p>
+                        {actionRequired() === PlayerState.Guessing ||
+                        actionRequired() === PlayerState.Intercepting
+                            ? "Do you think this hit belongs..."
+                            : "These are the possible slots:"}
+                    </p>
+                    <ToggleButtonGroup
+                        name="selected-slot"
                         type="radio"
+                        defaultValue="0"
+                        value={selectedSlot}
+                        onChange={(e) => setSelectedSlot(e)}
                     >
-                        Don't intercept
-                    </ToggleButton>
-                ) : (
-                    ""
-                )}
-                {game.players
-                    .find((p) => p.turn_player === true)
-                    ?.slots.map((slot) => {
-                        let text = ""
-
-                        if (slot.from_year === 0)
-                            text = `before ${slot.to_year}`
-                        else if (slot.to_year === 0)
-                            text = `after ${slot.from_year}`
-                        else
-                            text = `between ${slot.from_year} and ${slot.to_year}`
-
-                        return (
-                            <ToggleButton
-                                id={slot.id.toString()}
-                                value={slot.id}
-                                disabled={
-                                    (actionRequired() !==
-                                        PlayerState.Guessing &&
-                                        actionRequired() !==
-                                            PlayerState.Intercepting) ||
-                                    game.players.some(
-                                        (p) => p.guess?.id === slot.id,
-                                    )
-                                }
-                                type="radio"
-                            >
-                                {text +
-                                    (game.players.some(
-                                        (p) => p.guess?.id === slot.id,
-                                    )
-                                        ? " (" +
-                                          game.players.find(
-                                              (p) => p.guess?.id === slot.id,
-                                          )?.name +
-                                          ")"
-                                        : "")}
+                        {actionRequired() === PlayerState.Intercepting ? (
+                            <ToggleButton id="0" value="0" type="radio">
+                                Don't intercept
                             </ToggleButton>
-                        )
-                    })}
-            </ToggleButtonGroup>
-            <Button
-                disabled={
-                    (selectedSlot === 0 &&
-                        actionRequired() === PlayerState.Guessing) ||
-                    actionRequired() === PlayerState.Waiting
-                }
-                onClick={async () => {
-                    try {
-                        let gs = new GameService()
-                        await gs.guess(
-                            game.id,
-                            selectedSlot > 0 ? selectedSlot : null,
-                        )
-                        setSelectedSlot(0)
-                    } catch (e) {
-                        console.log(e)
-                    }
-                }}
-            >
-                {actionRequired() === PlayerState.Guessing ||
-                actionRequired() === PlayerState.Intercepting
-                    ? actionRequired() === PlayerState.Intercepting ||
-                      selectedSlot > 0
-                        ? "Submit guess"
-                        : "Select a slot first"
-                    : "You cannot submit a guess right now"}
-            </Button>
+                        ) : (
+                            ""
+                        )}
+                        {game.players
+                            .find((p) => p.turn_player === true)
+                            ?.slots.map((slot) => {
+                                let text = ""
+
+                                if (slot.from_year === 0)
+                                    text = `before ${slot.to_year}`
+                                else if (slot.to_year === 0)
+                                    text = `after ${slot.from_year}`
+                                else
+                                    text = `between ${slot.from_year} and ${slot.to_year}`
+
+                                return (
+                                    <ToggleButton
+                                        id={slot.id.toString()}
+                                        value={slot.id.toString()}
+                                        disabled={
+                                            (actionRequired() !==
+                                                PlayerState.Guessing &&
+                                                actionRequired() !==
+                                                    PlayerState.Intercepting) ||
+                                            game.players.some(
+                                                (p) => p.guess?.id === slot.id,
+                                            )
+                                        }
+                                        type="radio"
+                                    >
+                                        {text +
+                                            (game.players.some(
+                                                (p) => p.guess?.id === slot.id,
+                                            )
+                                                ? " (" +
+                                                  game.players.find(
+                                                      (p) =>
+                                                          p.guess?.id ===
+                                                          slot.id,
+                                                  )?.name +
+                                                  ")"
+                                                : "")}
+                                    </ToggleButton>
+                                )
+                            })}
+                    </ToggleButtonGroup>
+                    <Button
+                        disabled={
+                            (selectedSlot === "0" &&
+                                actionRequired() === PlayerState.Guessing) ||
+                            actionRequired() === PlayerState.Waiting
+                        }
+                        onClick={async () => {
+                            try {
+                                let gs = new GameService()
+                                await gs.guess(
+                                    game.id,
+                                    parseInt(selectedSlot, 10) > 0
+                                        ? parseInt(selectedSlot, 10)
+                                        : null,
+                                )
+                                setSelectedSlot("0")
+                            } catch (e) {
+                                console.log(e)
+                            }
+                        }}
+                    >
+                        {actionRequired() === PlayerState.Guessing ||
+                        actionRequired() === PlayerState.Intercepting
+                            ? actionRequired() === PlayerState.Intercepting ||
+                              parseInt(selectedSlot, 10) > 0
+                                ? "Submit guess"
+                                : "Select a slot first"
+                            : "You cannot submit a guess right now"}
+                    </Button>
+                </>
+            )}
         </>
     )
 }
@@ -193,6 +220,15 @@ export function Game() {
     let [hitSrc, setHitSrc] = useImmer("")
     let [showHits, setShowHits] = useImmer<boolean[]>([])
     let navigate = useNavigate()
+
+    const isSlotCorrect = (hit: Hit | null, slot: Slot | null): boolean => {
+        if (hit === null || slot === null) return false
+        return (
+            (slot.from_year === 0 && hit.year <= slot.to_year) ||
+            (slot.to_year === 0 && hit.year >= slot.from_year) ||
+            (slot.from_year <= hit.year && hit.year <= slot.to_year)
+        )
+    }
 
     useEffect(() => {
         let eventSource = new EventSource(`/api/games/${game.id}/events`)
@@ -208,8 +244,7 @@ export function Game() {
             })
 
             if (ge.state === GameState.Guessing) {
-                setHitSrc("")
-                setHitSrc(`/api/games/${game.id}/hit`)
+                setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
             } else if (ge.state === GameState.Open) {
                 setHitSrc("")
             }
@@ -395,14 +430,22 @@ export function Game() {
                 {game.state === GameState.Open
                     ? "No game is currently running, so no hit for you!"
                     : game.hit === null
-                      ? "The hit is hit is currently hidden, you'll have to wait for it to be revealed."
+                      ? "The hit is currently hidden, you'll have to wait for it to be revealed."
                       : "You're currently listening to " +
                         game.hit?.title +
                         " by " +
                         game.hit?.interpret +
                         " from " +
                         game.hit?.year +
-                        "."}
+                        (game.players.some((p) =>
+                            isSlotCorrect(game.hit, p.guess),
+                        )
+                            ? " and " +
+                              game.players.find((p) =>
+                                  isSlotCorrect(game.hit, p.guess),
+                              )?.name +
+                              " guessed it correctly."
+                            : " and noone guessed it correctly.")}
             </p>
             <HitPlayer src={hitSrc} duration={game.hit_duration} />
             <SlotSelector game={game} />

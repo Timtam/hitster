@@ -1,8 +1,8 @@
 use crate::{
-    games::{Game, GameEvent, GameState, SlotPayload},
+    games::{ConfirmationPayload, Game, GameEvent, GameState, SlotPayload},
     responses::{
-        CurrentHitError, GamesResponse, GuessSlotError, JoinGameError, LeaveGameError,
-        MessageResponse, StartGameError, StopGameError,
+        ConfirmSlotError, CurrentHitError, GamesResponse, GuessSlotError, JoinGameError,
+        LeaveGameError, MessageResponse, StartGameError, StopGameError,
     },
     services::ServiceStore,
     users::User,
@@ -290,6 +290,34 @@ pub fn guess_slot(
 
             Json(MessageResponse {
                 message: "guess submitted successfully".into(),
+                r#type: "success".into(),
+            })
+        })
+}
+
+#[openapi(tag = "Games")]
+#[post("/games/<game_id>/confirm", format = "json", data = "<confirmation>")]
+pub fn confirm_slot(
+    game_id: u32,
+    confirmation: Json<ConfirmationPayload>,
+    user: User,
+    serv: &State<ServiceStore>,
+    queue: &State<Sender<GameEvent>>,
+) -> Result<Json<MessageResponse>, ConfirmSlotError> {
+    serv.game_service()
+        .lock()
+        .confirm(game_id, &user, confirmation.confirm)
+        .map(|game| {
+            let _ = queue.send(GameEvent {
+                game_id,
+                event: "change_state".into(),
+                state: Some(game.state),
+                players: Some(game.players),
+                ..Default::default()
+            });
+
+            Json(MessageResponse {
+                message: "confirmation received".into(),
                 r#type: "success".into(),
             })
         })

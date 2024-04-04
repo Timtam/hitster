@@ -8,6 +8,11 @@ pub struct SlotPayload {
     pub id: Option<u8>,
 }
 
+#[derive(Deserialize, Serialize, JsonSchema)]
+pub struct ConfirmationPayload {
+    pub confirm: bool,
+}
+
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Copy)]
 #[serde(rename_all_fields = "snake_case")]
 pub enum GameState {
@@ -29,6 +34,7 @@ pub struct Game {
     pub hits_remaining: VecDeque<Hit>,
     pub hit_duration: u8,
     pub start_tokens: u8,
+    pub goal: u8,
     pub hit: Option<Hit>,
 }
 
