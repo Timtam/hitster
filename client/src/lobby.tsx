@@ -3,7 +3,7 @@ import Table from "react-bootstrap/Table"
 import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
 import { Link, useLoaderData, useNavigate } from "react-router-dom"
-import { Game } from "./entities"
+import { Game, GameState } from "./entities"
 import { useRevalidateOnInterval } from "./hooks"
 import GameService from "./services/games.service"
 
@@ -47,6 +47,7 @@ export function Lobby() {
                     <tr>
                         <th>Game ID</th>
                         <th>Players</th>
+                        <th>State</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -59,6 +60,11 @@ export function Lobby() {
                                     </Link>
                                 </td>
                                 <td>{game.players.length}</td>
+                                <td>
+                                    {game.state === GameState.Open
+                                        ? "Open"
+                                        : "Running"}
+                                </td>
                             </tr>
                         )
                     })}

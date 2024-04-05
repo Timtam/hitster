@@ -243,6 +243,16 @@ export function Game() {
         )
     }
 
+    const canSkip = () => {
+        return (
+            cookies.logged_in !== undefined &&
+            (game.players.find((p) => p.id === cookies.logged_in.id)?.state ??
+                PlayerState.Waiting) === PlayerState.Guessing &&
+            (game.players.find((p) => p.id === cookies.logged_in.id)?.tokens ??
+                0) > 0
+        )
+    }
+
     useEffect(() => {
         let eventSource = new EventSource(`/api/games/${game.id}/events`)
 
@@ -287,6 +297,18 @@ export function Game() {
                     g.players[idx] = pe
                 })
             })
+        })
+
+        eventSource.addEventListener("skip", (e) => {
+            let ge = GameEvent.parse(JSON.parse(e.data))
+            setGame((g) => {
+                ge.players?.forEach((pe) => {
+                    let idx = g.players.findIndex((p) => p.id === pe.id)
+                    g.players[idx] = pe
+                })
+            })
+
+            setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
         })
 
         return () => {
@@ -462,6 +484,24 @@ export function Game() {
                 )}
             </p>
             <HitPlayer src={hitSrc} duration={game.hit_duration} />
+            <Button
+                className="me-2"
+                disabled={!canSkip()}
+                onClick={async () => await gameService.skip(game.id)}
+            >
+                {canSkip()
+                    ? "Skip this hit by paying one token"
+                    : cookies.logged_in === undefined
+                      ? "You are not logged in and cannot skip a hit"
+                      : game.players.find((p) => p.id === cookies.logged_in.id)
+                              ?.state === PlayerState.Guessing
+                        ? "Only the guessing player can skip a hit"
+                        : game.players.find(
+                                (p) => p.id === cookies.logged_in.id,
+                            )?.tokens === 0
+                          ? "You need to pay a token to skip a hit"
+                          : "You cannot skip a hit right now"}
+            </Button>
             <SlotSelector game={game} />
         </>
     )

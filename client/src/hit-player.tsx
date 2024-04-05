@@ -41,7 +41,11 @@ export default function HitPlayer({
                 setTimer(undefined)
             }
             player.current?.audio.current?.pause()
-            if(player.current !== null && player.current.audio.current !== null) player.current.audio.current.currentTime = 0
+            if (
+                player.current !== null &&
+                player.current.audio.current !== null
+            )
+                player.current.audio.current.currentTime = 0
         }
     }, [src, playing])
 
@@ -57,6 +61,7 @@ export default function HitPlayer({
                 autoPlayAfterSrcChange={false}
             />
             <Button
+                className="me-2"
                 disabled={src === ""}
                 onClick={() => {
                     if (playing === true) {

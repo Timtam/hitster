@@ -89,4 +89,14 @@ export default class GameService {
         if (res.status == 200) return
         throw json({ message: (await res.json()).message, status: res.status })
     }
+
+    async skip(game_id: number) {
+        let res = await fetch(`/api/games/${game_id}/skip`, {
+            method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
 }

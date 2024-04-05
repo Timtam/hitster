@@ -2,7 +2,7 @@ use crate::{
     games::{ConfirmationPayload, Game, GameEvent, GameState, SlotPayload},
     responses::{
         ConfirmSlotError, CurrentHitError, GamesResponse, GuessSlotError, JoinGameError,
-        LeaveGameError, MessageResponse, StartGameError, StopGameError,
+        LeaveGameError, MessageResponse, SkipHitError, StartGameError, StopGameError,
     },
     services::ServiceStore,
     users::User,
@@ -318,6 +318,37 @@ pub fn confirm_slot(
 
             Json(MessageResponse {
                 message: "confirmation received".into(),
+                r#type: "success".into(),
+            })
+        })
+}
+
+#[openapi(tag = "Games")]
+#[post("/games/<game_id>/skip")]
+pub fn skip_hit(
+    game_id: u32,
+    user: User,
+    serv: &State<ServiceStore>,
+    queue: &State<Sender<GameEvent>>,
+) -> Result<Json<MessageResponse>, SkipHitError> {
+    serv.game_service()
+        .lock()
+        .skip(game_id, &user)
+        .map(|game| {
+            let _ = queue.send(GameEvent {
+                game_id,
+                event: "skip".into(),
+                players: game
+                    .players
+                    .iter()
+                    .find(|p| p.id == user.id)
+                    .cloned()
+                    .map(|p| vec![p]),
+                ..Default::default()
+            });
+
+            Json(MessageResponse {
+                message: "skipped successfully".into(),
                 r#type: "success".into(),
             })
         })

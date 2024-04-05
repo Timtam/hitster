@@ -3,7 +3,7 @@ use crate::{
     hits::Hit,
     responses::{
         ConfirmSlotError, CurrentHitError, GuessSlotError, JoinGameError, LeaveGameError,
-        StartGameError, StopGameError,
+        SkipHitError, StartGameError, StopGameError,
     },
     services::{HitService, ServiceHandle},
     users::User,
@@ -537,6 +537,56 @@ impl GameService {
             Ok(game.clone())
         } else {
             Err(ConfirmSlotError {
+                message: "game not found".into(),
+                http_status_code: 404,
+            })
+        }
+    }
+
+    pub fn skip(&self, game_id: u32, user: &User) -> Result<Game, SkipHitError> {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(game) = data.games.get_mut(&game_id) {
+            if !game.players.iter().any(|p| p.id == user.id) {
+                return Err(SkipHitError {
+                    message: "user is not part of this game".into(),
+                    http_status_code: 409,
+                });
+            }
+
+            let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+
+            if game.players.get(pos).unwrap().state != PlayerState::Guessing {
+                return Err(SkipHitError {
+                    message: "this player cannot skip right now".into(),
+                    http_status_code: 403,
+                });
+            } else if game.players.get(pos).unwrap().tokens == 0 {
+                return Err(SkipHitError {
+                    message: "this player doesn't have a token to skip here".into(),
+                    http_status_code: 403,
+                });
+            }
+
+            game.players.get_mut(pos).unwrap().tokens -= 1;
+
+            game.hits_remaining.pop_front();
+
+            if game.hits_remaining.len() == 0 {
+                let mut rng = thread_rng();
+                game.hits_remaining = self
+                    .hit_service
+                    .lock()
+                    .get_all()
+                    .into_iter()
+                    .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                    .collect::<VecDeque<_>>();
+                game.hits_remaining.make_contiguous().shuffle(&mut rng);
+            }
+
+            Ok(game.clone())
+        } else {
+            Err(SkipHitError {
                 message: "game not found".into(),
                 http_status_code: 404,
             })
