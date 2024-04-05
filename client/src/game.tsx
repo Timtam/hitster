@@ -78,11 +78,11 @@ const SlotSelector = ({ game }: { game: GameType }) => {
     }, [game])
 
     if (game.state === GameState.Open)
-        return <h2>The game hasn't started yet.</h2>
+        return <h2 className="h4">The game hasn't started yet.</h2>
 
     return (
         <>
-            <h2>
+            <h2 className="h4">
                 {actionRequired() === PlayerState.Waiting
                     ? "You are waiting for " +
                       joinString(
@@ -97,7 +97,7 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                         ? "You can now step in and make another guess, but be aware, it'll cost you one token!"
                         : "You now need to confirm if " +
                           game.players.find((p) => p.turn_player)?.name +
-                          " guessed title and interpret of the song correctly. Be fair!"}
+                          " guessed title and artist of the song correctly. Be fair!"}
             </h2>
             {actionRequired() === PlayerState.Confirming ? (
                 <>
@@ -106,10 +106,10 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                             game.players.find((p) => p.turn_player)?.name +
                             " guess artist and title correctly?"}
                     </p>
-                    <Button onClick={async () => await confirm(false)}>
+                    <Button className="me-2"onClick={async () => await confirm(false)}>
                         No
                     </Button>
-                    <Button onClick={async () => await confirm(true)}>
+                    <Button className="me-2" onClick={async () => await confirm(true)}>
                         Yes
                     </Button>
                 </>
@@ -129,7 +129,12 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                         onChange={(e) => setSelectedSlot(e)}
                     >
                         {actionRequired() === PlayerState.Intercepting ? (
-                            <ToggleButton id="0" value="0" type="radio">
+                            <ToggleButton
+                                className="me-2 mb-2"
+                                id="0"
+                                value="0"
+                                type="radio"
+                            >
                                 Don't intercept
                             </ToggleButton>
                         ) : (
@@ -149,6 +154,7 @@ const SlotSelector = ({ game }: { game: GameType }) => {
 
                                 return (
                                     <ToggleButton
+                                        className="me-2 mb-2"
                                         id={slot.id.toString()}
                                         value={slot.id.toString()}
                                         disabled={
@@ -178,6 +184,7 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                                 )
                             })}
                     </ToggleButtonGroup>
+                    <br aria-hidden="true" />
                     <Button
                         disabled={
                             (selectedSlot === "0" &&
@@ -300,11 +307,12 @@ export function Game() {
             <Helmet>
                 <title>{`${game.id} - Game - Hitster`}</title>
             </Helmet>
-            <h2>
+            <h2 className="h4">
                 Game ID: {game.id}, State: {game.state}
             </h2>
             <p>Game Actions:</p>
             <Button
+                className="me-2"
                 disabled={cookies.logged_in === undefined}
                 onClick={async () => {
                     if (
@@ -315,13 +323,14 @@ export function Game() {
                     } else await gameService.join(game.id)
                 }}
             >
-                {cookies === undefined
+                {cookies.logged_in === undefined
                     ? "You need to be logged in to participate in a game"
                     : game.players.some((p) => p.id === cookies.logged_in.id)
                       ? "Leave game"
                       : "Join game"}
             </Button>
             <Button
+                className="me-2"
                 disabled={!canStartOrStopGame()}
                 onClick={async () => {
                     if (game.state === GameState.Open)
@@ -339,7 +348,7 @@ export function Game() {
                         ? "At least two players must be part of a game"
                         : "Only the creator can start or stop a game"}
             </Button>
-            <h3>Players</h3>
+            <h3 className="h5">Players</h3>
             <Table responsive>
                 <thead>
                     <tr>
@@ -423,7 +432,7 @@ export function Game() {
                     })}
                 </tbody>
             </Table>
-            <h2>What the hit?</h2>
+            <h2 className="h4">What the hit?</h2>
             <p aria-live="polite">
                 {game.state === GameState.Open ? (
                     "No game is currently running, so no hit for you!"

@@ -47,7 +47,6 @@ export default function HitPlayer({
                 ref={player}
                 src={src}
                 style={{ display: "none" }}
-                aria-hidden={true}
                 showJumpControls={false}
                 showDownloadProgress={false}
                 showFilledProgress={false}
