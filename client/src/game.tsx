@@ -106,10 +106,16 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                             game.players.find((p) => p.turn_player)?.name +
                             " guess artist and title correctly?"}
                     </p>
-                    <Button className="me-2"onClick={async () => await confirm(false)}>
+                    <Button
+                        className="me-2"
+                        onClick={async () => await confirm(false)}
+                    >
                         No
                     </Button>
-                    <Button className="me-2" onClick={async () => await confirm(true)}>
+                    <Button
+                        className="me-2"
+                        onClick={async () => await confirm(true)}
+                    >
                         Yes
                     </Button>
                 </>

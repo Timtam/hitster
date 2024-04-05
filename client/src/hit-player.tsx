@@ -2,7 +2,6 @@ import { createRef, useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import AudioPlayer from "react-h5-audio-player"
 import "react-h5-audio-player/lib/styles.css"
-import { useImmer } from "use-immer"
 
 export default function HitPlayer({
     src,
@@ -13,33 +12,38 @@ export default function HitPlayer({
 }) {
     let player = createRef<AudioPlayer>()
     let [playing, setPlaying] = useState(false)
-    let [timer, setTimer] = useImmer<ReturnType<typeof setTimeout> | undefined>(
+    let [timer, setTimer] = useState<ReturnType<typeof setTimeout> | undefined>(
         undefined,
     )
 
     useEffect(() => {
         if (src !== "") {
             setPlaying(true)
-            player.current?.audio.current?.play()
         } else {
             setPlaying(false)
-            player.current?.audio.current?.pause()
         }
     }, [src])
 
     useEffect(() => {
         if (playing === true) {
+            if (timer !== undefined) {
+                clearTimeout(timer)
+            }
+            player.current?.audio.current?.play()
             setTimer(
                 setTimeout(() => {
                     setPlaying(false)
                 }, duration * 1000),
             )
         } else {
-            clearTimeout(timer)
-            setTimer(undefined)
-            player.current?.audio.current?.load()
+            if (timer !== undefined) {
+                clearTimeout(timer)
+                setTimer(undefined)
+            }
+            player.current?.audio.current?.pause()
+            if(player.current !== null && player.current.audio.current !== null) player.current.audio.current.currentTime = 0
         }
-    }, [playing])
+    }, [src, playing])
 
     return (
         <>
@@ -57,10 +61,8 @@ export default function HitPlayer({
                 onClick={() => {
                     if (playing === true) {
                         setPlaying(false)
-                        player.current?.audio.current?.load()
                     } else {
                         setPlaying(true)
-                        player.current?.audio.current?.play()
                     }
                 }}
             >
