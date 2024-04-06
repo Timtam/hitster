@@ -1,3 +1,4 @@
+import { useState } from "react"
 import Nav from "react-bootstrap/Nav"
 import NavDropdown from "react-bootstrap/NavDropdown"
 import Navbar from "react-bootstrap/Navbar"
@@ -5,14 +6,13 @@ import { useCookies } from "react-cookie"
 import { useTranslation } from "react-i18next"
 import { LinkContainer } from "react-router-bootstrap"
 import { useNavigate } from "react-router-dom"
+import Settings from "./settings"
 
 export default function Navigation() {
     let [cookies] = useCookies(["logged_in"])
     let navigate = useNavigate()
-    const {
-        t,
-        i18n: { changeLanguage, language, services },
-    } = useTranslation()
+    const { t } = useTranslation()
+    let [showSettings, setShowSettings] = useState(false)
 
     return (
         <>
@@ -67,37 +67,20 @@ export default function Navigation() {
                             </NavDropdown.Item>
                         </NavDropdown>
                     )}
-                    <NavDropdown
-                        className="me-2"
-                        title={t("language", {
-                            language: new Intl.DisplayNames(language, {
-                                type: "language",
-                            }).of(language),
-                        })}
-                    >
-                        {Object.keys(services.resourceStore.data).map(
-                            (langcode) => {
-                                let nameGenerator = new Intl.DisplayNames(
-                                    langcode,
-                                    { type: "language" },
-                                )
-                                let displayName = nameGenerator.of(langcode)
-                                return (
-                                    <NavDropdown.Item as="div" className="me-2">
-                                        <Nav.Link
-                                            onClick={() => {
-                                                changeLanguage(langcode)
-                                            }}
-                                        >
-                                            {displayName}
-                                        </Nav.Link>
-                                    </NavDropdown.Item>
-                                )
-                            },
-                        )}
-                    </NavDropdown>
+                    <Nav.Item className="me-2">
+                        <Nav.Link
+                            aria-expanded="false"
+                            onClick={() => setShowSettings(true)}
+                        >
+                            {t("settings")}
+                        </Nav.Link>
+                    </Nav.Item>
                 </Navbar.Collapse>
             </Navbar>
+            <Settings
+                show={showSettings}
+                onHide={() => setShowSettings(false)}
+            />
         </>
     )
 }

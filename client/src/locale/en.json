@@ -8,7 +8,7 @@
         "notLoggedIn": "Not logged in",
         "login": "Login",
         "register": "Register",
-        "language": "Language: {{language}}",
+        "language": "Language",
         "username": "Username",
         "password": "Password",
         "registrationSuccessful": "You've been registered successfully. You can now move on to <1>login</1>.",
@@ -73,6 +73,9 @@
         "skipHitNotGuessing": "Only the guessing player can skip a hit",
         "skipHitNoToken": "You need to pay a token to skip a hit",
         "cannotSkipHit": "You cannot skip a hit right now",
-        "noone": "noone"
+        "noone": "noone",
+        "settings": "Settings",
+        "musicVolume": "Music volume",
+        "volume": "Volume"
     }
 }

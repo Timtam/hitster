@@ -1,3 +1,4 @@
+import { useLocalStorage } from "@uidotdev/usehooks"
 import { createRef, useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import AudioPlayer from "react-h5-audio-player"
@@ -17,6 +18,7 @@ export default function HitPlayer({
         undefined,
     )
     let { t } = useTranslation()
+    let [volume] = useLocalStorage("musicVolume", "1.0")
 
     useEffect(() => {
         if (src !== "") {
@@ -51,6 +53,11 @@ export default function HitPlayer({
         }
     }, [src, playing])
 
+    useEffect(() => {
+        if (player.current !== null && player.current.audio.current !== null)
+            player.current.audio.current.volume = parseFloat(volume)
+    }, [volume])
+
     return (
         <>
             <AudioPlayer
@@ -61,6 +68,7 @@ export default function HitPlayer({
                 showDownloadProgress={false}
                 showFilledProgress={false}
                 autoPlayAfterSrcChange={false}
+                volume={parseFloat(volume)}
             />
             <Button
                 className="me-2"

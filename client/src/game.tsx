@@ -328,6 +328,9 @@ export function Game() {
             setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
         })
 
+        if (game.state !== GameState.Open)
+            setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
+
         return () => {
             eventSource.close()
         }
