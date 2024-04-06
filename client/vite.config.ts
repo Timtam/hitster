@@ -1,5 +1,5 @@
 import react from "@vitejs/plugin-react-swc"
-import { defineConfig } from "vite"
+import { defineConfig, splitVendorChunkPlugin } from "vite"
 import checker from "vite-plugin-checker"
 import viteTsconfigPaths from "vite-tsconfig-paths"
 
@@ -11,5 +11,6 @@ export default defineConfig({
         checker({
             typescript: true,
         }),
+        splitVendorChunkPlugin(),
     ],
 })

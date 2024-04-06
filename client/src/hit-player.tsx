@@ -2,6 +2,7 @@ import { createRef, useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import AudioPlayer from "react-h5-audio-player"
 import "react-h5-audio-player/lib/styles.css"
+import { useTranslation } from "react-i18next"
 
 export default function HitPlayer({
     src,
@@ -15,6 +16,7 @@ export default function HitPlayer({
     let [timer, setTimer] = useState<ReturnType<typeof setTimeout> | undefined>(
         undefined,
     )
+    let { t } = useTranslation()
 
     useEffect(() => {
         if (src !== "") {
@@ -72,10 +74,10 @@ export default function HitPlayer({
                 }}
             >
                 {src === ""
-                    ? "No hit available"
+                    ? t("noHitAvailable")
                     : playing
-                      ? "Stop hit"
-                      : "Play hit"}
+                      ? t("stopHit")
+                      : t("playHit")}
             </Button>
         </>
     )

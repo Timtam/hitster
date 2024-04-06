@@ -6,6 +6,7 @@ import ToggleButton from "react-bootstrap/ToggleButton"
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
 import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
+import { Trans, useTranslation } from "react-i18next"
 import type { LoaderFunction } from "react-router"
 import { json, useLoaderData, useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
@@ -40,6 +41,7 @@ const SlotSelector = ({ game }: { game: GameType }) => {
     const [selectedSlot, setSelectedSlot] = useImmer("0")
     const [cookies] = useCookies(["logged_in"])
     const navigate = useNavigate()
+    let { t } = useTranslation()
     const actionRequired = (): PlayerState => {
         if (cookies.logged_in === undefined) return PlayerState.Waiting
         return (
@@ -54,7 +56,9 @@ const SlotSelector = ({ game }: { game: GameType }) => {
         else
             return (
                 parts.slice(0, -1).join(", ") +
-                " and " +
+                " " +
+                t("and") +
+                " " +
                 parts[parts.length - 1]
             )
     }
@@ -78,45 +82,50 @@ const SlotSelector = ({ game }: { game: GameType }) => {
     }, [game])
 
     if (game.state === GameState.Open)
-        return <h2 className="h4">The game hasn't started yet.</h2>
+        return <h2 className="h4">{t("gameNotStarted")}</h2>
 
     return (
         <>
             <h2 className="h4">
                 {actionRequired() === PlayerState.Waiting
-                    ? "You are waiting for " +
-                      joinString(
-                          game.players
-                              .filter((p) => p.state != PlayerState.Waiting)
-                              .map((p) => p.name),
-                      ) +
-                      " to make their move."
+                    ? t("waitingForPlayerHeading", {
+                          count: game.players.filter(
+                              (p) => p.state != PlayerState.Waiting,
+                          ).length,
+                          player: joinString(
+                              game.players
+                                  .filter((p) => p.state != PlayerState.Waiting)
+                                  .map((p) => p.name),
+                          ),
+                      })
                     : actionRequired() === PlayerState.Guessing
-                      ? "Finally, its your turn to guess!"
+                      ? t("guessHeading")
                       : actionRequired() === PlayerState.Intercepting
-                        ? "You can now step in and make another guess, but be aware, it'll cost you one token!"
-                        : "You now need to confirm if " +
-                          game.players.find((p) => p.turn_player)?.name +
-                          " guessed title and artist of the song correctly. Be fair!"}
+                        ? t("interceptHeading")
+                        : t("confirmHeading", {
+                              player: game.players.find((p) => p.turn_player)
+                                  ?.name,
+                          })}
             </h2>
             {actionRequired() === PlayerState.Confirming ? (
                 <>
                     <p>
-                        {"Did " +
-                            game.players.find((p) => p.turn_player)?.name +
-                            " guess artist and title correctly?"}
+                        {t("confirmText", {
+                            player: game.players.find((p) => p.turn_player)
+                                ?.name,
+                        })}
                     </p>
                     <Button
                         className="me-2"
                         onClick={async () => await confirm(false)}
                     >
-                        No
+                        {t("no")}
                     </Button>
                     <Button
                         className="me-2"
                         onClick={async () => await confirm(true)}
                     >
-                        Yes
+                        {t("yes")}
                     </Button>
                 </>
             ) : (
@@ -124,8 +133,8 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                     <p>
                         {actionRequired() === PlayerState.Guessing ||
                         actionRequired() === PlayerState.Intercepting
-                            ? "Do you think this hit belongs..."
-                            : "These are the possible slots:"}
+                            ? t("guessText")
+                            : t("waitingText")}
                     </p>
                     <ToggleButtonGroup
                         name="selected-slot"
@@ -141,7 +150,7 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                                 value="0"
                                 type="radio"
                             >
-                                Don't intercept
+                                {t("dontIntercept")}
                             </ToggleButton>
                         ) : (
                             ""
@@ -152,11 +161,18 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                                 let text = ""
 
                                 if (slot.from_year === 0)
-                                    text = `before ${slot.to_year}`
+                                    text = t("beforeYear", {
+                                        year: slot.to_year,
+                                    })
                                 else if (slot.to_year === 0)
-                                    text = `after ${slot.from_year}`
+                                    text = t("afterYear", {
+                                        year: slot.from_year,
+                                    })
                                 else
-                                    text = `between ${slot.from_year} and ${slot.to_year}`
+                                    text = t("betweenYears", {
+                                        year1: slot.from_year,
+                                        year2: slot.to_year,
+                                    })
 
                                 return (
                                     <ToggleButton
@@ -216,9 +232,9 @@ const SlotSelector = ({ game }: { game: GameType }) => {
                         actionRequired() === PlayerState.Intercepting
                             ? actionRequired() === PlayerState.Intercepting ||
                               parseInt(selectedSlot, 10) > 0
-                                ? "Submit guess"
-                                : "Select a slot first"
-                            : "You cannot submit a guess right now"}
+                                ? t("submitGuess")
+                                : t("selectSlotFirst")
+                            : t("cannotSubmitGuess")}
                     </Button>
                 </>
             )}
@@ -233,6 +249,7 @@ export function Game() {
     let [hitSrc, setHitSrc] = useImmer("")
     let [showHits, setShowHits] = useImmer<boolean[]>([])
     let navigate = useNavigate()
+    let { t } = useTranslation()
 
     const isSlotCorrect = (hit: Hit | null, slot: Slot | null): boolean => {
         if (hit === null || slot === null) return false
@@ -333,12 +350,17 @@ export function Game() {
     return (
         <>
             <Helmet>
-                <title>{`${game.id} - Game - Hitster`}</title>
+                <title>
+                    {game.id.toString() +
+                        " - " +
+                        t("game", { count: 1 }) +
+                        " - Hitster"}
+                </title>
             </Helmet>
             <h2 className="h4">
-                Game ID: {game.id}, State: {game.state}
+                {t("gameId")}: {game.id}, {t("state")}: {game.state}
             </h2>
-            <p>Game Actions:</p>
+            <p>{t("gameActions")}</p>
             <Button
                 className="me-2"
                 disabled={cookies.logged_in === undefined}
@@ -352,10 +374,10 @@ export function Game() {
                 }}
             >
                 {cookies.logged_in === undefined
-                    ? "You need to be logged in to participate in a game"
+                    ? t("joinGameNotLoggedIn")
                     : game.players.some((p) => p.id === cookies.logged_in.id)
-                      ? "Leave game"
-                      : "Join game"}
+                      ? t("leaveGame")
+                      : t("joinGame")}
             </Button>
             <Button
                 className="me-2"
@@ -368,21 +390,21 @@ export function Game() {
             >
                 {canStartOrStopGame()
                     ? game.state !== GameState.Open
-                        ? "Stop game"
-                        : "Start game"
+                        ? t("stopGame")
+                        : t("startGame")
                     : cookies.logged_in === undefined
-                      ? "You must be logged in to start or stop a game"
+                      ? t("startGameNotLoggedIn")
                       : game.players.length < 2
-                        ? "At least two players must be part of a game"
-                        : "Only the creator can start or stop a game"}
+                        ? t("startGameNotEnoughPlayers")
+                        : t("startGameNotCreator")}
             </Button>
-            <h3 className="h5">Players</h3>
+            <h3 className="h5">{t("player", { count: 2 })}</h3>
             <Table responsive>
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Tokens</th>
-                        <th>Hits</th>
+                        <th>{t("name")}</th>
+                        <th>{t("token", { count: 2 })}</th>
+                        <th>{t("hit", { count: 2 })}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -392,7 +414,7 @@ export function Game() {
                                 <td>
                                     {p.name +
                                         (p.creator === true
-                                            ? " (creator)"
+                                            ? " (" + t("creator") + ")"
                                             : "")}
                                 </td>
                                 <td>{p.tokens}</td>
@@ -405,7 +427,10 @@ export function Game() {
                                                 h[i] = true
                                             })
                                         }
-                                    >{`Hits: ${p.hits.length}`}</Button>
+                                    >
+                                        {t("hit", { count: 2 }) +
+                                            `: ${p.hits.length}`}
+                                    </Button>
                                     <Modal
                                         show={showHits[i]}
                                         onHide={() =>
@@ -416,19 +441,21 @@ export function Game() {
                                     >
                                         <Modal.Header
                                             closeButton
-                                            closeLabel="Close"
+                                            closeLabel={t("close")}
                                         >
                                             <Modal.Title>
-                                                {"Hits for " + p.name}
+                                                {t("hitsForPlayer", {
+                                                    player: p.name,
+                                                })}
                                             </Modal.Title>
                                         </Modal.Header>
                                         <Modal.Body>
                                             <Table responsive>
                                                 <thead>
                                                     <tr>
-                                                        <th>Artist</th>
-                                                        <th>Title</th>
-                                                        <th>Year</th>
+                                                        <th>{t("artist")}</th>
+                                                        <th>{t("title")}</th>
+                                                        <th>{t("year")}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -460,27 +487,26 @@ export function Game() {
                     })}
                 </tbody>
             </Table>
-            <h2 className="h4">What the hit?</h2>
+            <h2 className="h4">{t("hitHeading")}</h2>
             <p aria-live="polite">
                 {game.state === GameState.Open ? (
-                    "No game is currently running, so no hit for you!"
+                    t("hitNoGameRunning")
                 ) : game.hit === null ? (
-                    "The hit is currently unknown, you'll have to wait for it to be revealed."
+                    t("hitUnknown")
                 ) : (
-                    <>
-                        You're currently listening to <b>{game.hit?.title}</b>{" "}
-                        by <b>{game.hit?.artist}</b> from{" "}
-                        <b>{game.hit?.year}</b>{" "}
-                        {game.players.some((p) =>
-                            isSlotCorrect(game.hit, p.guess),
-                        )
-                            ? " and " +
-                              game.players.find((p) =>
-                                  isSlotCorrect(game.hit, p.guess),
-                              )?.name +
-                              " guessed it correctly."
-                            : " and noone guessed it correctly."}
-                    </>
+                    <Trans
+                        i18nKey="hitRevealed"
+                        values={{
+                            title: game.hit?.title,
+                            artist: game.hit?.artist,
+                            year: game.hit?.year,
+                            player:
+                                game.players.find((p) =>
+                                    isSlotCorrect(game.hit, p.guess),
+                                )?.name ?? t("noone"),
+                        }}
+                        components={[<b />, <b />, <b />]}
+                    />
                 )}
             </p>
             <HitPlayer src={hitSrc} duration={game.hit_duration} />
@@ -490,17 +516,17 @@ export function Game() {
                 onClick={async () => await gameService.skip(game.id)}
             >
                 {canSkip()
-                    ? "Skip this hit by paying one token"
+                    ? t("skipHit")
                     : cookies.logged_in === undefined
-                      ? "You are not logged in and cannot skip a hit"
+                      ? t("skipHitNotLoggedIn")
                       : game.players.find((p) => p.id === cookies.logged_in.id)
                               ?.state === PlayerState.Guessing
-                        ? "Only the guessing player can skip a hit"
+                        ? t("skipHitNotGuessing")
                         : game.players.find(
                                 (p) => p.id === cookies.logged_in.id,
                             )?.tokens === 0
-                          ? "You need to pay a token to skip a hit"
-                          : "You cannot skip a hit right now"}
+                          ? t("skipHitNoToken")
+                          : t("cannotSkipHit")}
             </Button>
             <SlotSelector game={game} />
         </>

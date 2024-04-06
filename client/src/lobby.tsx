@@ -2,6 +2,7 @@ import Button from "react-bootstrap/Button"
 import Table from "react-bootstrap/Table"
 import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
+import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router-dom"
 import { Game, GameState } from "./entities"
 import { useRevalidateOnInterval } from "./hooks"
@@ -16,6 +17,7 @@ export function Lobby() {
     let [cookies] = useCookies(["logged_in"])
     let games = useLoaderData() as Game[]
     let navigate = useNavigate()
+    let { t } = useTranslation()
 
     useRevalidateOnInterval({ enabled: true, interval: 5000 })
 
@@ -32,22 +34,22 @@ export function Lobby() {
     return (
         <>
             <Helmet>
-                <title>Game Lobby - Hitster</title>
+                <title>{t("gameLobby")} - Hitster</title>
             </Helmet>
             <Button
                 disabled={cookies.logged_in === undefined}
                 onClick={createGame}
             >
                 {cookies.logged_in === undefined
-                    ? "You need to be logged in to create a new game"
-                    : "Create new game"}
+                    ? t("createNewGameNotLoggedIn")
+                    : t("createNewGame")}
             </Button>
             <Table responsive>
                 <thead>
                     <tr>
-                        <th>Game ID</th>
-                        <th>Players</th>
-                        <th>State</th>
+                        <th>{t("gameId")}</th>
+                        <th>{t("player", { count: 2 })}</th>
+                        <th>{t("state")}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -62,8 +64,8 @@ export function Lobby() {
                                 <td>{game.players.length}</td>
                                 <td>
                                     {game.state === GameState.Open
-                                        ? "Open"
-                                        : "Running"}
+                                        ? t("open")
+                                        : t("running")}
                                 </td>
                             </tr>
                         )

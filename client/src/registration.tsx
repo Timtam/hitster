@@ -2,6 +2,7 @@ import { useState } from "react"
 import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
 import { Helmet } from "react-helmet-async"
+import { Trans, useTranslation } from "react-i18next"
 import type { ActionFunction } from "react-router"
 import { Form, Link, useActionData } from "react-router-dom"
 import Error from "./error"
@@ -31,16 +32,19 @@ export function Registration() {
     let [username, setUsername] = useState("")
     let [password, setPassword] = useState("")
     let [passwordRepetition, setPasswordRepetition] = useState("")
+    let { t } = useTranslation()
 
     return (
         <>
             <Helmet>
-                <title>Register - Hitster</title>
+                <title>{t("register")} - Hitster</title>
             </Helmet>
             {response && response.success === true ? (
                 <p>
-                    You've been registered successfully. You can now move on to
-                    <Link to="/login">login</Link>.
+                    <Trans i18nKey="registrationSuccessful">
+                        You've been registered successfully. You can now move on
+                        to <Link to="/login">login</Link>
+                    </Trans>
                 </p>
             ) : (
                 <>
@@ -53,11 +57,11 @@ export function Registration() {
                     />
                     <Form method="post">
                         <BsForm.Group controlId="basicFormUsername">
-                            <BsForm.Label>Username</BsForm.Label>
+                            <BsForm.Label>{t("username")}</BsForm.Label>
                             <BsForm.Control
                                 type="input"
                                 name="username"
-                                placeholder="Username"
+                                placeholder={t("username")}
                                 value={username}
                                 onChange={(evt) =>
                                     setUsername(evt.target.value)
@@ -65,11 +69,11 @@ export function Registration() {
                             />
                         </BsForm.Group>
                         <BsForm.Group controlId="formBasicPassword">
-                            <BsForm.Label>Password</BsForm.Label>
+                            <BsForm.Label>{t("password")}</BsForm.Label>
                             <BsForm.Control
                                 type="password"
                                 name="password"
-                                placeholder="Password"
+                                placeholder={t("password")}
                                 value={password}
                                 onChange={(evt) =>
                                     setPassword(evt.target.value)
@@ -77,10 +81,10 @@ export function Registration() {
                             />
                         </BsForm.Group>
                         <BsForm.Group controlId="formBasicPasswordRepeat">
-                            <BsForm.Label>Repeat Password</BsForm.Label>
+                            <BsForm.Label>{t("repeatPassword")}</BsForm.Label>
                             <BsForm.Control
                                 type="password"
-                                placeholder="Repeat Password"
+                                placeholder={t("repeatPassword")}
                                 value={passwordRepetition}
                                 onChange={(evt) =>
                                     setPasswordRepetition(evt.target.value)
@@ -96,7 +100,7 @@ export function Registration() {
                                 password !== passwordRepetition
                             }
                         >
-                            Register now
+                            {t("register")}
                         </Button>
                     </Form>
                 </>

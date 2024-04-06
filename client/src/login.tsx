@@ -2,6 +2,7 @@ import { useState } from "react"
 import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
 import { Helmet } from "react-helmet-async"
+import { useTranslation } from "react-i18next"
 import type { ActionFunction } from "react-router"
 import { Form, redirect, useActionData } from "react-router-dom"
 import Error from "./error"
@@ -30,11 +31,12 @@ export function Login() {
     }
     let [username, setUsername] = useState("")
     let [password, setPassword] = useState("")
+    let { t } = useTranslation()
 
     return (
         <>
             <Helmet>
-                <title>Login - Hitster</title>
+                <title>{t("login")} - Hitster</title>
             </Helmet>
             <Error
                 text={
@@ -45,21 +47,21 @@ export function Login() {
             />
             <Form method="post">
                 <BsForm.Group controlId="basicFormUsername">
-                    <BsForm.Label>Username</BsForm.Label>
+                    <BsForm.Label>{t("username")}</BsForm.Label>
                     <BsForm.Control
                         type="input"
                         name="username"
-                        placeholder="Username"
+                        placeholder={t("username")}
                         value={username}
                         onChange={(evt) => setUsername(evt.target.value)}
                     />
                 </BsForm.Group>
                 <BsForm.Group controlId="formBasicPassword">
-                    <BsForm.Label>Password</BsForm.Label>
+                    <BsForm.Label>{t("password")}</BsForm.Label>
                     <BsForm.Control
                         type="password"
                         name="password"
-                        placeholder="Password"
+                        placeholder={t("password")}
                         value={password}
                         onChange={(evt) => setPassword(evt.target.value)}
                     />
@@ -69,7 +71,7 @@ export function Login() {
                     type="submit"
                     disabled={username.length === 0 || password.length === 0}
                 >
-                    Login
+                    {t("login")}
                 </Button>
             </Form>
         </>
