@@ -1,4 +1,4 @@
-use crate::{games::Game, users::User};
+use crate::{games::Game, hits::Pack, users::User};
 use rocket::{
     http::{ContentType, Status},
     request::Request,
@@ -14,6 +14,7 @@ use rocket_okapi::{
     OpenApiError,
 };
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct JoinGameError {
@@ -578,4 +579,9 @@ pub struct MessageResponse {
 #[derive(Serialize, Deserialize, JsonSchema)]
 pub struct UsersResponse {
     pub users: Vec<User>,
+}
+
+#[derive(Serialize, Deserialize, JsonSchema)]
+pub struct PacksResponse {
+    pub packs: HashMap<Pack, usize>,
 }

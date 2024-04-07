@@ -15,11 +15,23 @@ use std::{
     process::Stdio,
     str::FromStr,
 };
-use strum::EnumString;
+use strum::{EnumString, VariantArray};
 
 include!(concat!(env!("OUT_DIR"), "/hits.rs"));
 
-#[derive(EnumString, Eq, PartialEq, Debug, Clone, Serialize, Deserialize, JsonSchema)]
+#[derive(
+    EnumString,
+    Eq,
+    PartialEq,
+    Debug,
+    Clone,
+    Serialize,
+    Deserialize,
+    JsonSchema,
+    VariantArray,
+    Hash,
+    Copy,
+)]
 pub enum Pack {
     Basic,
     Schlagerparty,

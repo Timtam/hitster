@@ -18,7 +18,7 @@ use rocket::{
 };
 use rocket_db_pools::{sqlx, Database};
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
-use routes::{games as games_routes, users as users_routes};
+use routes::{games as games_routes, hits as hits_routes, users as users_routes};
 use services::ServiceStore;
 use std::{
     env,
@@ -98,6 +98,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 games_routes::skip_hit,
                 games_routes::start_game,
                 games_routes::stop_game,
+                hits_routes::get_all_packs,
             ],
         )
         .mount(
