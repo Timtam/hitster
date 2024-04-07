@@ -34,11 +34,12 @@ export default function HitPlayer({
                 clearTimeout(timer)
             }
             player.current?.audio.current?.play()
-            setTimer(
-                setTimeout(() => {
-                    setPlaying(false)
-                }, duration * 1000),
-            )
+            if (duration > 0)
+                setTimer(
+                    setTimeout(() => {
+                        setPlaying(false)
+                    }, duration * 1000),
+                )
         } else {
             if (timer !== undefined) {
                 clearTimeout(timer)
@@ -69,6 +70,7 @@ export default function HitPlayer({
                 showFilledProgress={false}
                 autoPlayAfterSrcChange={false}
                 volume={parseFloat(volume)}
+                onEnded={() => setPlaying(false)}
             />
             <Button
                 className="me-2"

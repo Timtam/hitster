@@ -512,7 +512,12 @@ export function Game() {
                     />
                 )}
             </p>
-            <HitPlayer src={hitSrc} duration={game.hit_duration} />
+            <HitPlayer
+                src={hitSrc}
+                duration={
+                    game.state === GameState.Confirming ? 0 : game.hit_duration
+                }
+            />
             <Button
                 className="me-2"
                 disabled={!canSkip()}
