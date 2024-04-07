@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 use std::{
     env,
     fs::{create_dir_all, remove_file},
+    hash::{Hash, Hasher},
     path::{Path, PathBuf},
     process::Stdio,
     str::FromStr,
@@ -24,7 +25,7 @@ pub enum Pack {
     Schlagerparty,
 }
 
-#[derive(Clone, PartialEq, Eq, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Hit {
     pub artist: String,
     pub title: String,
@@ -59,6 +60,20 @@ impl Hit {
 
     pub fn exists(&self) -> bool {
         self.file().map(|p| p.is_file()).unwrap_or(false)
+    }
+}
+
+impl PartialEq for Hit {
+    fn eq(&self, other: &Self) -> bool {
+        self.artist == other.artist && self.title == other.title && self.year == other.year
+    }
+}
+
+impl Hash for Hit {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.artist.hash(state);
+        self.title.hash(state);
+        self.year.hash(state);
     }
 }
 

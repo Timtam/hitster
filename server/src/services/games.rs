@@ -187,7 +187,14 @@ impl GameService {
                 game.state = GameState::Guessing;
                 game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
                 game.players.get_mut(0).unwrap().turn_player = true;
-                game.hits_remaining = self.hit_service.lock().get_all().into_iter().collect::<_>();
+                game.hits_remaining = self
+                    .hit_service
+                    .lock()
+                    .get_all()
+                    .into_iter()
+                    .collect::<HashSet<_>>()
+                    .into_iter()
+                    .collect::<_>();
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
 
                 for i in 0..game.players.len() {
@@ -529,6 +536,8 @@ impl GameService {
                         .get_all()
                         .into_iter()
                         .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                        .collect::<HashSet<_>>()
+                        .into_iter()
                         .collect::<VecDeque<_>>();
                     game.hits_remaining.make_contiguous().shuffle(&mut rng);
                 }
@@ -580,6 +589,8 @@ impl GameService {
                     .get_all()
                     .into_iter()
                     .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                    .collect::<HashSet<_>>()
+                    .into_iter()
                     .collect::<VecDeque<_>>();
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
             }
