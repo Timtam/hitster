@@ -38,35 +38,40 @@ export default function Settings({
                         )
                     }
                 />
+                <h2 className="h4">{t("language")}</h2>
+                <ToggleButtonGroup
+                    name="language"
+                    type="radio"
+                    value={language}
+                    defaultValue={
+                        Object.keys(services.resourceStore.data).find(
+                            (langcode) => language.startsWith(langcode),
+                        ) ?? "en"
+                    }
+                    onChange={(e) => changeLanguage(e)}
+                >
+                    {Object.keys(services.resourceStore.data).map(
+                        (langcode) => {
+                            let nameGenerator = new Intl.DisplayNames(
+                                langcode,
+                                {
+                                    type: "language",
+                                },
+                            )
+                            let displayName = nameGenerator.of(langcode)
+                            return (
+                                <ToggleButton
+                                    className="me-2"
+                                    value={langcode}
+                                    id={langcode}
+                                >
+                                    {displayName}
+                                </ToggleButton>
+                            )
+                        },
+                    )}
+                </ToggleButtonGroup>
             </Modal.Body>
-            <h2 className="h4">{t("language")}</h2>
-            <ToggleButtonGroup
-                name="language"
-                type="radio"
-                value={language}
-                defaultValue={
-                    Object.keys(services.resourceStore.data).find((langcode) =>
-                        language.startsWith(langcode),
-                    ) ?? "en"
-                }
-                onChange={(e) => changeLanguage(e)}
-            >
-                {Object.keys(services.resourceStore.data).map((langcode) => {
-                    let nameGenerator = new Intl.DisplayNames(langcode, {
-                        type: "language",
-                    })
-                    let displayName = nameGenerator.of(langcode)
-                    return (
-                        <ToggleButton
-                            className="me-2"
-                            value={langcode}
-                            id={langcode}
-                        >
-                            {displayName}
-                        </ToggleButton>
-                    )
-                })}
-            </ToggleButtonGroup>
         </Modal>
     )
 }

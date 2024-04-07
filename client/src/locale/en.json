@@ -76,6 +76,11 @@
         "noone": "noone",
         "settings": "Settings",
         "musicVolume": "Music volume",
-        "volume": "Volume"
+        "volume": "Volume",
+        "gameEnded": "The game ended!",
+        "youWin": "Congratulations, you are the winner!",
+        "otherWins": "{{player}} is the winner of this game!",
+        "nooneWins": "Noone won this game.",
+        "finalScore": "And here are the final results:"
     }
 }

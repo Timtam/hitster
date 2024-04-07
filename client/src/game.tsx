@@ -1,3 +1,4 @@
+import deepcopy from "deepcopy"
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
@@ -21,6 +22,15 @@ import {
 import HitPlayer from "./hit-player"
 import GameService from "./services/games.service"
 
+const isSlotCorrect = (hit: Hit | null, slot: Slot | null): boolean => {
+    if (hit === null || slot === null) return false
+    return (
+        (slot.from_year === 0 && hit.year <= slot.to_year) ||
+        (slot.to_year === 0 && hit.year >= slot.from_year) ||
+        (slot.from_year <= hit.year && hit.year <= slot.to_year)
+    )
+}
+
 export const loader: LoaderFunction = async ({
     params,
 }): Promise<GameEntity> => {
@@ -35,6 +45,66 @@ export const loader: LoaderFunction = async ({
         throw json({ message: "game id not found", status: 404 })
     }
     throw json({ message: "internal api error", status: 500 })
+}
+
+const GameEndScreen = ({
+    game,
+    show,
+    onHide,
+}: {
+    game: GameType
+    show: boolean
+    onHide: () => void
+}) => {
+    let [cookies] = useCookies()
+    let { t } = useTranslation()
+    let [winner, setWinner] = useImmer<Player | undefined>(undefined)
+
+    useEffect(() => {
+        setWinner(
+            game.players.find(
+                (p) =>
+                    p.hits.length === game.goal - 1 &&
+                    isSlotCorrect(game.hit, p.guess),
+            ),
+        )
+    }, [game])
+
+    return (
+        <Modal show={show} onHide={onHide}>
+            <Modal.Header closeButton closeLabel={t("close")}>
+                <Modal.Title>{t("gameEnded")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <h2 className="h4">
+                    {winner !== undefined && winner.id === cookies.logged_in?.id
+                        ? t("youWin")
+                        : winner !== undefined
+                          ? t("otherWins", { player: winner.name })
+                          : t("nooneWins")}
+                </h2>
+                <p>{t("finalScore")}</p>
+                <Table responsive>
+                    <thead>
+                        <tr>
+                            <th>{t("player", { count: 1 })}</th>
+                            <th>{t("token", { count: 2 })}</th>
+                            <th>{t("hit", { count: 2 })}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {game.players.map((p) => (
+                            <tr>
+                                <td>{p.name}</td>
+                                <td>{p.tokens}</td>
+                                <td>{p.hits.length}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
+            </Modal.Body>
+        </Modal>
+    )
 }
 
 const SlotSelector = ({ game }: { game: GameType }) => {
@@ -248,17 +318,9 @@ export function Game() {
     let [game, setGame] = useImmer(useLoaderData() as GameEntity)
     let [hitSrc, setHitSrc] = useImmer("")
     let [showHits, setShowHits] = useImmer<boolean[]>([])
+    let [gameEnded, setGameEnded] = useImmer<boolean>(false)
     let navigate = useNavigate()
     let { t } = useTranslation()
-
-    const isSlotCorrect = (hit: Hit | null, slot: Slot | null): boolean => {
-        if (hit === null || slot === null) return false
-        return (
-            (slot.from_year === 0 && hit.year <= slot.to_year) ||
-            (slot.to_year === 0 && hit.year >= slot.from_year) ||
-            (slot.from_year <= hit.year && hit.year <= slot.to_year)
-        )
-    }
 
     const canSkip = () => {
         return (
@@ -286,6 +348,7 @@ export function Game() {
             if (ge.state === GameState.Guessing) {
                 setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
             } else if (ge.state === GameState.Open) {
+                setGameEnded(true)
                 setHitSrc("")
             }
         })
@@ -537,6 +600,15 @@ export function Game() {
                           : t("cannotSkipHit")}
             </Button>
             <SlotSelector game={game} />
+            {gameEnded ? (
+                <GameEndScreen
+                    game={deepcopy(game)}
+                    show={gameEnded}
+                    onHide={() => setGameEnded(false)}
+                />
+            ) : (
+                ""
+            )}
         </>
     )
 }

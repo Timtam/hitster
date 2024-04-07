@@ -76,6 +76,11 @@
         "noone": "niemand",
         "settings": "Einstellungen",
         "musicVolume": "Musiklautstärke",
-        "volume": "Lautstärke"
+        "volume": "Lautstärke",
+        "gameEnded": "Das Spiel ist vorbei!",
+        "youWin": "Gratulation, du hast das Spiel gewonnen!",
+        "otherWins": "{{player}} hat dieses Spiel gewonnen!",
+        "nooneWins": "Niemand hat dieses Spiel gewonnen.",
+        "finalScore": "Hier sind die finalen Ergebnisse:"
     }
 }
