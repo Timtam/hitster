@@ -1,8 +1,9 @@
 use crate::{
-    games::{ConfirmationPayload, Game, GameEvent, GameState, SlotPayload},
+    games::{ConfirmationPayload, Game, GameEvent, GameSettingsPayload, GameState, SlotPayload},
     responses::{
         ConfirmSlotError, CurrentHitError, GamesResponse, GuessSlotError, JoinGameError,
         LeaveGameError, MessageResponse, SkipHitError, StartGameError, StopGameError,
+        UpdateGameError,
     },
     services::ServiceStore,
     users::User,
@@ -285,6 +286,7 @@ pub fn guess_slot(
                             None
                         }
                     }),
+                    ..Default::default()
                 });
             }
 
@@ -349,6 +351,33 @@ pub fn skip_hit(
             r#type: "success".into(),
         })
     })
+}
+
+#[openapi(tag = "Games")]
+#[patch("/games/<game_id>/update", format = "json", data = "<settings>")]
+pub fn update_game(
+    game_id: u32,
+    settings: Json<GameSettingsPayload>,
+    user: User,
+    serv: &State<ServiceStore>,
+    queue: &State<Sender<GameEvent>>,
+) -> Result<Json<MessageResponse>, UpdateGameError> {
+    serv.game_service()
+        .lock()
+        .update(game_id, &user, &settings)
+        .map(|_| {
+            let _ = queue.send(GameEvent {
+                game_id,
+                event: "update".into(),
+                settings: Some(settings.into()),
+                ..Default::default()
+            });
+
+            Json(MessageResponse {
+                message: "game updated successfully".into(),
+                r#type: "success".into(),
+            })
+        })
 }
 
 #[cfg(test)]

@@ -1,4 +1,8 @@
-use crate::{hits::Hit, users::User};
+use crate::{
+    hits::{Hit, Pack},
+    users::User,
+};
+use rocket::serde::json::Json;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
 use std::{collections::VecDeque, convert::From, default::Default};
@@ -6,6 +10,25 @@ use std::{collections::VecDeque, convert::From, default::Default};
 #[derive(Deserialize, Serialize, JsonSchema)]
 pub struct SlotPayload {
     pub id: Option<u8>,
+}
+
+#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+pub struct GameSettingsPayload {
+    pub hit_duration: Option<u8>,
+    pub start_tokens: Option<u8>,
+    pub goal: Option<u8>,
+    pub packs: Option<Vec<Pack>>,
+}
+
+impl From<Json<GameSettingsPayload>> for GameSettingsPayload {
+    fn from(src: Json<GameSettingsPayload>) -> Self {
+        Self {
+            goal: src.goal,
+            hit_duration: src.hit_duration,
+            start_tokens: src.start_tokens,
+            packs: src.packs.clone(),
+        }
+    }
 }
 
 #[derive(Deserialize, Serialize, JsonSchema)]
@@ -36,6 +59,7 @@ pub struct Game {
     pub start_tokens: u8,
     pub goal: u8,
     pub hit: Option<Hit>,
+    pub packs: Vec<Pack>,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -95,6 +119,8 @@ pub struct GameEvent {
     pub state: Option<GameState>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub hit: Option<Hit>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub settings: Option<GameSettingsPayload>,
 }
 
 impl Default for GameEvent {
@@ -105,6 +131,7 @@ impl Default for GameEvent {
             players: None,
             state: None,
             hit: None,
+            settings: None,
         }
     }
 }

@@ -1,9 +1,9 @@
 use crate::{
-    games::{Game, GameState, Player, PlayerState, Slot},
-    hits::Hit,
+    games::{Game, GameSettingsPayload, GameState, Player, PlayerState, Slot},
+    hits::{Hit, Pack},
     responses::{
         ConfirmSlotError, CurrentHitError, GuessSlotError, JoinGameError, LeaveGameError,
-        SkipHitError, StartGameError, StopGameError,
+        SkipHitError, StartGameError, StopGameError, UpdateGameError,
     },
     services::{HitService, ServiceHandle},
     users::User,
@@ -14,6 +14,7 @@ use std::{
     collections::{HashMap, HashSet, VecDeque},
     sync::Mutex,
 };
+use strum::VariantArray;
 
 pub struct GameServiceData {
     games: HashMap<u32, Game>,
@@ -52,6 +53,7 @@ impl GameService {
             start_tokens: 2,
             goal: 10,
             hit: None,
+            packs: Vec::from(Pack::VARIANTS),
         };
 
         data.games.insert(game.id, game.clone());
@@ -598,6 +600,69 @@ impl GameService {
             Ok(game.clone())
         } else {
             Err(SkipHitError {
+                message: "game not found".into(),
+                http_status_code: 404,
+            })
+        }
+    }
+
+    pub fn update(
+        &self,
+        game_id: u32,
+        user: &User,
+        settings: &GameSettingsPayload,
+    ) -> Result<(), UpdateGameError> {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(game) = data.games.get_mut(&game_id) {
+            if !game.players.iter().any(|p| p.id == user.id) {
+                return Err(UpdateGameError {
+                    message: "user is not part of this game".into(),
+                    http_status_code: 409,
+                });
+            } else if game.state != GameState::Open {
+                return Err(UpdateGameError {
+                    message: "game is currently running".into(),
+                    http_status_code: 403,
+                });
+            } else if !game
+                .players
+                .iter()
+                .find(|p| p.id == user.id)
+                .unwrap()
+                .creator
+            {
+                return Err(UpdateGameError {
+                    message: "user must be creator of the game".into(),
+                    http_status_code: 409,
+                });
+            }
+
+            if let Some(packs) = &settings.packs {
+                let mut rng = thread_rng();
+                game.hits_remaining = self
+                    .hit_service
+                    .lock()
+                    .get_all()
+                    .into_iter()
+                    .filter(|h| packs.len() == 0 || packs.contains(&h.pack))
+                    .collect::<VecDeque<_>>();
+                game.hits_remaining.make_contiguous().shuffle(&mut rng);
+
+                game.packs = if packs.len() == 0 {
+                    Vec::from(Pack::VARIANTS)
+                } else {
+                    packs.clone()
+                };
+            }
+
+            game.start_tokens = settings.start_tokens.unwrap_or(game.start_tokens);
+            game.goal = settings.goal.unwrap_or(game.goal);
+            game.hit_duration = settings.hit_duration.unwrap_or(game.hit_duration);
+
+            Ok(())
+        } else {
+            Err(UpdateGameError {
                 message: "game not found".into(),
                 http_status_code: 404,
             })
