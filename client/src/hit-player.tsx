@@ -21,7 +21,7 @@ export default function HitPlayer({
     let [volume] = useLocalStorage("musicVolume", "1.0")
 
     useEffect(() => {
-        if (src !== "") {
+        if (src !== "" && navigator.userActivation.isActive) {
             setPlaying(true)
         } else {
             setPlaying(false)
