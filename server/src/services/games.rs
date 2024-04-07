@@ -491,7 +491,7 @@ impl GameService {
                     .push(game.hits_remaining.front().cloned().unwrap());
                 player.slots = self.get_slots(&player.hits);
             } else if winners.len() == 1 {
-                let i = winners.get(0).map(|(i, _)| *i).unwrap();
+                let i = winners.first().map(|(i, _)| *i).unwrap();
                 let player = game.players.get_mut(i).unwrap();
 
                 player
@@ -530,7 +530,7 @@ impl GameService {
                     p.state = PlayerState::Guessing;
                 }
 
-                if game.hits_remaining.len() == 0 {
+                if game.hits_remaining.is_empty() {
                     let mut rng = thread_rng();
                     game.hits_remaining = self
                         .hit_service
@@ -583,7 +583,7 @@ impl GameService {
 
             game.hits_remaining.pop_front();
 
-            if game.hits_remaining.len() == 0 {
+            if game.hits_remaining.is_empty() {
                 let mut rng = thread_rng();
                 game.hits_remaining = self
                     .hit_service
@@ -645,11 +645,11 @@ impl GameService {
                     .lock()
                     .get_all()
                     .into_iter()
-                    .filter(|h| packs.len() == 0 || packs.contains(&h.pack))
+                    .filter(|h| packs.is_empty() || packs.contains(&h.pack))
                     .collect::<VecDeque<_>>();
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
 
-                game.packs = if packs.len() == 0 {
+                game.packs = if packs.is_empty() {
                     Vec::from(Pack::VARIANTS)
                 } else {
                     packs.clone()
