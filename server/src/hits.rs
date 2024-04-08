@@ -35,6 +35,10 @@ include!(concat!(env!("OUT_DIR"), "/hits.rs"));
 pub enum Pack {
     Basic,
     Schlagerparty,
+    Eurovision,
+    #[strum(serialize = "Custom Basic")]
+    #[serde(rename = "Custom Basic")]
+    CustomBasic,
 }
 
 #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
