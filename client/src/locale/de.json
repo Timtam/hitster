@@ -81,6 +81,22 @@
         "youWin": "Gratulation, du hast das Spiel gewonnen!",
         "otherWins": "{{player}} hat dieses Spiel gewonnen!",
         "nooneWins": "Niemand hat dieses Spiel gewonnen.",
-        "finalScore": "Hier sind die finalen Ergebnisse:"
+        "finalScore": "Hier sind die finalen Ergebnisse:",
+        "cancel": "Abbrechen",
+        "gameSettings": "Spieleinstellungen",
+        "gameSettingsHitGoal": "Wie viele Hits muss ein Spieler erraten, um das Spiel zu gewinnen?",
+        "goal": "Ziel",
+        "gameSettingsStartTokens": "Wie viele Chips bekommt jeder Spieler zu Beginn des Spiels?",
+        "startTokens": "Start-Chips",
+        "gameSettingsHitDuration": "Wie viele Sekunden eines Hits werden zu jeder Spielrunde abgespielt?",
+        "hitDuration": "Abspielzeit der Hits",
+        "gameSettingsNotLoggedIn": "Du musst eingeloggt sein, um die Spieleinstellungen ändern zu können",
+        "gameSettingsNotOpen": "Das Spiel muss gestoppt sein, um die Spieleinstellungen zu ändern",
+        "gameSettingsNotCreator": "Nur der Ersteller kann die Spieleinstellungen ändern",
+        "loading": "Lädt, bitte warten...",
+        "pack_one": "Pack",
+        "pack_other": "Packs",
+        "gameSettingsPacks": "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:",
+        "save": "Speichern"
     }
 }

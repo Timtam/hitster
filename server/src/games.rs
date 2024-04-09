@@ -14,9 +14,13 @@ pub struct SlotPayload {
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 pub struct GameSettingsPayload {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub hit_duration: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub start_tokens: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub goal: Option<u8>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub packs: Option<Vec<Pack>>,
 }
 

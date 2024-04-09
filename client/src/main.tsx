@@ -3,14 +3,17 @@ import { CookiesProvider } from "react-cookie"
 import ReactDOM from "react-dom/client"
 import { HelmetProvider } from "react-helmet-async"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
-import ErrorPage from "./error-page"
-import { Game, loader as GameLoader } from "./game"
 import "./i18n"
 import "./index.css"
 import Layout from "./layout"
-import { Lobby, loader as LobbyLoader } from "./lobby"
-import { Login, action as LoginAction } from "./login"
-import { Registration, action as RegistrationAction } from "./registration"
+import ErrorPage from "./pages/error-page"
+import { Game, loader as GameLoader } from "./pages/game"
+import { Lobby, loader as LobbyLoader } from "./pages/lobby"
+import { Login, action as LoginAction } from "./pages/login"
+import {
+    Registration,
+    action as RegistrationAction,
+} from "./pages/registration"
 
 const router = createBrowserRouter([
     {

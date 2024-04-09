@@ -81,6 +81,22 @@
         "youWin": "Congratulations, you are the winner!",
         "otherWins": "{{player}} is the winner of this game!",
         "nooneWins": "Noone won this game.",
-        "finalScore": "And here are the final results:"
+        "finalScore": "And here are the final results:",
+        "cancel": "Cancel",
+        "gameSettings": "Game settings",
+        "gameSettingsHitGoal": "How many hits do the players need to guess correctly in order to win?",
+        "goal": "Goal",
+        "gameSettingsStartTokens": "How many tokens should every player get when starting a game?",
+        "startTokens": "Start tokens",
+        "gameSettingsHitDuration": "How many seconds of a hit will every player hear when guessing?",
+        "hitDuration": "Hit duration",
+        "gameSettingsNotLoggedIn": "You need to be logged in to change game settings",
+        "gameSettingsNotOpen": "The game needs to be stopped to change its settings",
+        "gameSettingsNotCreator": "Only the creator can change a game's settings",
+        "loading": "Loading...",
+        "pack_one": "Pack",
+        "pack_other": "Packs",
+        "gameSettingsPacks": "Check all the packs you want to use in this game:",
+        "save": "Save"
     }
 }

@@ -1,4 +1,5 @@
 import { json } from "react-router-dom"
+import type { GameSettings } from "../entities"
 import { Game, GamesResponse } from "../entities"
 
 export default class GameService {
@@ -93,6 +94,20 @@ export default class GameService {
     async skip(game_id: number) {
         let res = await fetch(`/api/games/${game_id}/skip`, {
             method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
+
+    async update(game_id: number, settings: GameSettings) {
+        let res = await fetch(`/api/games/${game_id}/update`, {
+            body: JSON.stringify(settings),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "PATCH",
             credentials: "include",
         })
 

@@ -4,9 +4,9 @@ import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router-dom"
-import { Game, GameState } from "./entities"
-import { useRevalidateOnInterval } from "./hooks"
-import GameService from "./services/games.service"
+import { Game, GameState } from "../entities"
+import { useRevalidateOnInterval } from "../hooks"
+import GameService from "../services/games.service"
 
 export async function loader(): Promise<Game[]> {
     let gs = new GameService()

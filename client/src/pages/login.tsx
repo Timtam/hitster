@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
 import type { ActionFunction } from "react-router"
 import { Form, redirect, useActionData } from "react-router-dom"
-import Error from "./error"
+import Error from "../error"
 
 export const action: ActionFunction = async ({ request }) => {
     let formData = await request.formData()

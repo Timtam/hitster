@@ -11,6 +11,7 @@ export const Hit = z.object({
     artist: z.string(),
     title: z.string(),
     year: z.number(),
+    pack: z.string(),
 })
 
 export type Hit = z.infer<typeof Hit>
@@ -59,6 +60,7 @@ export const Game = z.object({
     start_tokens: z.number(),
     goal: z.number(),
     hit: z.nullable(Hit),
+    packs: z.array(z.string()),
 })
 
 export type Game = z.infer<typeof Game>
@@ -69,10 +71,26 @@ export const GamesResponse = z.object({
 
 export type GamesResponse = z.infer<typeof GamesResponse>
 
+export const GameSettings = z.object({
+    start_tokens: z.optional(z.number()),
+    hit_duration: z.optional(z.number()),
+    goal: z.optional(z.number()),
+    packs: z.optional(z.array(z.string())),
+})
+
+export type GameSettings = z.infer<typeof GameSettings>
+
 export const GameEvent = z.object({
     state: z.optional(z.nativeEnum(GameState)),
     players: z.optional(z.array(Player)),
     hit: z.optional(Hit),
+    settings: z.optional(GameSettings),
 })
 
 export type GameEvent = z.infer<typeof GameEvent>
+
+export const PacksResponse = z.object({
+    packs: z.record(z.string(), z.number()),
+})
+
+export type PacksResponse = z.infer<typeof PacksResponse>

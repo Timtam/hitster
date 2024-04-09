@@ -3,33 +3,25 @@ import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
-import ToggleButton from "react-bootstrap/ToggleButton"
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
 import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
 import { Trans, useTranslation } from "react-i18next"
 import type { LoaderFunction } from "react-router"
 import { json, useLoaderData, useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
-import type { Game as GameType, Hit, Slot } from "./entities"
 import {
     Game as GameEntity,
     GameEvent,
     GameState,
     Player,
     PlayerState,
-} from "./entities"
-import HitPlayer from "./hit-player"
-import GameService from "./services/games.service"
-
-const isSlotCorrect = (hit: Hit | null, slot: Slot | null): boolean => {
-    if (hit === null || slot === null) return false
-    return (
-        (slot.from_year === 0 && hit.year <= slot.to_year) ||
-        (slot.to_year === 0 && hit.year >= slot.from_year) ||
-        (slot.from_year <= hit.year && hit.year <= slot.to_year)
-    )
-}
+} from "../entities"
+import GameService from "../services/games.service"
+import GameEndScreen from "./game/end-screen"
+import HitPlayer from "./game/hit-player"
+import GameSettings from "./game/settings"
+import SlotSelector from "./game/slot-selector"
+import { isSlotCorrect } from "./game/utils"
 
 export const loader: LoaderFunction = async ({
     params,
@@ -47,271 +39,6 @@ export const loader: LoaderFunction = async ({
     throw json({ message: "internal api error", status: 500 })
 }
 
-const GameEndScreen = ({
-    game,
-    show,
-    onHide,
-}: {
-    game: GameType
-    show: boolean
-    onHide: () => void
-}) => {
-    let [cookies] = useCookies()
-    let { t } = useTranslation()
-    let [winner, setWinner] = useImmer<Player | undefined>(undefined)
-
-    useEffect(() => {
-        setWinner(
-            game.players.find(
-                (p) =>
-                    p.hits.length === game.goal - 1 &&
-                    isSlotCorrect(game.hit, p.guess),
-            ),
-        )
-    }, [game])
-
-    return (
-        <Modal show={show} onHide={onHide}>
-            <Modal.Header closeButton closeLabel={t("close")}>
-                <Modal.Title>{t("gameEnded")}</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <h2 className="h4">
-                    {winner !== undefined && winner.id === cookies.logged_in?.id
-                        ? t("youWin")
-                        : winner !== undefined
-                          ? t("otherWins", { player: winner.name })
-                          : t("nooneWins")}
-                </h2>
-                <p>{t("finalScore")}</p>
-                <Table responsive>
-                    <thead>
-                        <tr>
-                            <th>{t("player", { count: 1 })}</th>
-                            <th>{t("token", { count: 2 })}</th>
-                            <th>{t("hit", { count: 2 })}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {game.players.map((p) => (
-                            <tr>
-                                <td>{p.name}</td>
-                                <td>{p.tokens}</td>
-                                <td>{p.hits.length}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            </Modal.Body>
-        </Modal>
-    )
-}
-
-const SlotSelector = ({ game }: { game: GameType }) => {
-    const [selectedSlot, setSelectedSlot] = useImmer("0")
-    const [cookies] = useCookies(["logged_in"])
-    const navigate = useNavigate()
-    let { t } = useTranslation()
-    const actionRequired = (): PlayerState => {
-        if (cookies.logged_in === undefined) return PlayerState.Waiting
-        return (
-            game.players.find((p) => p.id === cookies.logged_in.id)?.state ??
-            PlayerState.Waiting
-        )
-    }
-
-    const joinString = (parts: string[]): string => {
-        if (parts.length === 1) return parts[0]
-        else if (parts.length === 2) return parts.join(" and ")
-        else
-            return (
-                parts.slice(0, -1).join(", ") +
-                " " +
-                t("and") +
-                " " +
-                parts[parts.length - 1]
-            )
-    }
-
-    const confirm = async (confirm: boolean) => {
-        try {
-            let gs = new GameService()
-            await gs.confirm(game.id, confirm)
-        } catch (e) {
-            console.log(e)
-        }
-    }
-
-    useEffect(() => {
-        game.players.forEach((p) => {
-            if (p.guess?.id === parseInt(selectedSlot, 10)) {
-                setSelectedSlot("0")
-                navigate("", { replace: true })
-            }
-        })
-    }, [game])
-
-    if (game.state === GameState.Open)
-        return <h2 className="h4">{t("gameNotStarted")}</h2>
-
-    return (
-        <>
-            <h2 className="h4">
-                {actionRequired() === PlayerState.Waiting
-                    ? t("waitingForPlayerHeading", {
-                          count: game.players.filter(
-                              (p) => p.state != PlayerState.Waiting,
-                          ).length,
-                          player: joinString(
-                              game.players
-                                  .filter((p) => p.state != PlayerState.Waiting)
-                                  .map((p) => p.name),
-                          ),
-                      })
-                    : actionRequired() === PlayerState.Guessing
-                      ? t("guessHeading")
-                      : actionRequired() === PlayerState.Intercepting
-                        ? t("interceptHeading")
-                        : t("confirmHeading", {
-                              player: game.players.find((p) => p.turn_player)
-                                  ?.name,
-                          })}
-            </h2>
-            {actionRequired() === PlayerState.Confirming ? (
-                <>
-                    <p>
-                        {t("confirmText", {
-                            player: game.players.find((p) => p.turn_player)
-                                ?.name,
-                        })}
-                    </p>
-                    <Button
-                        className="me-2"
-                        onClick={async () => await confirm(false)}
-                    >
-                        {t("no")}
-                    </Button>
-                    <Button
-                        className="me-2"
-                        onClick={async () => await confirm(true)}
-                    >
-                        {t("yes")}
-                    </Button>
-                </>
-            ) : (
-                <>
-                    <p>
-                        {actionRequired() === PlayerState.Guessing ||
-                        actionRequired() === PlayerState.Intercepting
-                            ? t("guessText")
-                            : t("waitingText")}
-                    </p>
-                    <ToggleButtonGroup
-                        name="selected-slot"
-                        type="radio"
-                        defaultValue="0"
-                        value={selectedSlot}
-                        onChange={(e) => setSelectedSlot(e)}
-                    >
-                        {actionRequired() === PlayerState.Intercepting ? (
-                            <ToggleButton
-                                className="me-2 mb-2"
-                                id="0"
-                                value="0"
-                                type="radio"
-                            >
-                                {t("dontIntercept")}
-                            </ToggleButton>
-                        ) : (
-                            ""
-                        )}
-                        {game.players
-                            .find((p) => p.turn_player === true)
-                            ?.slots.map((slot) => {
-                                let text = ""
-
-                                if (slot.from_year === 0)
-                                    text = t("beforeYear", {
-                                        year: slot.to_year,
-                                    })
-                                else if (slot.to_year === 0)
-                                    text = t("afterYear", {
-                                        year: slot.from_year,
-                                    })
-                                else
-                                    text = t("betweenYears", {
-                                        year1: slot.from_year,
-                                        year2: slot.to_year,
-                                    })
-
-                                return (
-                                    <ToggleButton
-                                        className="me-2 mb-2"
-                                        id={slot.id.toString()}
-                                        value={slot.id.toString()}
-                                        disabled={
-                                            (actionRequired() !==
-                                                PlayerState.Guessing &&
-                                                actionRequired() !==
-                                                    PlayerState.Intercepting) ||
-                                            game.players.some(
-                                                (p) => p.guess?.id === slot.id,
-                                            )
-                                        }
-                                        type="radio"
-                                    >
-                                        {text +
-                                            (game.players.some(
-                                                (p) => p.guess?.id === slot.id,
-                                            )
-                                                ? " (" +
-                                                  game.players.find(
-                                                      (p) =>
-                                                          p.guess?.id ===
-                                                          slot.id,
-                                                  )?.name +
-                                                  ")"
-                                                : "")}
-                                    </ToggleButton>
-                                )
-                            })}
-                    </ToggleButtonGroup>
-                    <br aria-hidden="true" />
-                    <Button
-                        disabled={
-                            (selectedSlot === "0" &&
-                                actionRequired() === PlayerState.Guessing) ||
-                            actionRequired() === PlayerState.Waiting
-                        }
-                        onClick={async () => {
-                            try {
-                                let gs = new GameService()
-                                await gs.guess(
-                                    game.id,
-                                    parseInt(selectedSlot, 10) > 0
-                                        ? parseInt(selectedSlot, 10)
-                                        : null,
-                                )
-                                setSelectedSlot("0")
-                            } catch (e) {
-                                console.log(e)
-                            }
-                        }}
-                    >
-                        {actionRequired() === PlayerState.Guessing ||
-                        actionRequired() === PlayerState.Intercepting
-                            ? actionRequired() === PlayerState.Intercepting ||
-                              parseInt(selectedSlot, 10) > 0
-                                ? t("submitGuess")
-                                : t("selectSlotFirst")
-                            : t("cannotSubmitGuess")}
-                    </Button>
-                </>
-            )}
-        </>
-    )
-}
-
 export function Game() {
     let gameService = useMemo(() => new GameService(), [])
     let [cookies] = useCookies()
@@ -319,6 +46,7 @@ export function Game() {
     let [hitSrc, setHitSrc] = useImmer("")
     let [showHits, setShowHits] = useImmer<boolean[]>([])
     let [gameEnded, setGameEnded] = useImmer<boolean>(false)
+    let [showSettings, setShowSettings] = useImmer<boolean>(false)
     let navigate = useNavigate()
     let { t } = useTranslation()
 
@@ -389,6 +117,18 @@ export function Game() {
             })
 
             setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
+        })
+
+        eventSource.addEventListener("update", (e) => {
+            let ge = GameEvent.parse(JSON.parse(e.data))
+            setGame((g) => {
+                if (ge.settings !== undefined) {
+                    g.hit_duration = ge.settings.hit_duration ?? g.hit_duration
+                    g.start_tokens = ge.settings.start_tokens ?? g.start_tokens
+                    g.goal = ge.settings.goal ?? g.goal
+                    g.packs = ge.settings.packs ?? g.packs
+                }
+            })
         })
 
         if (game.state !== GameState.Open)
@@ -464,6 +204,30 @@ export function Game() {
                         ? t("startGameNotEnoughPlayers")
                         : t("startGameNotCreator")}
             </Button>
+            <Button
+                className="me-2"
+                disabled={
+                    game.state !== GameState.Open ||
+                    (game.players.find((p) => p.id === cookies.logged_in?.id)
+                        ?.creator ?? false) === false
+                }
+                aria-expanded={false}
+                onClick={() => setShowSettings(true)}
+            >
+                {cookies.logged_in === undefined
+                    ? t("gameSettingsNotLoggedIn")
+                    : game.state !== GameState.Open
+                      ? t("gameSettingsNotOpen")
+                      : game.players.find((p) => p.id === cookies.logged_in.id)
+                              ?.creator !== true
+                        ? t("gameSettingsNotCreator")
+                        : t("gameSettings")}
+            </Button>
+            <GameSettings
+                show={showSettings}
+                game={game}
+                onHide={() => setShowSettings(false)}
+            />
             <h3 className="h5">{t("player", { count: 2 })}</h3>
             <Table responsive>
                 <thead>
