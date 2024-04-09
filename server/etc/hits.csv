@@ -1,651 +1,956 @@
 ﻿Interpret;Jahr;Titel;Pack;Youtube-Link;Abspiel-Beginn (in Sekunden)
-50 Cent;2003;In Da Club;Basic;https://www.youtube.com/watch?v=H3axP4norfk;0
-ABBA;1974;Waterloo;Basic;https://www.youtube.com/watch?v=Sj_9CiNkkn4;0
-Ace of Base;1992;All That She Wants;Basic;https://www.youtube.com/watch?v=HGbGmoIPb-o;0
-Adele;2011;Set Fire To The Rain;Basic;https://www.youtube.com/watch?v=a2giXO6eyuI;0
-Akon;2005;Lonely;Basic;https://www.youtube.com/watch?v=T82tsf-MF00;0
-Alessia Cara;2016;Scars To Be Beautiful;Basic;https://www.youtube.com/watch?v=_epVgBDPBOg;0
-Alicia Keys;2001;Fallin';Basic;https://www.youtube.com/watch?v=PHUADSzCIBA;5
-Alicia Keys;2007;No One;Basic;https://www.youtube.com/watch?v=woS5m96RNzo;10
-Alphaville;1984;Forever Young;Basic;https://www.youtube.com/watch?v=W5guhMw_EH0;10
-Álvaro Soler;2018;La Cintura;Basic;https://www.youtube.com/watch?v=Eg4LUvUjUWI;38
-Amii Stewart;1979;Knock On Wood;Basic;https://www.youtube.com/watch?v=XKuJUxGntRI;25
-Amy Winehouse;2006;Rehab;Basic;https://www.youtube.com/watch?v=XOjDJRiUeGE;0
-Anastacia;2004;Sick and Tired;Basic;https://www.youtube.com/watch?v=HzfyCuPVpCY;20
-Andreas Bourani;2014;Auf uns;Basic;https://www.youtube.com/watch?v=pP6gH3P65nM;0
-Annie Lennox;1992;Why;Basic;https://www.youtube.com/watch?v=u8YNwi8S5GM;40
-Aqua;1997;Barbie Girl;Basic;https://www.youtube.com/watch?v=rXdT85bMXsE;0
-Aretha Franklin;1967;Respect;Basic;https://www.youtube.com/watch?v=6FOUqQt3Kg0;6
-Atomic Kitten;2001;Whole Again;Basic;https://www.youtube.com/watch?v=eZRH1x6HtmA;0
-Avicii;2017;Without You;Basic;https://www.youtube.com/watch?v=-AJrAem0YyA;12
-Betty Everett;1964;It's In His Kiss (The Shoop Shoop Song);Basic;https://www.youtube.com/watch?v=B4KN6TFhy2I;0
-Beyoncé (feat. Jay-Z);2003;Crazy In Love;Basic;https://www.youtube.com/watch?v=BVQaQNpkxzg;15
-Bill Haley & His Comets;1956;See You Later, Alligator;Basic;https://www.youtube.com/watch?v=jOTY76FVxCU;0
-Bill Haley & His Comets;1954;(We're Gonna) Rock Around The Clock;Basic;https://www.youtube.com/watch?v=hzYBEJgKjv0;0
+Ross Antony;2013; Kettenkarussell;Schlagerparty;https://www.youtube.com/watch?v=NRbsDcxi5kE;0
+The Rolling Stones;1965;(I Can't Get No) Satisfaction;Basic;https://www.youtube.com/watch?v=nrIPxlFzDi0;0
 Bill Medley & Jennifer Warnes;1987;(I've Had) The Time Of My Life;Basic;https://www.youtube.com/watch?v=E7DU70UTI3Q;0
-Bill Ramsey;1961;Zuckerpuppe (aus der Bauchtanz-Truppe);Basic;https://www.youtube.com/watch?v=JP6m8jP1oXo;0
-Billie Eilish;2019;Bad Guy;Basic;https://www.youtube.com/watch?v=4-TbQnONe_w;0
-Billy Idol;1982;White Wedding;Basic;https://www.youtube.com/watch?v=x9j6DE6RnSk;26
-Billy Joel;1973;Piano Man;Basic;https://www.youtube.com/watch?v=QwVjTlTdIDQ;21
-Billy Swan;1974;I Can Help;Basic;https://www.youtube.com/watch?v=bgPsM-YWBrE;19
-Black Eyed Peas;2003;Where Is The Love?;Basic;https://www.youtube.com/watch?v=PZj_I0DBtKU;9
-Blümchen;1996;Herz an Herz;Basic;https://www.youtube.com/watch?v=2JCelVI6U68;0
-Bob Marley & The Wailers;1974;No Woman No Cry;Basic;https://www.youtube.com/watch?v=Pv00rRagnqA;50
-Bob Sinclar (feat. Steve Edwards);2006;World, Hold On (Children Of The Sky);Basic;https://www.youtube.com/watch?v=Z9bNzbWlYb0;10
-Bon Jovi;2000;It's My Life;Basic;https://www.youtube.com/watch?v=9VSerKr1vBM;0
-Bonnie Tyler;1977;It's A Heartache;Basic;https://www.youtube.com/watch?v=zjloI8jfXJM;0
-Boston;1976;More Than A Feeling;Basic;https://www.youtube.com/watch?v=DCZNFmHJbV8;15
-Brandy (feat. Monica);1998;The Boy Is Mine;Basic;https://www.youtube.com/watch?v=HRxDR-83XBo;45
-Britney Spears;2000;Oops!... I Did It Again;Basic;https://www.youtube.com/watch?v=CduA0TULnow;39
-Bronski Beat;1984;Smalltown Boy;Basic;https://www.youtube.com/watch?v=E5i2Wa7daDA;44
-Bruce Springsteen;1984;Dancing In The Dark;Basic;https://www.youtube.com/watch?v=8cNS_Mecbw8;11
-Bryan Adams;1985;Heaven;Basic;https://www.youtube.com/watch?v=s6TtwR2Dbjg;20
-Bryan Ferry;1976;Let's Stick Together;Basic;https://www.youtube.com/watch?v=XFy2wN2Wdt0;22
-Buddy;2003;Ab in den Süden;Basic;https://www.youtube.com/watch?v=q5WdWSpz1vQ;0
-Captain Jack;1995;Captain Jack;Basic;https://www.youtube.com/watch?v=0Bb_w7nOBwg;0
-Carly Simon;1972;You're So Vain;Basic;https://www.youtube.com/watch?v=lT7I40wWYAQ;15
-Caterina Valente;1954;Ganz Paris träumt von der Liebe;Basic;https://www.youtube.com/watch?v=uhVP418YR_8;0
-Caterina Valente & Silvio Francesco;1960;Itsy Bitsy Teenie Weenie Honolulu Strand Bikini;Basic;https://www.youtube.com/watch?v=xxSPQGaGqd0;0
-Céline Dion;1997;My Heart Will Go On;Basic;https://www.youtube.com/watch?v=Siz-xBfIqpg;10
-Cher;1998;Believe;Basic;https://www.youtube.com/watch?v=n7wvAEDOxAs;15
-Chic;1978;Le Freak;Basic;https://www.youtube.com/watch?v=aXgSHL7efKg;0
-Chicago;1976;If You Leave Me Right Now;Basic;https://www.youtube.com/watch?v=-9_d-sFhmRM;0
-Christina Aguilera;1999;Genie In A Bottle;Basic;https://www.youtube.com/watch?v=k6H5v9iMQhQ;0
-Chubby Checker;1960;The Twist;Basic;https://www.youtube.com/watch?v=EVb1r-HTlNs;0
-Chuck Berry;1958;Johnny B. Goode;Basic;https://www.youtube.com/watch?v=Uf4rxCB4lys;15
-Cliff Richard;1968;Congratualions;Basic;https://www.youtube.com/watch?v=770f-pwPe4o;0
-Coldplay;2005;Talk;Basic;https://www.youtube.com/watch?v=D8UfEWttw1M;15
-Commoderes;1977;Easy;Basic;https://www.youtube.com/watch?v=7XcTyEKSnYg;10
-Connie Francis;1964;Schöner fremder Mann;Basic;https://www.youtube.com/watch?v=X6OUwtI9J5E;0
-Coolio (feat. L.V.);1995;Gangsta's Paradise;Basic;https://www.youtube.com/watch?v=Tw0_qHNRAEA;6
-Corinne Bailey Rae;2006;Put You Records On;Basic;https://www.youtube.com/watch?v=E-_JcJiUOII;0
-Cornelia Froboess;1951;Pack die Badehose ein;Basic;https://www.youtube.com/watch?v=Jq755GRl4E0;44
-Creedence Clearwater Revival;1971;Have You Ever Seen the Rain?;Basic;https://www.youtube.com/watch?v=bO28lB1uwp4;10
-Cro;2012;Einmal um die Welt;Basic;https://www.youtube.com/watch?v=vG8-WbaguMI;0
-Crowded House;1986;Don't Dream It's Over;Basic;https://www.youtube.com/watch?v=-5QA0Y3Yjlc;10
-Culture Beat;1993;Mr. Vain;Basic;https://www.youtube.com/watch?v=V3qUoiwr5kQ;25
-Culture Club;1983;Karma Chameleon;Basic;https://www.youtube.com/watch?v=h5WA79F4UCs;0
-Cyndi Lauper;1986;True Colors;Basic;https://www.youtube.com/watch?v=LPn0KFlbqX8;20
-Daft Punk;2000;One More Time;Basic;https://www.youtube.com/watch?v=A2VpR8HahKc;20
-Danny & The Junors;1957;At The Hop;Basic;https://www.youtube.com/watch?v=SEPvoNA1OGw;0
-Daryl Hall & John Oates;1982;Maneater;Basic;https://www.youtube.com/watch?v=oqy2N1jM2tU;41
-David Bowie;1969;Space Oddity;Basic;https://www.youtube.com/watch?v=tRNpjt29n6Y;29
-Dean Martin;1953;That's Amore;Basic;https://www.youtube.com/watch?v=OnFlx2Lnr9Q;0
-Diana Ross;1980;Upside Down;Basic;https://www.youtube.com/watch?v=5zyidkj2fpo;0
-Die Ärzte;1988;Westerland;Basic;https://www.youtube.com/watch?v=tIFFfP87Ooc;19
-Die Ärzte;2007;Junge;Basic;https://www.youtube.com/watch?v=gEJVuMPpJFA;22
-Die Doofen;1995;Mief! (Nimm mich jetzt, auch wenn ich stinke);Basic;https://www.youtube.com/watch?v=yMPCN2hGXvo;0
-Die Firma;1998;Die Eine;Basic;https://www.youtube.com/watch?v=qwHVE9UjAy0;0
-Die Prinizen;1993;Alles nur geklaut;Basic;https://www.youtube.com/watch?v=s5CK8cEg3ms;0
-Die Toten Hosen;2012;Tage wie diese;Basic;https://www.youtube.com/watch?v=j09hpp3AxIE;0
-Dion;1961;The Wanderer;Basic;https://www.youtube.com/watch?v=SbYa7NBYyRc;0
-Dire Straits;1985;Walk Of Life;Basic;https://www.youtube.com/watch?v=h2a20YL5mvg;56
-Dolly Parton;1973;Jolene;Basic;https://www.youtube.com/watch?v=Ixrje2rXLMA;0
-Dr. Alban;1993;Sing Hallelujah!;Basic;https://www.youtube.com/watch?v=pKxJca7LLNM;0
-Drafi Deutscher;1965;Marmor, Stein und Eisen bricht;Basic;https://www.youtube.com/watch?v=gc0HPw7g1Bo;0
-Drake;2020;Toosie Slide;Basic;https://www.youtube.com/watch?v=x7IBEq9iOkc;8
-Dschinghis Khan;1979;Moskau;Basic;https://www.youtube.com/watch?v=IZRGKv2uk2o;0
-Dua Lipa;2020;Break My Heart;Basic;https://www.youtube.com/watch?v=jgh8owCuX78;0
-Duck Sauce;2010;Barbara Streisand;Basic;https://www.youtube.com/watch?v=WK4HHaNhcgU;44
-Duffy;2008;Mercy;Basic;https://www.youtube.com/watch?v=rOu4wwI0xF8;0
-Eagle-Eye Cherry;1997;Save Tonight;Basic;https://www.youtube.com/watch?v=Hc4JvgmFp5Y;13
-Echt;1999;Du trägst keine Liebe in dir;Basic;https://www.youtube.com/watch?v=7fUpaXxPgMI;0
-Eddy Grant;1988;Gimme Hope Jo'anna;Basic;https://www.youtube.com/watch?v=R-ZplG81oZg;10
-Elton John;1970;Your Song;Basic;https://www.youtube.com/watch?v=FT3D1Cu6g10;0
-Elvis Presley;1957;Jailhouse Rock;Basic;https://www.youtube.com/watch?v=A99sV18J0mk;0
-Elvis Presley;1961;Can't Help Falling In Love;Basic;https://www.youtube.com/watch?v=_f917QSZq50;0
-Emma Franklin;1967;Piece Of My Heart;Basic;https://www.youtube.com/watch?v=L0QAxIKf8G4;21
-Enrico Caruso;1908;La Donna È Mobile (Rigoletto);Basic;https://www.youtube.com/watch?v=SrQV5x1sczs;0
-Enriique Iglesias & Whitney Houston;2000;Could I Have This Kiss Forever;Basic;https://www.youtube.com/watch?v=fLikA-aTuAY;15
-Enrique Iglesias;2007;Do You Know? (The Ping Pong Song);Basic;https://www.youtube.com/watch?v=BcFPWHRXHHU;0
-Enya;1988;Orinoco Flow;Basic;https://www.youtube.com/watch?v=xWyw5VBZzrI;15
-Eric Carmen;1987;Hungry Eyes;Basic;https://www.youtube.com/watch?v=x653F7beSpY;20
-Eric Prydz;2004;Call On Me;Basic;https://www.youtube.com/watch?v=-6hpGaTkP0A;0
-Eros Ramazzotti;1996;Più Bella Cosa;Basic;https://www.youtube.com/watch?v=yELzcAnV5aM;17
-Eurythmics;1983;Sweet Dreams (Are Made Of This);Basic;https://www.youtube.com/watch?v=qeMFqkcPYcg;0
-Fatboy Slim;1999;Praise You;Basic;https://www.youtube.com/watch?v=iPo7y_8AocI;10
-Fats Domino;1955;Ain't That A Shame;Basic;https://www.youtube.com/watch?v=50OF4x1lIbg;0
-Fettes Brot;2005;Emanuela;Basic;https://www.youtube.com/watch?v=qURXrPdx9WQ;0
-Fine Young Cannibals;1988;She Drives Me Crazy;Basic;https://www.youtube.com/watch?v=wyrmfuIxS98;20
-Fleetwood Mac;1987;Everywhere;Basic;https://www.youtube.com/watch?v=TpgCWuAYPjU;30
-Frankie Valli & The Four Seasons;1975;December, 1963 (Oh, What A Night);Basic;https://www.youtube.com/watch?v=fhc13WNMNpg;10
-Freddy Quinn;1956;Heimweh (Dort wo die Blumen blüh'n);Basic;https://www.youtube.com/watch?v=CNwsXRsvVWE;0
-Freddy Quinn;1959;Die Gitarre und das Meer;Basic;https://www.youtube.com/watch?v=3y57Xi5crxA;0
-Fugees;1996;Killing Me Softly With His Song;Basic;https://www.youtube.com/watch?v=H-RBJNqdnoM;0
-Genesis;1991;No Son of Mine;Basic;https://www.youtube.com/watch?v=KZbHcAPsllE;27
-George Harrison;1987;Got My Mind Set On You;Basic;https://www.youtube.com/watch?v=ycNxDe88iEY;0
-George Michael & Aretha Franklin;1987;I Knew You Were Waiting (For Me);Basic;https://www.youtube.com/watch?v=fDxzQJaA228;30
-Gipsy Kings;1989;Volare (Nel Blue Di Pinto Di Blu);Basic;https://www.youtube.com/watch?v=zY8VXynNCPs;0
-Gitte Haenning;1963;Ich will 'nen Cowboy als Mann;Basic;https://www.youtube.com/watch?v=zOcyefACvws;0
-Glenn Miller;1939;In The Mood;Basic;https://www.youtube.com/watch?v=7vMTZBVBkPU;0
-Gotye (feat. Kimbra);2011;Somebody That I Used To Know;Basic;https://www.youtube.com/watch?v=8UVNT4wvIGY;0
-Guns N' Roses;1988;Sweet Child O' Mine;Basic;https://www.youtube.com/watch?v=D2gWc5Sw75w;40
-Haddaway;1993;What Is Love;Basic;https://www.youtube.com/watch?v=G8RY_XOqJf4;6
-Harry Belafonte;1956;Day-0 (The Banana Boat Song);Basic;https://www.youtube.com/watch?v=lZABxj718uA;4
-Harry Styles;2019;Adore You;Basic;https://www.youtube.com/watch?v=iquhBgM-Qv0;10
-Heintje;1968;Mama;Basic;https://www.youtube.com/watch?v=5YA6kjrvpRQ;0
-Helene Fischer;2013;Atemlos durch die Nacht;Basic;https://www.youtube.com/watch?v=M5X_D_b-iTY;0
-Herbert Grönemeyer;1984;Männer;Basic;https://www.youtube.com/watch?v=jSPbWaT-XmA;0
-House of Pain;1992;Jump Around;Basic;https://www.youtube.com/watch?v=W4o6XBJ_J-k;7
-Ich + Ich;2007;Vom selben Stern;Basic;https://www.youtube.com/watch?v=2uugJeWljx8;8
-Icona Pop (feat. Charli XCX);2012;I Love It;Basic;https://www.youtube.com/watch?v=W50HtcPAeSs;0
-Imagine Dragons;2017;Thunder;Basic;https://www.youtube.com/watch?v=4AqjqOqNrjw;0
-James Brown & The Famous Flames;1965;I Got You (I Feel Good);Basic;https://www.youtube.com/watch?v=b5DfwGAej-k;0
-Jason Derulo;2009;Whatcha Say;Basic;https://www.youtube.com/watch?v=pBI3lc18k8Q;0
-Jay-Z & Linkin Park;2004;Numb/Encore;Basic;https://www.youtube.com/watch?v=_1oO4wzPCmE;0
-Jennifer Lopez;1999;If You Had My Love;Basic;https://www.youtube.com/watch?v=tT5g7I-Itc8;19
-Jessie J (feat. B.O.B);2011;Price Tag;Basic;https://www.youtube.com/watch?v=qMxX-QOV9tI;18
-Jimmy Cliff;1970;You Can Get It If You Really Want;Basic;https://www.youtube.com/watch?v=IYSkDbOik9s;0
-John Legend;2013;All Of Me;Basic;https://www.youtube.com/watch?v=ngq5Aw0Q6rQ;0
-Johnny Cash;1963;Ring Of Fire;Basic;https://www.youtube.com/watch?v=1WaV2x8GXj0;9
-Joseíto Fernández;1929;Guajira Guantanamera;Basic;https://www.youtube.com/watch?v=gdYIpvnzoW8;24
-Journey;1981;Don't Stop Believin';Basic;https://www.youtube.com/watch?v=1k8craCGpgs;15
-Jürgen Drews;1976;Ein Bett im Kernfeld;Basic;https://www.youtube.com/watch?v=-IcBlAzTr7Y;0
-Jürgen Marcus;1972;Eine neue Liebe ist wie ein neues Leben;Basic;https://www.youtube.com/watch?v=zmLqYi9fe3U;0
-Justin Bieber;2021;Anyone;Basic;https://www.youtube.com/watch?v=KIK3azN4w34;12
-Kanye West (feat. Jamie Foxx);2005;Gold Digger;Basic;https://www.youtube.com/watch?v=LFFcyWGWz14;15
-Kaoma;1989;Lambada;Basic;https://www.youtube.com/watch?v=ooxAZfr-woI;30
-Karat;1978;Über sieben Brücken musst du gehen;Basic;https://www.youtube.com/watch?v=eKwl5HclBeQ;10
-Katy Perry;2010;Firework;Basic;https://www.youtube.com/watch?v=KLc5qNAzLaM;0
-KC And The Sunshine Band;1982;Give It Up;Basic;https://www.youtube.com/watch?v=GWqshuTyqjA;38
-Kelly Clarkson;2005;Because Of You;Basic;https://www.youtube.com/watch?v=9SAh14Kt4n8;14
-Kim Carnes;1981;Bette Davis Eyes;Basic;https://www.youtube.com/watch?v=AlZEdyo6uwY;0
+Bill Haley & His Comets;1954;(We're Gonna) Rock Around The Clock;Basic;https://www.youtube.com/watch?v=hzYBEJgKjv0;0
+Sam Cooke;1960;(What A) Wonderful World;Basic;https://www.youtube.com/watch?v=R4GLAKEjU4w;0
+Kristina Bach;1997;…es kribbelt und prickelt...;Schlagerparty;https://www.youtube.com/watch?v=5JDMgosFXY4;0
 Klaus Lage;1984;1000 und 1 Nacht (Zoom!);Basic;https://www.youtube.com/watch?v=Ug3HFmW8AVA;0
-Kool & The Gang;1980;Celebration;Basic;https://www.youtube.com/watch?v=1Qu6Dyn-c6M;8
-Kraftwerk;1974;Autobahn;Basic;https://www.youtube.com/watch?v=iukUMRlaBBE;65
-Lady Gaga;2008;Poker Face;Basic;https://www.youtube.com/watch?v=BvJSig2WhnY;0
-Lady Gaga & Bradley Cooper;2018;Shallow;Basic;https://www.youtube.com/watch?v=BpIf43m2ZQI;14
-Las Ketchup;2002;The Ketchup Song (Aserejé);Basic;https://www.youtube.com/watch?v=hLeUL4i9PNw;0
-Led Zepplin;1969;Whole Lotta Love;Basic;https://www.youtube.com/watch?v=HibBnC6SVk8;10
-Lenny Kravitz;1998;Fly Away;Basic;https://www.youtube.com/watch?v=cELBtOexOOo;24
-Leo Sayer;1977;When I Need You;Basic;https://www.youtube.com/watch?v=koc_LF856jc;22
-Lewis Capaldi;2018;Someone You Loved;Basic;https://www.youtube.com/watch?v=AyCrypt1pdI;0
-Limahl;1984;Never Ending Story;Basic;https://www.youtube.com/watch?v=RxJuIlbT740;70
+Erste Allgemeine Verunsicherung;1994;300 PS;Schlagerparty;https://www.youtube.com/watch?v=H8QPwZLQuwY;0
+Mitch Keller;2015;7 Leben;Schlagerparty;https://www.youtube.com/watch?v=Gojprk_UOmg;0
+Bernhard Brink;2010;7 Tafeln Schokolade;Schlagerparty;https://www.youtube.com/watch?v=KI8Pz6SakiM;0
+Manuela Fellner;2012;7 Tage hat die Woche;Schlagerparty;https://www.youtube.com/watch?v=tYJhwawckmM;0
+Max Giesinger ;2016;80 Millionen;Basic;https://www.youtube.com/watch?v=OuAGkCAlblc;0
+Dolly Parton;1980;9 To 5;Custom Basic;https://www.youtube.com/watch?v=E4OzdyxbOuU;0
+Nena;1983;99 Luftballons;Basic;https://www.youtube.com/watch?v=TMSlTQmDLx4;0
+The Beatles;1964;A Hard Days Night;Custom Basic;https://www.youtube.com/watch?v=AMSiHdrHl0g;0
+Buddy;2003;Ab in den Süden;Basic;https://www.youtube.com/watch?v=q5WdWSpz1vQ;0
+Fats Domino;1955;Ain't That A Shame;Basic;https://www.youtube.com/watch?v=50OF4x1lIbg;0
+Meghan Trainor;2014;All About That Bass;Basic;https://www.youtube.com/watch?v=QgmzAu7_wyc;0
+The Everly Brothers;1958;All I Have To Do Is Dream;Basic;https://www.youtube.com/watch?v=tbU3zdAgiX8;0
+Sheryl Crow;1994;All I Wanna Do;Custom Basic;https://www.youtube.com/watch?v=rGr6i5Sar5s;0
+John Legend;2013;All Of Me;Basic;https://www.youtube.com/watch?v=ngq5Aw0Q6rQ;0
+Ace of Base;1992;All That She Wants;Basic;https://www.youtube.com/watch?v=HGbGmoIPb-o;0
+Stephan Remmler;1986;Alles hat ein Ende nur die Wurst hat zwei;Schlagerparty;https://www.youtube.com/watch?v=eWbcv47DXww;0
+Die Prinzen;1993;Alles nur geklaut;Basic;https://www.youtube.com/watch?v=s5CK8cEg3ms;0
+Achim Reichel;1991;Aloha heja he;Schlagerparty;https://www.youtube.com/watch?v=NbPc8VhstGE;0
+Axel Fischer;2008;Amsterdam;Schlagerparty;https://www.youtube.com/watch?v=CtHDNPCIsts;0
+Nicki Minaj;2014;Anaconda;Custom Basic;https://www.youtube.com/watch?v=2ArN3HfSebw;0
+Costa Cordalis;1976;Anita;Schlagerparty;https://www.youtube.com/watch?v=ggqBxFn1NGU;0
+Taylor Swift;2022;Anti-Hero;Custom Basic;https://www.youtube.com/watch?v=pGHK4UPCtXk;0
+DJ Ötzi;1999;Anton aus Tirol;Schlagerparty;https://www.youtube.com/watch?v=bdu1iUgM5c8;0
+Danny & The Junors;1957;At The Hop;Basic;https://www.youtube.com/watch?v=SEPvoNA1OGw;0
+Helene Fischer;2013;Atemlos durch die Nacht;Basic;https://www.youtube.com/watch?v=M5X_D_b-iTY;0
+Charlie Puth;2017;Attention;Custom Basic;https://www.youtube.com/watch?v=RSaN430miTg;0
+Andreas Bourani;2014;Auf uns;Basic;https://www.youtube.com/watch?v=pP6gH3P65nM;0
+Breakout (feat. Irfane);2012;Baby I'm Yours;Custom Basic;https://www.youtube.com/watch?v=ahdH8eTydWY;0
+Billie Eilish;2019;Bad Guy;Basic;https://www.youtube.com/watch?v=4-TbQnONe_w;0
+Lady Gaga;2009;Bad Romance;Custom Basic;https://www.youtube.com/watch?v=lFprV1lVrZ8;0
+Stefanie Heinzmann;2009;Bag It Up;Custom Basic;https://www.youtube.com/watch?v=09Dd3hMoXdk;0
+Jessie J, Ariana Grande, Nicki Minaj;2014;Bang Bang;Custom Basic;https://www.youtube.com/watch?v=YswhUHH6Ufc;0
+Aqua;1997;Barbie Girl;Basic;https://www.youtube.com/watch?v=rXdT85bMXsE;0
+Dieter Thomas Kuhn, Michael Holm;2007;Barfuß im Regen;Schlagerparty;https://www.youtube.com/watch?v=U1Wgb4nPlZA;0
+The 4 Seasons;1967;Beggin;Custom Basic;https://www.youtube.com/watch?v=d5AfvOk57bE;0
+Loona;1998;Beilando;Custom Basic;https://www.youtube.com/watch?v=LmT3Cj44JXE;0
+Torfrock;1990;Beinhart;Basic;https://www.youtube.com/watch?v=mEk7RDxvhYo;0
+Imagine Dragons;2017;Believer;Custom Basic;https://www.youtube.com/watch?v=IhP3J0j9JmY;0
+Kim Carnes;1981;Bette Davis Eyes;Basic;https://www.youtube.com/watch?v=AlZEdyo6uwY;0
+Karel Gott;1975;Biene Maja;Schlagerparty;https://www.youtube.com/watch?v=XNWferBsNCw;0
+The Verve;1997;Bitter Sweet Symphony;Basic;https://www.youtube.com/watch?v=VHuwD0XW_TU;0
+Heino;1972;Blau blau blüht der Enzian;Schlagerparty;https://www.youtube.com/watch?v=HBGnU4Q5pRg;0
+The Weeknd;2019;Blining Lights;Basic;https://www.youtube.com/watch?v=fHI8X4OXluQ;0
 Linda Ronstadt;1977;Blue Bayou;Basic;https://www.youtube.com/watch?v=_qqvdOwoN-Y;0
-Lionel Richie;1986;Dancing On The Ceiling;Basic;https://www.youtube.com/watch?v=4KlLfYADaVE;30
-Little Eva;1962;The Loco-Motion;Basic;https://www.youtube.com/watch?v=24Neyv2crh4;0
-Little Richard;1958;Good Golly, Miss Molly;Basic;https://www.youtube.com/watch?v=lQ6akiGRcL8;0
-Loreen;2012;Euphoria;Basic;https://www.youtube.com/watch?v=t5qURKt4maw;10
-Lukas Graham;2015;7 Years;Basic;https://www.youtube.com/watch?v=kqFLQG484pg;15
-Lynyrd Skynyrd;1974;Sweet Home Alabama;Basic;https://www.youtube.com/watch?v=-35W_FWCT9Q;3
-Mabel;2019;Don't Call Me Up;Basic;https://www.youtube.com/watch?v=V35iQO30Xys;0
+Queen;1975;Bohemian Rhapsody;Custom Basic;https://www.youtube.com/watch?v=fJ9rUzIMcZQ;0
+Dua Lipa;2020;Break My Heart;Basic;https://www.youtube.com/watch?v=jgh8owCuX78;0
+Geier Sturzflug;1982;Bruttosozialprodukt;Schlagerparty;https://www.youtube.com/watch?v=Zm8dk7SfV1E;0
+DNCE;2015;Cake By The Ocean;Custom Basic;https://www.youtube.com/watch?v=GgTXUCb0WjI;0
+Eric Prydz;2004;Call On Me;Basic;https://www.youtube.com/watch?v=-6hpGaTkP0A;0
+Elvis Presley;1961;Can't Help Falling In Love;Basic;https://www.youtube.com/watch?v=_f917QSZq50;0
 Macklemore & Ryan Lewis (feat. Ray Dalton;2011;Can't Hold Us;Basic;https://www.youtube.com/watch?v=VG3JsmOmDqw;0
-Mad'House;2002;Like A Prayer;Basic;https://www.youtube.com/watch?v=fYaAolJw21w;0
-Madonna (feat. Justin Timberlake & Timbaland);2008;4 Minutes;Basic;https://www.youtube.com/watch?v=BgPqNyqYDN4;15
-Major Lazer, DJ Snake & Mø;2015;Lean On;Basic;https://www.youtube.com/watch?v=NEjF9np9_NU;0
+Captain Jack;1995;Captain Jack;Basic;https://www.youtube.com/watch?v=0Bb_w7nOBwg;0
+Fall Out Boy;2014;Centuries;Custom Basic;https://www.youtube.com/watch?v=x1ckRXQFvdk;0
+Sia;2015;Cheap Thrills;Basic;https://www.youtube.com/watch?v=J1b22l1kFKY;0
+Döf;1983;Codo;Schlagerparty;https://www.youtube.com/watch?v=Nu5uJ7aqAwg;0
+Cliff Richard;1968;Congratualions;Basic;https://www.youtube.com/watch?v=770f-pwPe4o;0
+Josh;2018;Cordula Grün;Schlagerparty;https://www.youtube.com/watch?v=uSbxCX2LVps;0
+Rednex;1994;Cotton Eye Joe;Basic;https://www.youtube.com/watch?v=fYnJZh5ZHIA;0
+OneRepublic;2013;Counting Stars;Basic;https://www.youtube.com/watch?v=mgT0N3tMP74;0
+Trio;1981;Da Da Da;Schlagerparty;https://www.youtube.com/watch?v=4_kZdimDGfM;0
+Tones And I;2019;Dance Monkey;Basic;https://www.youtube.com/watch?v=1__CAdTJ5JU;0
+U96;1992;Das Boot;Basic;https://www.youtube.com/watch?v=YVxXbTk-zsQ;0
+Vader Abraham;1977;Das Lied der Schlümpfe;Schlagerparty;https://www.youtube.com/watch?v=sXdUMoEHxKs;0
+Manuel & Pony;1979;Das Lied von Manuel;Schlagerparty;https://www.youtube.com/watch?v=_Fsdo2DaS_0;0
+Olaf Henning;2000;Das Spiel ist aus;Schlagerparty;https://www.youtube.com/watch?v=dHM_31pwXFg;0
+Mike Krüger;1994;Das Trampolin;Schlagerparty;https://www.youtube.com/watch?v=0CLGRuqSYMw;0
+Nino Gemba;2006;Dein Zug ist abgefahre'n;Schlagerparty;https://www.youtube.com/watch?v=1j1ZnYaKjnQ;0
+Alisha;2021;Deine braunen Augen;Schlagerparty;https://www.youtube.com/watch?v=4ts53J9MPbo;0
+Klaus & Klaus;1988;Der Eiermann;Schlagerparty;https://www.youtube.com/watch?v=u58UVnV7RF4;0
+Ben Zucker;2018;Der Sonne entgegen;Schlagerparty;https://www.youtube.com/watch?v=Vu403ZAEtxE;0
+Truckstop;1980;Der wilde wilde Westen;Schlagerparty;https://www.youtube.com/watch?v=80DSyg01uUc;0
+Mia Julia, Lorenz Büffel, Malle Anja;2022;Der Zug hat keine Bremse;Schlagerparty;https://www.youtube.com/watch?v=Sg4nv5uC-0w;0
+Rihanna;2012;Diamonds;Custom Basic;https://www.youtube.com/watch?v=0-p5EbAsxUM;0
+Bernd Clüver;1992;Dich hat der Himmel geschickt;Schlagerparty;https://www.youtube.com/watch?v=qWEEYDWdIGw;0
+Julian Sommer;2022;Dicht im Flieger;Schlagerparty;https://www.youtube.com/watch?v=hzqcMvDON1g;0
+Die Firma;1998;Die Eine;Basic;https://www.youtube.com/watch?v=qwHVE9UjAy0;0
+Freddy Quinn;1959;Die Gitarre und das Meer;Basic;https://www.youtube.com/watch?v=3y57Xi5crxA;0
+Die Kolibris;1998;Die Hände zum Himmel;Schlagerparty;https://www.youtube.com/watch?v=ZDG00xyq6nQ;0
+SDP;2012;Die Nacht von Freitag auf Montag;Basic;https://www.youtube.com/watch?v=_6Q09KJ0HBM;0
+Geier Sturzflug;1984;Die Pure Lust am Leben;Schlagerparty;https://www.youtube.com/watch?v=wKAwFAdI2jI;0
+Heino;1975;Die schwarze Barbara;Schlagerparty;https://www.youtube.com/watch?v=GFlmQyBHoRk;0
 Mannfred Mann;1964;Do Wah Diddy Diddy;Basic;https://www.youtube.com/watch?v=1UingsUi0mI;0
-Manuela;1963;Schuld war nur der Bossa Nova;Basic;https://www.youtube.com/watch?v=Gnmq27MCkFY;0
+Enrique Iglesias;2007;Do You Know? (The Ping Pong Song);Basic;https://www.youtube.com/watch?v=BcFPWHRXHHU;0
+Mabel;2019;Don't Call Me Up;Basic;https://www.youtube.com/watch?v=V35iQO30Xys;0
+Yazoo;1982;Don't Go;Basic;https://www.youtube.com/watch?v=Me9PPt7btEg;0
+No Doubt;1996;Don't Speak;Basic;https://www.youtube.com/watch?v=EQePYyin4vQ;0
+Dua Lipa;2019;Don't Start Now;Custom Basic;https://www.youtube.com/watch?v=xjiYBGs0TUA;0
+Queen;1979;Don't Stop Me Now;Custom Basic;https://www.youtube.com/watch?v=hBp4dgE7Bho;0
+O-Zone;2003;Dragostea Din Tei;Basic;https://www.youtube.com/watch?v=gE-h0xsRY4M;0
 Mark Forster feat. Lea;2021;Drei Uhr Nachts;Basic;https://www.youtube.com/watch?v=fDSOhYhORiw;0
-Mark Morrison;1996;Return Of The Mack;Basic;https://www.youtube.com/watch?v=1ZfjB5P7RS0;10
+Olivia Rodrigo;2021;Drivers License;Basic;https://www.youtube.com/watch?v=tNJhkrpLGT8;0
+Dschinghis Khan;1979;Dschinghis Khan;Eurovision;https://www.youtube.com/watch?v=0pA1C6sAjKo;0
+Dschinghis Khan;1979;Dschinghis Khan;Schlagerparty;https://www.youtube.com/watch?v=0pA1C6sAjKo;0
+Andreas Martin;1987;Du bist Alles (Maria Maria);Schlagerparty;https://www.youtube.com/watch?v=cufovD-oSbo;0
+Amigos;2010;Du bist wie ein Feuer im Vulkan;Schlagerparty;https://www.youtube.com/watch?v=ttftqclYHJs;0
+Peter Cornelius;1980;Du Entschuldige - I Kenn' Di;Schlagerparty;https://www.youtube.com/watch?v=fhaP9-YhLig;0
+Chris Roberts;1974;Du kannst nicht immer 17 sein;Schlagerparty;https://www.youtube.com/watch?v=PxArycwd76M;0
+KLUBBB3;2016;Du schaffst das schon;Schlagerparty;https://www.youtube.com/watch?v=wCDsm_dt1cI;0
+Echt;1999;Du trägst keine Liebe in dir;Basic;https://www.youtube.com/watch?v=7fUpaXxPgMI;0
+Nockis (Nockalm Quintett);2014;Du warst der geilste Fehler meines Lebens;Schlagerparty;https://www.youtube.com/watch?v=0JR4cHZOFZs;0
+Dieter Hallervorden, Helga Feddersen;1978;Du, die Wanne ist voll;Schlagerparty;https://www.youtube.com/watch?v=-N_8Lr6YbTw;0
+Tokio Hotel;2005;Durch den Monsun;Basic;https://www.youtube.com/watch?v=S_Sy5-sOodA;0
+Eloy;2018;Egal was andere sagen;Schlagerparty;https://www.youtube.com/watch?v=f87DAkIRbY0;0
+Münchner Freiheit;2009;Ein Augenblick in rot;Schlagerparty;https://www.youtube.com/watch?v=P9eGiSONjf4;0
+Jürgen Drews;1976;Ein Bett im Kernfeld;Basic;https://www.youtube.com/watch?v=-IcBlAzTr7Y;0
+Roberto Blanco;1972;Ein bisschen Spaß muss sein;Schlagerparty;https://www.youtube.com/watch?v=4-DYhrD-N6M;0
+Feuerherz;2016;Ein Lied auf das Leben;Schlagerparty;https://www.youtube.com/watch?v=cTeRskQuFNA;0
+PS Alex;2007;Eine Frau, die mich nach Hause trägt;Schlagerparty;https://www.youtube.com/watch?v=hrNXPy7PyJM;0
+Jürgen Marcus;1972;Eine neue Liebe ist wie ein neues Leben;Basic;https://www.youtube.com/watch?v=zmLqYi9fe3U;0
+Xanadu;1989;Einen Traum für diese Welt;Schlagerparty;https://www.youtube.com/watch?v=nk0HTecN568;0
+Sarah-Jane;2005;Einmal hin, einmal her;Schlagerparty;https://www.youtube.com/watch?v=FmOlsP4KnUQ;0
+Cro;2012;Einmal um die Welt;Basic;https://www.youtube.com/watch?v=vG8-WbaguMI;0
+Fettes Brot;2005;Emanuela;Basic;https://www.youtube.com/watch?v=qURXrPdx9WQ;0
+Rammstein;1997;Engel;Basic;https://www.youtube.com/watch?v=hNwMfgHcz5k;0
+Nino de Angelo;2001;Engel;Schlagerparty;https://www.youtube.com/watch?v=iWhzhu7TiKk;0
+Ben (feat. Gim);2002;Engel;Custom Basic;https://www.youtube.com/watch?v=btyuNe8LQS8;0
+Fred Sonnenschein und seine Freunde;1981;Ententanz (Ja, wenn wir alle Englein wären);Schlagerparty;https://www.youtube.com/watch?v=LVadU2UnSjs;0
+Wencke Myhre;1970;Er hat ein knallrotes Gummiboot;Basic;https://www.youtube.com/watch?v=2lyCBJAOqcQ;0
+Wencke Myhre;1970;Er hat ein knallrotes Gummiboot;Schlagerparty;https://www.youtube.com/watch?v=2lyCBJAOqcQ;0
+Christian Anders;1972;Es fährt ein Zug nach nirgendwo;Schlagerparty;https://www.youtube.com/watch?v=haIgciQVN-0;0
+Christian Anders;1972;Es fährt ein Zug nach nirgendwo;Custom Basic;https://www.youtube.com/watch?v=HYnotUA4p1E;0
+Paul Kuhn;1963;Es gibt kein Bier auf Hawaii;Schlagerparty;https://www.youtube.com/watch?v=mB1rM73lmnc;0
+Santiano;2012;Es gibt nur Wasser;Schlagerparty;https://www.youtube.com/watch?v=-RWKohWx8JQ;0
+Christian Möllmann;2000;Es ist doch geil, ein Arschloch zu sein;Schlagerparty;https://www.youtube.com/watch?v=bYqx4hlfhlk;0
+Michael Morgan;1996;Es schießt ein Blitz in meinen Kopf;Schlagerparty;https://www.youtube.com/watch?v=QeO0vFWnjBI;0
+Rupert Holmes;1979;Escape (The Piña Colada Song);Basic;https://www.youtube.com/watch?v=FXG_I_tf_i4;0
+The Police;1983;Every Breath You Take;Basic;https://www.youtube.com/watch?v=6cucosmPj-A;0
+Robbie Williams;2002;Feel;Basic;https://www.youtube.com/watch?v=eK_tpyqtnsg;0
+Portugal. The Man;2017;Feel It Still;Basic;https://www.youtube.com/watch?v=e-2aoz_Um10;0
+Rex Guildo;1972;Fiesta Mexicana;Schlagerparty;https://www.youtube.com/watch?v=EEGQrYBkm_A;0
+Katy Perry;2010;Firework;Basic;https://www.youtube.com/watch?v=KLc5qNAzLaM;0
+Bläck Föös;1985;Frankreich Frankreich;Schlagerparty;https://www.youtube.com/watch?v=m-AF_5rXd4s;0
+Gitte Haenning;1980;Freu' dich bloss nicht zu früh;Schlagerparty;https://www.youtube.com/watch?v=ZoFzlHjcLfo;0
+Anna-Maria Zimmermann & Olaf Henning;2012;Freundschaftsring;Schlagerparty;https://www.youtube.com/watch?v=5Xs6dhAxUE0;0
+Caterina Valente;1954;Ganz Paris träumt von der Liebe;Basic;https://www.youtube.com/watch?v=uhVP418YR_8;0
+Unheilig;2010;Geboren um zu leben;Basic;https://www.youtube.com/watch?v=uurx9BGLSAA;0
+Christina Aguilera;1999;Genie In A Bottle;Basic;https://www.youtube.com/watch?v=k6H5v9iMQhQ;0
+The Beatles;1969;Get Back;Basic;https://www.youtube.com/watch?v=n9rzHF8tlUY;0
+Vernon Burch;1979;Get Up;Custom Basic;https://www.youtube.com/watch?v=kGHnVvdHTX0;0
+Nik P.;2008;Gloria 2;Schlagerparty;https://www.youtube.com/watch?v=1NqYMKHKawM;0
+Jasmin Wagner;2021;Gold;Schlagerparty;https://www.youtube.com/watch?v=cpTuOc55_9s;0
+(Die Fidelen) Mölltaler;1984;Gold, Platin und Diamant;Schlagerparty;https://www.youtube.com/watch?v=hUJnO8CDcD4;0
+Little Richard;1958;Good Golly, Miss Molly;Basic;https://www.youtube.com/watch?v=lQ6akiGRcL8;0
+The Beach Boys;1966;Good Vibrations;Basic;https://www.youtube.com/watch?v=Eab_beh07HU;0
+George Harrison;1987;Got My Mind Set On You;Basic;https://www.youtube.com/watch?v=ycNxDe88iEY;0
+Mika;2007;Grace Kelly;Custom Basic;https://www.youtube.com/watch?v=LzCm2dg7yyg;0
+Udo Jürgens;1974;Griechischer Wein;Schlagerparty;https://www.youtube.com/watch?v=eKveb4BjK_c;0
+Die Minstrels;1968;Grüezi Wohl, Frau Stirnimaa;Schlagerparty;https://www.youtube.com/watch?v=40BkbgKai7g;0
+Otto Waalkes;2008;Grund zum Feiern;Schlagerparty;https://www.youtube.com/watch?v=aGnmuBOmL5I;0
+Guildo Horn & die Orthopädischen Strümpfe;1998;Guildo hat euch lieb;Eurovision;https://www.youtube.com/watch?v=yB1lWt1Jmpw;0
+Guildo Horn & die Orthopädischen Strümpfe;1998;Guildo hat euch lieb;Schlagerparty;https://www.youtube.com/watch?v=yB1lWt1Jmpw;0
+Klostertaler;1997;Ha-Le-Lu-Ja;Schlagerparty;https://www.youtube.com/watch?v=q2cPcD6cp_A;0
+Taio Cruz;2011;Hangover;Basic;https://www.youtube.com/watch?v=97PT8to46fc;0
+Pharell Williams;2013;Happy;Basic;https://www.youtube.com/watch?v=jffGXR7vNdk;0
+twenty one pilots;2016;Heathens;Custom Basic;https://www.youtube.com/watch?v=YeR7O6jLMiQ;0
+Gitti und Erica;1977;Heidi;Schlagerparty;https://www.youtube.com/watch?v=Fio8vUIG5nA;0
+Plüsch;2007;Heimweh;Schlagerparty;https://www.youtube.com/watch?v=ZhZhRRg93aA;0
+Freddy Quinn;1956;Heimweh (Dort wo die Blumen blüh'n);Basic;https://www.youtube.com/watch?v=CNwsXRsvVWE;0
+Howard Carpendale;1984;Hello Again;Schlagerparty;https://www.youtube.com/watch?v=2-EzIZErBCY;0
+The Beatles;1965;Help!;Custom Basic;https://www.youtube.com/watch?v=N4KvafPbauw;0
+Blümchen;1996;Herz an Herz;Basic;https://www.youtube.com/watch?v=2JCelVI6U68;0
+G.G. Anderson;2003;Herz auf rot;Schlagerparty;https://www.youtube.com/watch?v=I5HtYA54Jcw;0
+Rosenstolz;1998;Herzensschöner;Schlagerparty;https://www.youtube.com/watch?v=uiNs4rcFkak;0
+Wildecker Herzbuben;1990;Herzilein;Schlagerparty;https://www.youtube.com/watch?v=l1eqypd6TEk;0
+BB Jürgen;2004;Heute fährt die 18 bis nach Istanbul;Schlagerparty;https://www.youtube.com/watch?v=u2jQSbwkasI;0
+Drafi Deutscher;1965;Heute male ich dein Bild, Cindy Lou;Schlagerparty;https://www.youtube.com/watch?v=XSBq01VLOgQ;0
+David Guetta (feat. Nicki Minaj, Bebe Rexha & Afrojack);2015;Hey Mama;Custom Basic;https://www.youtube.com/watch?v=6Z6VimTcfmA;0
+Outcast;2003;Hey Ya!;Basic;https://www.youtube.com/watch?v=-7XnDlYY9qw;0
+Train;2009;Hey, Soul Sister;Basic;https://www.youtube.com/watch?v=AGmI4l6jpPI;0
+Sandy Wagner;2002;Hier spricht die Polizei;Schlagerparty;https://www.youtube.com/watch?v=oYwYtPvKQvA;0
+Mireille Mathieu;1969;Hinter den Kulissen von Paris;Schlagerparty;https://www.youtube.com/watch?v=3mY-2acmKr0;0
+Norman Langen;2011;Hör meinen Herzschlag;Schlagerparty;https://www.youtube.com/watch?v=cAzgX9XSXbA;0
+Nickelback;2001;How You Remind Me;Basic;https://www.youtube.com/watch?v=hhSLkkLl750;0
+James Brown & The Famous Flames;1965;I Got You (I Feel Good);Basic;https://www.youtube.com/watch?v=b5DfwGAej-k;0
+Reel 2 Real (feat. The Mad Stuntman);1993;I Like To Move It;Basic;https://www.youtube.com/watch?v=vuo8kD5zF5I;0
+Icona Pop (feat. Charli XCX);2012;I Love It;Basic;https://www.youtube.com/watch?v=W50HtcPAeSs;0
+Donna Lewis;1996;I Love You Always Forever;Custom Basic;https://www.youtube.com/watch?v=xpbqJ1qvCPQ;0
+Melissa Naschenweng;2019;I steh auf Bergbauernbuam;Schlagerparty;https://www.youtube.com/watch?v=D6EzUpOj4KU;0
+Ibo;1986;Ibiza;Schlagerparty;https://www.youtube.com/watch?v=3O2QRoQ0Y8E;0
+Jürgen Drews;2009;Ich bau dir ein Schloss;Schlagerparty;https://www.youtube.com/watch?v=TOGS85Yno3E;0
+Jan Smit;2013;Ich bin da;Schlagerparty;https://www.youtube.com/watch?v=vCW-0DhwNy0;0
+Musikapostel (feat. Allessa);2019;Ich bin wer ich sein will;Schlagerparty;https://www.youtube.com/watch?v=PvI0nM9fOMA;0
+Christoff;2012;Ich Hab Alain Delon geseh'n;Schlagerparty;https://www.youtube.com/watch?v=f7pOq3vOh5o;0
+Billy Mo;1962;Ich kauf' mir lieber einen Tirolerhut;Schlagerparty;https://www.youtube.com/watch?v=Kln1cgHxd94;0
+Liane ;2014;Ich lass' nur noch Sonne in mein Herz;Schlagerparty;https://www.youtube.com/watch?v=9QZ0VlgJ4uw;0
+Vanessa Mai;2016;Ich sterb für Dich;Schlagerparty;https://www.youtube.com/watch?v=izHB2EdMngg;0
+Zlatko;2000;Ich vermiss' dich;Schlagerparty;https://www.youtube.com/watch?v=_BLfvl2jGDc;0
+Tic Tac Toe;1997;Ich wär so gern so blöd wie du;Schlagerparty;https://www.youtube.com/watch?v=QukYHQRH3NM;0
+Gitte Haenning;1983;Ich will alles;Schlagerparty;https://www.youtube.com/watch?v=tuGnrp1Wh80;0
+Matthias Reim;2007;Ich will dich immer noch;Schlagerparty;https://www.youtube.com/watch?v=WnHLrcX4pfY;0
+Gitte Haenning;1963;Ich will 'nen Cowboy als Mann;Basic;https://www.youtube.com/watch?v=zOcyefACvws;0
+Wums Gesang;1972;Ich wünsch mir 'ne kleine Mietzekatze;Schlagerparty;https://www.youtube.com/watch?v=8CiSEtZCvyY;0
+Chicago;1976;If You Leave Me Right Now;Basic;https://www.youtube.com/watch?v=-9_d-sFhmRM;0
+The Monkees;1966;I'm A Believer;Basic;https://www.youtube.com/watch?v=4PQAqprjOuA;0
+Cindy & Bert;1973;Immer wieder Sonntags;Schlagerparty;https://www.youtube.com/watch?v=UeXCCCY7jq4;0
+50 Cent;2003;In Da Club;Basic;https://www.youtube.com/watch?v=H3axP4norfk;0
+Glenn Miller;1939;In The Mood;Basic;https://www.youtube.com/watch?v=7vMTZBVBkPU;0
+Snow;1992;Informer;Basic;https://www.youtube.com/watch?v=dom-m5Ijrrs;0
+Ariana Grande;2016;Into You;Custom Basic;https://www.youtube.com/watch?v=GB2aPHTDaqU;0
+Tom Astor;1996;Irgendwie wird's schon gehen;Schlagerparty;https://www.youtube.com/watch?v=EvusweZ4Sjs;0
+Jürgen von der Lippe;1989;Is was;Schlagerparty;https://www.youtube.com/watch?v=fwjZl8SbASg;0
+Bonnie Tyler;1977;It's A Heartache;Basic;https://www.youtube.com/watch?v=zjloI8jfXJM;0
+Betty Everett;1964;It's In His Kiss (The Shoop Shoop Song);Basic;https://www.youtube.com/watch?v=B4KN6TFhy2I;0
+Bon Jovi;2000;It's My Life;Basic;https://www.youtube.com/watch?v=9VSerKr1vBM;0
+Caterina Valente & Silvio Francesco;1960;Itsy Bitsy Teenie Weenie Honolulu Strand Bikini;Basic;https://www.youtube.com/watch?v=xxSPQGaGqd0;0
+Elvis Presley;1957;Jailhouse Rock;Basic;https://www.youtube.com/watch?v=A99sV18J0mk;0
+Roland Kaiser;1984;Joana;Schlagerparty;https://www.youtube.com/watch?v=nEO8d59-riM;0
+Lorenz Büffel;2016;Johnny Däpp;Schlagerparty;https://www.youtube.com/watch?v=3osLPAfdqQg;0
+Dolly Parton;1973;Jolene;Basic;https://www.youtube.com/watch?v=Ixrje2rXLMA;0
+P!nk (feat. Nate Reuss);2013;Just Give Me A Reason;Basic;https://www.youtube.com/watch?v=OpQFFLBMEPI;0
+Culture Club;1983;Karma Chameleon;Basic;https://www.youtube.com/watch?v=h5WA79F4UCs;0
+Helge Schneider;1993;Katzenklo;Schlagerparty;https://www.youtube.com/watch?v=o99uuZ6pNv4;0
+Max Raabe;1999;Kein Schwein ruft mich an;Schlagerparty;https://www.youtube.com/watch?v=ZkHa6Vyy0Wg;0
+Fugees;1996;Killing Me Softly With His Song;Basic;https://www.youtube.com/watch?v=H-RBJNqdnoM;0
+Costa Cordalis;2003;Königin der Nacht;Schlagerparty;https://www.youtube.com/watch?v=unzyXAdUPNQ;0
+Pe Werner;1991;Kribbeln im Bauch;Schlagerparty;https://www.youtube.com/watch?v=0201_NPzWbE;0
+Erste Allgemeine Verunsicherung;1987;Küss' die Hand schöne Frau;Schlagerparty;https://www.youtube.com/watch?v=v22mq5JNbJE;0
+Max Raabe;2011;Küssen kann man nicht alleine;Schlagerparty;https://www.youtube.com/watch?v=XjU8u_TjXfw;0
+Ritchie Valens;1958;La Bamba;Basic;https://www.youtube.com/watch?v=Coy8Hoa1DNw;0
+Enrico Caruso;1908;La Donna È Mobile (Rigoletto);Basic;https://www.youtube.com/watch?v=SrQV5x1sczs;0
+Monika Martin;1996;La Luna Blue;Schlagerparty;https://www.youtube.com/watch?v=2zicwoLpCyU;0
+Chic;1978;Le Freak;Basic;https://www.youtube.com/watch?v=aXgSHL7efKg;0
+Major Lazer, DJ Snake & Mø;2015;Lean On;Basic;https://www.youtube.com/watch?v=NEjF9np9_NU;0
+De Randfichten;2004;Lebt denn der alte Holzmichl noch?;Schlagerparty;https://www.youtube.com/watch?v=uDGsw8S9RYM;0
+Melissa Naschenweng;2020;Lederhosenrock;Schlagerparty;https://www.youtube.com/watch?v=ZIlTo0JMUb0;0
+Bernd Clüver;1993;Lieben heißt Leben;Schlagerparty;https://www.youtube.com/watch?v=DvDff1QNXdY;0
+Siw Malmkvist;1964;Liebeskummer lohnt sich nicht;Basic;https://www.youtube.com/watch?v=Lz3S5HXyw4o;0
+Mad'House;2002;Like A Prayer;Basic;https://www.youtube.com/watch?v=fYaAolJw21w;0
+The Kinks;1970;Lola;Basic;https://www.youtube.com/watch?v=LemG0cvc4oU;0
+The Chordettes;1958;Lollipop;Basic;https://www.youtube.com/watch?v=_kXKUSAbvuM;0
+Akon;2005;Lonely;Basic;https://www.youtube.com/watch?v=T82tsf-MF00;0
+Young Posse;2023;Macaroni Cheese;K-Pop;https://www.youtube.com/watch?v=hHE5U6TnTYc;0
+Rainhard Fendrich;1988;Macho Macho;Schlagerparty;https://www.youtube.com/watch?v=3ROwnYnWNwg;0
+Heintje;1968;Mama;Basic;https://www.youtube.com/watch?v=5YA6kjrvpRQ;0
+Herbert Grönemeyer;1984;Männer;Basic;https://www.youtube.com/watch?v=jSPbWaT-XmA;0
+Drafi Deutscher;1965;Marmor, Stein und Eisen bricht;Basic;https://www.youtube.com/watch?v=gc0HPw7g1Bo;0
+Stefan Raab;1999;Maschen-Draht-Zaun;Schlagerparty;https://www.youtube.com/watch?v=yNwgTW_AJ_s;0
+Beatrice Egli;2013;Mein Herz;Schlagerparty;https://www.youtube.com/watch?v=rvBBMSfF31w;0
+Vanessa Mai;2015;Mein Herz schlägt Schlager;Schlagerparty;https://www.youtube.com/watch?v=8bd_6CyjyXI;0
+Michael Holm;1969;Mendocino;Schlagerparty;https://www.youtube.com/watch?v=Ngx9Z_RdwOk;0
+Duffy;2008;Mercy;Basic;https://www.youtube.com/watch?v=rOu4wwI0xF8;0
+Bata Illic;1972;Michaela;Schlagerparty;https://www.youtube.com/watch?v=wkwKRmLlh6E;0
+Die Doofen;1995;Mief! (Nimm mich jetzt, auch wenn ich stinke);Basic;https://www.youtube.com/watch?v=yMPCN2hGXvo;0
+Karl Dall;1987;Milionen Frauen lieben mich;Schlagerparty;https://www.youtube.com/watch?v=ThdYxMGZl04;0
+Alex Swings Oscar Sings!;2009;Miss Kiss Kiss Bang;Eurovision;https://www.youtube.com/watch?v=v26lQzKTt8E;0
+Alex Swings Oscar Sings!;2009;Miss Kiss Kiss Bang;Custom Basic;https://www.youtube.com/watch?v=v26lQzKTt8E;0
+Nicole;1992;Mit dir vielleicht;Schlagerparty;https://www.youtube.com/watch?v=3EpZlbsAKJQ;0
+Bernhard Brink;1996;Mit dir werden Wunder noch wahr;Schlagerparty;https://www.youtube.com/watch?v=znEK4sWjbxk;0
+Münchner Zwietracht;2000;Moos Hamma;Schlagerparty;https://www.youtube.com/watch?v=IsIAPSXWaNw;0
+Dschinghis Khan;1979;Moskau;Basic;https://www.youtube.com/watch?v=IZRGKv2uk2o;0
+Ben Zucker;2017;Na und!?;Schlagerparty;https://www.youtube.com/watch?v=kAsAoyaqh1Y;0
+Rick Astley;1987;Never Gonna Give You Up;Custom Basic;https://www.youtube.com/watch?v=QdezFxHfatw;0
+Mike Leon Grosch;2021;Nicht mal eine Stunde;Schlagerparty;https://www.youtube.com/watch?v=pk0edki-syI;0
+Dieter Thomas Kuhn;2012;Night Fever;Schlagerparty;https://www.youtube.com/watch?v=Oz9T0n-eUno;0
+DJ Ötzi;2008;Noch in 100.000 Jahren;Schlagerparty;https://www.youtube.com/watch?v=LHK-d8EqWAU;0
+Jay-Z & Linkin Park;2004;Numb/Encore;Basic;https://www.youtube.com/watch?v=_1oO4wzPCmE;0
+Nena;1982;Nur geträumt;Schlagerparty;https://www.youtube.com/watch?v=HEGRwUuWn64;0
+Deliah Lavi;1970;Oh wann kommst du?;Schlagerparty;https://www.youtube.com/watch?v=xptnAq9W5Zg;0
+Roy Orbison;1964;Oh, Pretty Woman;Basic;https://www.youtube.com/watch?v=3KFvoDDs0XM;0
+Francine Jordi;2015;Paradies;Schlagerparty;https://www.youtube.com/watch?v=kcYm6S-FgKo;0
+Meat Loaf;1978;Paradise By The Dashboard Light;Basic;https://www.youtube.com/watch?v=a136H5K3OKw;0
+Juli;2004;Perfekte Welle;Schlagerparty;https://www.youtube.com/watch?v=BBYdvFWsFBc;0
+Ramones;1989;Pet Semetary;Custom Basic;https://www.youtube.com/watch?v=OCiAZnn_dYE;0
+Lady Gaga;2008;Poker Face;Basic;https://www.youtube.com/watch?v=BvJSig2WhnY;0
+Corinne Bailey Rae;2006;Put You Records On;Basic;https://www.youtube.com/watch?v=E-_JcJiUOII;0
+Wind;2009;Radio Zuckerhut;Schlagerparty;https://www.youtube.com/watch?v=cMBcBSzH3gs;0
+Amy Winehouse;2006;Rehab;Basic;https://www.youtube.com/watch?v=XOjDJRiUeGE;0
+Elton John;1972;Rocket Man (I Think It's Going to Be a Long Long Time);Custom Basic;https://www.youtube.com/watch?v=GuyGoiQkWAo;0
+Alessia Cara;2016;Scars To Be Beautiful;Basic;https://www.youtube.com/watch?v=_epVgBDPBOg;0
+Mickie Krause;2010;Schatzi schenk mir ein Foto;Schlagerparty;https://www.youtube.com/watch?v=MRmgD2LaDw0;0
+Peter Wackel;2013;Scheiß drauf! (Mallorca ist nur einmal im Jahr);Schlagerparty;https://www.youtube.com/watch?v=MeZfP-JSJTw;0
+Schnappi, Joy;2004;Schnappi, das kleine Krokodil;Schlagerparty;https://www.youtube.com/watch?v=hVRw7jtSiEA;0
+Connie Francis;1964;Schöner fremder Mann;Basic;https://www.youtube.com/watch?v=X6OUwtI9J5E;0
+Demis Roussos;1973;Schönes Mädchen aus Arcadia;Schlagerparty;https://www.youtube.com/watch?v=jzwG72oLHrc;0
+Manuela;1963;Schuld war nur der Bossa Nova;Basic;https://www.youtube.com/watch?v=Gnmq27MCkFY;0
+Bill Haley & His Comets;1956;See You Later, Alligator;Basic;https://www.youtube.com/watch?v=jOTY76FVxCU;0
+Adele;2011;Set Fire To The Rain;Basic;https://www.youtube.com/watch?v=a2giXO6eyuI;0
+Tom Jones;1971;She's A Lady;Basic;https://www.youtube.com/watch?v=x8G4xrYfWmw;0
+Roland Kaiser;1977;Sieben Fässer Wein;Schlagerparty;https://www.youtube.com/watch?v=G0_pmvMJdZc;0
+Dorthe;1968;Sind Sie der Graf von Luxemburg?;Schlagerparty;https://www.youtube.com/watch?v=8swk6Qg1Src;0
+Dr. Alban;1993;Sing Hallelujah!;Basic;https://www.youtube.com/watch?v=pKxJca7LLNM;0
+Nirvana;1991;Smells Like Teen Spirit;Basic;https://www.youtube.com/watch?v=hTWKbfoikeg;0
+Edward Reekers;1995;So schmeckt der Sommer;Schlagerparty;https://www.youtube.com/watch?v=kCcXlhzX8N4;0
+Maite Kelly;2001;So wie man tanzt so liebt man;Schlagerparty;https://www.youtube.com/watch?v=dLle5uwURtU;0
+Gotye (feat. Kimbra);2011;Somebody That I Used To Know;Basic;https://www.youtube.com/watch?v=8UVNT4wvIGY;0
+Lewis Capaldi;2018;Someone You Loved;Basic;https://www.youtube.com/watch?v=AyCrypt1pdI;0
+Stoakogler Trio;1992;Steiermen san very good;Schlagerparty;https://www.youtube.com/watch?v=p-gK9kzEVhY;0
+Hubert Kah;1982;Sternenhimmel;Schlagerparty;https://www.youtube.com/watch?v=wdRSPSt_IEA;0
+Thomas Anders;2017;Sternenregen;Schlagerparty;https://www.youtube.com/watch?v=IglQLKlMHB8;0
+Colör;2001;Su Mädche wie wir;Schlagerparty;https://www.youtube.com/watch?v=yQ_G9jX9FYU;0
+Peter Kraus;1958;Sugar Baby;Basic;https://www.youtube.com/watch?v=-9R3_53qe08;0
+Rick James;1981;Super Freak;Basic;https://www.youtube.com/watch?v=XESxsUl6hGU;0
+The Beach Boys;1963;Surfin' U.S.A.;Basic;https://www.youtube.com/watch?v=KcZn05qxVgg;0
+Eurythmics;1983;Sweet Dreams (Are Made Of This);Basic;https://www.youtube.com/watch?v=qeMFqkcPYcg;0
+Die Toten Hosen;2012;Tage wie diese;Basic;https://www.youtube.com/watch?v=j09hpp3AxIE;0
+Gerhard Wendeland;1961;Tanze mit mir in den Morgen;Schlagerparty;https://www.youtube.com/watch?v=T1fXqPXBs-4;0
+Dean Martin;1953;That's Amore;Basic;https://www.youtube.com/watch?v=OnFlx2Lnr9Q;0
+Tina Turner;1989;The Best ;Basic;https://www.youtube.com/watch?v=8Afffdv5Tfg;0
+Las Ketchup;2002;The Ketchup Song (Aserejé);Basic;https://www.youtube.com/watch?v=hLeUL4i9PNw;0
+Little Eva;1962;The Loco-Motion;Basic;https://www.youtube.com/watch?v=24Neyv2crh4;0
+Chubby Checker;1960;The Twist;Basic;https://www.youtube.com/watch?v=EVb1r-HTlNs;0
+Dion;1961;The Wanderer;Basic;https://www.youtube.com/watch?v=SbYa7NBYyRc;0
+Duran Duran;1984;The Wild Boys;Custom Basic;https://www.youtube.com/watch?v=YprKU-fhimE;0
+Vicky Leandros;1974;Theo, wir fahr'n nach Lodz;Schlagerparty;https://www.youtube.com/watch?v=NVHvUT9lMjs;0
+Imagine Dragons;2017;Thunder;Basic;https://www.youtube.com/watch?v=4AqjqOqNrjw;0
+The Zombies;1968;Time of the Season;Custom Basic;https://www.youtube.com/watch?v=qzpPy9hJYA8;0
+Wolfram;1970;Trödler Abraham;Schlagerparty;https://www.youtube.com/watch?v=1IF3zk1g4c8;0
+Howard Carpendale;1977;Tür an Tür mit Alice;Schlagerparty;https://www.youtube.com/watch?v=Xnz2UfOJbkI;0
+Diana Ross;1980;Upside Down;Basic;https://www.youtube.com/watch?v=5zyidkj2fpo;0
 Mark Ronson (feat. Amy Winehouse);2007;Valerie;Basic;https://www.youtube.com/watch?v=zC2SZOY80Dk;0
+Wolfgang Petry;1992;Verlieben, verloren, vergessen, verzei'n;Schlagerparty;https://www.youtube.com/watch?v=VH9mObSufSg;0
+Michael Wendler;2002;Verlier sie nie;Schlagerparty;https://www.youtube.com/watch?v=-iEGAbJdkw0;0
+Gipsy Kings;1989;Volare (Nel Blue Di Pinto Di Blu);Basic;https://www.youtube.com/watch?v=zY8VXynNCPs;0
+Shakira;2010;Waka Waka (This Time For Africa);Basic;https://www.youtube.com/watch?v=czWcyZRAMtk;0
+Maite Kelly, Roland Kaiser;2014;Warum hast du nicht nein gesagt;Schlagerparty;https://www.youtube.com/watch?v=0MVy0VQfxUU;0
+ABBA;1974;Waterloo;Basic;https://www.youtube.com/watch?v=Sj_9CiNkkn4;0
+ABBA;1974;Waterloo;Eurovision;https://www.youtube.com/watch?v=Sj_9CiNkkn4;0
+DJ Herzbeat, Sarah Lombardi;2019;Weekend;Schlagerparty;https://www.youtube.com/watch?v=mrxOdbuMf_I;0
+Trude Herr;1961;Weil ich so sexy bin;Schlagerparty;https://www.youtube.com/watch?v=GRtqHMiNKS0;0
+Ingrid Peters;2005;Wenn den Kindern Flügeln wachsen;Schlagerparty;https://www.youtube.com/watch?v=lkPZMQuGq3I;0
+Höhner;2005;Wenn nicht jetzt, wann dann;Schlagerparty;https://www.youtube.com/watch?v=QnCVvgzKHLs;0
+Jason Derulo;2009;Whatcha Say;Basic;https://www.youtube.com/watch?v=pBI3lc18k8Q;0
+Atomic Kitten;2001;Whole Again;Basic;https://www.youtube.com/watch?v=eZRH1x6HtmA;0
+Andy Borg;2000;Wie kannst du mich bloß lieben;Schlagerparty;https://www.youtube.com/watch?v=Njks7i9aaGI;0
+Jürgen Drews;1999;Wieder alles im Griff;Schlagerparty;https://www.youtube.com/watch?v=i_9Sul1WBf8;0
+Ute Freudenberg;2012;Wilkommen im Leben;Schlagerparty;https://www.youtube.com/watch?v=kRKpf38DoJ8;0
+Tahiti Tamoures;1963;Wini-Wini;Schlagerparty;https://www.youtube.com/watch?v=J2l0X0wscmA;0
+Andrea Jürgens;1990;Wir tanzen Lambada;Schlagerparty;https://www.youtube.com/watch?v=y0GbjgpEAbc;0
+Lill Babs;1961;Wo finde ich den Mann?;Schlagerparty;https://www.youtube.com/watch?v=UdqDzPXqD9U;0
+Sam The Sham & The Pharaohs;1965;Wolly Bully;Basic;https://www.youtube.com/watch?v=KZJiGu6Gz8E;0
+Oasis;1995;Wonderwall;Basic;https://www.youtube.com/watch?v=PoJh4JNedns;0
+Miley Cyrus;2013;Wrecking Ball;Basic;https://www.youtube.com/watch?v=My2FRPA3Gf8;0
+Paul Simon;1986;You Can Call Me Al;Basic;https://www.youtube.com/watch?v=KHxeM1hQOSc;0
+Jimmy Cliff;1970;You Can Get It If You Really Want;Basic;https://www.youtube.com/watch?v=IYSkDbOik9s;0
+The Supremes;1966;You Can't Hurry Love;Basic;https://www.youtube.com/watch?v=ovoBi3pXD_A;0
+Elton John;1970;Your Song;Basic;https://www.youtube.com/watch?v=FT3D1Cu6g10;0
+Bill Ramsey;1961;Zuckerpuppe (aus der Bauchtanz-Truppe);Basic;https://www.youtube.com/watch?v=JP6m8jP1oXo;0
+Sigrid & Marina;2010;Zwei Senoritas;Schlagerparty;https://www.youtube.com/watch?v=fSsFkNRI-cQ;0
+Robin Thicke, T.I. & Pharrell;2013;Blurred Lines;Basic;https://www.youtube.com/watch?v=yyDUC1LUXSU;1
+Herbert Grönemeyer;1988;Was soll das;Schlagerparty;https://www.youtube.com/watch?v=xJJIS64k_LY;1
+Andreas Gabalier;2015;Hulapalu;Schlagerparty;https://www.youtube.com/watch?v=lHZtcC67yrY;2
+Tony Marshall;1978;Auf der Straße nach Süden;Schlagerparty;https://www.youtube.com/watch?v=lbuzlplYGj8;3
+Boney M.;1976;Daddy Cool;Custom Basic;https://www.youtube.com/watch?v=aOKhjCM38QQ;3
+Mungo Jerry;1970;In The Summertime;Basic;https://www.youtube.com/watch?v=wvUQcnfwUUM;3
+Roxette;1991;Joyride;Basic;https://www.youtube.com/watch?v=BBrZTL2uuNs;3
+Almklausi, Specktakel;2018;Mama Laudaaa;Schlagerparty;https://www.youtube.com/watch?v=pFNHN0YGqyk;3
+Lynyrd Skynyrd;1974;Sweet Home Alabama;Basic;https://www.youtube.com/watch?v=-35W_FWCT9Q;3
+Harry Belafonte;1956;Day-0 (The Banana Boat Song);Basic;https://www.youtube.com/watch?v=lZABxj718uA;4
+Helene Fischer;2017;Herzbeben;Schlagerparty;https://www.youtube.com/watch?v=8ySJJMu8ReY;4
+Electric Light Orchestra;1978;Mr. Blue Sky;Custom Basic;https://www.youtube.com/watch?v=wuJIqmha2Hk;4
+Voxxclub;2013;Rock mi;Schlagerparty;https://www.youtube.com/watch?v=OqFswmifyqw;4
+Beatrice Egli;2018;Verliebt, verlobt, verflixt nochmal;Schlagerparty;https://www.youtube.com/watch?v=_QO4zXwwpS8;4
+Spice Girls;1996;Wannabe;Custom Basic;https://www.youtube.com/watch?v=HNehiNC_tq0;4
+Markus Becker;2019;Bierkapitän;Schlagerparty;https://www.youtube.com/watch?v=wNkqohlUQWA;5
+Dove Cameron;2022;Boyfriend;Custom Basic;https://www.youtube.com/watch?v=ZGHRfLAn2wI;5
+Freya Ridings;2019;Castles;Custom Basic;https://www.youtube.com/watch?v=pL32uHAiHgU;5
+Stefanie Heinzmann;2012;Diggin' In The Dirt;Custom Basic;https://www.youtube.com/watch?v=t6FPtyM4QPs;5
+Nicole;1982;Ein bisschen Frieden;Eurovision;https://www.youtube.com/watch?v=W9S3YMmIFdw;5
+Nicole;1982;Ein bisschen Frieden;Schlagerparty;https://www.youtube.com/watch?v=W9S3YMmIFdw;5
+Truckstop;1995;Emmylou, Emmylou;Schlagerparty;https://www.youtube.com/watch?v=FTEaBHl7Org;5
+Alicia Keys;2001;Fallin';Basic;https://www.youtube.com/watch?v=PHUADSzCIBA;5
+Ray Charles;1961;Hit The Road Jack;Custom Basic;https://www.youtube.com/watch?v=SrnWp5O0DEs;5
+Sonny & Cher;1965;I Got You Babe;Basic;https://www.youtube.com/watch?v=HKGjCPBSG38;5
+Trude Herr;1960;Ich will keine Schokolade;Basic;https://www.youtube.com/watch?v=2OqgIupSf5k;5
 Markus;1982;Ich will Spaß;Basic;https://www.youtube.com/watch?v=1Ss0wzeoqHU;5
 Maroon 5 (feat. Christina Aguilera);2011;Moves Like Jagger;Basic;https://www.youtube.com/watch?v=Q-jqcZ_Jbd8;5
-Marvin Gaye;1968;I Heard It Through The Grapevine;Basic;https://www.youtube.com/watch?v=VWG3npfEoHo;19
-Matthias Reim;1990;Verdammt, ich lieb' dich;Basic;https://www.youtube.com/watch?v=fKV_Ma9T5N8;9
-Max Giesinger ;2016;80 Millionen;Basic;https://www.youtube.com/watch?v=OuAGkCAlblc;0
-Meat Loaf;1978;Paradise By The Dashboard Light;Basic;https://www.youtube.com/watch?v=a136H5K3OKw;0
-Meghan Trainor;2014;All About That Bass;Basic;https://www.youtube.com/watch?v=QgmzAu7_wyc;0
-Michael Holm;1974;Tränen lügen nicht;Basic;https://www.youtube.com/watch?v=7grORBI4fJ8;13
-Mika;2007;Relax, Take It Easy;Basic;https://www.youtube.com/watch?v=EVDYmBrl02Q;10
-Mike & The Mechanics;1988;The Living Years;Basic;https://www.youtube.com/watch?v=IW8mcLiIsI8;25
-Miley Cyrus;2013;Wrecking Ball;Basic;https://www.youtube.com/watch?v=My2FRPA3Gf8;0
-Modjo;2000;Lady (Hear Me Tonight);Basic;https://www.youtube.com/watch?v=oPTtFbB5NvU;45
-Mungo Jerry;1970;In The Summertime;Basic;https://www.youtube.com/watch?v=wvUQcnfwUUM;3
-Nancy Sinatra;1965;These Boots Are Made For Walkin';Basic;https://www.youtube.com/watch?v=TDmidrIDB4o;11
-Natalie Imbruglia;1997;Torn;Basic;https://www.youtube.com/watch?v=UOJkzcJigGI;13
-Neil Diamond;1969;Sweet Caroline;Basic;https://www.youtube.com/watch?v=4F_RCWVoL4s;10
-Nelly (feat. Kelly Rowland);2002;Dilemma;Basic;https://www.youtube.com/watch?v=8WYHDfJDPDc;23
-Nena;1983;99 Luftballons;Basic;https://www.youtube.com/watch?v=TMSlTQmDLx4;0
-New Radicals;1998;You Get What You Give;Basic;https://www.youtube.com/watch?v=cPAEFnVZVOs;30
-Nickelback;2001;How You Remind Me;Basic;https://www.youtube.com/watch?v=hhSLkkLl750;0
-Nirvana;1991;Smells Like Teen Spirit;Basic;https://www.youtube.com/watch?v=hTWKbfoikeg;0
-No Doubt;1996;Don't Speak;Basic;https://www.youtube.com/watch?v=EQePYyin4vQ;0
-Oasis;1995;Wonderwall;Basic;https://www.youtube.com/watch?v=PoJh4JNedns;0
-Olivia Rodrigo;2021;Drivers License;Basic;https://www.youtube.com/watch?v=tNJhkrpLGT8;0
-OneRepublic;2013;Counting Stars;Basic;https://www.youtube.com/watch?v=mgT0N3tMP74;0
-Outcast;2003;Hey Ya!;Basic;https://www.youtube.com/watch?v=-7XnDlYY9qw;0
-Owl City;2009;Fireflies;Basic;https://www.youtube.com/watch?v=qSsAEZa_fb0;10
-O-Zone;2003;Dragostea Din Tei;Basic;https://www.youtube.com/watch?v=gE-h0xsRY4M;0
-P!nk (feat. Nate Reuss);2013;Just Give Me A Reason;Basic;https://www.youtube.com/watch?v=OpQFFLBMEPI;0
-Patrick Hernandez;1978;Born To Be Alive;Basic;https://www.youtube.com/watch?v=vb5a-GYty-o;14
-Paul Simon;1986;You Can Call Me Al;Basic;https://www.youtube.com/watch?v=KHxeM1hQOSc;0
-Percy Sledge;1966;When A Man Loves A Woman;Basic;https://www.youtube.com/watch?v=tbWDkg4T3G4;10
-Peter Fox;2008;Haus am See;Basic;https://www.youtube.com/watch?v=j-XKgB5guDQ;9
-Peter Kraus;1958;Sugar Baby;Basic;https://www.youtube.com/watch?v=-9R3_53qe08;0
-Peter Schilling;1982;Major Tom (völlig losgelöst);Basic;https://www.youtube.com/watch?v=vr_UK0tSb8M;35
-Pharell Williams;2013;Happy;Basic;https://www.youtube.com/watch?v=jffGXR7vNdk;0
-Plastic Bertrand;1977;Ça Plane Pour Moi;Basic;https://www.youtube.com/watch?v=OvgagTxWqAE;15
-Portugal. The Man;2017;Feel It Still;Basic;https://www.youtube.com/watch?v=e-2aoz_Um10;0
-Post Malone;2019;Circles;Basic;https://www.youtube.com/watch?v=WnLIGgTaBM0;15
-Prince;1984;Purple Rain;Basic;https://www.youtube.com/watch?v=TvnYmWpD_T8;85
-Pur;1995;Abenteuerland;Basic;https://www.youtube.com/watch?v=XC-HspEa2vs;10
-Queen (feat. David Bowie);1981;Under Pressure;Basic;https://www.youtube.com/watch?v=a01QQZyl-_I;25
-R.E.M.;1992;Everybody Hurts;Basic;https://www.youtube.com/watch?v=mhIay4-PbCY;15
-Rammstein;1997;Engel;Basic;https://www.youtube.com/watch?v=hNwMfgHcz5k;0
-Red Hot Chili Peppers;1992;Under The Bridge;Basic;https://www.youtube.com/watch?v=O9TunCtR3dQ;28
-Rednex;1994;Cotton Eye Joe;Basic;https://www.youtube.com/watch?v=fYnJZh5ZHIA;0
-Reel 2 Real (feat. The Mad Stuntman);1993;I Like To Move It;Basic;https://www.youtube.com/watch?v=vuo8kD5zF5I;0
-Reinhard Mey;1974;Über den Wolken;Basic;https://www.youtube.com/watch?v=fZMFF8QH3ew;12
-Richard Marx;1989;Right Here Waiting;Basic;https://www.youtube.com/watch?v=Jrc21w_zFc4;44
-Rick James;1981;Super Freak;Basic;https://www.youtube.com/watch?v=XESxsUl6hGU;0
-Rio Reiser;1986;König von Deutschland;Basic;https://www.youtube.com/watch?v=I6oKCW6imjM;14
-Ritchie Valens;1958;La Bamba;Basic;https://www.youtube.com/watch?v=Coy8Hoa1DNw;0
-Robbie Williams;2002;Feel;Basic;https://www.youtube.com/watch?v=eK_tpyqtnsg;0
-Robin Thicke, T.I. & Pharrell;2013;Blurred Lines;Basic;https://www.youtube.com/watch?v=yyDUC1LUXSU;1
-Roxette;1991;Joyride;Basic;https://www.youtube.com/watch?v=BBrZTL2uuNs;3
-Roy Orbison;1964;Oh, Pretty Woman;Basic;https://www.youtube.com/watch?v=3KFvoDDs0XM;0
-Rudi Carell;1975;Wann wird's mal wieder richtig Sommer?;Basic;https://www.youtube.com/watch?v=cH3tuAAHpNI;17
-Rufus (feat. Chaka Khan);1983;Ain't Nobody;Basic;https://www.youtube.com/watch?v=BNirQXe8HOA;17
-Rupert Holmes;1979;Escape (The Piña Colada Song);Basic;https://www.youtube.com/watch?v=FXG_I_tf_i4;0
-Sam Cooke;1960;(What A) Wonderful World;Basic;https://www.youtube.com/watch?v=R4GLAKEjU4w;0
-Sam The Sham & The Pharaohs;1965;Wolly Bully;Basic;https://www.youtube.com/watch?v=KZJiGu6Gz8E;0
-Scorpions;1991;Wind of Change;Basic;https://www.youtube.com/watch?v=n4RjJKxsamQ;10
-SDP;2012;Die Nacht von Freitag auf Montag;Basic;https://www.youtube.com/watch?v=_6Q09KJ0HBM;0
-Shaggy;2000;It Wasn't Me;Basic;https://www.youtube.com/watch?v=ssVj50ombaM;19
-Shakira;2010;Waka Waka (This Time For Africa);Basic;https://www.youtube.com/watch?v=czWcyZRAMtk;0
-Shawn Mendes & Camila Cabello;2019;Señorita;Basic;https://www.youtube.com/watch?v=Pkh8UtuejGw;9
-Sia;2015;Cheap Thrills;Basic;https://www.youtube.com/watch?v=J1b22l1kFKY;0
-Silbermond;2006;Das Beste;Basic;https://www.youtube.com/watch?v=0fB_Lxu6UhQ;17
-Simply Red;1985;Holding Back The Years;Basic;https://www.youtube.com/watch?v=TXZ2TQqqe4M;20
-Sinéad O'Connor;1990;Nothing Compares 2 U;Basic;https://www.youtube.com/watch?v=cpGA0azFdCs;9
-Sister Sledge;1979;We Are Family;Basic;https://www.youtube.com/watch?v=uyGY2NfYpeE;30
-Siw Malmkvist;1964;Liebeskummer lohnt sich nicht;Basic;https://www.youtube.com/watch?v=Lz3S5HXyw4o;0
-Snow;1992;Informer;Basic;https://www.youtube.com/watch?v=dom-m5Ijrrs;0
-Sonny & Cher;1965;I Got You Babe;Basic;https://www.youtube.com/watch?v=HKGjCPBSG38;5
-Sophie Ellis-Bextor;2001;Murder On The Dancefloor;Basic;https://www.youtube.com/watch?v=tePdQJ6uI_4;8
-Spice Girls;1998;Stop;Basic;https://www.youtube.com/watch?v=60mS05_GjOw;17
-Spider Murphy Gang;1981;Skandal im Sperrbezirk;Basic;https://www.youtube.com/watch?v=u-AwlK_wBJ8;35
-Sportfreunde Stiller;2002;Ein Kompliment;Basic;https://www.youtube.com/watch?v=C4uXGzFZjqw;11
-Steppenwolf;1968;Born To Be Wild;Basic;https://www.youtube.com/watch?v=p8FTmkTIL88;10
-Stevie Wonder;1985;Part-Time Lovers;Basic;https://www.youtube.com/watch?v=jN2AdOjI4FI;20
-Sylvester;1978;You Make Me Feel (Mighty Real);Basic;https://www.youtube.com/watch?v=gD6cPE2BHic;12
-Taio Cruz;2011;Hangover;Basic;https://www.youtube.com/watch?v=97PT8to46fc;0
-The Bangles;1986;Manic Monday;Basic;https://www.youtube.com/watch?v=VshgeeW0NOI;16
-The Beach Boys;1963;Surfin' U.S.A.;Basic;https://www.youtube.com/watch?v=KcZn05qxVgg;0
-The Beach Boys;1966;Good Vibrations;Basic;https://www.youtube.com/watch?v=Eab_beh07HU;0
-The Beatles;1969;Get Back;Basic;https://www.youtube.com/watch?v=n9rzHF8tlUY;0
-The Chordettes;1958;Lollipop;Basic;https://www.youtube.com/watch?v=_kXKUSAbvuM;0
-The Cranberries;1994;Zombie;Basic;https://www.youtube.com/watch?v=bZFbX19Q-R8;45
-The Cure;1992;Friday I'm In Love;Basic;https://www.youtube.com/watch?v=mGgMZpGYiy8;31
-The Everly Brothers;1958;All I Have To Do Is Dream;Basic;https://www.youtube.com/watch?v=tbU3zdAgiX8;0
-The Hollies;1969;He Ain't Heavy He's My Brother;Basic;https://www.youtube.com/watch?v=Mlm2MnlEGyg;20
-The Human League;1981;Don't You Want Me;Basic;https://www.youtube.com/watch?v=eXXTWA82j18;15
-The Kinks;1970;Lola;Basic;https://www.youtube.com/watch?v=LemG0cvc4oU;0
-The Monkees;1966;I'm A Believer;Basic;https://www.youtube.com/watch?v=4PQAqprjOuA;0
-The Police;1983;Every Breath You Take;Basic;https://www.youtube.com/watch?v=6cucosmPj-A;0
-The Rolling Stones;1965;(I Can't Get No) Satisfaction;Basic;https://www.youtube.com/watch?v=nrIPxlFzDi0;0
-The Rolling Stones;1981;Start Me Up;Basic;https://www.youtube.com/watch?v=ZzlgJ-SfKYE;14
-The Supremes;1966;You Can't Hurry Love;Basic;https://www.youtube.com/watch?v=ovoBi3pXD_A;0
-The Trammps;1976;Disco Inferno;Basic;https://www.youtube.com/watch?v=cWqcgPmCbDQ;40
-The Verve;1997;Bitter Sweet Symphony;Basic;https://www.youtube.com/watch?v=VHuwD0XW_TU;0
-The Weeknd;2019;Blining Lights;Basic;https://www.youtube.com/watch?v=fHI8X4OXluQ;0
-Thelma Houston;1976;Don't Leave Me This Way;Basic;https://www.youtube.com/watch?v=rUdw7V-FC_Q;45
-Tic Tac Toe;1997;Warum?;Basic;https://www.youtube.com/watch?v=WflQ02OLVSQ;25
-Tim Bendzko;2011;Nur noch kurz die Welt retten;Basic;https://www.youtube.com/watch?v=4BAKb2p450Q;15
-Tina Turner;1989;The Best ;Basic;https://www.youtube.com/watch?v=8Afffdv5Tfg;0
-Tokio Hotel;2005;Durch den Monsun;Basic;https://www.youtube.com/watch?v=S_Sy5-sOodA;0
-Tom Jones;1971;She's A Lady;Basic;https://www.youtube.com/watch?v=x8G4xrYfWmw;0
-Tones And I;2019;Dance Monkey;Basic;https://www.youtube.com/watch?v=1__CAdTJ5JU;0
-Toploader;2000;Dancing In The Moonlight;Basic;https://www.youtube.com/watch?v=GSWcy-bx_lg;14
-Torfrock;1990;Beinhart;Basic;https://www.youtube.com/watch?v=mEk7RDxvhYo;0
-TOTO;1982;Africa;Basic;https://www.youtube.com/watch?v=Kb7lAMjFuA0;10
-T'Pau;1987;China In Your Hand;Basic;https://www.youtube.com/watch?v=RrJwccZBl-w;16
-Tracy Chapman;1988;Fast Car;Basic;https://www.youtube.com/watch?v=AIOAlaACuv4;15
-Train;2009;Hey, Soul Sister;Basic;https://www.youtube.com/watch?v=AGmI4l6jpPI;0
-Trude Herr;1960;Ich will keine Schokolade;Basic;https://www.youtube.com/watch?v=2OqgIupSf5k;5
-U96;1992;Das Boot;Basic;https://www.youtube.com/watch?v=YVxXbTk-zsQ;0
-Udo Jürgens;1965;Siebzehn Jahr, blondes Haar;Basic;https://www.youtube.com/watch?v=1_ReKoTY8eY;10
-Unheilig;2010;Geboren um zu leben;Basic;https://www.youtube.com/watch?v=uurx9BGLSAA;0
-Van McCoy;1975;The Hustle;Basic;https://www.youtube.com/watch?v=qeUfDTn5huM;33
-Vanilla Ice;1990;Ice Ice Baby;Basic;https://www.youtube.com/watch?v=1Q7QX0Rtpfg;8
-Vaya Con Dios;1990;Nah Neh Nah;Basic;https://www.youtube.com/watch?v=7LUm-E4GPU8;19
-Wencke Myhre;1970;Er hat ein knallrotes Gummiboot;Basic;https://www.youtube.com/watch?v=2lyCBJAOqcQ;0
-Wet Wet Wet;1994;Love Is All Around;Basic;https://www.youtube.com/watch?v=jSG4f71myKY;10
-Whitney Houston;1987;I Wanna Dance With Somebody (Who Loves Me);Basic;https://www.youtube.com/watch?v=2dzf4T3RbEc;31
-Will Smith;1998;Gettin' Jiggy Wit It;Basic;https://www.youtube.com/watch?v=-sOPCY6_If8;15
-Wincent Weiss & Johannes Oerding;2021;Die guten Zeiten;Basic;https://www.youtube.com/watch?v=Swlxm_msl4k;20
-Wolfgang Petry;1983;Wahnsinn;Basic;https://www.youtube.com/watch?v=LtNY7Fnva0Q;10
-Yazoo;1982;Don't Go;Basic;https://www.youtube.com/watch?v=Me9PPt7btEg;0
-ÁSDÍS;2023;Angel Eyes;Custom Basic;https://www.youtube.com/watch?v=H2Urtlhj17E;10
-Bay City Rollers;1975;Bye Bye Baby (Baby, Goodbye);Custom Basic;https://www.youtube.com/watch?v=BUVMCzVK7VQ;18
-Boney M.;1976;Daddy Cool;Custom Basic;https://www.youtube.com/watch?v=aOKhjCM38QQ;3
-Bürger Lars Dietrich;1996;Sexy Eis;Custom Basic;https://www.youtube.com/watch?v=H7c7hiRnvFY;18
-Chris Rea;1986;On The Beach;Custom Basic;https://www.youtube.com/watch?v=lt6aDXEdUrg;45
-Dolly Parton;1980;9 To 5;Custom Basic;https://www.youtube.com/watch?v=E4OzdyxbOuU;0
-Donna Lewis;1996;I Love You Always Forever;Custom Basic;https://www.youtube.com/watch?v=xpbqJ1qvCPQ;0
-Duran Duran;1984;The Wild Boys;Custom Basic;https://www.youtube.com/watch?v=YprKU-fhimE;0
-Duran Duran;1992;Ordinary World;Custom Basic;https://www.youtube.com/watch?v=z3BU9Z_x8qM;14
-Electric Light Orchestra;1978;Mr. Blue Sky;Custom Basic;https://www.youtube.com/watch?v=wuJIqmha2Hk;4
-Elton John;1972;Rocket Man (I Think It's Going to Be a Long Long Time);Custom Basic;https://www.youtube.com/watch?v=GuyGoiQkWAo;0
-Fleetwood Mac;1977;Dreams;Custom Basic;https://www.youtube.com/watch?v=PgagPdVM7bk;15
-Gazebo;1983;Lunatic;Custom Basic;https://www.youtube.com/watch?v=O2ftUaxDRuk;41
-Glenn Medeiros;1987;Nothing's Gonna Change My Love For You;Custom Basic;https://www.youtube.com/watch?v=zmsdw828dwI;10
-Klaus Lage;1985;Faust auf Faust;Custom Basic;https://www.youtube.com/watch?v=lTlpWn7EcdA;115
-Lionel Richie;1983;Love Will Find A Way;Custom Basic;https://www.youtube.com/watch?v=huMCFZfWin8;28
-Massive Attack;1998;Teardrop;Custom Basic;https://www.youtube.com/watch?v=8X490Yt0ZHU;40
-Mika;2007;Grace Kelly;Custom Basic;https://www.youtube.com/watch?v=LzCm2dg7yyg;0
-Naked Eyes;1982;Always Something There To Remind Me;Custom Basic;https://www.youtube.com/watch?v=PzU3fK6Pd0k;14
-Ramones;1989;Pet Semetary;Custom Basic;https://www.youtube.com/watch?v=OCiAZnn_dYE;0
-Rick Astley;1987;Never Gonna Give You Up;Custom Basic;https://www.youtube.com/watch?v=QdezFxHfatw;0
-Sade;1984;Smooth Operator;Custom Basic;https://www.youtube.com/watch?v=UNk6LTZYokk;20
-Sheryl Crow;1994;All I Wanna Do;Custom Basic;https://www.youtube.com/watch?v=rGr6i5Sar5s;0
-Silver;1976;Wham Bam (Shang-a-Lang);Custom Basic;https://www.youtube.com/watch?v=M5iSEdo5VNI;8
-The Blues Brothers;1980;Everybody Needs Somebody To Love;Custom Basic;https://www.youtube.com/watch?v=wDvIGZ-_au4;38
-The Zombies;1968;Time of the Season;Custom Basic;https://www.youtube.com/watch?v=qzpPy9hJYA8;0
-Tom Cochrane;1991;Life Is A Highway;Custom Basic;https://www.youtube.com/watch?v=BUzlBP01Nzg;18
-Vernon Burch;1979;Get Up;Custom Basic;https://www.youtube.com/watch?v=kGHnVvdHTX0;0
-Video Age;2020;Aerostar;Custom Basic;https://www.youtube.com/watch?v=oZOY5osmdx0;40
-Wang Chung;1982;Dance Hall Days;Custom Basic;https://www.youtube.com/watch?v=n1TNLU-ydLA;15
-ABBA;1974;Waterloo;Eurovision;https://www.youtube.com/watch?v=Sj_9CiNkkn4;0
-Dschinghis Khan;1979;Dschinghis Khan;Eurovision;https://www.youtube.com/watch?v=0pA1C6sAjKo;0
-Guildo Horn & die Orthopädischen Strümpfe;1998;Guildo hat euch lieb;Eurovision;https://www.youtube.com/watch?v=yB1lWt1Jmpw;0
-Loreen;2012;Euphoria;Eurovision;https://www.youtube.com/watch?v=t5qURKt4maw;10
-Stefan Raab;2000;Wadde Hadde Dudde Da?;Eurovision;https://www.youtube.com/watch?v=k6lqqzJohTw;44
-(Die Fidelen) Mölltaler;1984;Gold, Platin und Diamant;Schlagerparty;https://www.youtube.com/watch?v=hUJnO8CDcD4;0
-Achim Reichel;1991;Aloha heja he;Schlagerparty;https://www.youtube.com/watch?v=NbPc8VhstGE;0
-Achim Reichel;1999;Sa-Lo-Me;Schlagerparty;https://www.youtube.com/watch?v=bD9e0OUmu60;12
-Alisha;2021;Deine braunen Augen;Schlagerparty;https://www.youtube.com/watch?v=4ts53J9MPbo;0
-Almklausi, Specktakel;2018;Mama Laudaaa;Schlagerparty;https://www.youtube.com/watch?v=pFNHN0YGqyk;3
-Amigos;2010;Du bist wie ein Feuer im Vulkan;Schlagerparty;https://www.youtube.com/watch?v=ttftqclYHJs;0
+Ariana Grande (feat. Zedd);2014;Break Free;Custom Basic;https://www.youtube.com/watch?v=2Ek3WMM7I-0;6
+Katy Perry (feat. Snoop Dogg);2010;California Gurls;Custom Basic;https://www.youtube.com/watch?v=q7hK_liBVzk;6
 Andrea Berg;1995;Die Gefühle haben Schweigepflicht;Schlagerparty;https://www.youtube.com/watch?v=pJBeIviz8GE;6
-Andrea Berg;2001;Du hast mich tausendmal belogen;Schlagerparty;https://www.youtube.com/watch?v=t8zQyi61-wo;11
-Andrea Jürgens;1990;Wir tanzen Lambada;Schlagerparty;https://www.youtube.com/watch?v=y0GbjgpEAbc;0
-Andrea Jürgens;1991;Santa Catarina;Schlagerparty;https://www.youtube.com/watch?v=pQ8lvMaSLXQ;18
-Andreas Gabalier;2015;Hulapalu;Schlagerparty;https://www.youtube.com/watch?v=lHZtcC67yrY;2
-Andreas Martin;1987;Du bist Alles (Maria Maria);Schlagerparty;https://www.youtube.com/watch?v=cufovD-oSbo;0
-Andy Borg;2000;Wie kannst du mich bloß lieben;Schlagerparty;https://www.youtube.com/watch?v=Njks7i9aaGI;0
-Andy Borg;1994;Ich brauch ein bisschen Glück;Schlagerparty;https://www.youtube.com/watch?v=f_zOpe4hSNc;15
-Anja Regnitz;2006;Sex und seine Konsequenzen;Schlagerparty;https://www.youtube.com/watch?v=VylXVpaGWAg;13
-Anna-Carina Woitschack, Stefan Mross;2020;Blaue Lagune;Schlagerparty;https://www.youtube.com/watch?v=cnfqTwO5G7Y;14
-Anna-Maria Zimmermann;2009;1000 Träume weit (Tornero);Schlagerparty;https://www.youtube.com/watch?v=Yy2RsG4lnm4;55
-Anna-Maria Zimmermann & Olaf Henning;2012;Freundschaftsring;Schlagerparty;https://www.youtube.com/watch?v=5Xs6dhAxUE0;0
-Atlantis;1987;Lass mi bei dir sein;Schlagerparty;https://www.youtube.com/watch?v=e9PWUikQeeQ;19
-Axel Fischer;2008;Amsterdam;Schlagerparty;https://www.youtube.com/watch?v=CtHDNPCIsts;0
-Bata Illic;1972;Michaela;Schlagerparty;https://www.youtube.com/watch?v=wkwKRmLlh6E;0
-BB Jürgen;2004;Heute fährt die 18 bis nach Istanbul;Schlagerparty;https://www.youtube.com/watch?v=u2jQSbwkasI;0
-Beatrice Egli;2013;Mein Herz;Schlagerparty;https://www.youtube.com/watch?v=rvBBMSfF31w;0
-Beatrice Egli;2018;Verliebt, verlobt, verflixt nochmal;Schlagerparty;https://www.youtube.com/watch?v=_QO4zXwwpS8;4
-Ben Zucker;2018;Der Sonne entgegen;Schlagerparty;https://www.youtube.com/watch?v=Vu403ZAEtxE;0
-Ben Zucker;2017;Na und!?;Schlagerparty;https://www.youtube.com/watch?v=kAsAoyaqh1Y;0
-Bernd Clüver;1992;Dich hat der Himmel geschickt;Schlagerparty;https://www.youtube.com/watch?v=qWEEYDWdIGw;0
-Bernd Clüver;1993;Lieben heißt Leben;Schlagerparty;https://www.youtube.com/watch?v=DvDff1QNXdY;0
-Bernhard Brink;2010;7 Tafeln Schokolade;Schlagerparty;https://www.youtube.com/watch?v=KI8Pz6SakiM;0
-Bernhard Brink;1996;Mit dir werden Wunder noch wahr;Schlagerparty;https://www.youtube.com/watch?v=znEK4sWjbxk;0
-Billy Mo;1962;Ich kauf' mir lieber einen Tirolerhut;Schlagerparty;https://www.youtube.com/watch?v=Kln1cgHxd94;0
-Bläck Föös;1985;Frankreich Frankreich;Schlagerparty;https://www.youtube.com/watch?v=m-AF_5rXd4s;0
-Brings;2014;Kölsche Jung;Schlagerparty;https://www.youtube.com/watch?v=DcNPqsWPbD8;38
-Brunner & Brunner;1994;Für dich;Schlagerparty;https://www.youtube.com/watch?v=aW_qlvkAEAg;15
-Brunner & Brunner;1993;Schenk mir diese eine Nacht;Schlagerparty;https://www.youtube.com/watch?v=qtB-8REgBQo;15
-Carrière;1995;Mein Ein und Alles;Schlagerparty;https://www.youtube.com/watch?v=L1VAv9C6mKQ;15
-Chris Roberts;1974;Du kannst nicht immer 17 sein;Schlagerparty;https://www.youtube.com/watch?v=PxArycwd76M;0
-Christian Anders;1972;Es fährt ein Zug nach nirgendwo;Schlagerparty;https://www.youtube.com/watch?v=haIgciQVN-0;0
-Christian Lais;2010;Atemlos;Schlagerparty;https://www.youtube.com/watch?v=qQ0E2AVdJOM;10
-Christian Möllmann;2000;Es ist doch geil, ein Arschloch zu sein;Schlagerparty;https://www.youtube.com/watch?v=bYqx4hlfhlk;0
-Christoff;2012;Ich Hab Alain Delon geseh'n;Schlagerparty;https://www.youtube.com/watch?v=f7pOq3vOh5o;0
-Cindy & Bert;1973;Immer wieder Sonntags;Schlagerparty;https://www.youtube.com/watch?v=UeXCCCY7jq4;0
-Claudia Jung;1995;Wer die Sehnsucht kennt;Schlagerparty;https://www.youtube.com/watch?v=vfavz-qunYE;10
-Claudia Jung;1989;Etwas Für Die Ewigkeit;Schlagerparty;https://www.youtube.com/watch?v=qWw0IbK9fOA;15
-Claudia Jung & Richard Claydermann;1994;Je t'aime mon amour;Schlagerparty;https://www.youtube.com/watch?v=Xs5u6-D36XM;19
-Cliff Richard;1963;Rote Lippen soll man küssen;Schlagerparty;https://www.youtube.com/watch?v=H2RbCtfTjVo;10
-Clowns & Helden;1986;Ich liebe dich;Schlagerparty;https://www.youtube.com/watch?v=McZEhRabe7Y;40
-Colör;2001;Su Mädche wie wir;Schlagerparty;https://www.youtube.com/watch?v=yQ_G9jX9FYU;0
-Costa Cordalis;1976;Anita;Schlagerparty;https://www.youtube.com/watch?v=ggqBxFn1NGU;0
-Costa Cordalis;2003;Königin der Nacht;Schlagerparty;https://www.youtube.com/watch?v=unzyXAdUPNQ;0
-Daliah Lavi;1971;Willst Du mit mir geh'n;Schlagerparty;https://www.youtube.com/watch?v=6hb8MghgTwE;13
-De Randfichten;2004;Lebt denn der alte Holzmichl noch?;Schlagerparty;https://www.youtube.com/watch?v=uDGsw8S9RYM;0
-Deliah Lavi;1970;Oh wann kommst du?;Schlagerparty;https://www.youtube.com/watch?v=xptnAq9W5Zg;0
-Demis Roussos;1973;Schönes Mädchen aus Arcadia;Schlagerparty;https://www.youtube.com/watch?v=jzwG72oLHrc;0
-Die Atzen;2009;Das geht ab;Schlagerparty;https://www.youtube.com/watch?v=dkc14WdXFNI;14
-Die Flippers;1986;Die rote Sonne von Barbados;Schlagerparty;https://www.youtube.com/watch?v=gZO_-N3HBkM;11
-Die Flippers;1990;Sieben Tage;Schlagerparty;https://www.youtube.com/watch?v=71zgpIlJOK0;20
-Die Kolibris;1998;Die Hände zum Himmel;Schlagerparty;https://www.youtube.com/watch?v=ZDG00xyq6nQ;0
-Die Minstrels;1968;Grüezi Wohl, Frau Stirnimaa;Schlagerparty;https://www.youtube.com/watch?v=40BkbgKai7g;0
-Dieter Hallervorden, Helga Feddersen;1978;Du, die Wanne ist voll;Schlagerparty;https://www.youtube.com/watch?v=-N_8Lr6YbTw;0
-Dieter Thomas Kuhn;2012;Night Fever;Schlagerparty;https://www.youtube.com/watch?v=Oz9T0n-eUno;0
-Dieter Thomas Kuhn, Michael Holm;2007;Barfuß im Regen;Schlagerparty;https://www.youtube.com/watch?v=U1Wgb4nPlZA;0
-Dirk Busch;1994;Du muss deinen Weg alleine gehen;Schlagerparty;https://www.youtube.com/watch?v=leNl5BYZhWs;19
-DJ Herzbeat, Roger Whittaker;2021;Albany;Schlagerparty;https://www.youtube.com/watch?v=NXOcNL8WQh0;24
-DJ Herzbeat, Sarah Lombardi;2019;Weekend;Schlagerparty;https://www.youtube.com/watch?v=mrxOdbuMf_I;0
-DJ Ötzi;1999;Anton aus Tirol;Schlagerparty;https://www.youtube.com/watch?v=bdu1iUgM5c8;0
-DJ Ötzi;2008;Noch in 100.000 Jahren;Schlagerparty;https://www.youtube.com/watch?v=LHK-d8EqWAU;0
-DJ Zipfelmann;2004;Schlittenfahren in Tirol (Der Schlittensong);Schlagerparty;https://www.youtube.com/watch?v=rMKsa8LcE_M;30
-Döf;1983;Codo;Schlagerparty;https://www.youtube.com/watch?v=Nu5uJ7aqAwg;0
-Donikkl;2008;So ein schöner Tag (Fliegerlied);Schlagerparty;https://www.youtube.com/watch?v=Q65fxgCQeyA;11
-Dorthe;1968;Sind Sie der Graf von Luxemburg?;Schlagerparty;https://www.youtube.com/watch?v=8swk6Qg1Src;0
-Drafi Deutscher;1965;Heute male ich dein Bild, Cindy Lou;Schlagerparty;https://www.youtube.com/watch?v=XSBq01VLOgQ;0
-Dschinghis Khan;1979;Dschinghis Khan;Schlagerparty;https://www.youtube.com/watch?v=0pA1C6sAjKo;0
-Edward Reekers;1995;So schmeckt der Sommer;Schlagerparty;https://www.youtube.com/watch?v=kCcXlhzX8N4;0
-Ella Endlich;2011;Männtertango;Schlagerparty;https://www.youtube.com/watch?v=pnHVyCmbl1Q;15
-Eloy;2018;Egal was andere sagen;Schlagerparty;https://www.youtube.com/watch?v=f87DAkIRbY0;0
-Erste Allgemeine Verunsicherung;1987;Küss' die Hand schöne Frau;Schlagerparty;https://www.youtube.com/watch?v=v22mq5JNbJE;0
-Erste Allgemeine Verunsicherung;1994;300 PS;Schlagerparty;https://www.youtube.com/watch?v=H8QPwZLQuwY;0
-Erste Allgemeine Verunsicherung;1988;An der Copacabana;Schlagerparty;https://www.youtube.com/watch?v=7oLmT8Nf76w;14
-Falco;1985;Rock Me Amadeus;Schlagerparty;https://www.youtube.com/watch?v=zUaSZXedM9Y;22
-Falco;1981;Der Kommissar;Schlagerparty;https://www.youtube.com/watch?v=KhB05p-37wI;25
-Fantasy;2013;Flaschenpost;Schlagerparty;https://www.youtube.com/watch?v=zYzMefB-QZk;15
-Fernando Express;2008;Der rote Mond von Agadir;Schlagerparty;https://www.youtube.com/watch?v=Pu6T2UcKv-A;15
-Fernando Express;2005;Barfuss bis ans Ende der Welt;Schlagerparty;https://www.youtube.com/watch?v=9LFEoi3go8o;15
-Feuerherz;2016;Ein Lied auf das Leben;Schlagerparty;https://www.youtube.com/watch?v=cTeRskQuFNA;0
-Francine Jordi;2015;Paradies;Schlagerparty;https://www.youtube.com/watch?v=kcYm6S-FgKo;0
-Francine Jordi;2018;Lovesong;Schlagerparty;https://www.youtube.com/watch?v=j-01cEqVdr4;7
-Frank Lars;2010;Ich kann nicht ohne dich;Schlagerparty;https://www.youtube.com/watch?v=dgm2KFBWHTc;25
-Frank Zander;1989;Hier kommt Kurt;Schlagerparty;https://www.youtube.com/watch?v=BrPcg8y2-5E;13
-Franziska Wiese;2016;Ich bin frei;Schlagerparty;https://www.youtube.com/watch?v=xrZ5S3Lfmx8;18
-Fred Sonnenschein und seine Freunde;1981;Ententanz (Ja, wenn wir alle Englein wären);Schlagerparty;https://www.youtube.com/watch?v=LVadU2UnSjs;0
-Freddy Breck;1993;Tanz mit mir durch die Nacht;Schlagerparty;https://www.youtube.com/watch?v=e0rKgqdt5qg;16
-Freddy Breck;1973;Bianca;Schlagerparty;https://www.youtube.com/watch?v=ydccOKOSZ7s;24
-Freddy Quinn;1962;Junge, komm bald wieder;Schlagerparty;https://www.youtube.com/watch?v=or4T2IPhRVc;11
-G.G. Anderson;2003;Herz auf rot;Schlagerparty;https://www.youtube.com/watch?v=I5HtYA54Jcw;0
-G.G. Anderson;1981;Nein heißt ja;Schlagerparty;https://www.youtube.com/watch?v=SSiVFj-TW2s;15
-Gaby Baginsky;1994;Wer hat dir das Küssen beigebracht?;Schlagerparty;https://www.youtube.com/watch?v=9ZhHgzxksZY;15
-Gebrüder Blattschuss;1978;Kreuzberger Nächte;Schlagerparty;https://www.youtube.com/watch?v=I0GU899OdZ8;17
-Gebrüder Blattschuss;1979;Früh-Stück;Schlagerparty;https://www.youtube.com/watch?v=A2daAfNsL5E;44
-Geier Sturzflug;1982;Bruttosozialprodukt;Schlagerparty;https://www.youtube.com/watch?v=Zm8dk7SfV1E;0
-Geier Sturzflug;1984;Die Pure Lust am Leben;Schlagerparty;https://www.youtube.com/watch?v=wKAwFAdI2jI;0
-Gerhard Wendeland;1961;Tanze mit mir in den Morgen;Schlagerparty;https://www.youtube.com/watch?v=T1fXqPXBs-4;0
-Gitte Haenning;1983;Ich will alles;Schlagerparty;https://www.youtube.com/watch?v=tuGnrp1Wh80;0
-Gitte Haenning;1980;Freu' dich bloss nicht zu früh;Schlagerparty;https://www.youtube.com/watch?v=ZoFzlHjcLfo;0
-Gitti und Erica;1977;Heidi;Schlagerparty;https://www.youtube.com/watch?v=Fio8vUIG5nA;0
-Gölä & Trauffer;2019;Büetzer Buebe;Schlagerparty;https://www.youtube.com/watch?v=c8kUiobLHqs;10
-Gottlieb Wendehals;1981;Polonäse Blankenese;Schlagerparty;https://www.youtube.com/watch?v=bf6pR6MC2Xs;12
-Guildo Horn & die Orthopädischen Strümpfe;1998;Guildo hat euch lieb;Schlagerparty;https://www.youtube.com/watch?v=yB1lWt1Jmpw;0
-Gunter Gabriel & Linda Fellner;1974;Hey Boss, ich brauch mehr Geld;Schlagerparty;https://www.youtube.com/watch?v=YecsNemhULA;26
-Gunter Gabriel & Linda Fellner;1995;Wenn ich nur ein Trucker wär;Schlagerparty;https://www.youtube.com/watch?v=BZ9UZc_cBBU;60
-Haindling;1983;Du Depp;Schlagerparty;https://www.youtube.com/watch?v=Xi7lQJZuSOo;25
-Hanne Haller;1989;Mein lieber Mann;Schlagerparty;https://www.youtube.com/watch?v=hXtL1onjUFM;13
-Hannes Kröger;1988;Der blonde Hans;Schlagerparty;https://www.youtube.com/watch?v=SN8gLMjErds;26
-Hape Kerkeling;1991;Das ganze Leben ist ein Quiz;Schlagerparty;https://www.youtube.com/watch?v=-GRHmEEaxv0;10
-Heino;1972;Blau blau blüht der Enzian;Schlagerparty;https://www.youtube.com/watch?v=HBGnU4Q5pRg;0
-Heino;1975;Die schwarze Barbara;Schlagerparty;https://www.youtube.com/watch?v=GFlmQyBHoRk;0
-Helene Fischer;2017;Herzbeben;Schlagerparty;https://www.youtube.com/watch?v=8ySJJMu8ReY;4
-Helene Fischer;2021;Rausch;Schlagerparty;https://www.youtube.com/watch?v=vVnTxZ6ppBU;13
-Helge Schneider;1993;Katzenklo;Schlagerparty;https://www.youtube.com/watch?v=o99uuZ6pNv4;0
-Herbert Grönemeyer;1988;Was soll das;Schlagerparty;https://www.youtube.com/watch?v=xJJIS64k_LY;1
-Höhner;2005;Wenn nicht jetzt, wann dann;Schlagerparty;https://www.youtube.com/watch?v=QnCVvgzKHLs;0
-Höhner;2003;Viva Colonia (Da simmer dabei, dat is prima!);Schlagerparty;https://www.youtube.com/watch?v=DD9oG1kIC2I;34
-Howard Carpendale;1984;Hello Again;Schlagerparty;https://www.youtube.com/watch?v=2-EzIZErBCY;0
-Howard Carpendale;1977;Tür an Tür mit Alice;Schlagerparty;https://www.youtube.com/watch?v=Xnz2UfOJbkI;0
-Hubert Kah;1982;Sternenhimmel;Schlagerparty;https://www.youtube.com/watch?v=wdRSPSt_IEA;0
-Ibo;1986;Ibiza;Schlagerparty;https://www.youtube.com/watch?v=3O2QRoQ0Y8E;0
-Ibo;1998;Ein Himmelbett im Internet;Schlagerparty;https://www.youtube.com/watch?v=i3n87_Cd3IA;8
-Ich + Ich;2007;Stark;Schlagerparty;https://www.youtube.com/watch?v=McItNruy0wA;10
-Ines Adler;1996;Nimm einmal noch meine Hand;Schlagerparty;https://www.youtube.com/watch?v=g6EB9c978F8;10
-Ingo ohne Flamingo;2017;Saufen morgens, mittags, abends;Schlagerparty;https://www.youtube.com/watch?v=PP9I6WRD4VI;15
-Ingrid Peters;2005;Wenn den Kindern Flügeln wachsen;Schlagerparty;https://www.youtube.com/watch?v=lkPZMQuGq3I;0
-Isabell Varell;2002;Du-nur-du-nur-du;Schlagerparty;https://www.youtube.com/watch?v=A1KfvOvrVXU;10
-Jan Smit;2013;Ich bin da;Schlagerparty;https://www.youtube.com/watch?v=vCW-0DhwNy0;0
-Jasmin Wagner;2021;Gold;Schlagerparty;https://www.youtube.com/watch?v=cpTuOc55_9s;0
-Joachim Witt;1980;Goldener Reiter;Schlagerparty;https://www.youtube.com/watch?v=G5ZHyGBfPX8;18
-Josh;2018;Cordula Grün;Schlagerparty;https://www.youtube.com/watch?v=uSbxCX2LVps;0
-Juli;2004;Perfekte Welle;Schlagerparty;https://www.youtube.com/watch?v=BBYdvFWsFBc;0
-Julian Sommer;2022;Dicht im Flieger;Schlagerparty;https://www.youtube.com/watch?v=hzqcMvDON1g;0
-Juliane Werding;1975;Wenn du denkst du denkst dann denkst du nur du denkst;Schlagerparty;https://www.youtube.com/watch?v=sCJu71JxmbE;8
-Juliane Werding;1988;Starke Gefühle;Schlagerparty;https://www.youtube.com/watch?v=KSCk00ygOwY;45
-Jürgen Drews;1999;Wieder alles im Griff;Schlagerparty;https://www.youtube.com/watch?v=i_9Sul1WBf8;0
-Jürgen Drews;2009;Ich bau dir ein Schloss;Schlagerparty;https://www.youtube.com/watch?v=TOGS85Yno3E;0
-Jürgen Peters;2009;Mary Jane;Schlagerparty;https://www.youtube.com/watch?v=wQ6kpSOCa2s;30
-Jürgen von der Lippe;1989;Is was;Schlagerparty;https://www.youtube.com/watch?v=fwjZl8SbASg;0
-Jürgen von der Lippe;1987;Guten Morgen, liebe Sorgen;Schlagerparty;https://www.youtube.com/watch?v=tCxjFSO5AOE;10
-Karel Gott;1975;Biene Maja;Schlagerparty;https://www.youtube.com/watch?v=XNWferBsNCw;0
-Karell Gott & Klaus;1986;Fang Das Licht;Schlagerparty;https://www.youtube.com/watch?v=AAWHUHzQ4BM;10
-Karl Dall;1987;Milionen Frauen lieben mich;Schlagerparty;https://www.youtube.com/watch?v=ThdYxMGZl04;0
-Kasalla;2015;Stadt met K;Schlagerparty;https://www.youtube.com/watch?v=WEmdUN0cAhw;15
-Kastelruther Spatzen;2000;Ein Leben lang;Schlagerparty;https://www.youtube.com/watch?v=WhVc_ov2Cks;7
-Katja Ebstein;1980;Theater;Schlagerparty;https://www.youtube.com/watch?v=Agrad3dY5Qc;10
-Kerstin Ott;2018;Regenbogenfarben;Schlagerparty;https://www.youtube.com/watch?v=WSTu9AMLvTw;20
-Klaus & Klaus;1988;Der Eiermann;Schlagerparty;https://www.youtube.com/watch?v=u58UVnV7RF4;0
-Klaus & Klaus;1985;An der Nordseeküste;Schlagerparty;https://www.youtube.com/watch?v=U15ZCSkkU9A;20
-Klostertaler;1997;Ha-Le-Lu-Ja;Schlagerparty;https://www.youtube.com/watch?v=q2cPcD6cp_A;0
-Klostertaler;1998;Ciao d'amore;Schlagerparty;https://www.youtube.com/watch?v=v6ZbuEyHWrw;15
-KLUBBB3;2016;Du schaffst das schon;Schlagerparty;https://www.youtube.com/watch?v=wCDsm_dt1cI;0
-Kristina Bach;1997;…es kribbelt und prickelt...;Schlagerparty;https://www.youtube.com/watch?v=5JDMgosFXY4;0
-Liane ;2014;Ich lass' nur noch Sonne in mein Herz;Schlagerparty;https://www.youtube.com/watch?v=9QZ0VlgJ4uw;0
-Lill Babs;1961;Wo finde ich den Mann?;Schlagerparty;https://www.youtube.com/watch?v=UdqDzPXqD9U;0
-Linda Hesse;2014;Knutschen - Ich kann nichts dafür;Schlagerparty;https://www.youtube.com/watch?v=ME_5F7H7EOA;20
-Lorenz Büffel;2016;Johnny Däpp;Schlagerparty;https://www.youtube.com/watch?v=3osLPAfdqQg;0
-Maite Kelly;2001;So wie man tanzt so liebt man;Schlagerparty;https://www.youtube.com/watch?v=dLle5uwURtU;0
-Maite Kelly;2016;Sieben Leben für dich;Schlagerparty;https://www.youtube.com/watch?v=VOa30FJGd4w;25
-Maite Kelly, Roland Kaiser;2014;Warum hast du nicht nein gesagt;Schlagerparty;https://www.youtube.com/watch?v=0MVy0VQfxUU;0
-Manuel & Pony;1979;Das Lied von Manuel;Schlagerparty;https://www.youtube.com/watch?v=_Fsdo2DaS_0;0
-Manuela Fellner;2012;7 Tage hat die Woche;Schlagerparty;https://www.youtube.com/watch?v=tYJhwawckmM;0
-Marianne Rosenberg;1975;Er gehört zu mir;Schlagerparty;https://www.youtube.com/watch?v=COkhUbRoaLA;15
-Marie Reim;2022;Bist du dafür bereit?;Schlagerparty;https://www.youtube.com/watch?v=0QkRsiwmSB4;12
-Marina Marx;2020;Der geilste Fehler;Schlagerparty;https://www.youtube.com/watch?v=bgEEOI2kP2c;18
-Mario Jordan;1992;Welch ein Tag;Schlagerparty;https://www.youtube.com/watch?v=KtPmOFzd2xU;15
-Markus Becker;2019;Bierkapitän;Schlagerparty;https://www.youtube.com/watch?v=wNkqohlUQWA;5
-Markus Becker;2007;Das rote Pferd;Schlagerparty;https://www.youtube.com/watch?v=VDCrh5GRTNY;17
-Matthias Reim;2007;Ich will dich immer noch;Schlagerparty;https://www.youtube.com/watch?v=WnHLrcX4pfY;0
-Max Giesinger ;2021;Irgendwann ist jetzt;Schlagerparty;https://www.youtube.com/watch?v=pqMz4ZHV3BY;12
-Max Raabe;1999;Kein Schwein ruft mich an;Schlagerparty;https://www.youtube.com/watch?v=ZkHa6Vyy0Wg;0
-Max Raabe;2011;Küssen kann man nicht alleine;Schlagerparty;https://www.youtube.com/watch?v=XjU8u_TjXfw;0
-Melissa Naschenweng;2019;I steh auf Bergbauernbuam;Schlagerparty;https://www.youtube.com/watch?v=D6EzUpOj4KU;0
-Melissa Naschenweng;2020;Lederhosenrock;Schlagerparty;https://www.youtube.com/watch?v=ZIlTo0JMUb0;0
-Mia Julia, Lorenz Büffel, Malle Anja;2022;Der Zug hat keine Bremse;Schlagerparty;https://www.youtube.com/watch?v=Sg4nv5uC-0w;0
-Michael Holm;1969;Mendocino;Schlagerparty;https://www.youtube.com/watch?v=Ngx9Z_RdwOk;0
-Michael Morgan;1996;Es schießt ein Blitz in meinen Kopf;Schlagerparty;https://www.youtube.com/watch?v=QeO0vFWnjBI;0
-Michael Wendler;2002;Verlier sie nie;Schlagerparty;https://www.youtube.com/watch?v=-iEGAbJdkw0;0
-Michael Wendler;2006;Prinzessin;Schlagerparty;https://www.youtube.com/watch?v=ULN0pgnPHqc;28
-Michelle;1992;Und heut' Nacht will ich tanzen;Schlagerparty;https://www.youtube.com/watch?v=MtkrHb30Teg;15
-Michelle;2007;Willst du mich für immer?;Schlagerparty;https://www.youtube.com/watch?v=P_oW3lrn7-M;15
-Mickie Krause;2010;Schatzi schenk mir ein Foto;Schlagerparty;https://www.youtube.com/watch?v=MRmgD2LaDw0;0
-Mickie Krause;1999;Zehn nackte Friseusen;Schlagerparty;https://www.youtube.com/watch?v=ZIdhH3TxnD4;30
-Mike Krüger;1994;Das Trampolin;Schlagerparty;https://www.youtube.com/watch?v=0CLGRuqSYMw;0
-Mike Krüger;1980;Der Nippel;Schlagerparty;https://www.youtube.com/watch?v=1KRa4pD6ZUI;7
-Mike Leon Grosch;2021;Nicht mal eine Stunde;Schlagerparty;https://www.youtube.com/watch?v=pk0edki-syI;0
-Mireille Mathieu;1969;Hinter den Kulissen von Paris;Schlagerparty;https://www.youtube.com/watch?v=3mY-2acmKr0;0
-Mitch Keller;2015;7 Leben;Schlagerparty;https://www.youtube.com/watch?v=Gojprk_UOmg;0
-Monika Martin;1996;La Luna Blue;Schlagerparty;https://www.youtube.com/watch?v=2zicwoLpCyU;0
-Monique;2020;Sieben Tage, sieben Nächte;Schlagerparty;https://www.youtube.com/watch?v=594ydVlytN0;16
-Münchener Freiheit;1985;Ohne Dich (schlaf' ich heut Nacht nicht ein);Schlagerparty;https://www.youtube.com/watch?v=SoZ8naG0sj0;21
-Münchner Freiheit;2009;Ein Augenblick in rot;Schlagerparty;https://www.youtube.com/watch?v=P9eGiSONjf4;0
-Münchner Zwietracht;2000;Moos Hamma;Schlagerparty;https://www.youtube.com/watch?v=IsIAPSXWaNw;0
-Musikapostel (feat. Allessa);2019;Ich bin wer ich sein will;Schlagerparty;https://www.youtube.com/watch?v=PvI0nM9fOMA;0
-Nena;1982;Nur geträumt;Schlagerparty;https://www.youtube.com/watch?v=HEGRwUuWn64;0
-Nicki;1992;Das geht vorbei;Schlagerparty;https://www.youtube.com/watch?v=Zk5VHyimdfs;10
-Nicki;1986;Wenn I Mit Dir Tanz;Schlagerparty;https://www.youtube.com/watch?v=hPjm0fk8-E8;20
-Nicole;1992;Mit dir vielleicht;Schlagerparty;https://www.youtube.com/watch?v=3EpZlbsAKJQ;0
-Nicole;1982;Ein bisschen Frieden;Schlagerparty;https://www.youtube.com/watch?v=W9S3YMmIFdw;5
-Nik P.;2008;Gloria 2;Schlagerparty;https://www.youtube.com/watch?v=1NqYMKHKawM;0
-Nik P.;1998;Ein Stern, der deinen Namen trägt;Schlagerparty;https://www.youtube.com/watch?v=q0jkVfhky24;12
-Nino de Angelo;2001;Engel;Schlagerparty;https://www.youtube.com/watch?v=iWhzhu7TiKk;0
-Nino de Angelo;1983;Jenseits von Eden;Schlagerparty;https://www.youtube.com/watch?v=7wFRYTXBAVI;27
-Nino Gemba;2006;Dein Zug ist abgefahre'n;Schlagerparty;https://www.youtube.com/watch?v=1j1ZnYaKjnQ;0
-Nockis (Nockalm Quintett);2014;Du warst der geilste Fehler meines Lebens;Schlagerparty;https://www.youtube.com/watch?v=0JR4cHZOFZs;0
-Norman Langen;2011;Hör meinen Herzschlag;Schlagerparty;https://www.youtube.com/watch?v=cAzgX9XSXbA;0
-Olaf Henning;2000;Das Spiel ist aus;Schlagerparty;https://www.youtube.com/watch?v=dHM_31pwXFg;0
-Olaf Henning;2011;Ich mal für dich den Himmel blau;Schlagerparty;https://www.youtube.com/watch?v=TzMxvqMbjho;16
-Ole ohne Kohle;2012;Ich bin kein Model und kein Superstar;Schlagerparty;https://www.youtube.com/watch?v=7xNSfvxJxHA;16
-Oliver Haidt;1996;Lebenslänglich Du;Schlagerparty;https://www.youtube.com/watch?v=Tk6Boeo-Moo;12
-Oliver Pocher;2006;Schwarz und weiss;Schlagerparty;https://www.youtube.com/watch?v=B9od0nCPwpo;36
-Otto Waalkes;2008;Grund zum Feiern;Schlagerparty;https://www.youtube.com/watch?v=aGnmuBOmL5I;0
-Patrick Lindner;2003;Halleluja - auf das Leben;Schlagerparty;https://www.youtube.com/watch?v=U4XOGnBqvCQ;32
-Paul Kuhn;1963;Es gibt kein Bier auf Hawaii;Schlagerparty;https://www.youtube.com/watch?v=mB1rM73lmnc;0
-Pe Werner;1991;Kribbeln im Bauch;Schlagerparty;https://www.youtube.com/watch?v=0201_NPzWbE;0
-Peter Alexander;1976;Die Kleine Kneipe;Schlagerparty;https://www.youtube.com/watch?v=A10I_3e8B_I;13
-Peter Cornelius;1980;Du Entschuldige - I Kenn' Di;Schlagerparty;https://www.youtube.com/watch?v=fhaP9-YhLig;0
-Peter Maffay;1976;Und es war Sommer;Schlagerparty;https://www.youtube.com/watch?v=-DLE_1SQsj0;10
-Peter Maffay;1979;So bist du;Schlagerparty;https://www.youtube.com/watch?v=Hq9JebayPmo;14
-Peter Reber;1985;E Vogel ohni Flügel;Schlagerparty;https://www.youtube.com/watch?v=13YrHoMNe1I;13
-Peter Wackel;2013;Scheiß drauf! (Mallorca ist nur einmal im Jahr);Schlagerparty;https://www.youtube.com/watch?v=MeZfP-JSJTw;0
-Peter Wackel;2005;Oberammergau;Schlagerparty;https://www.youtube.com/watch?v=bGgRFctcb8A;10
-Plüsch;2007;Heimweh;Schlagerparty;https://www.youtube.com/watch?v=ZhZhRRg93aA;0
-Prince Damien;2016;Glücksmoment;Schlagerparty;https://www.youtube.com/watch?v=3RFnDpE3jGs;7
-PS Alex;2007;Eine Frau, die mich nach Hause trägt;Schlagerparty;https://www.youtube.com/watch?v=hrNXPy7PyJM;0
-Pur;1993;Hör gut zu;Schlagerparty;https://www.youtube.com/watch?v=F3MY3RZ0F6k;10
-Rainhard Fendrich;1988;Macho Macho;Schlagerparty;https://www.youtube.com/watch?v=3ROwnYnWNwg;0
-Rainhard Fendrich;1985;Haben Sie Wien schon bei Nacht geseh'n;Schlagerparty;https://www.youtube.com/watch?v=Ngd0BbvRHJA;13
-Ramon Roselly;2020;Eine Nacht;Schlagerparty;https://www.youtube.com/watch?v=9HdOqsDD5pQ;18
-Rebel Tell;2022;Schlager ist nicht kriminell;Schlagerparty;https://www.youtube.com/watch?v=vrpufaP9u-I;13
-Relax;1990;I lass di nimmer aus;Schlagerparty;https://www.youtube.com/watch?v=kgOR4WYxOu4;19
-Rex Guildo;1972;Fiesta Mexicana;Schlagerparty;https://www.youtube.com/watch?v=EEGQrYBkm_A;0
-Roberto Blanco;1972;Ein bisschen Spaß muss sein;Schlagerparty;https://www.youtube.com/watch?v=4-DYhrD-N6M;0
-Roland Kaiser;1977;Sieben Fässer Wein;Schlagerparty;https://www.youtube.com/watch?v=G0_pmvMJdZc;0
-Roland Kaiser;1984;Joana;Schlagerparty;https://www.youtube.com/watch?v=nEO8d59-riM;0
-Rosenstolz;1998;Herzensschöner;Schlagerparty;https://www.youtube.com/watch?v=uiNs4rcFkak;0
-Ross Antony;2013; Kettenkarussell;Schlagerparty;https://www.youtube.com/watch?v=NRbsDcxi5kE;0
-Ross Antony;2021;Willkommen im Club;Schlagerparty;https://www.youtube.com/watch?v=OjQiGPlbPgc;6
-Roy Black & Anita;1971;Schön ist es auf der Welt zu sein;Schlagerparty;https://www.youtube.com/watch?v=5O2mq590K5g;9
-Rudi Carrell;1978;Goethe war gut;Schlagerparty;https://www.youtube.com/watch?v=__pll7gNU0Q;12
-Rudolf Rock und die Schocker;1990;Herzilein;Schlagerparty;https://www.youtube.com/watch?v=l1eqypd6TEk;14
-Sabrina Setlur;1997;Du liebst mich nicht;Schlagerparty;https://www.youtube.com/watch?v=C6_FGIRbMm8;20
-Sandy Wagner;2002;Hier spricht die Polizei;Schlagerparty;https://www.youtube.com/watch?v=oYwYtPvKQvA;0
-Santiano;2012;Es gibt nur Wasser;Schlagerparty;https://www.youtube.com/watch?v=-RWKohWx8JQ;0
-Sarah-Jane;2005;Einmal hin, einmal her;Schlagerparty;https://www.youtube.com/watch?v=FmOlsP4KnUQ;0
-Schnappi, Joy;2004;Schnappi, das kleine Krokodil;Schlagerparty;https://www.youtube.com/watch?v=hVRw7jtSiEA;0
-Sigrid & Marina;2010;Zwei Senoritas;Schlagerparty;https://www.youtube.com/watch?v=fSsFkNRI-cQ;0
-Simone;2005;Viel zu oft;Schlagerparty;https://www.youtube.com/watch?v=nYgjahLa-D8;16
-Simone;2001;Solang wir lieben;Schlagerparty;https://www.youtube.com/watch?v=b4mV07X9cWg;17
-Spider Murphy Gang;1987;So a Nacht;Schlagerparty;https://www.youtube.com/watch?v=sox_-1x-VGw;11
-Spliff;1982;Carbonara;Schlagerparty;https://www.youtube.com/watch?v=y52bQT5J8HA;17
-Sportfreunde Stiller;2006;54, '74, '90, 2006;Schlagerparty;https://www.youtube.com/watch?v=gOUpBDSeWlA;13
-Stefan Raab;1999;Maschen-Draht-Zaun;Schlagerparty;https://www.youtube.com/watch?v=yNwgTW_AJ_s;0
-Stefan Waggershausen & Alice;1984;Zu nah am Feuer;Schlagerparty;https://www.youtube.com/watch?v=AJfj7ZiHlmc;19
-Stefan Waggershausen, Viktor Lazlo;1990;Das erste Mal tat's noch weh;Schlagerparty;https://www.youtube.com/watch?v=lEPLsMtlY4A;18
-Stefanie Hertel;2004;Erst du, dann du;Schlagerparty;https://www.youtube.com/watch?v=SF079N6dt8s;16
-Stephan Remmler;1986;Alles hat ein Ende nur die Wurst hat zwei;Schlagerparty;https://www.youtube.com/watch?v=eWbcv47DXww;0
-Stereoact feat. Kerstin Ott;2015;Die immer lacht;Schlagerparty;https://www.youtube.com/watch?v=wdC7k35C4ns;27
-Stoakogler Trio;1992;Steiermen san very good;Schlagerparty;https://www.youtube.com/watch?v=p-gK9kzEVhY;0
-Tahiti Tamoures;1963;Wini-Wini;Schlagerparty;https://www.youtube.com/watch?v=J2l0X0wscmA;0
-Thomas Anders;2017;Sternenregen;Schlagerparty;https://www.youtube.com/watch?v=IglQLKlMHB8;0
-Thomas Anders, Florian Silbereisen;2022;Alles wird gut;Schlagerparty;https://www.youtube.com/watch?v=ogXjEQkHzUw;16
-Tic Tac Toe;1997;Ich wär so gern so blöd wie du;Schlagerparty;https://www.youtube.com/watch?v=QukYHQRH3NM;0
+Coolio (feat. L.V.);1995;Gangsta's Paradise;Basic;https://www.youtube.com/watch?v=Tw0_qHNRAEA;6
 Tobee;2019;Helikopter 117 (Mach' den Hub Hub Hub);Schlagerparty;https://www.youtube.com/watch?v=ANqoWfqoGJY;6
-Tom Astor;1996;Irgendwie wird's schon gehen;Schlagerparty;https://www.youtube.com/watch?v=EvusweZ4Sjs;0
-Tom Astor;1991;Ich bin kein Dichter, kein Poet;Schlagerparty;https://www.youtube.com/watch?v=FcKFv-s4p6s;20
-Tony Holiday;1977;Tanze Samba mit mir;Schlagerparty;https://www.youtube.com/watch?v=ZYHO7BGiH54;15
-Tony Marshall;1978;Auf der Straße nach Süden;Schlagerparty;https://www.youtube.com/watch?v=lbuzlplYGj8;3
-Tony Marshall;1971;Schöne Maid;Schlagerparty;https://www.youtube.com/watch?v=EviBJR02-zk;14
-Trenkwalder;2001;Verliab di;Schlagerparty;https://www.youtube.com/watch?v=2zxqZARI0e0;10
-Trio;1981;Da Da Da;Schlagerparty;https://www.youtube.com/watch?v=4_kZdimDGfM;0
-Trio;1983;Herz ist Trumpf;Schlagerparty;https://www.youtube.com/watch?v=NUU3ci9KUdg;25
-Truckstop;1980;Der wilde wilde Westen;Schlagerparty;https://www.youtube.com/watch?v=80DSyg01uUc;0
-Truckstop;1995;Emmylou, Emmylou;Schlagerparty;https://www.youtube.com/watch?v=FTEaBHl7Org;5
-Trude Herr;1961;Weil ich so sexy bin;Schlagerparty;https://www.youtube.com/watch?v=GRtqHMiNKS0;0
-Udo Jürgens;1974;Griechischer Wein;Schlagerparty;https://www.youtube.com/watch?v=eKveb4BjK_c;0
-Udo Jürgens;1982;Ich war noch niemals in New York;Schlagerparty;https://www.youtube.com/watch?v=YPx2AxpBPs8;15
-Udo Lindenberg;1983;Sonderzug nach Pankow;Schlagerparty;https://www.youtube.com/watch?v=1oKKwuIZzr8;45
-Unheilig;2014;Zeit zu gehen;Schlagerparty;https://www.youtube.com/watch?v=4DTCHO9tQdI;10
-Ute Freudenberg;2012;Wilkommen im Leben;Schlagerparty;https://www.youtube.com/watch?v=kRKpf38DoJ8;0
-Vader Abraham;1977;Das Lied der Schlümpfe;Schlagerparty;https://www.youtube.com/watch?v=sXdUMoEHxKs;0
-Vanessa Mai;2016;Ich sterb für Dich;Schlagerparty;https://www.youtube.com/watch?v=izHB2EdMngg;0
-Vanessa Mai;2015;Mein Herz schlägt Schlager;Schlagerparty;https://www.youtube.com/watch?v=8bd_6CyjyXI;0
-Vicky Leandros;1974;Theo, wir fahr'n nach Lodz;Schlagerparty;https://www.youtube.com/watch?v=NVHvUT9lMjs;0
-Vicky Leandros;1975;Ich liebe das Leben;Schlagerparty;https://www.youtube.com/watch?v=mTyZMjezn6c;7
-Vikinger;2003;Das kann nur Liebe sein;Schlagerparty;https://www.youtube.com/watch?v=48LtCAqqr8I;7
-Vincent Gross;2017;Du Du Du;Schlagerparty;https://www.youtube.com/watch?v=pt9oeXkCy1g;9
-Voxxclub;2013;Rock mi;Schlagerparty;https://www.youtube.com/watch?v=OqFswmifyqw;4
+Sunrise Avenue;2011;I Don't Dance;Custom Basic;https://www.youtube.com/watch?v=ZmSUVVZed9E;6
+Aretha Franklin;1967;Respect;Basic;https://www.youtube.com/watch?v=6FOUqQt3Kg0;6
 Voxxclub;2022;Was geht hier ab;Schlagerparty;https://www.youtube.com/watch?v=tinrJJZmER8;6
-Wencke Myhre;1970;Er hat ein knallrotes Gummiboot;Schlagerparty;https://www.youtube.com/watch?v=2lyCBJAOqcQ;0
-Wildecker Herzbuben;1990;Herzilein;Schlagerparty;https://www.youtube.com/watch?v=l1eqypd6TEk;0
-Wind;2009;Radio Zuckerhut;Schlagerparty;https://www.youtube.com/watch?v=cMBcBSzH3gs;0
+Haddaway;1993;What Is Love;Basic;https://www.youtube.com/watch?v=G8RY_XOqJf4;6
+Ross Antony;2021;Willkommen im Club;Schlagerparty;https://www.youtube.com/watch?v=OjQiGPlbPgc;6
+The Weeknd;2015;Can't Feel My Face;Custom Basic;https://www.youtube.com/watch?v=dqt8Z1k0oWQ;7
+Vikinger;2003;Das kann nur Liebe sein;Schlagerparty;https://www.youtube.com/watch?v=48LtCAqqr8I;7
+Mike Krüger;1980;Der Nippel;Schlagerparty;https://www.youtube.com/watch?v=1KRa4pD6ZUI;7
+Kastelruther Spatzen;2000;Ein Leben lang;Schlagerparty;https://www.youtube.com/watch?v=WhVc_ov2Cks;7
+Irene Cara;1983;Flashdance… What A Feeling;Custom Basic;https://www.youtube.com/watch?v=A64KVUfo4ew;7
+CeeLo Green;2010;Forget You;Custom Basic;https://www.youtube.com/watch?v=omL2GxmgqFc;7
+Lily Allen;2009;Fuck You;Custom Basic;https://www.youtube.com/watch?v=4BpFqyxEDbo;7
+Prince Damien;2016;Glücksmoment;Schlagerparty;https://www.youtube.com/watch?v=3RFnDpE3jGs;7
+Vicky Leandros;1975;Ich liebe das Leben;Schlagerparty;https://www.youtube.com/watch?v=mTyZMjezn6c;7
+Avril Lavigne;2002;I'm With You;Custom Basic;https://www.youtube.com/watch?v=DhawV3ppm9c;7
+House of Pain;1992;Jump Around;Basic;https://www.youtube.com/watch?v=W4o6XBJ_J-k;7
+Lady Gaga (feat. Colby O'Donis);2008;Just Dance;Custom Basic;https://www.youtube.com/watch?v=VgdGDR15qgs;7
+Francine Jordi;2018;Lovesong;Schlagerparty;https://www.youtube.com/watch?v=j-01cEqVdr4;7
+Kool & The Gang;1980;Celebration;Basic;https://www.youtube.com/watch?v=1Qu6Dyn-c6M;8
+Ibo;1998;Ein Himmelbett im Internet;Schlagerparty;https://www.youtube.com/watch?v=i3n87_Cd3IA;8
+Ariana Grande;2015;Focus;Custom Basic;https://www.youtube.com/watch?v=vl2RzmF1R2Y;8
+Vanilla Ice;1990;Ice Ice Baby;Basic;https://www.youtube.com/watch?v=1Q7QX0Rtpfg;8
+Kygo & Selena Gomez;2017;It Ain't Me;Custom Basic;https://www.youtube.com/watch?v=D5drYkLiLI8;8
 Wind;1987;Lass Die Sonne In Dein Herz;Schlagerparty;https://www.youtube.com/watch?v=lLKsnjZoKj4;8
-Wolfgang Fierek;1985;Resi i hol di mit mei'm  Traktor;Schlagerparty;https://www.youtube.com/watch?v=Iftl_V1NKpI;15
-Wolfgang Petry;1992;Verlieben, verloren, vergessen, verzei'n;Schlagerparty;https://www.youtube.com/watch?v=VH9mObSufSg;0
-Wolfgang Petry;1998;Weiss' der Geier;Schlagerparty;https://www.youtube.com/watch?v=0yIIRkKtLSE;14
-Wolfgang Ziegler;2003;Ich küss dir die Angst von deiner Haut;Schlagerparty;https://www.youtube.com/watch?v=5R7fKOteVZw;20
-Wolfram;1970;Trödler Abraham;Schlagerparty;https://www.youtube.com/watch?v=1IF3zk1g4c8;0
+Udo Jürgens;1966;Merci, Chérie;Custom Basic;https://www.youtube.com/watch?v=aVMbip87NQM;8
+Udo Jürgens;1966;Merci, Chérie;Eurovision;https://www.youtube.com/watch?v=aVMbip87NQM;8
+Sophie Ellis-Bextor;2001;Murder On The Dancefloor;Basic;https://www.youtube.com/watch?v=tePdQJ6uI_4;8
+Drake;2020;Toosie Slide;Basic;https://www.youtube.com/watch?v=x7IBEq9iOkc;8
+Ich + Ich;2007;Vom selben Stern;Basic;https://www.youtube.com/watch?v=2uugJeWljx8;8
+Juliane Werding;1975;Wenn du denkst du denkst dann denkst du nur du denkst;Schlagerparty;https://www.youtube.com/watch?v=sCJu71JxmbE;8
+Silver;1976;Wham Bam (Shang-a-Lang);Custom Basic;https://www.youtube.com/watch?v=M5iSEdo5VNI;8
+Queen;1980;Another One Bites The Dust;Custom Basic;https://www.youtube.com/watch?v=kwwaWVP2PGE;9
+Vincent Gross;2017;Du Du Du;Schlagerparty;https://www.youtube.com/watch?v=pt9oeXkCy1g;9
+Peter Fox;2008;Haus am See;Basic;https://www.youtube.com/watch?v=j-XKgB5guDQ;9
+Prince;1979;I Wanna Be Your Lover;Custom Basic;https://www.youtube.com/watch?v=T9KG89BJx5g;9
+Sinéad O'Connor;1990;Nothing Compares 2 U;Basic;https://www.youtube.com/watch?v=cpGA0azFdCs;9
+Johnny Cash;1963;Ring Of Fire;Basic;https://www.youtube.com/watch?v=1WaV2x8GXj0;9
+Roy Black & Anita;1971;Schön ist es auf der Welt zu sein;Schlagerparty;https://www.youtube.com/watch?v=5O2mq590K5g;9
+Shawn Mendes & Camila Cabello;2019;Señorita;Basic;https://www.youtube.com/watch?v=Pkh8UtuejGw;9
+Matthias Reim;1990;Verdammt, ich lieb' dich;Basic;https://www.youtube.com/watch?v=fKV_Ma9T5N8;9
+Black Eyed Peas;2003;Where Is The Love?;Basic;https://www.youtube.com/watch?v=PZj_I0DBtKU;9
+Arctic Monkeys;2007;505;Custom Basic;https://www.youtube.com/watch?v=qU9mHegkTc4;10
+Pur;1995;Abenteuerland;Basic;https://www.youtube.com/watch?v=XC-HspEa2vs;10
+Harry Styles;2019;Adore You;Basic;https://www.youtube.com/watch?v=iquhBgM-Qv0;10
+TOTO;1982;Africa;Basic;https://www.youtube.com/watch?v=Kb7lAMjFuA0;10
+ÁSDÍS;2023;Angel Eyes;Custom Basic;https://www.youtube.com/watch?v=H2Urtlhj17E;10
+Christian Lais;2010;Atemlos;Schlagerparty;https://www.youtube.com/watch?v=qQ0E2AVdJOM;10
+Shinedown;2020;Atlas Falls;Custom Basic;https://www.youtube.com/watch?v=o9weVpLtjqY;10
+Billie Eilish;2019;bad guy;Custom Basic;https://www.youtube.com/watch?v=YD4utuFiexw;10
+Lunchmoney Lewis;2015;Bills;Custom Basic;https://www.youtube.com/watch?v=2aXzOfGQdMQ;10
+Steppenwolf;1968;Born To Be Wild;Basic;https://www.youtube.com/watch?v=p8FTmkTIL88;10
+Green Day;2004;Boulevard Of Broken Dreams;Custom Basic;https://www.youtube.com/watch?v=Dx1SPxGn-iU;10
+Evanescence;2003;Bring Me To Life;Custom Basic;https://www.youtube.com/watch?v=XStM7Ssbz_8;10
+Gölä & Trauffer;2019;Büetzer Buebe;Schlagerparty;https://www.youtube.com/watch?v=c8kUiobLHqs;10
+*NSYNC;2000;Bye Bye Bye;Custom Basic;https://www.youtube.com/watch?v=C27NShgTQE4;10
+Demi Lovato;2015;Cool For The Summer;Custom Basic;https://www.youtube.com/watch?v=mzyCMGTA3C4;10
+Hape Kerkeling;1991;Das ganze Leben ist ein Quiz;Schlagerparty;https://www.youtube.com/watch?v=-GRHmEEaxv0;10
+Nicki;1992;Das geht vorbei;Schlagerparty;https://www.youtube.com/watch?v=Zk5VHyimdfs;10
+Frankie Valli & The Four Seasons;1975;December, 1963 (Oh, What A Night);Basic;https://www.youtube.com/watch?v=fhc13WNMNpg;10
+Crowded House;1986;Don't Dream It's Over;Basic;https://www.youtube.com/watch?v=-5QA0Y3Yjlc;10
+Men At Work;1981;Down Under;Custom Basic;https://www.youtube.com/watch?v=EeeBH294v6I;10
+Isabell Varell;2002;Du-nur-du-nur-du;Schlagerparty;https://www.youtube.com/watch?v=A1KfvOvrVXU;10
+Commoderes;1977;Easy;Basic;https://www.youtube.com/watch?v=7XcTyEKSnYg;10
+Loreen;2012;Euphoria;Basic;https://www.youtube.com/watch?v=t5qURKt4maw;10
+Loreen;2012;Euphoria;Eurovision;https://www.youtube.com/watch?v=t5qURKt4maw;10
+Karell Gott & Klaus;1986;Fang Das Licht;Schlagerparty;https://www.youtube.com/watch?v=AAWHUHzQ4BM;10
+Owl City;2009;Fireflies;Basic;https://www.youtube.com/watch?v=qSsAEZa_fb0;10
+Alphaville;1984;Forever Young;Basic;https://www.youtube.com/watch?v=W5guhMw_EH0;10
+Sheppard;2014;Geronimo;Custom Basic;https://www.youtube.com/watch?v=E-SeaCZE2TM;10
+Eddy Grant;1988;Gimme Hope Jo'anna;Basic;https://www.youtube.com/watch?v=R-ZplG81oZg;10
+L'aupaire;2019;Goldrush;Custom Basic;https://www.youtube.com/watch?v=wm-NQTLC8c4;10
+Jürgen von der Lippe;1987;Guten Morgen, liebe Sorgen;Schlagerparty;https://www.youtube.com/watch?v=tCxjFSO5AOE;10
+Creedence Clearwater Revival;1971;Have You Ever Seen the Rain?;Basic;https://www.youtube.com/watch?v=bO28lB1uwp4;10
+Panic! At the Disco;2018;High Hopes;Custom Basic;https://www.youtube.com/watch?v=n3kDc9M2kqE;10
+Loona;1998;Hijo de la Luna;Custom Basic;https://www.youtube.com/watch?v=PjumPpEIjw8;10
+Pur;1993;Hör gut zu;Schlagerparty;https://www.youtube.com/watch?v=F3MY3RZ0F6k;10
+Elton John;1983;I'm Still Standing;Custom Basic;https://www.youtube.com/watch?v=RMndME63PMo;10
+Kim Wilde;1981;Kids In America;Custom Basic;https://www.youtube.com/watch?v=YXE9oBzST68;10
+Wet Wet Wet;1994;Love Is All Around;Basic;https://www.youtube.com/watch?v=jSG4f71myKY;10
+Céline Dion;1997;My Heart Will Go On;Basic;https://www.youtube.com/watch?v=Siz-xBfIqpg;10
+Ines Adler;1996;Nimm einmal noch meine Hand;Schlagerparty;https://www.youtube.com/watch?v=g6EB9c978F8;10
+Alicia Keys;2007;No One;Basic;https://www.youtube.com/watch?v=woS5m96RNzo;10
+Glenn Medeiros;1987;Nothing's Gonna Change My Love For You;Custom Basic;https://www.youtube.com/watch?v=zmsdw828dwI;10
+Peter Wackel;2005;Oberammergau;Schlagerparty;https://www.youtube.com/watch?v=bGgRFctcb8A;10
+Fatboy Slim;1999;Praise You;Basic;https://www.youtube.com/watch?v=iPo7y_8AocI;10
+Mika;2007;Relax, Take It Easy;Basic;https://www.youtube.com/watch?v=EVDYmBrl02Q;10
+Mark Morrison;1996;Return Of The Mack;Basic;https://www.youtube.com/watch?v=1ZfjB5P7RS0;10
+Cliff Richard;1963;Rote Lippen soll man küssen;Schlagerparty;https://www.youtube.com/watch?v=H2RbCtfTjVo;10
+Udo Jürgens;1965;Siebzehn Jahr, blondes Haar;Basic;https://www.youtube.com/watch?v=1_ReKoTY8eY;10
+Ich + Ich;2007;Stark;Schlagerparty;https://www.youtube.com/watch?v=McItNruy0wA;10
+Neil Diamond;1969;Sweet Caroline;Basic;https://www.youtube.com/watch?v=4F_RCWVoL4s;10
+Katja Ebstein;1980;Theater;Schlagerparty;https://www.youtube.com/watch?v=Agrad3dY5Qc;10
+Karat;1978;Über sieben Brücken musst du gehen;Basic;https://www.youtube.com/watch?v=eKwl5HclBeQ;10
+Peter Maffay;1976;Und es war Sommer;Schlagerparty;https://www.youtube.com/watch?v=-DLE_1SQsj0;10
+Trenkwalder;2001;Verliab di;Schlagerparty;https://www.youtube.com/watch?v=2zxqZARI0e0;10
+Wolfgang Petry;1983;Wahnsinn;Basic;https://www.youtube.com/watch?v=LtNY7Fnva0Q;10
+Claudia Jung;1995;Wer die Sehnsucht kennt;Schlagerparty;https://www.youtube.com/watch?v=vfavz-qunYE;10
+Billie Eilish;2023;What Was I Made For?;Custom Basic;https://www.youtube.com/watch?v=dpnTd9Dx2OM;10
+Percy Sledge;1966;When A Man Loves A Woman;Basic;https://www.youtube.com/watch?v=tbWDkg4T3G4;10
+Led Zepplin;1969;Whole Lotta Love;Basic;https://www.youtube.com/watch?v=HibBnC6SVk8;10
+Scorpions;1991;Wind of Change;Basic;https://www.youtube.com/watch?v=n4RjJKxsamQ;10
+Bob Sinclar (feat. Steve Edwards);2006;World, Hold On (Children Of The Sky);Basic;https://www.youtube.com/watch?v=Z9bNzbWlYb0;10
+Unheilig;2014;Zeit zu gehen;Schlagerparty;https://www.youtube.com/watch?v=4DTCHO9tQdI;10
+Bruce Springsteen;1984;Dancing In The Dark;Basic;https://www.youtube.com/watch?v=8cNS_Mecbw8;11
+Ariana Grande;2016;Dangerous Woman;Custom Basic;https://www.youtube.com/watch?v=TFrMDGfW_Sg;11
+Die Flippers;1986;Die rote Sonne von Barbados;Schlagerparty;https://www.youtube.com/watch?v=gZO_-N3HBkM;11
+Andrea Berg;2001;Du hast mich tausendmal belogen;Schlagerparty;https://www.youtube.com/watch?v=t8zQyi61-wo;11
+Sportfreunde Stiller;2002;Ein Kompliment;Basic;https://www.youtube.com/watch?v=C4uXGzFZjqw;11
+Freddy Quinn;1962;Junge, komm bald wieder;Schlagerparty;https://www.youtube.com/watch?v=or4T2IPhRVc;11
+Spider Murphy Gang;1987;So a Nacht;Schlagerparty;https://www.youtube.com/watch?v=sox_-1x-VGw;11
+Donikkl;2008;So ein schöner Tag (Fliegerlied);Schlagerparty;https://www.youtube.com/watch?v=Q65fxgCQeyA;11
+Nancy Sinatra;1965;These Boots Are Made For Walkin';Basic;https://www.youtube.com/watch?v=TDmidrIDB4o;11
+Justin Bieber;2021;Anyone;Basic;https://www.youtube.com/watch?v=KIK3azN4w34;12
+Marie Reim;2022;Bist du dafür bereit?;Schlagerparty;https://www.youtube.com/watch?v=0QkRsiwmSB4;12
+The Beatles;1969;Come Together;Custom Basic;https://www.youtube.com/watch?v=45cYwDMibGo;12
+Nik P.;1998;Ein Stern, der deinen Namen trägt;Schlagerparty;https://www.youtube.com/watch?v=q0jkVfhky24;12
+Rudi Carrell;1978;Goethe war gut;Schlagerparty;https://www.youtube.com/watch?v=__pll7gNU0Q;12
+Max Giesinger ;2021;Irgendwann ist jetzt;Schlagerparty;https://www.youtube.com/watch?v=pqMz4ZHV3BY;12
+Oliver Haidt;1996;Lebenslänglich Du;Schlagerparty;https://www.youtube.com/watch?v=Tk6Boeo-Moo;12
+Gottlieb Wendehals;1981;Polonäse Blankenese;Schlagerparty;https://www.youtube.com/watch?v=bf6pR6MC2Xs;12
+Achim Reichel;1999;Sa-Lo-Me;Schlagerparty;https://www.youtube.com/watch?v=bD9e0OUmu60;12
+Reinhard Mey;1974;Über den Wolken;Basic;https://www.youtube.com/watch?v=fZMFF8QH3ew;12
+Avicii;2017;Without You;Basic;https://www.youtube.com/watch?v=-AJrAem0YyA;12
+Sylvester;1978;You Make Me Feel (Mighty Real);Basic;https://www.youtube.com/watch?v=gD6cPE2BHic;12
+Sportfreunde Stiller;2006;54, '74, '90, 2006;Schlagerparty;https://www.youtube.com/watch?v=gOUpBDSeWlA;13
+Peter Alexander;1976;Die Kleine Kneipe;Schlagerparty;https://www.youtube.com/watch?v=A10I_3e8B_I;13
+Peter Reber;1985;E Vogel ohni Flügel;Schlagerparty;https://www.youtube.com/watch?v=13YrHoMNe1I;13
+Rainhard Fendrich;1985;Haben Sie Wien schon bei Nacht geseh'n;Schlagerparty;https://www.youtube.com/watch?v=Ngd0BbvRHJA;13
+Frank Zander;1989;Hier kommt Kurt;Schlagerparty;https://www.youtube.com/watch?v=BrPcg8y2-5E;13
+Larkins;2020;Hit and Run;Custom Basic;https://www.youtube.com/watch?v=x7p3N-lBuMo;13
+Hanne Haller;1989;Mein lieber Mann;Schlagerparty;https://www.youtube.com/watch?v=hXtL1onjUFM;13
+Helene Fischer;2021;Rausch;Schlagerparty;https://www.youtube.com/watch?v=vVnTxZ6ppBU;13
+Eagle-Eye Cherry;1997;Save Tonight;Basic;https://www.youtube.com/watch?v=Hc4JvgmFp5Y;13
+Rebel Tell;2022;Schlager ist nicht kriminell;Schlagerparty;https://www.youtube.com/watch?v=vrpufaP9u-I;13
+Anja Regnitz;2006;Sex und seine Konsequenzen;Schlagerparty;https://www.youtube.com/watch?v=VylXVpaGWAg;13
+Natalie Imbruglia;1997;Torn;Basic;https://www.youtube.com/watch?v=UOJkzcJigGI;13
+Michael Holm;1974;Tränen lügen nicht;Basic;https://www.youtube.com/watch?v=7grORBI4fJ8;13
+Daliah Lavi;1971;Willst Du mit mir geh'n;Schlagerparty;https://www.youtube.com/watch?v=6hb8MghgTwE;13
+Naked Eyes;1982;Always Something There To Remind Me;Custom Basic;https://www.youtube.com/watch?v=PzU3fK6Pd0k;14
+Erste Allgemeine Verunsicherung;1988;An der Copacabana;Schlagerparty;https://www.youtube.com/watch?v=7oLmT8Nf76w;14
+Kelly Clarkson;2005;Because Of You;Basic;https://www.youtube.com/watch?v=9SAh14Kt4n8;14
+Anna-Carina Woitschack, Stefan Mross;2020;Blaue Lagune;Schlagerparty;https://www.youtube.com/watch?v=cnfqTwO5G7Y;14
+Patrick Hernandez;1978;Born To Be Alive;Basic;https://www.youtube.com/watch?v=vb5a-GYty-o;14
+Toploader;2000;Dancing In The Moonlight;Basic;https://www.youtube.com/watch?v=GSWcy-bx_lg;14
+Die Atzen;2009;Das geht ab;Schlagerparty;https://www.youtube.com/watch?v=dkc14WdXFNI;14
+My Chemical Romance;2006;Dead;Custom Basic;https://www.youtube.com/watch?v=H48kOqqaWv0;14
+The Beatles;1969;Here Comes The Sun;Custom Basic;https://www.youtube.com/watch?v=tDEzmaZHuS0;14
+Rudolf Rock und die Schocker;1990;Herzilein;Schlagerparty;https://www.youtube.com/watch?v=l1eqypd6TEk;14
 Wolkenfrei;2014;Ich versprech Dir nichts und geb' Dir alles;Schlagerparty;https://www.youtube.com/watch?v=ib7WGGdeTYw;14
+Rio Reiser;1986;König von Deutschland;Basic;https://www.youtube.com/watch?v=I6oKCW6imjM;14
+Duran Duran;1992;Ordinary World;Custom Basic;https://www.youtube.com/watch?v=z3BU9Z_x8qM;14
+Tony Marshall;1971;Schöne Maid;Schlagerparty;https://www.youtube.com/watch?v=EviBJR02-zk;14
+Lady Gaga & Bradley Cooper;2018;Shallow;Basic;https://www.youtube.com/watch?v=BpIf43m2ZQI;14
+Peter Maffay;1979;So bist du;Schlagerparty;https://www.youtube.com/watch?v=Hq9JebayPmo;14
+The Rolling Stones;1981;Start Me Up;Basic;https://www.youtube.com/watch?v=ZzlgJ-SfKYE;14
+ABC;1982;The Look of Love, Pt. 1;Custom Basic;https://www.youtube.com/watch?v=LjRRP84tTew;14
+Wolfgang Petry;1998;Weiss' der Geier;Schlagerparty;https://www.youtube.com/watch?v=0yIIRkKtLSE;14
+Madonna (feat. Justin Timberlake & Timbaland);2008;4 Minutes;Basic;https://www.youtube.com/watch?v=BgPqNyqYDN4;15
+Lukas Graham;2015;7 Years;Basic;https://www.youtube.com/watch?v=kqFLQG484pg;15
+Gipsy Kings;1987;Bamboléo;Custom Basic;https://www.youtube.com/watch?v=NhGAQ6fjJxo;15
+Fernando Express;2005;Barfuss bis ans Ende der Welt;Schlagerparty;https://www.youtube.com/watch?v=9LFEoi3go8o;15
+Cher;1998;Believe;Basic;https://www.youtube.com/watch?v=n7wvAEDOxAs;15
+Plastic Bertrand;1977;Ça Plane Pour Moi;Basic;https://www.youtube.com/watch?v=OvgagTxWqAE;15
+Klostertaler;1998;Ciao d'amore;Schlagerparty;https://www.youtube.com/watch?v=v6ZbuEyHWrw;15
+Post Malone;2019;Circles;Basic;https://www.youtube.com/watch?v=WnLIGgTaBM0;15
+Enriique Iglesias & Whitney Houston;2000;Could I Have This Kiss Forever;Basic;https://www.youtube.com/watch?v=fLikA-aTuAY;15
+Beyoncé (feat. Jay-Z);2003;Crazy In Love;Basic;https://www.youtube.com/watch?v=BVQaQNpkxzg;15
+Wang Chung;1982;Dance Hall Days;Custom Basic;https://www.youtube.com/watch?v=n1TNLU-ydLA;15
+Fernando Express;2008;Der rote Mond von Agadir;Schlagerparty;https://www.youtube.com/watch?v=Pu6T2UcKv-A;15
+Journey;1981;Don't Stop Believin';Basic;https://www.youtube.com/watch?v=1k8craCGpgs;15
+The Human League;1981;Don't You Want Me;Basic;https://www.youtube.com/watch?v=eXXTWA82j18;15
+Fleetwood Mac;1977;Dreams;Custom Basic;https://www.youtube.com/watch?v=PgagPdVM7bk;15
+Marianne Rosenberg;1975;Er gehört zu mir;Schlagerparty;https://www.youtube.com/watch?v=COkhUbRoaLA;15
+Claudia Jung;1989;Etwas Für Die Ewigkeit;Schlagerparty;https://www.youtube.com/watch?v=qWw0IbK9fOA;15
+R.E.M.;1992;Everybody Hurts;Basic;https://www.youtube.com/watch?v=mhIay4-PbCY;15
+Tracy Chapman;1988;Fast Car;Basic;https://www.youtube.com/watch?v=AIOAlaACuv4;15
+Fantasy;2013;Flaschenpost;Schlagerparty;https://www.youtube.com/watch?v=zYzMefB-QZk;15
+Brunner & Brunner;1994;Für dich;Schlagerparty;https://www.youtube.com/watch?v=aW_qlvkAEAg;15
+Will Smith;1998;Gettin' Jiggy Wit It;Basic;https://www.youtube.com/watch?v=-sOPCY6_If8;15
+Cyndi Lauper;1983;Girls Just Wanna Have Fun;Custom Basic;https://www.youtube.com/watch?v=jRr5EasAq84;15
+Kanye West (feat. Jamie Foxx);2005;Gold Digger;Basic;https://www.youtube.com/watch?v=LFFcyWGWz14;15
+Andy Borg;1994;Ich brauch ein bisschen Glück;Schlagerparty;https://www.youtube.com/watch?v=f_zOpe4hSNc;15
+Udo Jürgens;1982;Ich war noch niemals in New York;Schlagerparty;https://www.youtube.com/watch?v=YPx2AxpBPs8;15
+Purple Disco Machine & Sophie and the Giants;2022;In The Dark;Custom Basic;https://www.youtube.com/watch?v=EFnG6CVkFeQ;15
+Chuck Berry;1958;Johnny B. Goode;Basic;https://www.youtube.com/watch?v=Uf4rxCB4lys;15
+Ella Endlich;2011;Männtertango;Schlagerparty;https://www.youtube.com/watch?v=pnHVyCmbl1Q;15
+Carrière;1995;Mein Ein und Alles;Schlagerparty;https://www.youtube.com/watch?v=L1VAv9C6mKQ;15
+Boston;1976;More Than A Feeling;Basic;https://www.youtube.com/watch?v=DCZNFmHJbV8;15
+G.G. Anderson;1981;Nein heißt ja;Schlagerparty;https://www.youtube.com/watch?v=SSiVFj-TW2s;15
+Tim Bendzko;2011;Nur noch kurz die Welt retten;Basic;https://www.youtube.com/watch?v=4BAKb2p450Q;15
+Enya;1988;Orinoco Flow;Basic;https://www.youtube.com/watch?v=xWyw5VBZzrI;15
+Wolfgang Fierek;1985;Resi i hol di mit mei'm  Traktor;Schlagerparty;https://www.youtube.com/watch?v=Iftl_V1NKpI;15
+Ingo ohne Flamingo;2017;Saufen morgens, mittags, abends;Schlagerparty;https://www.youtube.com/watch?v=PP9I6WRD4VI;15
+Brunner & Brunner;1993;Schenk mir diese eine Nacht;Schlagerparty;https://www.youtube.com/watch?v=qtB-8REgBQo;15
+Kasalla;2015;Stadt met K;Schlagerparty;https://www.youtube.com/watch?v=WEmdUN0cAhw;15
+Coldplay;2005;Talk;Basic;https://www.youtube.com/watch?v=D8UfEWttw1M;15
+Tony Holiday;1977;Tanze Samba mit mir;Schlagerparty;https://www.youtube.com/watch?v=ZYHO7BGiH54;15
+Michelle;1992;Und heut' Nacht will ich tanzen;Schlagerparty;https://www.youtube.com/watch?v=MtkrHb30Teg;15
+Mario Jordan;1992;Welch ein Tag;Schlagerparty;https://www.youtube.com/watch?v=KtPmOFzd2xU;15
+Gaby Baginsky;1994;Wer hat dir das Küssen beigebracht?;Schlagerparty;https://www.youtube.com/watch?v=9ZhHgzxksZY;15
+Michelle;2007;Willst du mich für immer?;Schlagerparty;https://www.youtube.com/watch?v=P_oW3lrn7-M;15
 Wolkenfrei;2015;Wolke 7;Schlagerparty;https://www.youtube.com/watch?v=GOCPXxB5YdQ;15
-Wums Gesang;1972;Ich wünsch mir 'ne kleine Mietzekatze;Schlagerparty;https://www.youtube.com/watch?v=8CiSEtZCvyY;0
-Xanadu;1989;Einen Traum für diese Welt;Schlagerparty;https://www.youtube.com/watch?v=nk0HTecN568;0
-Zlatko;2000;Ich vermiss' dich;Schlagerparty;https://www.youtube.com/watch?v=_BLfvl2jGDc;0
+Carly Simon;1972;You're So Vain;Basic;https://www.youtube.com/watch?v=lT7I40wWYAQ;15
+Thomas Anders, Florian Silbereisen;2022;Alles wird gut;Schlagerparty;https://www.youtube.com/watch?v=ogXjEQkHzUw;16
+T'Pau;1987;China In Your Hand;Basic;https://www.youtube.com/watch?v=RrJwccZBl-w;16
+twenty one pilots;2019;Chlorine;Custom Basic;https://www.youtube.com/watch?v=UOQlKBlobRY;16
+Stefanie Hertel;2004;Erst du, dann du;Schlagerparty;https://www.youtube.com/watch?v=SF079N6dt8s;16
+Ole ohne Kohle;2012;Ich bin kein Model und kein Superstar;Schlagerparty;https://www.youtube.com/watch?v=7xNSfvxJxHA;16
+Olaf Henning;2011;Ich mal für dich den Himmel blau;Schlagerparty;https://www.youtube.com/watch?v=TzMxvqMbjho;16
+The Bangles;1986;Manic Monday;Basic;https://www.youtube.com/watch?v=VshgeeW0NOI;16
+Monique;2020;Sieben Tage, sieben Nächte;Schlagerparty;https://www.youtube.com/watch?v=594ydVlytN0;16
+Freddy Breck;1993;Tanz mit mir durch die Nacht;Schlagerparty;https://www.youtube.com/watch?v=e0rKgqdt5qg;16
+Simone;2005;Viel zu oft;Schlagerparty;https://www.youtube.com/watch?v=nYgjahLa-D8;16
+Rufus (feat. Chaka Khan);1983;Ain't Nobody;Basic;https://www.youtube.com/watch?v=BNirQXe8HOA;17
+Spliff;1982;Carbonara;Schlagerparty;https://www.youtube.com/watch?v=y52bQT5J8HA;17
+Echosmith;2013;Cool Kids;Custom Basic;https://www.youtube.com/watch?v=YKCotHE1uNw;17
+ABBA;1976;Dancing Queen;Custom Basic;https://www.youtube.com/watch?v=2ZUX3j6WLiQ;17
+Silbermond;2006;Das Beste;Basic;https://www.youtube.com/watch?v=0fB_Lxu6UhQ;17
+Markus Becker;2007;Das rote Pferd;Schlagerparty;https://www.youtube.com/watch?v=VDCrh5GRTNY;17
+Gebrüder Blattschuss;1978;Kreuzberger Nächte;Schlagerparty;https://www.youtube.com/watch?v=I0GU899OdZ8;17
+Eros Ramazzotti;1996;Più Bella Cosa;Basic;https://www.youtube.com/watch?v=yELzcAnV5aM;17
+Simone;2001;Solang wir lieben;Schlagerparty;https://www.youtube.com/watch?v=b4mV07X9cWg;17
+Spice Girls;1998;Stop;Basic;https://www.youtube.com/watch?v=60mS05_GjOw;17
+Rudi Carell;1975;Wann wird's mal wieder richtig Sommer?;Basic;https://www.youtube.com/watch?v=cH3tuAAHpNI;17
+Max Giesinger & LOTTE;2019;Auf das was da noch kommt;Custom Basic;https://www.youtube.com/watch?v=fFqmzYwM1IQ;18
+Bay City Rollers;1975;Bye Bye Baby (Baby, Goodbye);Custom Basic;https://www.youtube.com/watch?v=BUVMCzVK7VQ;18
+Stefan Waggershausen, Viktor Lazlo;1990;Das erste Mal tat's noch weh;Schlagerparty;https://www.youtube.com/watch?v=lEPLsMtlY4A;18
+Marina Marx;2020;Der geilste Fehler;Schlagerparty;https://www.youtube.com/watch?v=bgEEOI2kP2c;18
+Ramon Roselly;2020;Eine Nacht;Schlagerparty;https://www.youtube.com/watch?v=9HdOqsDD5pQ;18
+Joachim Witt;1980;Goldener Reiter;Schlagerparty;https://www.youtube.com/watch?v=G5ZHyGBfPX8;18
+Panic! At the Disco;2019;Hey Look Ma, I Made It;Custom Basic;https://www.youtube.com/watch?v=vqQDp522wQU;18
+AC/DC;1979;Highway to Hell;Custom Basic;https://www.youtube.com/watch?v=MjAMHH3vysA;18
+Franziska Wiese;2016;Ich bin frei;Schlagerparty;https://www.youtube.com/watch?v=xrZ5S3Lfmx8;18
+Tom Cochrane;1991;Life Is A Highway;Custom Basic;https://www.youtube.com/watch?v=BUzlBP01Nzg;18
+Jessie J (feat. B.O.B);2011;Price Tag;Basic;https://www.youtube.com/watch?v=qMxX-QOV9tI;18
+Andrea Jürgens;1991;Santa Catarina;Schlagerparty;https://www.youtube.com/watch?v=pQ8lvMaSLXQ;18
+Bürger Lars Dietrich;1996;Sexy Eis;Custom Basic;https://www.youtube.com/watch?v=H7c7hiRnvFY;18
+Dirk Busch;1994;Du muss deinen Weg alleine gehen;Schlagerparty;https://www.youtube.com/watch?v=leNl5BYZhWs;19
+Billy Swan;1974;I Can Help;Basic;https://www.youtube.com/watch?v=bgPsM-YWBrE;19
+Marvin Gaye;1968;I Heard It Through The Grapevine;Basic;https://www.youtube.com/watch?v=VWG3npfEoHo;19
+Relax;1990;I lass di nimmer aus;Schlagerparty;https://www.youtube.com/watch?v=kgOR4WYxOu4;19
+Jennifer Lopez;1999;If You Had My Love;Basic;https://www.youtube.com/watch?v=tT5g7I-Itc8;19
+Shaggy;2000;It Wasn't Me;Basic;https://www.youtube.com/watch?v=ssVj50ombaM;19
+Claudia Jung & Richard Claydermann;1994;Je t'aime mon amour;Schlagerparty;https://www.youtube.com/watch?v=Xs5u6-D36XM;19
+Exile;1978;Kiss You All Over;Custom Basic;https://www.youtube.com/watch?v=l6tKoi4dVmw;19
+Atlantis;1987;Lass mi bei dir sein;Schlagerparty;https://www.youtube.com/watch?v=e9PWUikQeeQ;19
+Vaya Con Dios;1990;Nah Neh Nah;Basic;https://www.youtube.com/watch?v=7LUm-E4GPU8;19
+Huey Lewis & The News;1985;The Power Of Love;Custom Basic;https://www.youtube.com/watch?v=-UQFBtHEFJ8;19
+Die Ärzte;1988;Westerland;Basic;https://www.youtube.com/watch?v=tIFFfP87Ooc;19
+Stefan Waggershausen & Alice;1984;Zu nah am Feuer;Schlagerparty;https://www.youtube.com/watch?v=AJfj7ZiHlmc;19
+2raumwohnung;2007;36 Grad;Custom Basic;https://www.youtube.com/watch?v=LAEmDTu8Xtw;20
+Klaus & Klaus;1985;An der Nordseeküste;Schlagerparty;https://www.youtube.com/watch?v=U15ZCSkkU9A;20
+AC/DC;1980;Back In Black;Custom Basic;https://www.youtube.com/watch?v=zjx0D1Ivy-Q;20
+Wincent Weiss & Johannes Oerding;2021;Die guten Zeiten;Basic;https://www.youtube.com/watch?v=Swlxm_msl4k;20
+Sabrina Setlur;1997;Du liebst mich nicht;Schlagerparty;https://www.youtube.com/watch?v=C6_FGIRbMm8;20
+Hozier;2023;Eat Your Young;Custom Basic;https://www.youtube.com/watch?v=D9o_XTzYoa8;20
+Ottawan;1981;Hands Up (Give Me Your Heart);Custom Basic;https://www.youtube.com/watch?v=NR2qjvsqNSk;20
+The Hollies;1969;He Ain't Heavy He's My Brother;Basic;https://www.youtube.com/watch?v=Mlm2MnlEGyg;20
+Bryan Adams;1985;Heaven;Basic;https://www.youtube.com/watch?v=s6TtwR2Dbjg;20
+Simply Red;1985;Holding Back The Years;Basic;https://www.youtube.com/watch?v=TXZ2TQqqe4M;20
+Bonnie Tyler;1984;Holding Out For A Hero;Custom Basic;https://www.youtube.com/watch?v=CPK2HwYzjkA;20
+Eric Carmen;1987;Hungry Eyes;Basic;https://www.youtube.com/watch?v=x653F7beSpY;20
+Tom Astor;1991;Ich bin kein Dichter, kein Poet;Schlagerparty;https://www.youtube.com/watch?v=FcKFv-s4p6s;20
+Wolfgang Ziegler;2003;Ich küss dir die Angst von deiner Haut;Schlagerparty;https://www.youtube.com/watch?v=5R7fKOteVZw;20
+Linda Hesse;2014;Knutschen - Ich kann nichts dafür;Schlagerparty;https://www.youtube.com/watch?v=ME_5F7H7EOA;20
+Daft Punk;2000;One More Time;Basic;https://www.youtube.com/watch?v=A2VpR8HahKc;20
+Stevie Wonder;1985;Part-Time Lovers;Basic;https://www.youtube.com/watch?v=jN2AdOjI4FI;20
+Kerstin Ott;2018;Regenbogenfarben;Schlagerparty;https://www.youtube.com/watch?v=WSTu9AMLvTw;20
+Fine Young Cannibals;1988;She Drives Me Crazy;Basic;https://www.youtube.com/watch?v=wyrmfuIxS98;20
+Anastacia;2004;Sick and Tired;Basic;https://www.youtube.com/watch?v=HzfyCuPVpCY;20
+Die Flippers;1990;Sieben Tage;Schlagerparty;https://www.youtube.com/watch?v=71zgpIlJOK0;20
+Sade;1984;Smooth Operator;Custom Basic;https://www.youtube.com/watch?v=UNk6LTZYokk;20
+Cyndi Lauper;1986;True Colors;Basic;https://www.youtube.com/watch?v=LPn0KFlbqX8;20
+Nicki;1986;Wenn I Mit Dir Tanz;Schlagerparty;https://www.youtube.com/watch?v=hPjm0fk8-E8;20
+Münchener Freiheit;1985;Ohne Dich (schlaf' ich heut Nacht nicht ein);Schlagerparty;https://www.youtube.com/watch?v=SoZ8naG0sj0;21
+Billy Joel;1973;Piano Man;Basic;https://www.youtube.com/watch?v=QwVjTlTdIDQ;21
+Emma Franklin;1967;Piece Of My Heart;Basic;https://www.youtube.com/watch?v=L0QAxIKf8G4;21
+Die Ärzte;2007;Junge;Basic;https://www.youtube.com/watch?v=gEJVuMPpJFA;22
+Bryan Ferry;1976;Let's Stick Together;Basic;https://www.youtube.com/watch?v=XFy2wN2Wdt0;22
+Falco;1985;Rock Me Amadeus;Schlagerparty;https://www.youtube.com/watch?v=zUaSZXedM9Y;22
+Leo Sayer;1977;When I Need You;Basic;https://www.youtube.com/watch?v=koc_LF856jc;22
+Nelly (feat. Kelly Rowland);2002;Dilemma;Basic;https://www.youtube.com/watch?v=8WYHDfJDPDc;23
+Extrabreit;1980;Hurra, Hurra die Schule brennt;Custom Basic;https://www.youtube.com/watch?v=KADRYcVP7KA;23
+DJ Herzbeat, Roger Whittaker;2021;Albany;Schlagerparty;https://www.youtube.com/watch?v=NXOcNL8WQh0;24
+Freddy Breck;1973;Bianca;Schlagerparty;https://www.youtube.com/watch?v=ydccOKOSZ7s;24
+Avril Lavigne;2002;Complicated;Custom Basic;https://www.youtube.com/watch?v=5eGbnVlRcRg;24
+Lenny Kravitz;1998;Fly Away;Basic;https://www.youtube.com/watch?v=cELBtOexOOo;24
+Kenny Loggins;1984;Footloose;Custom Basic;https://www.youtube.com/watch?v=bjQ9vTsMQ4I;24
+Joseíto Fernández;1929;Guajira Guantanamera;Basic;https://www.youtube.com/watch?v=gdYIpvnzoW8;24
+Michael Jackson;1982;Billie Jean;Custom Basic;https://www.youtube.com/watch?v=7CTJcHjkq0E;25
+Falco;1981;Der Kommissar;Schlagerparty;https://www.youtube.com/watch?v=KhB05p-37wI;25
+Haindling;1983;Du Depp;Schlagerparty;https://www.youtube.com/watch?v=Xi7lQJZuSOo;25
+Trio;1983;Herz ist Trumpf;Schlagerparty;https://www.youtube.com/watch?v=NUU3ci9KUdg;25
+Frank Lars;2010;Ich kann nicht ohne dich;Schlagerparty;https://www.youtube.com/watch?v=dgm2KFBWHTc;25
+Amii Stewart;1979;Knock On Wood;Basic;https://www.youtube.com/watch?v=XKuJUxGntRI;25
+Culture Beat;1993;Mr. Vain;Basic;https://www.youtube.com/watch?v=V3qUoiwr5kQ;25
+Maite Kelly;2016;Sieben Leben für dich;Schlagerparty;https://www.youtube.com/watch?v=VOa30FJGd4w;25
+Mike & The Mechanics;1988;The Living Years;Basic;https://www.youtube.com/watch?v=IW8mcLiIsI8;25
+Queen (feat. David Bowie);1981;Under Pressure;Basic;https://www.youtube.com/watch?v=a01QQZyl-_I;25
+Tic Tac Toe;1997;Warum?;Basic;https://www.youtube.com/watch?v=WflQ02OLVSQ;25
+Hannes Kröger;1988;Der blonde Hans;Schlagerparty;https://www.youtube.com/watch?v=SN8gLMjErds;26
+In Extremo;2003;Erdbeermund;Custom Basic;https://www.youtube.com/watch?v=azpiavwMYh4&list=PLthosx2VRptcOB68hGRHKKMxIxQw9WQ0U&index=32;26
+Gunter Gabriel & Linda Fellner;1974;Hey Boss, ich brauch mehr Geld;Schlagerparty;https://www.youtube.com/watch?v=YecsNemhULA;26
+Billy Idol;1982;White Wedding;Basic;https://www.youtube.com/watch?v=x9j6DE6RnSk;26
+Stereoact feat. Kerstin Ott;2015;Die immer lacht;Schlagerparty;https://www.youtube.com/watch?v=wdC7k35C4ns;27
+Arctic Monkeys;2013;Do I Wanna Know?;Custom Basic;https://www.youtube.com/watch?v=rB6mXBWrPXY;27
+Nino de Angelo;1983;Jenseits von Eden;Schlagerparty;https://www.youtube.com/watch?v=7wFRYTXBAVI;27
+Genesis;1991;No Son of Mine;Basic;https://www.youtube.com/watch?v=KZbHcAPsllE;27
+Lionel Richie;1983;Love Will Find A Way;Custom Basic;https://www.youtube.com/watch?v=huMCFZfWin8;28
+Michael Wendler;2006;Prinzessin;Schlagerparty;https://www.youtube.com/watch?v=ULN0pgnPHqc;28
+Red Hot Chili Peppers;1992;Under The Bridge;Basic;https://www.youtube.com/watch?v=O9TunCtR3dQ;28
+David Bowie;1969;Space Oddity;Basic;https://www.youtube.com/watch?v=tRNpjt29n6Y;29
+Lionel Richie;1986;Dancing On The Ceiling;Basic;https://www.youtube.com/watch?v=4KlLfYADaVE;30
+Fleetwood Mac;1987;Everywhere;Basic;https://www.youtube.com/watch?v=TpgCWuAYPjU;30
+Lipps, Inc.;1979;Funkytown;Custom Basic;https://www.youtube.com/watch?v=Z6dqIYKIBSU;30
+Donna Summer;1979;Hot Stuff;Custom Basic;https://www.youtube.com/watch?v=tJxOXzE5A8w;30
+George Michael & Aretha Franklin;1987;I Knew You Were Waiting (For Me);Basic;https://www.youtube.com/watch?v=fDxzQJaA228;30
+Kaoma;1989;Lambada;Basic;https://www.youtube.com/watch?v=ooxAZfr-woI;30
+Jürgen Peters;2009;Mary Jane;Schlagerparty;https://www.youtube.com/watch?v=wQ6kpSOCa2s;30
+DJ Zipfelmann;2004;Schlittenfahren in Tirol (Der Schlittensong);Schlagerparty;https://www.youtube.com/watch?v=rMKsa8LcE_M;30
+Sister Sledge;1979;We Are Family;Basic;https://www.youtube.com/watch?v=uyGY2NfYpeE;30
+New Radicals;1998;You Get What You Give;Basic;https://www.youtube.com/watch?v=cPAEFnVZVOs;30
+Mickie Krause;1999;Zehn nackte Friseusen;Schlagerparty;https://www.youtube.com/watch?v=ZIdhH3TxnD4;30
+The Cure;1992;Friday I'm In Love;Basic;https://www.youtube.com/watch?v=mGgMZpGYiy8;31
+Whitney Houston;1987;I Wanna Dance With Somebody (Who Loves Me);Basic;https://www.youtube.com/watch?v=2dzf4T3RbEc;31
+Patrick Lindner;2003;Halleluja - auf das Leben;Schlagerparty;https://www.youtube.com/watch?v=U4XOGnBqvCQ;32
+Kiss;1979;I Was Made For Lovin' You;Custom Basic;https://www.youtube.com/watch?v=-gUBIP9bzK0;33
+Django Reinhardt;1936;Nagasaki;Custom Basic;https://www.youtube.com/watch?v=pUQN44doG9I;33
+Van McCoy;1975;The Hustle;Basic;https://www.youtube.com/watch?v=qeUfDTn5huM;33
+Höhner;2003;Viva Colonia (Da simmer dabei, dat is prima!);Schlagerparty;https://www.youtube.com/watch?v=DD9oG1kIC2I;34
+Peter Schilling;1982;Major Tom (völlig losgelöst);Basic;https://www.youtube.com/watch?v=vr_UK0tSb8M;35
+Spider Murphy Gang;1981;Skandal im Sperrbezirk;Basic;https://www.youtube.com/watch?v=u-AwlK_wBJ8;35
+ABBA;1979;Gimme! Gimme! Gimme!;Custom Basic;https://www.youtube.com/watch?v=j8B87_z_2tc;36
+Oliver Pocher;2006;Schwarz und weiss;Schlagerparty;https://www.youtube.com/watch?v=B9od0nCPwpo;36
+The Blues Brothers;1980;Everybody Needs Somebody To Love;Custom Basic;https://www.youtube.com/watch?v=wDvIGZ-_au4;38
+KC And The Sunshine Band;1982;Give It Up;Basic;https://www.youtube.com/watch?v=GWqshuTyqjA;38
+Brings;2014;Kölsche Jung;Schlagerparty;https://www.youtube.com/watch?v=DcNPqsWPbD8;38
+Álvaro Soler;2018;La Cintura;Basic;https://www.youtube.com/watch?v=Eg4LUvUjUWI;38
+Britney Spears;2000;Oops!... I Did It Again;Basic;https://www.youtube.com/watch?v=CduA0TULnow;39
+Video Age;2020;Aerostar;Custom Basic;https://www.youtube.com/watch?v=oZOY5osmdx0;40
+Ideal;1980;Blaue Augen;Custom Basic;https://www.youtube.com/watch?v=uMokwYNn1Oo;40
+Linkin Park;2012;Burn It Down;Custom Basic;https://www.youtube.com/watch?v=zgEKLhvCCVA;40
+The Trammps;1976;Disco Inferno;Basic;https://www.youtube.com/watch?v=cWqcgPmCbDQ;40
+Clowns & Helden;1986;Ich liebe dich;Schlagerparty;https://www.youtube.com/watch?v=McZEhRabe7Y;40
+Guns N' Roses;1988;Sweet Child O' Mine;Basic;https://www.youtube.com/watch?v=D2gWc5Sw75w;40
+Massive Attack;1998;Teardrop;Custom Basic;https://www.youtube.com/watch?v=8X490Yt0ZHU;40
+Annie Lennox;1992;Why;Basic;https://www.youtube.com/watch?v=u8YNwi8S5GM;40
+Gazebo;1983;Lunatic;Custom Basic;https://www.youtube.com/watch?v=O2ftUaxDRuk;41
+Daryl Hall & John Oates;1982;Maneater;Basic;https://www.youtube.com/watch?v=oqy2N1jM2tU;41
+In Extremo;1999;Herr Mannelig;Custom Basic;https://www.youtube.com/watch?v=bkX1iNUq6Jw;42
+Duck Sauce;2010;Barbara Streisand;Basic;https://www.youtube.com/watch?v=WK4HHaNhcgU;44
+Gebrüder Blattschuss;1979;Früh-Stück;Schlagerparty;https://www.youtube.com/watch?v=A2daAfNsL5E;44
+Cornelia Froboess;1951;Pack die Badehose ein;Basic;https://www.youtube.com/watch?v=Jq755GRl4E0;44
+Richard Marx;1989;Right Here Waiting;Basic;https://www.youtube.com/watch?v=Jrc21w_zFc4;44
+Bronski Beat;1984;Smalltown Boy;Basic;https://www.youtube.com/watch?v=E5i2Wa7daDA;44
+Stefan Raab;2000;Wadde Hadde Dudde Da?;Eurovision;https://www.youtube.com/watch?v=k6lqqzJohTw;44
+Thelma Houston;1976;Don't Leave Me This Way;Basic;https://www.youtube.com/watch?v=rUdw7V-FC_Q;45
+Survivor;1982;Eye Of The Tiger;Custom Basic;https://www.youtube.com/watch?v=XxxfQ7-aMrE;45
+The Weather Girls;1982;It's Raining Men;Custom Basic;https://www.youtube.com/watch?v=R3m6-U89Fxs;45
+Modjo;2000;Lady (Hear Me Tonight);Basic;https://www.youtube.com/watch?v=oPTtFbB5NvU;45
+Chris Rea;1986;On The Beach;Custom Basic;https://www.youtube.com/watch?v=lt6aDXEdUrg;45
+Udo Lindenberg;1983;Sonderzug nach Pankow;Schlagerparty;https://www.youtube.com/watch?v=1oKKwuIZzr8;45
+Juliane Werding;1988;Starke Gefühle;Schlagerparty;https://www.youtube.com/watch?v=KSCk00ygOwY;45
+Brandy (feat. Monica);1998;The Boy Is Mine;Basic;https://www.youtube.com/watch?v=HRxDR-83XBo;45
+The Cranberries;1994;Zombie;Basic;https://www.youtube.com/watch?v=bZFbX19Q-R8;45
+Bob Marley & The Wailers;1974;No Woman No Cry;Basic;https://www.youtube.com/watch?v=Pv00rRagnqA;50
+Anna-Maria Zimmermann;2009;1000 Träume weit (Tornero);Schlagerparty;https://www.youtube.com/watch?v=Yy2RsG4lnm4;55
+Santa Esmeralda;1977;Don't Let Me Be Misunderstood;Custom Basic;https://www.youtube.com/watch?v=yCGFfz7LfDQ;55
+Dire Straits;1985;Walk Of Life;Basic;https://www.youtube.com/watch?v=h2a20YL5mvg;56
+Gunter Gabriel & Linda Fellner;1995;Wenn ich nur ein Trucker wär;Schlagerparty;https://www.youtube.com/watch?v=BZ9UZc_cBBU;60
+Kraftwerk;1974;Autobahn;Basic;https://www.youtube.com/watch?v=iukUMRlaBBE;65
+Limahl;1984;Never Ending Story;Basic;https://www.youtube.com/watch?v=RxJuIlbT740;70
+AC/DC;1980;Hells Bells;Custom Basic;https://www.youtube.com/watch?v=xJR1oTDt1Ak;85
+Prince;1984;Purple Rain;Basic;https://www.youtube.com/watch?v=TvnYmWpD_T8;85
+Klaus Lage;1985;Faust auf Faust;Custom Basic;https://www.youtube.com/watch?v=lTlpWn7EcdA;115
+Daði Freyr;2021;10 Years;Eurovision;;
+Seulgi;2022;28 Reasons;K-Pop;;
+TWICE;2021;Alcohol-Free;K-Pop;;
+ISAAK;2024;Always on the run;Eurovision;;
+LE SSERAFIM;2022;ANTIFRAGILE;K-Pop;;
+Duncan Laurence;2019;Arcade;Eurovision;;
+Red Velvet;2018;Bad Boy;K-Pop;;
+BIGBANG;2015;BANG BANG BANG;K-Pop;;
+HUGEL;2018;Bella Ciao;Custom Basic;;
+aespa;2020;Black Mamba;K-Pop;;
+ONEUS;2021;BLACK MIRROR;K-Pop;;
+Ann Sophie;2015;Black Smoke;Eurovision;;
+Lord of the Lost;2023;Blood & Glitter;Eurovision;;
+BLACKPINK;2016;BOOMBAYAH;K-Pop;;
+VIVIZ;2022;BOP BOP!;K-Pop;;
+Billlie;2023;BYOB (bring your own best friend);K-Pop;;
+EXO;2015;CALL ME BABY;K-Pop;;
+Orange Caramel;2014;Catallena;K-Pop;;
+Käärijä;2023;Cha Cha Cha;Eurovision;;
+CLASS:y;2022;CLASSY;K-Pop;;
+TOMORROW X TOGETHER;2019;CROWN;K-Pop;;
+FIFTY FIFTY;2023;Cupid;K-Pop;;
+ITZY;2019;DALLA DALLA;K-Pop;;
+NMIXX;2024;DASH;K-Pop;;
+BLACKPINK;2018;DDU-DU DDU-DU;K-Pop;;
+NMIXX;2022;DICE;K-Pop;;
+SEVENTEEN;2017;Don't Wanna Cry;K-Pop;;
+Chung Ha (feat. R3HAB);2020;Dream Of You;K-Pop;;
+ENHYPEN;2021;Drunk-Dazed;K-Pop;;
+EVERGLOW;2020;DUN DUN;K-Pop;;
+BTS;2020;Dynamite;K-Pop;;
+Elena Tsagrinou;2021;El Diablo;Eurovision;;
+Pixie Paris;2014;Es rappelt im Karton;Custom Basic;;
+Billlie;2023;EUNOIA;K-Pop;;
+La Zarra;2013;Évidemment;Eurovision;;
+Alexander Rybak;2009;Fairytale;Eurovision;;
+Red Velvet;2022;Feel My Rythm;K-Pop;;
+TWICE;2019;Feel Special;K-Pop;;
+ENHYPEN;2021;FEVER;K-Pop;;
+SUNMI (feat. Lena);2014;Full Moon;K-Pop;;
+Girls' Generation;2009;Gee;K-Pop;;
+Billlie;2022;GingaMingaYo (the strange world);K-Pop;;
+Kard;2020;Gunshot;K-Pop;;
+Lordi;2006;Hard Rock Hallelujah;Eurovision;;
+Måns Zelmerlöw;2015;Heros;Eurovision;;
+MAMAMOO;2019;HIP;K-Pop;;
+SEVENTEEN;2019;Home;K-Pop;;
+BLACKPINK;2020;How You Like That;K-Pop;;
+IVE;2023;I AM;K-Pop;;
+2NE1;2011;I Am the Best;K-Pop;;
+Girls' Generation;2007;Into The New World;K-Pop;;
+Destiny;2021;Je me casse;Eurovision;;
+TREASURE;2022;JIKJIN;K-Pop;;
+GALANT;2024;Katze;Eurovision;;
+NCT 127;2020;Kick It;K-Pop;;
+BLACKPINK;2019;Kill This Love;K-Pop;;
+IVE;2023;Kitsch;K-Pop;;
+LEE CHAE YEON;2023;KNOCK;K-Pop;;
+Udo Lindenberg & Apache 207;2023;Komet;Custom Basic;;
+Carl Douglas;1974;Kung Fu Fighting;Custom Basic;;
+EVERGLOW;2020;LA DI DA;K-Pop;;
+Christina Aguilera, Lil' Kim, Mýa, P!nk;2001;Lady Marmelade;Custom Basic;;
+WJSN;2022;Last Sequence;K-Pop;;
+SEVENTEEN;2021;Left & Right;K-Pop;;
+The Score;2017;Legend;Custom Basic;;
+Dua Lipa;2020;Levitating;Custom Basic;;
+MIKOLAS;2017;Lie To Me;Eurovision;;
+Rosenstolz;2004;Liebe ist alles;Custom Basic;;
+Udo Jürgens (feat. Jenny Jürgens);1984;Liebe ohne Leiden;Custom Basic;;
+Ellie Goulding;2010;Lights;Custom Basic;;
+Megan Trainor;2014;Lips Are Moving;Custom Basic;;
+Roxette;1988;Listen to Your Heart;Custom Basic;;
+Of Monsters and Men;2011;Little Talks;Custom Basic;;
+Bon Jovi;1986;Livin' On A Prayer;Custom Basic;;
+Joel Corry;2020;Lonely;Custom Basic;;
+Taylor Swift;2017;Look What You Made Me Do;Custom Basic;;
+IVE;2022;LOVE DIVE;K-Pop;;
+Purple Kiss;2022;Love Is Dead;K-Pop;;
+NMIXX;2023;Love Me Like This;K-Pop;;
+Ellie Goulding;2015;Love Me Like You Do;Custom Basic;;
+iKON;2018;LOVE SCENARIO;K-Pop;;
+ILLIT;2024;Magnetic;K-Pop;;
+Loona;1999;Mamboleo;Custom Basic;;
+ABBA;1975;Mamma Mia;Custom Basic;;
+Stray Kids;2022;MANIAC;K-Pop;;
+HWASA;2020;Maria;K-Pop;;
+Ricky Martin;1995;María;Custom Basic;;
+Will Smith;1997;Miami;Custom Basic;;
+Irene & Seulgi;2020;Monster;K-Pop;;
+TWICE;2023;MOONLIGHT SUNRISE;K-Pop;;
+Twin Twin;2014;Moustache;Eurovision;;
+Evanescence;2003;My Immortal;Custom Basic;;
+Fall Out Boy;2013;My Songs Know What You Did In The Dark (Light Em Up);Custom Basic;;
+Demi Lovato;2013;Neon Lights;Custom Basic;;
+aespa;2021;Next Level;K-Pop;;
+Bee Gees;1978;Night Fever;Custom Basic;;
+Megan Trainor;2016;NO;Custom Basic;;
+Metallica;1992;Nothing Else Matters;Custom Basic;;
+NMIXX;2022;O.O;K-Pop;;
+(G)-IDLE;2020;Oh my god;K-Pop;;
+Capone;1997;Oh No;Custom Basic;;
+Bernie Paul;1981;Oh No No;Custom Basic;;
+BTS;2020;ON;K-Pop;;
+Emmelie de Forest;2013;Only Teardrops;Eurovision;;
+Red Velvet;2017;Peek-A-Boo;K-Pop;;
+Dua Lipa;2020;Physical;Custom Basic;;
+Extrabreit;1982;Polizisten;Custom Basic;;
+NAYEON;2022;POP!;K-Pop;;
+DJ Sammy (feat. Carisma);1998;Prince of Love;Custom Basic;;
+Calvin Harris, Sam Smith;2018;Promises;Custom Basic;;
+Red Velvet;2019;Psycho;K-Pop;;
+Technotronic;1989;Pump Up The Jam;Custom Basic;;
+Sugarbabes;2005;Push the Button;Custom Basic;;
+Alessandra;2023;Queen of Kings;Eurovision;;
+Imagine Dragons;2012;Radioactive;Custom Basic;;
+P!nk;2010;Raise Your Glass;Custom Basic;;
+Christopher Cross;1980;Ride Like The Wind;Custom Basic;;
+KARD;2022;Ring The Alarm;K-Pop;;
+Conchita Wurst;2014;Rise Like A Phoenix;Eurovision;;
+Adele;2010;Rolling In The Deep;Custom Basic;;
+BTS;2015;Run;K-Pop;;
+Girls' Generation;2010;Run Devil Run;K-Pop;;
+Red Velvet;2016;Russian Roulette;K-Pop;;
+AWOLNATION;2010;Sail;Custom Basic;;
+Ava Max;2019;Salt;Custom Basic;;
+Lena;2010;Satellite;Eurovision;;
+ADINA;2022;Schwarzes Konfetti;Custom Basic;;
+Dreamcatcher;2020;Scream;K-Pop;;
+Earth, Wind & Fire;1978;September;Custom Basic;;
+Ed Sheeran;2017;Shape Of You;Custom Basic;;
+Bag Raiders;2009;Shooting Stars;Custom Basic;;
+Tarkan;1998;Şımarık;Custom Basic;;
+Avril Lavigne;2002;Sk8er Boi;Custom Basic;;
+Chanel;2021;SloMo;Eurovision;;
+Chung Ha;2019;Snapping;K-Pop;;
+P!nk;2008;So What;Custom Basic;;
+Hot Chocolate;1977;So You Win Again;Custom Basic;;
+Blanca;2022;Solo;Eurovision;;
+SUPER JUNIOR;2009;Sorry, Sorry;K-Pop;;
+Stars On 45;1981;Stars On 45;Custom Basic;;
+Chung Ha;2020;Stay Tonight;K-Pop;;
+Bee Gees;1977;Stayin' Alive;Custom Basic;;
+KALUSH & Kalush Orchestra;2022;Stefania;Eurovision;;
+Lena;2021;Strip;Custom Basic;;
+Chris Norman & Suzi Quatro;1978;Stumblin' In;Custom Basic;;
+Taylor Swift;2015;Style;Custom Basic;;
+The FAIM;2018;Summer Is a Curse;Custom Basic;;
+Stevie Wonder;1972;Superstition;Custom Basic;;
+AC/DC;1976;T.N.T;Custom Basic;;
+ABBA;1978;Take A Chance On Me;Custom Basic;;
+Alexander Klaws;2003;Take Me Tonight;Custom Basic;;
+a-ha;1984;Take On Me;Custom Basic;;
+Lena;2011;Taken By A Stranger;Eurovision;;
+Toy-Box;1998;Tarzan & Jane;Custom Basic;;
+Eric Clapton;1992;Tears In Heaven;Custom Basic;;
+Bodine Monet;2024;Tears Like Rain;Eurovision;;
+Lady Gaga (feat. Beyoncé);2010;Telephone;Custom Basic;;
+Bruno Mars;2017;That's What I Like;Custom Basic;;
+Miley Cyrus (Hannah Montana);2006;The Best Of Both Worlds;Custom Basic;;
+TWICE;2021;The Feels;K-Pop;;
+Europe;1986;The Final Countdown;Custom Basic;;
+Purple Rain;2020;The King Must Die;K-Pop;;
+Fall Out Boy;2013;The Phoenix;Custom Basic;;
+Billie Eilish;2020;Therefore I Am;Custom Basic;;
+Katy Perry;2014;This Is How We Do;Custom Basic;;
+Macklemore & Ryan Lewis (feat. Wanz);2012;Thrift Shop;Custom Basic;;
+Imagine Dragons;2017;Thunder;Custom Basic;;
+AC/DC;1990;Thunderstruck;Custom Basic;;
+David Guetta (feat. Sia);2011;Titanium;Custom Basic;;
+(G)-IDLE;2022;TOMBOY;K-Pop;;
+Netta;2018;Toy;Eurovision;;
+Burak Yeter (feat. Danelle Sandoval);2016;Tuesday;Custom Basic;;
+EMF;1990;Unbelivable;Custom Basic;;
+Noa Kirel;2023;Unicorn;Eurovision;;
+ITZY;2024;UNTOUCHABLE;K-Pop;;
+Muse;2009;Uprising;Custom Basic;;
+Mark Ronson (feat. Bruno Mars);2014;Uptown Funk;Custom Basic;;
+Foreigner;1981;Urgent;Custom Basic;;
+Hot Banditoz;2004;Veo Veo;Custom Basic;;
+SEVENTEEN;2016;VERY NICE;K-Pop;;
+The Buggles;1979;Video Killed the Radio Star;Custom Basic;;
+Stella Jang;2020;Villain;K-Pop;;
+PIXY;2022;Villain;K-Pop;;
+Barbara Pravi;2021;Voilà;Eurovision;;
+ABBA;1979;Voulez-Vous;Custom Basic;;
+Devon Cole;2022;W.I.T.C.H.;Custom Basic;;
+Run-DMC;1986;Walk This Way;Custom Basic;;
+ITZY;2020;WANNABE;K-Pop;;
+Harry Styles;2020;Watermelon Sugar;Custom Basic;;
+Queen;1977;We Are The Champions;Custom Basic;;
+Queen;1977;We Will Rock You;Custom Basic;;
+TWICE;2018;What is Love?;K-Pop;;
+Linkin Park;2007;What I've Done;Custom Basic;;
+TEYA & SALENA;2023;Who The Hell Is Edgar?;Eurovision;;
+HUGEL (feat. Amber Van Day);2018;WTF;Custom Basic;;
+Village People;1978;Y.M.C.A.;Custom Basic;;
+GOT7;2019;You Calling My Name;K-Pop;;
+Dead or Alive;1984;You Spin Me Round (Like A Record);Custom Basic;;
+Ohio Express;1968;Yummy, Yummy, Yummy;Custom Basic;;
+Red Velvet;2019;Zimzalabim;K-Pop;;
+Måneskin;2021;ZITTI E BUONI;Eurovision;;
+The Cranberries;1994;Zombie;Custom Basic;;

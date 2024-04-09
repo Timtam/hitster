@@ -39,6 +39,9 @@ pub enum Pack {
     #[strum(serialize = "Custom Basic")]
     #[serde(rename = "Custom Basic")]
     CustomBasic,
+    #[strum(serialize = "K-Pop")]
+    #[serde(rename = "K-Pop")]
+    KPop,
 }
 
 #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]

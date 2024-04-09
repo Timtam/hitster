@@ -4,6 +4,8 @@ import Button from "react-bootstrap/Button"
 import AudioPlayer from "react-h5-audio-player"
 import "react-h5-audio-player/lib/styles.css"
 import { useTranslation } from "react-i18next"
+import StopHit from "../../../stop_hit.mp3"
+import PlayHit from "../../../play_hit.mp3"
 
 export default function HitPlayer({
     src,
