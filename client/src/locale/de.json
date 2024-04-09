@@ -67,7 +67,7 @@
         "hitHeading": "Was zum Hit?",
         "hitNoGameRunning": "Derzeit läuft kein Spiel, also gibt es auch keinen Hit für dich!",
         "hitUnknown": "Der Hit ist derzeit unbekannt, du musst wohl warten, bis er aufgedeckt wird.",
-        "hitRevealed": "Du hörst derzeit <0>{{title}}</0> von <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2> und {{player}} hat es richtig erraten. Du kannst dir den Hit jetzt in voller Länge anhören.",
+        "hitRevealed": "Du hörst derzeit <0>{{title}}</0> von <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2> und {{player}} hat es richtig erraten. Der Hit stammt aus dem <3>{{pack}}</3> Pack. Du kannst dir den Hit jetzt in voller Länge anhören.",
         "skipHit": "Überspringe diesen Hit, indem du einen Chip bezahlst",
         "skipHitNotLoggedIn": "Du bist nicht angemeldet und kannst keinen Hit überspringen",
         "skipHitNotGuessing": "Nur der Zugspieler kann einen Hit überspringen",

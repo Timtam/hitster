@@ -1,4 +1,5 @@
 import { useLocalStorage } from "@uidotdev/usehooks"
+import { useEffect } from "react"
 import Form from "react-bootstrap/Form"
 import Modal from "react-bootstrap/Modal"
 import ToggleButton from "react-bootstrap/ToggleButton"
@@ -17,6 +18,15 @@ export default function Settings({
         i18n: { changeLanguage, language, services },
     } = useTranslation()
     let [musicVolume, setMusicVolume] = useLocalStorage("musicVolume", "1.0")
+
+    useEffect(() => {
+        if (!Object.keys(services.resourceStore.data).includes(language)) {
+            let lang = Object.keys(services.resourceStore.data).find(
+                (langcode) => language.startsWith(langcode),
+            )
+            if (lang !== undefined) changeLanguage(lang)
+        }
+    }, [language])
 
     return (
         <Modal show={show} onHide={onHide}>

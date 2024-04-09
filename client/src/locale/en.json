@@ -67,7 +67,7 @@
         "hitHeading": "What the hit?",
         "hitNoGameRunning": "No game is currently running, so no hit for you!",
         "hitUnknown": "The hit is currently unknown, you'll have to wait for it to be revealed.",
-        "hitRevealed": "You're currently listening to <0>{{title}}</0> by <1>{{artist}}</1> from <2>{{year}}</2> and {{player}} guessed it correctly. You can now play it at full length.",
+        "hitRevealed": "You're currently listening to <0>{{title}}</0> by <1>{{artist}}</1> from <2>{{year}}</2> and {{player}} guessed it correctly. This song belongs to the <3>{{pack}}</3> pack. You can now play it at full length.",
         "skipHit": "Skip this hit by paying one token",
         "skipHitNotLoggedIn": "You are not logged in and cannot skip a hit",
         "skipHitNotGuessing": "Only the guessing player can skip a hit",

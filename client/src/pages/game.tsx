@@ -330,12 +330,13 @@ export function Game() {
                             title: game.hit?.title,
                             artist: game.hit?.artist,
                             year: game.hit?.year,
+                            pack: game.hit.pack,
                             player:
                                 game.players.find((p) =>
                                     isSlotCorrect(game.hit, p.guess),
                                 )?.name ?? t("noone"),
                         }}
-                        components={[<b />, <b />, <b />]}
+                        components={[<b />, <b />, <b />, <b />]}
                     />
                 )}
             </p>
