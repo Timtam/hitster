@@ -1,9 +1,10 @@
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { createRef, useEffect, useState } from "react"
+import { Howl } from "howler"
+import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
-import AudioPlayer from "react-h5-audio-player"
-import "react-h5-audio-player/lib/styles.css"
 import { useTranslation } from "react-i18next"
+import playHit from "../../../sfx/play_hit.mp3"
+import stopHit from "../../../sfx/stop_hit.mp3"
 
 export default function HitPlayer({
     src,
@@ -12,13 +13,50 @@ export default function HitPlayer({
     src: string
     duration: number
 }) {
-    let player = createRef<AudioPlayer>()
+    let [player, setPlayer] = useState<Howl | undefined>(undefined)
     let [playing, setPlaying] = useState(false)
     let [timer, setTimer] = useState<ReturnType<typeof setTimeout> | undefined>(
         undefined,
     )
     let { t } = useTranslation()
     let [volume] = useLocalStorage("musicVolume", "1.0")
+    let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
+    let hPlayHit = new Howl({
+        src: [playHit],
+    })
+    let hStopHit = new Howl({
+        src: [stopHit],
+    })
+
+    const play = () => {
+        if (timer !== undefined) {
+            clearTimeout(timer)
+        }
+        if (player !== undefined) player.stop()
+        let plr = new Howl({
+            src: [src],
+            format: "audio/mpeg",
+            html5: true,
+            volume: parseFloat(volume),
+        })
+        plr.once("end", () => {
+            setPlaying(false)
+        })
+        setPlayer(plr)
+        if (parseFloat(sfxVolume) > 0) {
+            setTimeout(() => plr.play(), 250)
+            hPlayHit.volume(parseFloat(sfxVolume))
+            hPlayHit.play()
+        } else {
+            plr.play()
+        }
+        if (duration > 0)
+            setTimer(
+                setTimeout(() => {
+                    setPlaying(false)
+                }, duration * 1000),
+            )
+    }
 
     useEffect(() => {
         if (src !== "" && navigator.userActivation.hasBeenActive) {
@@ -30,48 +68,27 @@ export default function HitPlayer({
 
     useEffect(() => {
         if (playing === true) {
-            if (timer !== undefined) {
-                clearTimeout(timer)
-            }
-            player.current?.audio.current?.play()
-            if (duration > 0)
-                setTimer(
-                    setTimeout(() => {
-                        setPlaying(false)
-                    }, duration * 1000),
-                )
+            play()
         } else {
             if (timer !== undefined) {
                 clearTimeout(timer)
                 setTimer(undefined)
             }
-            player.current?.audio.current?.pause()
-            if (
-                player.current !== null &&
-                player.current.audio.current !== null
-            )
-                player.current.audio.current.currentTime = 0
+            player?.pause()
+            if (src !== "" && parseFloat(sfxVolume) > 0) {
+                hStopHit.volume(parseFloat(sfxVolume))
+                hStopHit.play()
+            }
+            setPlayer(undefined)
         }
     }, [src, playing])
 
     useEffect(() => {
-        if (player.current !== null && player.current.audio.current !== null)
-            player.current.audio.current.volume = parseFloat(volume)
+        if (player !== undefined) player.volume(parseFloat(volume))
     }, [volume])
 
     return (
         <>
-            <AudioPlayer
-                ref={player}
-                src={src}
-                style={{ display: "none" }}
-                showJumpControls={false}
-                showDownloadProgress={false}
-                showFilledProgress={false}
-                autoPlayAfterSrcChange={false}
-                volume={parseFloat(volume)}
-                onEnded={() => setPlaying(false)}
-            />
             <Button
                 className="me-2"
                 disabled={src === ""}

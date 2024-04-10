@@ -97,6 +97,7 @@
         "pack_one": "Pack",
         "pack_other": "Packs",
         "gameSettingsPacks": "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:",
-        "save": "Speichern"
+        "save": "Speichern",
+        "sfxVolume": "Lautstärke der Sound Effekte"
     }
 }

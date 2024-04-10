@@ -18,6 +18,7 @@ export default function Settings({
         i18n: { changeLanguage, language, services },
     } = useTranslation()
     let [musicVolume, setMusicVolume] = useLocalStorage("musicVolume", "1.0")
+    let [sfxVolume, setSfxVolume] = useLocalStorage("sfxVolume", "1.0")
 
     useEffect(() => {
         if (!Object.keys(services.resourceStore.data).includes(language)) {
@@ -35,19 +36,36 @@ export default function Settings({
             </Modal.Header>
             <Modal.Body>
                 <h2 className="h4">{t("volume")}</h2>
-                <Form.Label>{t("musicVolume")}</Form.Label>
-                <Form.Range
-                    min="0"
-                    max="100"
-                    value={parseFloat(musicVolume) * 100}
-                    onChange={(e) =>
-                        setMusicVolume(
-                            (
-                                parseFloat(e.currentTarget.value) / 100
-                            ).toString(),
-                        )
-                    }
-                />
+                <div>
+                    <Form.Label>{t("musicVolume")}</Form.Label>
+                    <Form.Range
+                        min="0"
+                        max="100"
+                        value={parseFloat(musicVolume) * 100}
+                        onChange={(e) =>
+                            setMusicVolume(
+                                (
+                                    parseFloat(e.currentTarget.value) / 100
+                                ).toString(),
+                            )
+                        }
+                    />
+                </div>
+                <div>
+                    <Form.Label>{t("sfxVolume")}</Form.Label>
+                    <Form.Range
+                        min="0"
+                        max="100"
+                        value={parseFloat(sfxVolume) * 100}
+                        onChange={(e) =>
+                            setSfxVolume(
+                                (
+                                    parseFloat(e.currentTarget.value) / 100
+                                ).toString(),
+                            )
+                        }
+                    />
+                </div>
                 <h2 className="h4">{t("language")}</h2>
                 <ToggleButtonGroup
                     name="language"
