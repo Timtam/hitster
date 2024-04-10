@@ -1,9 +1,13 @@
+import { useLocalStorage } from "@uidotdev/usehooks"
+import { Howl } from "howler"
 import { useEffect } from "react"
 import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
 import { useCookies } from "react-cookie"
 import { useTranslation } from "react-i18next"
 import { useImmer } from "use-immer"
+import youLose from "../../../sfx/you_lose.mp3"
+import youWin from "../../../sfx/you_win.mp3"
 import type { Game, Player } from "../../entities"
 import { isSlotCorrect } from "./utils"
 
@@ -19,6 +23,13 @@ export default ({
     let [cookies] = useCookies()
     let { t } = useTranslation()
     let [winner, setWinner] = useImmer<Player | undefined>(undefined)
+    let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
+    let hYouLose = new Howl({
+        src: [youLose],
+    })
+    let hYouWin = new Howl({
+        src: [youWin],
+    })
 
     useEffect(() => {
         setWinner(
@@ -28,6 +39,22 @@ export default ({
                     isSlotCorrect(game.hit, p.guess),
             ),
         )
+
+        if (
+            winner !== undefined &&
+            game.players.find((p) => p.id === cookies.logged_in?.id) !==
+                undefined &&
+            winner.id !== cookies.logged_in?.id
+        ) {
+            hYouLose.volume(parseFloat(sfxVolume))
+            hYouLose.play()
+        } else if (
+            winner !== undefined &&
+            winner.id === cookies.logged_in?.id
+        ) {
+            hYouWin.volume(parseFloat(sfxVolume))
+            hYouWin.play()
+        }
     }, [game])
 
     return (
