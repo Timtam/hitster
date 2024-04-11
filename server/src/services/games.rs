@@ -194,6 +194,7 @@ impl GameService {
                     .lock()
                     .get_all()
                     .into_iter()
+                    .filter(|h| game.packs.len() == 0 || game.packs.contains(&h.pack))
                     .collect::<HashSet<_>>()
                     .into_iter()
                     .collect::<_>();
@@ -537,7 +538,10 @@ impl GameService {
                         .lock()
                         .get_all()
                         .into_iter()
-                        .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                        .filter(|h| {
+                            !game.players.iter().any(|p| p.hits.contains(h))
+                                && (game.packs.len() == 0 || game.packs.contains(&h.pack))
+                        })
                         .collect::<HashSet<_>>()
                         .into_iter()
                         .collect::<VecDeque<_>>();
@@ -590,7 +594,10 @@ impl GameService {
                     .lock()
                     .get_all()
                     .into_iter()
-                    .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                    .filter(|h| {
+                        !game.players.iter().any(|p| p.hits.contains(h))
+                            && (game.packs.len() == 0 || game.packs.contains(&h.pack))
+                    })
                     .collect::<HashSet<_>>()
                     .into_iter()
                     .collect::<VecDeque<_>>();
@@ -639,16 +646,6 @@ impl GameService {
             }
 
             if let Some(packs) = &settings.packs {
-                let mut rng = thread_rng();
-                game.hits_remaining = self
-                    .hit_service
-                    .lock()
-                    .get_all()
-                    .into_iter()
-                    .filter(|h| packs.is_empty() || packs.contains(&h.pack))
-                    .collect::<VecDeque<_>>();
-                game.hits_remaining.make_contiguous().shuffle(&mut rng);
-
                 game.packs = if packs.is_empty() {
                     Vec::from(Pack::VARIANTS)
                 } else {
