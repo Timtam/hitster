@@ -15,6 +15,7 @@ parking_lot = "0.12.1"
 rand = "0.8.5"
 regex = "1.10.3"
 rocket = { version = "0.5.0", features = ["json", "secrets"]}
+rocket_async_compression = "0.6.0"
 rocket_db_pools = { version = "0.1.0", default-features = false, features = ["sqlx_sqlite" ]}
 rocket_okapi = { version = "0.8.0", default-features = false, features = ["swagger", "rapidoc", "secrets", "rocket_db_pools"]}
 rusty_ytdl = "0.7.0"
