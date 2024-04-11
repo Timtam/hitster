@@ -332,6 +332,11 @@ export function Game() {
                                                         <th>{t("artist")}</th>
                                                         <th>{t("title")}</th>
                                                         <th>{t("year")}</th>
+                                                        <th>
+                                                            {t("pack", {
+                                                                count: 1,
+                                                            })}
+                                                        </th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -350,6 +355,9 @@ export function Game() {
                                                                 </td>
                                                                 <td>
                                                                     {h.year}
+                                                                </td>
+                                                                <td>
+                                                                    {h.pack}
                                                                 </td>
                                                             </tr>
                                                         ))}
