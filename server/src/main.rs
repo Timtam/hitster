@@ -16,7 +16,7 @@ use rocket::{
     tokio::sync::broadcast::channel,
     Build, Config, Rocket,
 };
-use rocket_async_compression::Compression;
+use rocket_async_compression::CachedCompression;
 use rocket_db_pools::{sqlx, Database};
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
 use routes::{games as games_routes, hits as hits_routes, users as users_routes};
@@ -78,7 +78,9 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .attach(HitsterConfig::init())
         .attach(migrations_fairing)
         .attach(HitsterDownloader::default())
-        .attach(Compression::fairing())
+        .attach(CachedCompression::path_suffix_fairing(
+            CachedCompression::static_paths(vec![".js", ".js", ".html", ".htm", ".json", ".mp3"]),
+        ))
         .mount("/", routes![index, files,])
         .mount("/api/", routes![api_index, games_routes::events])
         .mount(
