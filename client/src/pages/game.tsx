@@ -1,5 +1,4 @@
 import { useLocalStorage } from "@uidotdev/usehooks"
-import deepcopy from "deepcopy"
 import { Howl } from "howler"
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
@@ -85,13 +84,6 @@ export function Game() {
         eventSource.addEventListener("change_state", (e) => {
             let ge = GameEvent.parse(JSON.parse(e.data))
 
-            setGame((g) => {
-                g.state = ge.state as GameState
-                g.hit = ge.hit ?? null
-
-                if (ge.players !== undefined) g.players = ge.players
-            })
-
             if (ge.state === GameState.Guessing) {
                 setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
             } else if (ge.state === GameState.Open) {
@@ -115,6 +107,13 @@ export function Game() {
                     hYouFail.play()
                 }
             }
+
+            setGame((g) => {
+                g.state = ge.state as GameState
+                g.hit = ge.hit ?? null
+
+                if (ge.players !== undefined) g.players = ge.players
+            })
         })
 
         eventSource.addEventListener("join", (e) => {
@@ -186,7 +185,7 @@ export function Game() {
     }, [])
 
     useEffect(() => {
-        setShowHits(Array.from({ length: 5 }, () => false))
+        setShowHits(Array.from({ length: game.players.length }, () => false))
     }, [game])
 
     const canStartOrStopGame = (): boolean => {
@@ -419,11 +418,21 @@ export function Game() {
                           : t("cannotSkipHit")}
             </Button>
             <SlotSelector game={game} />
-            {gameEnded ? (
+            {gameEnded !== undefined ? (
                 <GameEndScreen
-                    game={deepcopy(game)}
+                    game={game}
                     show={gameEnded}
-                    onHide={() => setGameEnded(false)}
+                    onHide={() => {
+                        setGameEnded(false)
+                        setGame((g) => {
+                            g.players = g.players.map((p) => {
+                                p.hits = []
+                                p.tokens = 0
+                                p.guess = null
+                                return p
+                            })
+                        })
+                    }}
                 />
             ) : (
                 ""

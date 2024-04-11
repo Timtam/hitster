@@ -13,7 +13,6 @@
     "dependencies": {
         "@uidotdev/usehooks": "^2.4.1",
         "bootstrap": "^5.3.3",
-        "deepcopy": "^2.1.0",
         "howler": "^2.2.4",
         "i18next": "^23.10.1",
         "i18next-browser-languagedetector": "^7.2.1",
