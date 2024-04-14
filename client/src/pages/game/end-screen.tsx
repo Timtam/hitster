@@ -3,11 +3,11 @@ import { Howl } from "howler"
 import { useEffect } from "react"
 import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
-import { useCookies } from "react-cookie"
 import { useTranslation } from "react-i18next"
 import { useImmer } from "use-immer"
 import youLose from "../../../sfx/you_lose.mp3"
 import youWin from "../../../sfx/you_win.mp3"
+import { useUser } from "../../contexts"
 import type { Game, Player } from "../../entities"
 import { isSlotCorrect } from "./utils"
 
@@ -20,7 +20,7 @@ export default ({
     show: boolean
     onHide: () => void
 }) => {
-    let [cookies] = useCookies()
+    let { user } = useUser()
     let { t } = useTranslation()
     let [winner, setWinner] = useImmer<Player | undefined>(undefined)
     let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
@@ -42,16 +42,12 @@ export default ({
 
         if (
             winner !== undefined &&
-            game.players.find((p) => p.id === cookies.logged_in?.id) !==
-                undefined &&
-            winner.id !== cookies.logged_in?.id
+            game.players.find((p) => p.id === user?.id) !== undefined &&
+            winner.id !== user?.id
         ) {
             hYouLose.volume(parseFloat(sfxVolume))
             hYouLose.play()
-        } else if (
-            winner !== undefined &&
-            winner.id === cookies.logged_in?.id
-        ) {
+        } else if (winner !== undefined && winner.id === user?.id) {
             hYouWin.volume(parseFloat(sfxVolume))
             hYouWin.play()
         }
@@ -64,7 +60,7 @@ export default ({
             </Modal.Header>
             <Modal.Body>
                 <h2 className="h4">
-                    {winner !== undefined && winner.id === cookies.logged_in?.id
+                    {winner !== undefined && winner.id === user?.id
                         ? t("youWin")
                         : winner !== undefined
                           ? t("otherWins", { player: winner.name })

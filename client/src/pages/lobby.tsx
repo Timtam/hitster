@@ -1,9 +1,9 @@
 import Button from "react-bootstrap/Button"
 import Table from "react-bootstrap/Table"
-import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router-dom"
+import { useUser } from "../contexts"
 import { Game, GameState } from "../entities"
 import { useRevalidateOnInterval } from "../hooks"
 import GameService from "../services/games.service"
@@ -14,7 +14,7 @@ export async function loader(): Promise<Game[]> {
 }
 
 export function Lobby() {
-    let [cookies] = useCookies(["logged_in"])
+    let { user } = useUser()
     let games = useLoaderData() as Game[]
     let navigate = useNavigate()
     let { t } = useTranslation()
@@ -36,11 +36,8 @@ export function Lobby() {
             <Helmet>
                 <title>{t("gameLobby")} - Hitster</title>
             </Helmet>
-            <Button
-                disabled={cookies.logged_in === undefined}
-                onClick={createGame}
-            >
-                {cookies.logged_in === undefined
+            <Button disabled={user === null} onClick={createGame}>
+                {user === null
                     ? t("createNewGameNotLoggedIn")
                     : t("createNewGame")}
             </Button>

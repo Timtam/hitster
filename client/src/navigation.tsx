@@ -2,14 +2,13 @@ import { useState } from "react"
 import Nav from "react-bootstrap/Nav"
 import NavDropdown from "react-bootstrap/NavDropdown"
 import Navbar from "react-bootstrap/Navbar"
-import { useCookies } from "react-cookie"
 import { useTranslation } from "react-i18next"
 import { LinkContainer } from "react-router-bootstrap"
 import { useNavigate } from "react-router-dom"
+import { User } from "./entities"
 import Settings from "./settings"
 
-export default function Navigation() {
-    let [cookies] = useCookies(["logged_in"])
+export default function Navigation({ user }: { user: User | null }) {
     let navigate = useNavigate()
     const { t } = useTranslation()
     let [showSettings, setShowSettings] = useState(false)
@@ -24,11 +23,11 @@ export default function Navigation() {
                             <Nav.Link>{t("gameLobby")}</Nav.Link>
                         </LinkContainer>
                     </Nav.Item>
-                    {cookies.logged_in !== undefined ? (
+                    {user !== null ? (
                         <NavDropdown
                             className="me-2"
                             title={t("loggedInAs", {
-                                username: cookies.logged_in.username,
+                                username: user.username,
                             })}
                         >
                             <NavDropdown.Item as="div" className="me-2">

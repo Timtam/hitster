@@ -2,23 +2,23 @@ import { useEffect } from "react"
 import Button from "react-bootstrap/Button"
 import ToggleButton from "react-bootstrap/ToggleButton"
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
-import { useCookies } from "react-cookie"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
+import { useUser } from "../../contexts"
 import type { Game } from "../../entities"
 import { GameState, PlayerState } from "../../entities"
 import GameService from "../../services/games.service"
 
 export default ({ game }: { game: Game }) => {
+    const { user } = useUser()
     const [selectedSlot, setSelectedSlot] = useImmer("0")
-    const [cookies] = useCookies(["logged_in"])
     const navigate = useNavigate()
     let { t } = useTranslation()
     const actionRequired = (): PlayerState => {
-        if (cookies.logged_in === undefined) return PlayerState.Waiting
+        if (user === null) return PlayerState.Waiting
         return (
-            game.players.find((p) => p.id === cookies.logged_in.id)?.state ??
+            game.players.find((p) => p.id === user.id)?.state ??
             PlayerState.Waiting
         )
     }

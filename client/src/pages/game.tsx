@@ -4,7 +4,6 @@ import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
-import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
 import { Trans, useTranslation } from "react-i18next"
 import type { LoaderFunction } from "react-router"
@@ -14,6 +13,7 @@ import noInterception from "../../sfx/no_interception.mp3"
 import payToken from "../../sfx/pay_token.mp3"
 import youFail from "../../sfx/you_fail.mp3"
 import youScore from "../../sfx/you_score.mp3"
+import { useUser } from "../contexts"
 import {
     Game as GameEntity,
     GameEvent,
@@ -46,7 +46,7 @@ export const loader: LoaderFunction = async ({
 
 export function Game() {
     let gameService = useMemo(() => new GameService(), [])
-    let [cookies] = useCookies()
+    let { user } = useUser()
     let [game, setGame] = useImmer(useLoaderData() as GameEntity)
     let [hitSrc, setHitSrc] = useImmer("")
     let [showHits, setShowHits] = useImmer<boolean[]>([])
@@ -70,11 +70,10 @@ export function Game() {
 
     const canSkip = () => {
         return (
-            cookies.logged_in !== undefined &&
-            (game.players.find((p) => p.id === cookies.logged_in.id)?.state ??
+            user !== null &&
+            (game.players.find((p) => p.id === user.id)?.state ??
                 PlayerState.Waiting) === PlayerState.Guessing &&
-            (game.players.find((p) => p.id === cookies.logged_in.id)?.tokens ??
-                0) > 0
+            (game.players.find((p) => p.id === user.id)?.tokens ?? 0) > 0
         )
     }
 
@@ -93,15 +92,14 @@ export function Game() {
                 if (
                     ge.players?.find(
                         (p) =>
-                            p.id === cookies.logged_in?.id &&
+                            p.id === user?.id &&
                             isSlotCorrect(ge.hit ?? null, p.guess),
                     ) !== undefined
                 ) {
                     hYouScore.volume(parseFloat(sfxVolume))
                     hYouScore.play()
                 } else if (
-                    ge.players?.find((p) => p.id === cookies.logged_in?.id)
-                        ?.guess !== null
+                    ge.players?.find((p) => p.id === user?.id)?.guess !== null
                 ) {
                     hYouFail.volume(parseFloat(sfxVolume))
                     hYouFail.play()
@@ -190,10 +188,8 @@ export function Game() {
 
     const canStartOrStopGame = (): boolean => {
         return (
-            cookies.logged_in !== undefined &&
-            game.players.some(
-                (p) => p.id === cookies.logged_in.id && p.creator === true,
-            ) &&
+            user !== null &&
+            game.players.some((p) => p.id === user.id && p.creator === true) &&
             game.players.length >= 2
         )
     }
@@ -214,19 +210,17 @@ export function Game() {
             <p>{t("gameActions")}</p>
             <Button
                 className="me-2"
-                disabled={cookies.logged_in === undefined}
+                disabled={user === null}
                 onClick={async () => {
-                    if (
-                        game.players.some((p) => p.id === cookies.logged_in?.id)
-                    ) {
+                    if (game.players.some((p) => p.id === user?.id)) {
                         await gameService.leave(game.id)
                         navigate("/")
                     } else await gameService.join(game.id)
                 }}
             >
-                {cookies.logged_in === undefined
+                {user === null
                     ? t("joinGameNotLoggedIn")
-                    : game.players.some((p) => p.id === cookies.logged_in.id)
+                    : game.players.some((p) => p.id === user.id)
                       ? t("leaveGame")
                       : t("joinGame")}
             </Button>
@@ -243,7 +237,7 @@ export function Game() {
                     ? game.state !== GameState.Open
                         ? t("stopGame")
                         : t("startGame")
-                    : cookies.logged_in === undefined
+                    : user === null
                       ? t("startGameNotLoggedIn")
                       : game.players.length < 2
                         ? t("startGameNotEnoughPlayers")
@@ -253,18 +247,18 @@ export function Game() {
                 className="me-2"
                 disabled={
                     game.state !== GameState.Open ||
-                    (game.players.find((p) => p.id === cookies.logged_in?.id)
-                        ?.creator ?? false) === false
+                    (game.players.find((p) => p.id === user?.id)?.creator ??
+                        false) === false
                 }
                 aria-expanded={false}
                 onClick={() => setShowSettings(true)}
             >
-                {cookies.logged_in === undefined
+                {user === null
                     ? t("gameSettingsNotLoggedIn")
                     : game.state !== GameState.Open
                       ? t("gameSettingsNotOpen")
-                      : game.players.find((p) => p.id === cookies.logged_in.id)
-                              ?.creator !== true
+                      : game.players.find((p) => p.id === user.id)?.creator !==
+                          true
                         ? t("gameSettingsNotCreator")
                         : t("gameSettings")}
             </Button>
@@ -406,14 +400,13 @@ export function Game() {
             >
                 {canSkip()
                     ? t("skipHit")
-                    : cookies.logged_in === undefined
+                    : user === null
                       ? t("skipHitNotLoggedIn")
-                      : game.players.find((p) => p.id === cookies.logged_in.id)
-                              ?.state === PlayerState.Guessing
+                      : game.players.find((p) => p.id === user.id)?.state ===
+                          PlayerState.Guessing
                         ? t("skipHitNotGuessing")
-                        : game.players.find(
-                                (p) => p.id === cookies.logged_in.id,
-                            )?.tokens === 0
+                        : game.players.find((p) => p.id === user.id)?.tokens ===
+                            0
                           ? t("skipHitNoToken")
                           : t("cannotSkipHit")}
             </Button>
