@@ -72,18 +72,40 @@ impl GameService {
         game
     }
 
-    pub fn get_all(&self) -> Vec<Game> {
+    pub fn get_all(&self, user: Option<&User>) -> Vec<Game> {
         self.data
             .lock()
             .unwrap()
             .games
             .clone()
             .into_values()
+            .filter(|g| {
+                g.mode == GameMode::Public
+                    || (user.is_some()
+                        && (g.mode == GameMode::Private
+                            && g.players.iter().any(|p| p.id == user.as_ref().unwrap().id))
+                        || (g.mode == GameMode::Local
+                            && g.players
+                                .iter()
+                                .any(|p| p.id == user.as_ref().unwrap().id && p.creator)))
+            })
             .collect::<_>()
     }
 
-    pub fn get(&self, id: &str) -> Option<Game> {
-        self.data.lock().unwrap().games.get(id).cloned()
+    pub fn get(&self, id: &str, user: Option<&User>) -> Option<Game> {
+        self.data
+            .lock()
+            .unwrap()
+            .games
+            .get(id)
+            .cloned()
+            .filter(|g| {
+                g.mode != GameMode::Local
+                    || (user.is_some()
+                        && g.players
+                            .iter()
+                            .any(|p| p.id == user.as_ref().unwrap().id && p.creator))
+            })
     }
 
     pub fn join(&self, game_id: &str, user: &User) -> Result<(), JoinGameError> {

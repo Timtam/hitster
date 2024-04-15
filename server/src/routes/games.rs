@@ -41,8 +41,8 @@ pub fn create_game(
 ) -> Created<Json<Game>> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
-    let mode = if data.is_some() {
-        data.as_ref().unwrap().game_mode.unwrap_or(GameMode::Public)
+    let mode = if let Some(data) = data.as_ref() {
+        data.game_mode.unwrap_or(GameMode::Public)
     } else {
         GameMode::Public
     };
@@ -66,9 +66,9 @@ pub fn create_game(
 
 #[openapi(tag = "Games")]
 #[get("/games")]
-pub fn get_all_games(serv: &State<ServiceStore>) -> Json<GamesResponse> {
+pub fn get_all_games(user: Option<User>, serv: &State<ServiceStore>) -> Json<GamesResponse> {
     Json(GamesResponse {
-        games: serv.game_service().lock().get_all(),
+        games: serv.game_service().lock().get_all(user.as_ref()),
     })
 }
 
@@ -87,7 +87,7 @@ pub async fn join_game(
         let _ = queue.send(GameEvent {
             game_id: game_id.clone(),
             event: "join".into(),
-            players: Some(games.get(&game_id).unwrap().players),
+            players: Some(games.get(&game_id, Some(&user)).unwrap().players),
             ..Default::default()
         });
         Json(MessageResponse {
@@ -109,7 +109,7 @@ pub async fn leave_game(
     let games = game_svc.lock();
 
     let state = games
-        .get(&game_id)
+        .get(&game_id, Some(&user))
         .map(|g| g.state)
         .unwrap_or(GameState::Open);
 
@@ -117,12 +117,12 @@ pub async fn leave_game(
         let _ = queue.send(GameEvent {
             game_id: game_id.clone(),
             event: "leave".into(),
-            players: games.get(&game_id).map(|g| g.players),
+            players: games.get(&game_id, Some(&user)).map(|g| g.players),
             ..Default::default()
         });
 
         let new_state = games
-            .get(&game_id)
+            .get(&game_id, Some(&user))
             .map(|g| g.state)
             .unwrap_or(GameState::Open);
 
@@ -208,12 +208,13 @@ pub async fn stop_game(
 #[get("/games/<game_id>")]
 pub fn get_game(
     game_id: String,
+    user: Option<User>,
     serv: &State<ServiceStore>,
 ) -> Result<Json<Game>, NotFound<Json<MessageResponse>>> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
-    match games.get(&game_id) {
+    match games.get(&game_id, user.as_ref()) {
         Some(g) => Ok(Json(g)),
         None => Err(NotFound(Json(MessageResponse {
             message: "game id not found".into(),
@@ -279,7 +280,7 @@ pub fn guess_slot(
     let state = serv
         .game_service()
         .lock()
-        .get(&game_id)
+        .get(&game_id, Some(&user))
         .map(|g| g.state)
         .unwrap_or(GameState::Guessing);
     serv.game_service()
