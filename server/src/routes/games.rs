@@ -42,7 +42,7 @@ pub fn create_game(
     let game_svc = serv.game_service();
     let games = game_svc.lock();
     let mode = if let Some(data) = data.as_ref() {
-        data.game_mode.unwrap_or(GameMode::Public)
+        data.mode.unwrap_or(GameMode::Public)
     } else {
         GameMode::Public
     };

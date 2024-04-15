@@ -98,6 +98,9 @@
         "pack_other": "Packs",
         "gameSettingsPacks": "Check all the packs you want to use in this game:",
         "save": "Save",
-        "sfxVolume": "SFX Volume"
+        "sfxVolume": "SFX Volume",
+        "publicGame": "Public game",
+        "privateGame": "Private game",
+        "localGame": "Local game"
     }
 }

@@ -29,7 +29,7 @@ pub struct CreateGamePayload {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub settings: Option<GameSettingsPayload>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub game_mode: Option<GameMode>,
+    pub mode: Option<GameMode>,
 }
 
 impl From<Json<GameSettingsPayload>> for GameSettingsPayload {

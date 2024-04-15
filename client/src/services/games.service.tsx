@@ -1,5 +1,5 @@
 import { json } from "react-router-dom"
-import type { GameSettings } from "../entities"
+import type { GameMode, GameSettings } from "../entities"
 import { Game, GamesResponse } from "../entities"
 
 export default class GameService {
@@ -19,13 +19,16 @@ export default class GameService {
         return undefined
     }
 
-    async create(): Promise<Game> {
+    async create(mode: GameMode): Promise<Game> {
         let res = await fetch("/api/games", {
             method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json",
             },
+            body: JSON.stringify({
+                mode: mode,
+            }),
         })
 
         if (res.status === 201) return Game.parse(await res.json())

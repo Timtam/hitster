@@ -1,11 +1,11 @@
 import { useMemo } from "react"
-import Button from "react-bootstrap/Button"
+import Dropdown from "react-bootstrap/Dropdown"
 import Table from "react-bootstrap/Table"
 import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router-dom"
 import { useUser } from "../contexts"
-import { Game, GameState } from "../entities"
+import { Game, GameMode, GameState } from "../entities"
 import { useRevalidateOnInterval } from "../hooks"
 import GameService from "../services/games.service"
 
@@ -23,8 +23,8 @@ export function Lobby() {
 
     useRevalidateOnInterval({ enabled: true, interval: 5000 })
 
-    const createGame = async () => {
-        let game = await gameService.create()
+    const createGame = async (mode: GameMode) => {
+        let game = await gameService.create(mode)
         navigate("/game/" + game.id)
     }
 
@@ -33,11 +33,24 @@ export function Lobby() {
             <Helmet>
                 <title>{t("gameLobby")} - Hitster</title>
             </Helmet>
-            <Button disabled={user === null} onClick={createGame}>
-                {user === null
-                    ? t("createNewGameNotLoggedIn")
-                    : t("createNewGame")}
-            </Button>
+            <Dropdown>
+                <Dropdown.Toggle variant="success" disabled={user === null}>
+                    {user === null
+                        ? t("createNewGameNotLoggedIn")
+                        : t("createNewGame")}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => createGame(GameMode.Public)}>
+                        {t("publicGame")}
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => createGame(GameMode.Private)}>
+                        {t("privateGame")}
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => createGame(GameMode.Local)}>
+                        {t("localGame")}
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
             <Table responsive>
                 <thead>
                     <tr>

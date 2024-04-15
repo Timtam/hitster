@@ -98,6 +98,9 @@
         "pack_other": "Packs",
         "gameSettingsPacks": "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:",
         "save": "Speichern",
-        "sfxVolume": "Lautstärke der Sound Effekte"
+        "sfxVolume": "Lautstärke der Sound Effekte",
+        "publicGame": "Öffentliches Spiel",
+        "privateGame": "Privates Spiel",
+        "localGame": "Lokales Spiel"
     }
 }
