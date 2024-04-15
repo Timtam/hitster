@@ -33,10 +33,8 @@ export const loader: LoaderFunction = async ({
 }): Promise<GameEntity> => {
     let gs = new GameService()
 
-    let gameId = parseInt(params.gameId as string, 10)
-
-    if (!Number.isNaN(gameId)) {
-        let game = await gs.get(gameId)
+    if (params.gameId !== undefined) {
+        let game = await gs.get(params.gameId)
 
         if (game !== undefined) return game
         throw json({ message: "game id not found", status: 404 })

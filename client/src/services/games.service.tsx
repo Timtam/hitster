@@ -10,7 +10,7 @@ export default class GameService {
         return GamesResponse.parse(await res.json()).games
     }
 
-    async get(game_id: number): Promise<Game | undefined> {
+    async get(game_id: string): Promise<Game | undefined> {
         let res = await fetch(`/api/games/${game_id}`, {
             method: "GET",
         })
@@ -19,7 +19,7 @@ export default class GameService {
         return undefined
     }
 
-    async join(game_id: number) {
+    async join(game_id: string) {
         let res = await fetch(`/api/games/${game_id}/join`, {
             method: "PATCH",
             credentials: "include",
@@ -29,7 +29,7 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async leave(game_id: number) {
+    async leave(game_id: string) {
         let res = await fetch(`/api/games/${game_id}/leave`, {
             method: "PATCH",
             credentials: "include",
@@ -39,7 +39,7 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async start(game_id: number) {
+    async start(game_id: string) {
         let res = await fetch(`/api/games/${game_id}/start`, {
             method: "PATCH",
             credentials: "include",
@@ -49,7 +49,7 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async stop(game_id: number) {
+    async stop(game_id: string) {
         let res = await fetch(`/api/games/${game_id}/stop`, {
             method: "PATCH",
             credentials: "include",
@@ -59,7 +59,7 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async guess(game_id: number, slot_id: number | null) {
+    async guess(game_id: string, slot_id: number | null) {
         let res = await fetch(`/api/games/${game_id}/guess`, {
             body: JSON.stringify({
                 id: slot_id,
@@ -75,7 +75,7 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async confirm(game_id: number, confirmation: boolean) {
+    async confirm(game_id: string, confirmation: boolean) {
         let res = await fetch(`/api/games/${game_id}/confirm`, {
             body: JSON.stringify({
                 confirm: confirmation,
@@ -91,7 +91,7 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async skip(game_id: number) {
+    async skip(game_id: string) {
         let res = await fetch(`/api/games/${game_id}/skip`, {
             method: "POST",
             credentials: "include",
@@ -101,7 +101,7 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async update(game_id: number, settings: GameSettings) {
+    async update(game_id: string, settings: GameSettings) {
         let res = await fetch(`/api/games/${game_id}/update`, {
             body: JSON.stringify(settings),
             headers: {

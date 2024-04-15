@@ -9,7 +9,10 @@ use crate::{
     users::User,
 };
 use itertools::sorted;
-use rand::prelude::{thread_rng, SliceRandom};
+use rand::{
+    distributions::{Alphanumeric, DistString},
+    prelude::{thread_rng, SliceRandom},
+};
 use std::{
     collections::{HashMap, HashSet, VecDeque},
     sync::Mutex,
@@ -17,8 +20,7 @@ use std::{
 use strum::VariantArray;
 
 pub struct GameServiceData {
-    games: HashMap<u32, Game>,
-    id: u32,
+    games: HashMap<String, Game>,
 }
 
 pub struct GameService {
@@ -31,7 +33,6 @@ impl GameService {
         Self {
             hit_service,
             data: Mutex::new(GameServiceData {
-                id: 0,
                 games: HashMap::new(),
             }),
         }
@@ -39,13 +40,22 @@ impl GameService {
 
     pub fn add(&self, creator: &User) -> Game {
         let mut data = self.data.lock().unwrap();
-        data.id += 1;
         let mut player: Player = creator.into();
 
         player.creator = true;
 
+        let mut rng = thread_rng();
+
+        let id: String = loop {
+            let id: String = Alphanumeric.sample_string(&mut rng, 8);
+
+            if !data.games.contains_key(&id) {
+                break id;
+            }
+        };
+
         let game = Game {
-            id: data.id,
+            id: id.clone(),
             players: vec![player],
             state: GameState::Open,
             hits_remaining: VecDeque::new(),
@@ -56,7 +66,7 @@ impl GameService {
             packs: Vec::from(Pack::VARIANTS),
         };
 
-        data.games.insert(game.id, game.clone());
+        data.games.insert(id.clone(), game.clone());
 
         game
     }
@@ -71,14 +81,14 @@ impl GameService {
             .collect::<_>()
     }
 
-    pub fn get(&self, id: u32) -> Option<Game> {
-        self.data.lock().unwrap().games.get(&id).cloned()
+    pub fn get(&self, id: &str) -> Option<Game> {
+        self.data.lock().unwrap().games.get(id).cloned()
     }
 
-    pub fn join(&self, game_id: u32, user: &User) -> Result<(), JoinGameError> {
+    pub fn join(&self, game_id: &str, user: &User) -> Result<(), JoinGameError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(game) = data.games.get_mut(&game_id) {
+        if let Some(game) = data.games.get_mut(game_id) {
             if game.state != GameState::Open {
                 Err(JoinGameError {
                     message: "the game is already running".into(),
@@ -101,10 +111,10 @@ impl GameService {
         }
     }
 
-    pub fn leave(&self, game_id: u32, user: &User) -> Result<(), LeaveGameError> {
+    pub fn leave(&self, game_id: &str, user: &User) -> Result<(), LeaveGameError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(game) = data.games.get_mut(&game_id) {
+        if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
                 Err(LeaveGameError {
                     message: "user is not part of this game".into(),
@@ -142,7 +152,7 @@ impl GameService {
                 game.players.remove(pos);
 
                 if game.players.is_empty() {
-                    data.games.remove(&game_id);
+                    data.games.remove(game_id);
                 } else if game.players.len() == 1 && game.state != GameState::Open {
                     drop(data);
                     let _ = self.stop(game_id, None);
@@ -158,10 +168,10 @@ impl GameService {
         }
     }
 
-    pub fn start(&self, game_id: u32, user: &User) -> Result<Game, StartGameError> {
+    pub fn start(&self, game_id: &str, user: &User) -> Result<Game, StartGameError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(game) = data.games.get_mut(&game_id) {
+        if let Some(game) = data.games.get_mut(game_id) {
             if game.players.len() < 2 {
                 Err(StartGameError {
                     message: "you need at least two players to start a game".into(),
@@ -194,7 +204,7 @@ impl GameService {
                     .lock()
                     .get_all()
                     .into_iter()
-                    .filter(|h| game.packs.len() == 0 || game.packs.contains(&h.pack))
+                    .filter(|h| game.packs.is_empty() || game.packs.contains(&h.pack))
                     .collect::<HashSet<_>>()
                     .into_iter()
                     .collect::<_>();
@@ -218,10 +228,10 @@ impl GameService {
         }
     }
 
-    pub fn stop(&self, game_id: u32, user: Option<&User>) -> Result<(), StopGameError> {
+    pub fn stop(&self, game_id: &str, user: Option<&User>) -> Result<(), StopGameError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(game) = data.games.get_mut(&game_id) {
+        if let Some(game) = data.games.get_mut(game_id) {
             if let Some(u) = user {
                 if !game
                     .players
@@ -264,10 +274,10 @@ impl GameService {
         }
     }
 
-    pub fn get_current_hit(&self, game_id: u32) -> Result<Hit, CurrentHitError> {
+    pub fn get_current_hit(&self, game_id: &str) -> Result<Hit, CurrentHitError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(game) = data.games.get_mut(&game_id) {
+        if let Some(game) = data.games.get_mut(game_id) {
             if game.state == GameState::Open {
                 Err(CurrentHitError {
                     message: "game currently isn't running".into(),
@@ -320,13 +330,13 @@ impl GameService {
 
     pub fn guess(
         &self,
-        game_id: u32,
+        game_id: &str,
         user: &User,
         slot_id: Option<u8>,
     ) -> Result<Game, GuessSlotError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(game) = data.games.get_mut(&game_id) {
+        if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
                 return Err(GuessSlotError {
                     message: "user is not part of this game".into(),
@@ -437,13 +447,13 @@ impl GameService {
 
     pub fn confirm(
         &self,
-        game_id: u32,
+        game_id: &str,
         user: &User,
         confirm: bool,
     ) -> Result<Game, ConfirmSlotError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(mut game) = data.games.get_mut(&game_id) {
+        if let Some(mut game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
                 return Err(ConfirmSlotError {
                     message: "user is not part of this game".into(),
@@ -511,7 +521,7 @@ impl GameService {
                 drop(data);
                 let _ = self.stop(game_id, None);
                 data = self.data.lock().unwrap();
-                game = data.games.get_mut(&game_id).unwrap();
+                game = data.games.get_mut(game_id).unwrap();
             } else {
                 for p in game.players.iter_mut() {
                     if p.guess.is_some() && !p.turn_player {
@@ -540,7 +550,7 @@ impl GameService {
                         .into_iter()
                         .filter(|h| {
                             !game.players.iter().any(|p| p.hits.contains(h))
-                                && (game.packs.len() == 0 || game.packs.contains(&h.pack))
+                                && (game.packs.is_empty() || game.packs.contains(&h.pack))
                         })
                         .collect::<HashSet<_>>()
                         .into_iter()
@@ -558,10 +568,10 @@ impl GameService {
         }
     }
 
-    pub fn skip(&self, game_id: u32, user: &User) -> Result<Game, SkipHitError> {
+    pub fn skip(&self, game_id: &str, user: &User) -> Result<Game, SkipHitError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(game) = data.games.get_mut(&game_id) {
+        if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
                 return Err(SkipHitError {
                     message: "user is not part of this game".into(),
@@ -596,7 +606,7 @@ impl GameService {
                     .into_iter()
                     .filter(|h| {
                         !game.players.iter().any(|p| p.hits.contains(h))
-                            && (game.packs.len() == 0 || game.packs.contains(&h.pack))
+                            && (game.packs.is_empty() || game.packs.contains(&h.pack))
                     })
                     .collect::<HashSet<_>>()
                     .into_iter()
@@ -615,13 +625,13 @@ impl GameService {
 
     pub fn update(
         &self,
-        game_id: u32,
+        game_id: &str,
         user: &User,
         settings: &GameSettingsPayload,
     ) -> Result<(), UpdateGameError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(game) = data.games.get_mut(&game_id) {
+        if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
                 return Err(UpdateGameError {
                     message: "user is not part of this game".into(),

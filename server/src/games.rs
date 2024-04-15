@@ -54,7 +54,7 @@ pub enum GameState {
 
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize, Serialize, JsonSchema)]
 pub struct Game {
-    pub id: u32,
+    pub id: String,
     pub players: Vec<Player>,
     pub state: GameState,
     #[serde(skip)]
@@ -114,7 +114,7 @@ impl From<&User> for Player {
 #[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 pub struct GameEvent {
     #[serde(skip)]
-    pub game_id: u32,
+    pub game_id: String,
     #[serde(skip)]
     pub event: String,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -130,7 +130,7 @@ pub struct GameEvent {
 impl Default for GameEvent {
     fn default() -> Self {
         Self {
-            game_id: 0,
+            game_id: "".into(),
             event: "".into(),
             players: None,
             state: None,

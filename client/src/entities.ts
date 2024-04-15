@@ -53,7 +53,7 @@ export const Player = z.object({
 export type Player = z.infer<typeof Player>
 
 export const Game = z.object({
-    id: z.number(),
+    id: z.string(),
     players: z.array(Player),
     state: z.nativeEnum(GameState),
     hit_duration: z.number(),
