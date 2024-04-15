@@ -130,4 +130,14 @@ export default class GameService {
         if (res.status == 200) return
         throw json({ message: (await res.json()).message, status: res.status })
     }
+
+    async addPlayer(game_id: string, player_name: string) {
+        let res = await fetch(`/api/games/${game_id}/join/${player_name}`, {
+            method: "PATCH",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
 }

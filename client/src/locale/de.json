@@ -101,6 +101,9 @@
         "sfxVolume": "Lautstärke der Sound Effekte",
         "publicGame": "Öffentliches Spiel",
         "privateGame": "Privates Spiel",
-        "localGame": "Lokales Spiel"
+        "localGame": "Lokales Spiel",
+        "addPlayer": "Lokalen Spieler hinzufügen",
+        "addPlayerNotLocalGame": "Du kannst lokale Spieler nur in einem lokalen Spiel hinzufügen",
+        "addPlayerNotWaiting": "Du kannst lokale Spieler nur hinzufügen, während das Spiel nicht läuft"
     }
 }

@@ -17,11 +17,13 @@ import { useUser } from "../contexts"
 import {
     Game as GameEntity,
     GameEvent,
+    GameMode,
     GameState,
     Player,
     PlayerState,
 } from "../entities"
 import GameService from "../services/games.service"
+import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
 import HitPlayer from "./game/hit-player"
 import GameSettings from "./game/settings"
@@ -50,6 +52,7 @@ export function Game() {
     let [showHits, setShowHits] = useImmer<boolean[]>([])
     let [gameEnded, setGameEnded] = useImmer<boolean>(false)
     let [showSettings, setShowSettings] = useImmer<boolean>(false)
+    let [showAddPlayer, setShowAddPlayer] = useImmer(false)
     let navigate = useNavigate()
     let { t } = useTranslation()
     let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
@@ -366,6 +369,29 @@ export function Game() {
                     })}
                 </tbody>
             </Table>
+            <Button
+                aria-expanded="false"
+                disabled={
+                    game.mode !== GameMode.Local ||
+                    game.state !== GameState.Open
+                }
+                onClick={() => setShowAddPlayer(true)}
+            >
+                {game.mode !== GameMode.Local
+                    ? t("addPlayerNotLocalGame")
+                    : game.state != GameState.Open
+                      ? t("addPlayerNotWaiting")
+                      : t("addPlayer")}
+            </Button>
+            {showAddPlayer ? (
+                <AddLocalPlayerScreen
+                    show={showAddPlayer}
+                    onHide={() => setShowAddPlayer(false)}
+                    game={game}
+                />
+            ) : (
+                ""
+            )}
             <h2 className="h4">{t("hitHeading")}</h2>
             <p aria-live="polite">
                 {game.state === GameState.Open ? (
