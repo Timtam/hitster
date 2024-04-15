@@ -1,5 +1,5 @@
 use crate::{
-    games::{Game, GameSettingsPayload, GameState, Player, PlayerState, Slot},
+    games::{Game, GameMode, GameSettingsPayload, GameState, Player, PlayerState, Slot},
     hits::{Hit, Pack},
     responses::{
         ConfirmSlotError, CurrentHitError, GuessSlotError, JoinGameError, LeaveGameError,
@@ -38,7 +38,7 @@ impl GameService {
         }
     }
 
-    pub fn add(&self, creator: &User) -> Game {
+    pub fn add(&self, creator: &User, mode: GameMode) -> Game {
         let mut data = self.data.lock().unwrap();
         let mut player: Player = creator.into();
 
@@ -64,6 +64,7 @@ impl GameService {
             goal: 10,
             hit: None,
             packs: Vec::from(Pack::VARIANTS),
+            mode,
         };
 
         data.games.insert(id.clone(), game.clone());
@@ -628,7 +629,7 @@ impl GameService {
         game_id: &str,
         user: &User,
         settings: &GameSettingsPayload,
-    ) -> Result<(), UpdateGameError> {
+    ) -> Result<Game, UpdateGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -667,7 +668,7 @@ impl GameService {
             game.goal = settings.goal.unwrap_or(game.goal);
             game.hit_duration = settings.hit_duration.unwrap_or(game.hit_duration);
 
-            Ok(())
+            Ok(game.clone())
         } else {
             Err(UpdateGameError {
                 message: "game not found".into(),

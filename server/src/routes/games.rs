@@ -1,5 +1,8 @@
 use crate::{
-    games::{ConfirmationPayload, Game, GameEvent, GameSettingsPayload, GameState, SlotPayload},
+    games::{
+        ConfirmationPayload, CreateGamePayload, Game, GameEvent, GameMode, GameSettingsPayload,
+        GameState, SlotPayload,
+    },
     responses::{
         ConfirmSlotError, CurrentHitError, GamesResponse, GuessSlotError, JoinGameError,
         LeaveGameError, MessageResponse, SkipHitError, StartGameError, StopGameError,
@@ -30,9 +33,28 @@ use std::default::Default;
 /// The API will return 401 if the user_id is invalid.
 
 #[openapi(tag = "Games")]
-#[post("/games")]
-pub fn create_game(user: User, serv: &State<ServiceStore>) -> Created<Json<Game>> {
-    let game = serv.game_service().lock().add(&user);
+#[post("/games", format = "json", data = "<data>")]
+pub fn create_game(
+    user: User,
+    data: Option<Json<CreateGamePayload>>,
+    serv: &State<ServiceStore>,
+) -> Created<Json<Game>> {
+    let game_svc = serv.game_service();
+    let games = game_svc.lock();
+    let mode = if data.is_some() {
+        data.as_ref().unwrap().game_mode.unwrap_or(GameMode::Public)
+    } else {
+        GameMode::Public
+    };
+
+    let mut game = games.add(&user, mode);
+
+    if data.is_some() && data.as_ref().unwrap().settings.is_some() {
+        game = games
+            .update(&game.id, &user, data.unwrap().settings.as_ref().unwrap())
+            .ok()
+            .unwrap_or(game);
+    }
 
     Created::new(format!("/games/{}", game.id)).body(Json(game))
 }

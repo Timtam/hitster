@@ -31,6 +31,12 @@ export enum GameState {
     Confirming = "Confirming",
 }
 
+export enum GameMode {
+    Public = "Public",
+    Private = "Private",
+    Local = "Local",
+}
+
 export enum PlayerState {
     Waiting = "Waiting",
     Guessing = "Guessing",
@@ -61,6 +67,7 @@ export const Game = z.object({
     goal: z.number(),
     hit: z.nullable(Hit),
     packs: z.array(z.string()),
+    mode: z.nativeEnum(GameMode),
 })
 
 export type Game = z.infer<typeof Game>

@@ -1,3 +1,4 @@
+import { useMemo } from "react"
 import Button from "react-bootstrap/Button"
 import Table from "react-bootstrap/Table"
 import { Helmet } from "react-helmet-async"
@@ -14,6 +15,7 @@ export async function loader(): Promise<Game[]> {
 }
 
 export function Lobby() {
+    let gameService = useMemo(() => new GameService(), [])
     let { user } = useUser()
     let games = useLoaderData() as Game[]
     let navigate = useNavigate()
@@ -22,13 +24,8 @@ export function Lobby() {
     useRevalidateOnInterval({ enabled: true, interval: 5000 })
 
     const createGame = async () => {
-        let res = await fetch("/api/games", {
-            method: "POST",
-            credentials: "include",
-        })
-
-        if (res.status === 201)
-            navigate("/game/" + Game.parse(await res.json()).id)
+        let game = await gameService.create()
+        navigate("/game/" + game.id)
     }
 
     return (

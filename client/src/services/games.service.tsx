@@ -19,6 +19,19 @@ export default class GameService {
         return undefined
     }
 
+    async create(): Promise<Game> {
+        let res = await fetch("/api/games", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+
+        if (res.status === 201) return Game.parse(await res.json())
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
+
     async join(game_id: string) {
         let res = await fetch(`/api/games/${game_id}/join`, {
             method: "PATCH",

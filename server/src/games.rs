@@ -24,6 +24,14 @@ pub struct GameSettingsPayload {
     pub packs: Option<Vec<Pack>>,
 }
 
+#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+pub struct CreateGamePayload {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub settings: Option<GameSettingsPayload>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub game_mode: Option<GameMode>,
+}
+
 impl From<Json<GameSettingsPayload>> for GameSettingsPayload {
     fn from(src: Json<GameSettingsPayload>) -> Self {
         Self {
@@ -52,6 +60,17 @@ pub enum GameState {
     Confirming,
 }
 
+#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Copy)]
+#[serde(rename_all_fields = "snake_case")]
+pub enum GameMode {
+    /// the game is available and visible to all users
+    Public,
+    /// the game is private, only the creator can see the game, but it can be joined by knowing the id or sharing the link
+    Private,
+    /// the game is private, only the creator can see and control the game
+    Local,
+}
+
 #[derive(Clone, Eq, PartialEq, Debug, Deserialize, Serialize, JsonSchema)]
 pub struct Game {
     pub id: String,
@@ -64,6 +83,7 @@ pub struct Game {
     pub goal: u8,
     pub hit: Option<Hit>,
     pub packs: Vec<Pack>,
+    pub mode: GameMode,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
