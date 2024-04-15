@@ -243,7 +243,7 @@ impl GameService {
 
                 game.players.remove(pos);
 
-                if game.players.is_empty() {
+                if game.players.iter().filter(|p| p.id >= 0).count() == 0 {
                     data.games.remove(game_id);
                 } else if game.players.len() == 1 && game.state != GameState::Open {
                     drop(data);
