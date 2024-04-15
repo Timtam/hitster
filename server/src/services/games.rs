@@ -83,11 +83,13 @@ impl GameService {
                 g.mode == GameMode::Public
                     || (user.is_some()
                         && (g.mode == GameMode::Private
-                            && g.players.iter().any(|p| p.id == user.as_ref().unwrap().id))
-                        || (g.mode == GameMode::Local
                             && g.players
                                 .iter()
-                                .any(|p| p.id == user.as_ref().unwrap().id && p.creator)))
+                                .any(|p| p.id == Into::<i64>::into(user.as_ref().unwrap().id)))
+                        || (g.mode == GameMode::Local
+                            && g.players.iter().any(|p| {
+                                p.id == Into::<i64>::into(user.as_ref().unwrap().id) && p.creator
+                            })))
             })
             .collect::<_>()
     }
@@ -102,13 +104,18 @@ impl GameService {
             .filter(|g| {
                 g.mode != GameMode::Local
                     || (user.is_some()
-                        && g.players
-                            .iter()
-                            .any(|p| p.id == user.as_ref().unwrap().id && p.creator))
+                        && g.players.iter().any(|p| {
+                            p.id == Into::<i64>::into(user.as_ref().unwrap().id) && p.creator
+                        }))
             })
     }
 
-    pub fn join(&self, game_id: &str, user: &User) -> Result<(), JoinGameError> {
+    pub fn join(
+        &self,
+        game_id: &str,
+        user: &User,
+        player: Option<&str>,
+    ) -> Result<(), JoinGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -117,13 +124,53 @@ impl GameService {
                     message: "the game is already running".into(),
                     http_status_code: 403,
                 })
-            } else if game.players.iter().any(|p| p.id == user.id) {
+            } else if player.is_none()
+                && game
+                    .players
+                    .iter()
+                    .any(|p| p.id == Into::<i64>::into(user.id))
+            {
                 Err(JoinGameError {
                     message: "user is already part of this game".into(),
                     http_status_code: 409,
                 })
+            } else if player.is_some() && game.mode != GameMode::Local {
+                Err(JoinGameError {
+                    message: "virtual players can only be added to local games".into(),
+                    http_status_code: 409,
+                })
+            } else if player.is_some()
+                && game.mode == GameMode::Local
+                && !game
+                    .players
+                    .iter()
+                    .find(|p| p.id == Into::<i64>::into(user.id))
+                    .map(|p| p.creator)
+                    .unwrap_or(false)
+            {
+                Err(JoinGameError {
+                    message: "only the creator can add virtual players to a game".into(),
+                    http_status_code: 409,
+                })
             } else {
-                game.players.push(user.into());
+                if let Some(player) = player {
+                    let mut id: i64 = -1;
+                    id = loop {
+                        if !game.players.iter().any(|p| p.id == id) {
+                            break id;
+                        } else {
+                            id -= 1;
+                        }
+                    };
+                    game.players.push(Player {
+                        id,
+                        name: player.into(),
+                        ..Default::default()
+                    });
+                } else {
+                    game.players.push(user.into());
+                }
+
                 Ok(())
             }
         } else {
@@ -134,17 +181,39 @@ impl GameService {
         }
     }
 
-    pub fn leave(&self, game_id: &str, user: &User) -> Result<(), LeaveGameError> {
+    pub fn leave(
+        &self,
+        game_id: &str,
+        user: &User,
+        player_id: Option<i64>,
+    ) -> Result<(), LeaveGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
-            if !game.players.iter().any(|p| p.id == user.id) {
+            if !game
+                .players
+                .iter()
+                .any(|p| p.id == Into::<i64>::into(user.id))
+            {
                 Err(LeaveGameError {
                     message: "user is not part of this game".into(),
                     http_status_code: 409,
                 })
+            } else if player_id.is_some()
+                && !game
+                    .players
+                    .iter()
+                    .find(|p| p.id == Into::<i64>::into(user.id))
+                    .map(|p| p.creator)
+                    .unwrap_or(false)
+            {
+                Err(LeaveGameError {
+                    message: "only the creator can kick other players from a game".into(),
+                    http_status_code: 409,
+                })
             } else {
-                let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+                let id = player_id.unwrap_or(Into::<i64>::into(user.id));
+                let pos = game.players.iter().position(|p| p.id == id).unwrap();
                 let creator = game.players.get(pos).unwrap().creator;
                 let turn_player = game.players.get(pos).unwrap().turn_player;
 
@@ -208,7 +277,7 @@ impl GameService {
             } else if !game
                 .players
                 .iter()
-                .find(|p| p.id == user.id)
+                .find(|p| p.id == Into::<i64>::into(user.id))
                 .map(|p| p.creator)
                 .unwrap_or(false)
             {
@@ -259,7 +328,7 @@ impl GameService {
                 if !game
                     .players
                     .iter()
-                    .find(|p| p.id == u.id)
+                    .find(|p| p.id == Into::<i64>::into(u.id))
                     .map(|p| p.creator)
                     .unwrap_or(false)
                 {
@@ -360,7 +429,11 @@ impl GameService {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
-            if !game.players.iter().any(|p| p.id == user.id) {
+            if !game
+                .players
+                .iter()
+                .any(|p| p.id == Into::<i64>::into(user.id))
+            {
                 return Err(GuessSlotError {
                     message: "user is not part of this game".into(),
                     http_status_code: 409,
@@ -368,7 +441,11 @@ impl GameService {
             }
 
             let turn_player_pos = game.players.iter().position(|p| p.turn_player).unwrap();
-            let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+            let pos = game
+                .players
+                .iter()
+                .position(|p| p.id == Into::<i64>::into(user.id))
+                .unwrap();
 
             if game.players.get(pos).unwrap().state != PlayerState::Guessing
                 && game.players.get(pos).unwrap().state != PlayerState::Intercepting
@@ -477,7 +554,11 @@ impl GameService {
         let mut data = self.data.lock().unwrap();
 
         if let Some(mut game) = data.games.get_mut(game_id) {
-            if !game.players.iter().any(|p| p.id == user.id) {
+            if !game
+                .players
+                .iter()
+                .any(|p| p.id == Into::<i64>::into(user.id))
+            {
                 return Err(ConfirmSlotError {
                     message: "user is not part of this game".into(),
                     http_status_code: 409,
@@ -485,7 +566,11 @@ impl GameService {
             }
 
             let turn_player_pos = game.players.iter().position(|p| p.turn_player).unwrap();
-            let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+            let pos = game
+                .players
+                .iter()
+                .position(|p| p.id == Into::<i64>::into(user.id))
+                .unwrap();
 
             if game.players.get(pos).unwrap().state != PlayerState::Confirming {
                 return Err(ConfirmSlotError {
@@ -595,14 +680,22 @@ impl GameService {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
-            if !game.players.iter().any(|p| p.id == user.id) {
+            if !game
+                .players
+                .iter()
+                .any(|p| p.id == Into::<i64>::into(user.id))
+            {
                 return Err(SkipHitError {
                     message: "user is not part of this game".into(),
                     http_status_code: 409,
                 });
             }
 
-            let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+            let pos = game
+                .players
+                .iter()
+                .position(|p| p.id == Into::<i64>::into(user.id))
+                .unwrap();
 
             if game.players.get(pos).unwrap().state != PlayerState::Guessing {
                 return Err(SkipHitError {
@@ -655,7 +748,11 @@ impl GameService {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
-            if !game.players.iter().any(|p| p.id == user.id) {
+            if !game
+                .players
+                .iter()
+                .any(|p| p.id == Into::<i64>::into(user.id))
+            {
                 return Err(UpdateGameError {
                     message: "user is not part of this game".into(),
                     http_status_code: 409,
@@ -668,7 +765,7 @@ impl GameService {
             } else if !game
                 .players
                 .iter()
-                .find(|p| p.id == user.id)
+                .find(|p| p.id == Into::<i64>::into(user.id))
                 .unwrap()
                 .creator
             {

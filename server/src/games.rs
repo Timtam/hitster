@@ -97,7 +97,7 @@ pub enum PlayerState {
 
 #[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 pub struct Player {
-    pub id: u32,
+    pub id: i64,
     pub name: String,
     pub state: PlayerState,
     pub creator: bool,
@@ -115,11 +115,11 @@ pub struct Slot {
     pub id: u8,
 }
 
-impl From<&User> for Player {
-    fn from(u: &User) -> Self {
+impl Default for Player {
+    fn default() -> Self {
         Self {
-            id: u.id,
-            name: u.username.clone(),
+            id: 0,
+            name: "".into(),
             state: PlayerState::Waiting,
             creator: false,
             hits: vec![],
@@ -127,6 +127,16 @@ impl From<&User> for Player {
             slots: vec![],
             turn_player: false,
             guess: None,
+        }
+    }
+}
+
+impl From<&User> for Player {
+    fn from(u: &User) -> Self {
+        Self {
+            id: u.id.into(),
+            name: u.username.clone(),
+            ..Default::default()
         }
     }
 }

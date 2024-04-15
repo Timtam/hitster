@@ -211,7 +211,7 @@ pub async fn logout(
     let games = game_srv.lock();
 
     for game in games.get_all(Some(&user)).iter() {
-        let _ = games.leave(&game.id, &user);
+        let _ = games.leave(&game.id, &user, None);
     }
 
     let user_srv = serv.user_service();

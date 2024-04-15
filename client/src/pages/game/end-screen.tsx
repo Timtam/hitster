@@ -26,9 +26,11 @@ export default ({
     let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
     let hYouLose = new Howl({
         src: [youLose],
+        preload: false,
     })
     let hYouWin = new Howl({
         src: [youWin],
+        preload: false,
     })
 
     useEffect(() => {

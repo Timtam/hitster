@@ -25,7 +25,7 @@ use rocket::{
     Shutdown, State,
 };
 use rocket_okapi::openapi;
-use std::default::Default;
+use std::{default::Default, path::PathBuf};
 
 /// Create a new game
 ///
@@ -73,9 +73,10 @@ pub fn get_all_games(user: Option<User>, serv: &State<ServiceStore>) -> Json<Gam
 }
 
 #[openapi(tag = "Games")]
-#[patch("/games/<game_id>/join")]
+#[patch("/games/<game_id>/join/<player..>")]
 pub async fn join_game(
-    game_id: String,
+    game_id: &str,
+    player: PathBuf,
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
@@ -83,24 +84,33 @@ pub async fn join_game(
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
-    games.join(&game_id, &user).map(|_| {
-        let _ = queue.send(GameEvent {
-            game_id: game_id.clone(),
-            event: "join".into(),
-            players: Some(games.get(&game_id, Some(&user)).unwrap().players),
-            ..Default::default()
-        });
-        Json(MessageResponse {
-            message: "joined the game successfully".into(),
-            r#type: "success".into(),
+    games
+        .join(
+            game_id,
+            &user,
+            player
+                .to_str()
+                .and_then(|p| if !p.is_empty() { Some(p) } else { None }),
+        )
+        .map(|_| {
+            let _ = queue.send(GameEvent {
+                game_id: game_id.into(),
+                event: "join".into(),
+                players: Some(games.get(game_id, Some(&user)).unwrap().players),
+                ..Default::default()
+            });
+            Json(MessageResponse {
+                message: "joined the game successfully".into(),
+                r#type: "success".into(),
+            })
         })
-    })
 }
 
 #[openapi(tag = "Games")]
-#[patch("/games/<game_id>/leave")]
+#[patch("/games/<game_id>/leave/<player_id..>")]
 pub async fn leave_game(
-    game_id: String,
+    game_id: &str,
+    player_id: PathBuf,
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
@@ -109,37 +119,43 @@ pub async fn leave_game(
     let games = game_svc.lock();
 
     let state = games
-        .get(&game_id, Some(&user))
+        .get(game_id, Some(&user))
         .map(|g| g.state)
         .unwrap_or(GameState::Open);
 
-    games.leave(&game_id, &user).map(|_| {
-        let _ = queue.send(GameEvent {
-            game_id: game_id.clone(),
-            event: "leave".into(),
-            players: games.get(&game_id, Some(&user)).map(|g| g.players),
-            ..Default::default()
-        });
-
-        let new_state = games
-            .get(&game_id, Some(&user))
-            .map(|g| g.state)
-            .unwrap_or(GameState::Open);
-
-        if new_state != state {
+    games
+        .leave(
+            game_id,
+            &user,
+            player_id.to_str().and_then(|p| p.parse::<i64>().ok()),
+        )
+        .map(|_| {
             let _ = queue.send(GameEvent {
-                game_id,
-                event: "change_state".into(),
-                state: Some(new_state),
+                game_id: game_id.into(),
+                event: "leave".into(),
+                players: games.get(game_id, Some(&user)).map(|g| g.players),
                 ..Default::default()
             });
-        }
 
-        Json(MessageResponse {
-            message: "left the game successfully".into(),
-            r#type: "success".into(),
+            let new_state = games
+                .get(game_id, Some(&user))
+                .map(|g| g.state)
+                .unwrap_or(GameState::Open);
+
+            if new_state != state {
+                let _ = queue.send(GameEvent {
+                    game_id: game_id.into(),
+                    event: "change_state".into(),
+                    state: Some(new_state),
+                    ..Default::default()
+                });
+            }
+
+            Json(MessageResponse {
+                message: "left the game successfully".into(),
+                r#type: "success".into(),
+            })
         })
-    })
 }
 
 /// Start the game
@@ -147,7 +163,7 @@ pub async fn leave_game(
 #[openapi(tag = "Games")]
 #[patch("/games/<game_id>/start")]
 pub async fn start_game(
-    game_id: String,
+    game_id: &str,
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
@@ -155,9 +171,9 @@ pub async fn start_game(
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
-    games.start(&game_id, &user).map(|g| {
+    games.start(game_id, &user).map(|g| {
         let _ = queue.send(GameEvent {
-            game_id,
+            game_id: game_id.into(),
             event: "change_state".into(),
             state: Some(g.state),
             players: Some(g.players),
@@ -174,17 +190,17 @@ pub async fn start_game(
 #[openapi(tag = "Games")]
 #[patch("/games/<game_id>/stop")]
 pub async fn stop_game(
-    game_id: String,
+    game_id: &str,
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, StopGameError> {
     serv.game_service()
         .lock()
-        .stop(&game_id, Some(&user))
+        .stop(game_id, Some(&user))
         .map(|_| {
             let _ = queue.send(GameEvent {
-                game_id,
+                game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(GameState::Open),
                 ..Default::default()
@@ -207,14 +223,14 @@ pub async fn stop_game(
 #[openapi(tag = "Games")]
 #[get("/games/<game_id>")]
 pub fn get_game(
-    game_id: String,
+    game_id: &str,
     user: Option<User>,
     serv: &State<ServiceStore>,
 ) -> Result<Json<Game>, NotFound<Json<MessageResponse>>> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
-    match games.get(&game_id, user.as_ref()) {
+    match games.get(game_id, user.as_ref()) {
         Some(g) => Ok(Json(g)),
         None => Err(NotFound(Json(MessageResponse {
             message: "game id not found".into(),
@@ -250,11 +266,8 @@ pub async fn events(
 
 #[openapi(tag = "Games")]
 #[get("/games/<game_id>/hit")]
-pub async fn hit(
-    game_id: String,
-    serv: &State<ServiceStore>,
-) -> Result<NamedFile, CurrentHitError> {
-    let hit = serv.game_service().lock().get_current_hit(&game_id);
+pub async fn hit(game_id: &str, serv: &State<ServiceStore>) -> Result<NamedFile, CurrentHitError> {
+    let hit = serv.game_service().lock().get_current_hit(game_id);
 
     if hit.is_ok() {
         return NamedFile::open(&hit.unwrap().file().unwrap())
@@ -271,7 +284,7 @@ pub async fn hit(
 #[openapi(tag = "Games")]
 #[post("/games/<game_id>/guess", format = "json", data = "<slot>")]
 pub fn guess_slot(
-    game_id: String,
+    game_id: &str,
     slot: Json<SlotPayload>,
     user: User,
     serv: &State<ServiceStore>,
@@ -280,20 +293,20 @@ pub fn guess_slot(
     let state = serv
         .game_service()
         .lock()
-        .get(&game_id, Some(&user))
+        .get(game_id, Some(&user))
         .map(|g| g.state)
         .unwrap_or(GameState::Guessing);
     serv.game_service()
         .lock()
-        .guess(&game_id, &user, slot.id)
+        .guess(game_id, &user, slot.id)
         .map(|game| {
             let _ = queue.send(GameEvent {
-                game_id: game_id.clone(),
+                game_id: game_id.into(),
                 event: "guess".into(),
                 players: game
                     .players
                     .iter()
-                    .find(|p| p.id == user.id)
+                    .find(|p| p.id == Into::<i64>::into(user.id))
                     .cloned()
                     .map(|p| vec![p]),
                 ..Default::default()
@@ -301,7 +314,7 @@ pub fn guess_slot(
 
             if state != game.state {
                 let _ = queue.send(GameEvent {
-                    game_id,
+                    game_id: game_id.into(),
                     event: "change_state".into(),
                     state: Some(game.state),
                     players: Some(game.players),
@@ -326,7 +339,7 @@ pub fn guess_slot(
 #[openapi(tag = "Games")]
 #[post("/games/<game_id>/confirm", format = "json", data = "<confirmation>")]
 pub fn confirm_slot(
-    game_id: String,
+    game_id: &str,
     confirmation: Json<ConfirmationPayload>,
     user: User,
     serv: &State<ServiceStore>,
@@ -334,10 +347,10 @@ pub fn confirm_slot(
 ) -> Result<Json<MessageResponse>, ConfirmSlotError> {
     serv.game_service()
         .lock()
-        .confirm(&game_id, &user, confirmation.confirm)
+        .confirm(game_id, &user, confirmation.confirm)
         .map(|game| {
             let _ = queue.send(GameEvent {
-                game_id,
+                game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(game.state),
                 players: Some(game.players),
@@ -354,38 +367,35 @@ pub fn confirm_slot(
 #[openapi(tag = "Games")]
 #[post("/games/<game_id>/skip")]
 pub fn skip_hit(
-    game_id: String,
+    game_id: &str,
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, SkipHitError> {
-    serv.game_service()
-        .lock()
-        .skip(&game_id, &user)
-        .map(|game| {
-            let _ = queue.send(GameEvent {
-                game_id,
-                event: "skip".into(),
-                players: game
-                    .players
-                    .iter()
-                    .find(|p| p.id == user.id)
-                    .cloned()
-                    .map(|p| vec![p]),
-                ..Default::default()
-            });
+    serv.game_service().lock().skip(game_id, &user).map(|game| {
+        let _ = queue.send(GameEvent {
+            game_id: game_id.into(),
+            event: "skip".into(),
+            players: game
+                .players
+                .iter()
+                .find(|p| p.id == Into::<i64>::into(user.id))
+                .cloned()
+                .map(|p| vec![p]),
+            ..Default::default()
+        });
 
-            Json(MessageResponse {
-                message: "skipped successfully".into(),
-                r#type: "success".into(),
-            })
+        Json(MessageResponse {
+            message: "skipped successfully".into(),
+            r#type: "success".into(),
         })
+    })
 }
 
 #[openapi(tag = "Games")]
 #[patch("/games/<game_id>/update", format = "json", data = "<settings>")]
 pub fn update_game(
-    game_id: String,
+    game_id: &str,
     settings: Json<GameSettingsPayload>,
     user: User,
     serv: &State<ServiceStore>,
@@ -393,10 +403,10 @@ pub fn update_game(
 ) -> Result<Json<MessageResponse>, UpdateGameError> {
     serv.game_service()
         .lock()
-        .update(&game_id, &user, &settings)
+        .update(game_id, &user, &settings)
         .map(|_| {
             let _ = queue.send(GameEvent {
-                game_id,
+                game_id: game_id.into(),
                 event: "update".into(),
                 settings: Some(settings.into()),
                 ..Default::default()
