@@ -132,7 +132,12 @@ export function Game() {
                 setGame((g) => {
                     g.players = ge.players as Player[]
                 })
-            else navigate("/")
+
+            if (
+                ge.players === undefined ||
+                ge.players.some((p) => p.id === user?.id) === false
+            )
+                navigate("/")
         })
 
         eventSource.addEventListener("guess", (e) => {
@@ -217,10 +222,9 @@ export function Game() {
                 className="me-2"
                 disabled={user === null}
                 onClick={async () => {
-                    if (game.players.some((p) => p.id === user?.id)) {
+                    if (game.players.some((p) => p.id === user?.id))
                         await gameService.leave(game.id)
-                        navigate("/")
-                    } else await gameService.join(game.id)
+                    else await gameService.join(game.id)
                 }}
             >
                 {user === null
@@ -229,49 +233,47 @@ export function Game() {
                       ? t("leaveGame")
                       : t("joinGame")}
             </Button>
-            <Button
-                className="me-2"
-                disabled={!canStartOrStopGame()}
-                onClick={async () => {
-                    if (game.state === GameState.Open)
-                        await gameService.start(game.id)
-                    else await gameService.stop(game.id)
-                }}
-            >
-                {canStartOrStopGame()
-                    ? game.state !== GameState.Open
-                        ? t("stopGame")
-                        : t("startGame")
-                    : user === null
-                      ? t("startGameNotLoggedIn")
-                      : game.players.length < 2
-                        ? t("startGameNotEnoughPlayers")
-                        : t("startGameNotCreator")}
-            </Button>
-            <Button
-                className="me-2"
-                disabled={
-                    game.state !== GameState.Open ||
-                    (game.players.find((p) => p.id === user?.id)?.creator ??
-                        false) === false
-                }
-                aria-expanded={false}
-                onClick={() => setShowSettings(true)}
-            >
-                {user === null
-                    ? t("gameSettingsNotLoggedIn")
-                    : game.state !== GameState.Open
-                      ? t("gameSettingsNotOpen")
-                      : game.players.find((p) => p.id === user.id)?.creator !==
-                          true
-                        ? t("gameSettingsNotCreator")
-                        : t("gameSettings")}
-            </Button>
-            <GameSettings
-                show={showSettings}
-                game={game}
-                onHide={() => setShowSettings(false)}
-            />
+            {user !== null &&
+            game.players.find((p) => p.id === user.id)?.creator === true ? (
+                <>
+                    <Button
+                        className="me-2"
+                        disabled={!canStartOrStopGame()}
+                        onClick={async () => {
+                            if (game.state === GameState.Open)
+                                await gameService.start(game.id)
+                            else await gameService.stop(game.id)
+                        }}
+                    >
+                        {canStartOrStopGame()
+                            ? game.state !== GameState.Open
+                                ? t("stopGame")
+                                : t("startGame")
+                            : t("startGameNotEnoughPlayers")}
+                    </Button>
+                    <Button
+                        className="me-2"
+                        disabled={
+                            game.state !== GameState.Open ||
+                            (game.players.find((p) => p.id === user?.id)
+                                ?.creator ?? false) === false
+                        }
+                        aria-expanded={false}
+                        onClick={() => setShowSettings(true)}
+                    >
+                        {game.state !== GameState.Open
+                            ? t("gameSettingsNotOpen")
+                            : t("gameSettings")}
+                    </Button>
+                    <GameSettings
+                        show={showSettings}
+                        game={game}
+                        onHide={() => setShowSettings(false)}
+                    />
+                </>
+            ) : (
+                ""
+            )}
             <h3 className="h5">{t("player", { count: 2 })}</h3>
             <Table responsive>
                 <thead>
@@ -279,6 +281,13 @@ export function Game() {
                         <th>{t("name")}</th>
                         <th>{t("token", { count: 2 })}</th>
                         <th>{t("hit", { count: 2 })}</th>
+                        {user !== null &&
+                        game.players.find((p) => p.id === user.id)?.creator ===
+                            true ? (
+                            <th>{t("kick")}</th>
+                        ) : (
+                            ""
+                        )}
                     </tr>
                 </thead>
                 <tbody>
@@ -364,6 +373,25 @@ export function Game() {
                                         </Modal.Body>
                                     </Modal>
                                 </td>
+                                {user !== null &&
+                                game.players.find((p) => p.id === user.id)
+                                    ?.creator === true ? (
+                                    <td>
+                                        <Button
+                                            disabled={user?.id === p.id}
+                                            onClick={async () =>
+                                                await gameService.kickPlayer(
+                                                    game.id,
+                                                    p.id,
+                                                )
+                                            }
+                                        >
+                                            {t("kick")}
+                                        </Button>
+                                    </td>
+                                ) : (
+                                    ""
+                                )}
                             </tr>
                         )
                     })}

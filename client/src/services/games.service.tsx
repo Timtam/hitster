@@ -140,4 +140,14 @@ export default class GameService {
         if (res.status == 200) return
         throw json({ message: (await res.json()).message, status: res.status })
     }
+
+    async kickPlayer(game_id: string, player_id: number) {
+        let res = await fetch(`/api/games/${game_id}/leave/${player_id}`, {
+            method: "PATCH",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
 }

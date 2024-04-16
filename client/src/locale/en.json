@@ -55,9 +55,7 @@
         "token_other": "Tokens",
         "hit_one": "Hit",
         "hit_other": "Hits",
-        "startGameNotLoggedIn": "You must be logged in to start or stop a game",
         "startGameNotEnoughPlayers": "At least two players must be part of a game",
-        "startGameNotCreator": "Only the creator can start or stop a game",
         "creator": "creator",
         "close": "Close",
         "hitsForPlayer": "Hits for {{player}}",
@@ -90,9 +88,7 @@
         "startTokens": "Start tokens",
         "gameSettingsHitDuration": "How many seconds of a hit will every player hear when guessing?",
         "hitDuration": "Hit duration",
-        "gameSettingsNotLoggedIn": "You need to be logged in to change game settings",
         "gameSettingsNotOpen": "The game needs to be stopped to change its settings",
-        "gameSettingsNotCreator": "Only the creator can change a game's settings",
         "loading": "Loading...",
         "pack_one": "Pack",
         "pack_other": "Packs",
@@ -104,6 +100,7 @@
         "localGame": "Local game",
         "addPlayer": "Add local player",
         "addPlayerNotLocalGame": "You can only add local players in a local game",
-        "addPlayerNotWaiting": "You can only add local players while the game isn't running"
+        "addPlayerNotWaiting": "You can only add local players while the game isn't running",
+        "kick": "Kick"
     }
 }

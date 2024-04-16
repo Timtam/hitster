@@ -55,9 +55,7 @@
         "token_other": "Chips",
         "hit_one": "Hit",
         "hit_other": "Hits",
-        "startGameNotLoggedIn": "Du musst angemeldet sein, um ein Spiel starten oder stoppen zu können",
         "startGameNotEnoughPlayers": "Ein Spiel benötigt mindestens zwei Mitspieler",
-        "startGameNotCreator": "Nur der Ersteller kann ein Spiel starten oder stoppen",
         "creator": "Ersteller",
         "close": "Schließen",
         "hitsForPlayer": "Hits für {{player}}",
@@ -90,9 +88,7 @@
         "startTokens": "Start-Chips",
         "gameSettingsHitDuration": "Wie viele Sekunden eines Hits werden zu jeder Spielrunde abgespielt?",
         "hitDuration": "Abspielzeit der Hits",
-        "gameSettingsNotLoggedIn": "Du musst eingeloggt sein, um die Spieleinstellungen ändern zu können",
         "gameSettingsNotOpen": "Das Spiel muss gestoppt sein, um die Spieleinstellungen zu ändern",
-        "gameSettingsNotCreator": "Nur der Ersteller kann die Spieleinstellungen ändern",
         "loading": "Lädt, bitte warten...",
         "pack_one": "Pack",
         "pack_other": "Packs",
@@ -104,6 +100,7 @@
         "localGame": "Lokales Spiel",
         "addPlayer": "Lokalen Spieler hinzufügen",
         "addPlayerNotLocalGame": "Du kannst lokale Spieler nur in einem lokalen Spiel hinzufügen",
-        "addPlayerNotWaiting": "Du kannst lokale Spieler nur hinzufügen, während das Spiel nicht läuft"
+        "addPlayerNotWaiting": "Du kannst lokale Spieler nur hinzufügen, während das Spiel nicht läuft",
+        "kick": "Kicken"
     }
 }
