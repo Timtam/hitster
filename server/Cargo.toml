@@ -7,26 +7,35 @@ edition = "2021"
 
 [dependencies]
 argon2 = "0.5.3"
+deref-derive = "0.1.0"
 dotenvy = "0.15.7"
 ffmpeg-cli = "0.1.0"
 itertools = "0.12.1"
-names = "0.14.0"
 parking_lot = "0.12.1"
+petname = {version = "2.0.0-beta.4", default-features = false, features = ["default-rng", "default-words"]}
 rand = "0.8.5"
+rand_chacha = "0.3.1"
 regex = "1.10.3"
-rocket = { version = "0.5.0", features = ["json", "secrets"]}
+rocket = { version = "0.5.0", features = ["json", "secrets", "uuid"]}
 rocket_async_compression = "0.6.0"
 rocket_db_pools = { version = "0.1.0", default-features = false, features = ["sqlx_sqlite" ]}
 rocket_okapi = { version = "0.8.0", default-features = false, features = ["swagger", "rapidoc", "secrets", "rocket_db_pools"]}
 rusty_ytdl = "0.7.0"
+schemars = { version = "0.8.16", features = ["uuid1"]}
 serde = { version = "1.0.197", features = ["derive"]}
 serde_json = "1.0.114"
 sqlx = { version = "0.7.3", default-features = false, features = ["migrate", "macros"] }
 strum = { version = "0.26.1", features = ["strum_macros", "derive"]}
-time = "0.3.34"
+time = { version = "0.3.34", features = ["serde"]}
+uuid = { version = "1.8.0", features = ["v4"] }
 
 [build-dependencies]
 csv = "1.3.0"
 
 [dev-dependencies]
 futures = "0.3.30"
+
+[profile.release]
+lto = true
+opt-level = "z"
+strip = true

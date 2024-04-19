@@ -26,6 +26,7 @@ use rocket::{
 };
 use rocket_okapi::openapi;
 use std::{default::Default, path::PathBuf};
+use uuid::Uuid;
 
 /// Create a new game
 ///
@@ -127,7 +128,7 @@ pub async fn leave_game(
         .leave(
             game_id,
             &user,
-            player_id.to_str().and_then(|p| p.parse::<i64>().ok()),
+            player_id.to_str().and_then(|p| Uuid::parse_str(p).ok()),
         )
         .map(|_| {
             let _ = queue.send(GameEvent {
@@ -306,7 +307,7 @@ pub fn guess_slot(
                 players: game
                     .players
                     .iter()
-                    .find(|p| p.id == Into::<i64>::into(user.id))
+                    .find(|p| p.id == user.id)
                     .cloned()
                     .map(|p| vec![p]),
                 ..Default::default()
@@ -379,7 +380,7 @@ pub fn skip_hit(
             players: game
                 .players
                 .iter()
-                .find(|p| p.id == Into::<i64>::into(user.id))
+                .find(|p| p.id == user.id)
                 .cloned()
                 .map(|p| vec![p]),
             ..Default::default()

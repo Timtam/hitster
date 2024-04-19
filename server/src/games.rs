@@ -6,6 +6,7 @@ use rocket::serde::json::Json;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
 use std::{collections::VecDeque, convert::From, default::Default};
+use uuid::Uuid;
 
 #[derive(Deserialize, Serialize, JsonSchema)]
 pub struct SlotPayload {
@@ -97,7 +98,7 @@ pub enum PlayerState {
 
 #[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
 pub struct Player {
-    pub id: i64,
+    pub id: Uuid,
     pub name: String,
     pub state: PlayerState,
     pub creator: bool,
@@ -106,6 +107,7 @@ pub struct Player {
     pub slots: Vec<Slot>,
     pub turn_player: bool,
     pub guess: Option<Slot>,
+    pub r#virtual: bool,
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -118,7 +120,7 @@ pub struct Slot {
 impl Default for Player {
     fn default() -> Self {
         Self {
-            id: 0,
+            id: Uuid::new_v4(),
             name: "".into(),
             state: PlayerState::Waiting,
             creator: false,
@@ -127,6 +129,7 @@ impl Default for Player {
             slots: vec![],
             turn_player: false,
             guess: None,
+            r#virtual: true,
         }
     }
 }
@@ -134,8 +137,9 @@ impl Default for Player {
 impl From<&User> for Player {
     fn from(u: &User) -> Self {
         Self {
-            id: u.id.into(),
-            name: u.username.clone(),
+            id: u.id.clone(),
+            name: u.name.clone(),
+            r#virtual: false,
             ..Default::default()
         }
     }

@@ -1,8 +1,9 @@
 use crate::users::User;
 use std::{collections::HashMap, sync::Mutex};
+use uuid::Uuid;
 
 struct UserServiceData {
-    users: HashMap<u32, User>,
+    users: HashMap<Uuid, User>,
 }
 
 pub struct UserService {
@@ -33,7 +34,7 @@ impl UserService {
             .collect::<_>()
     }
 
-    pub fn get_by_id(&self, id: u32) -> Option<User> {
+    pub fn get_by_id(&self, id: Uuid) -> Option<User> {
         self.data.lock().unwrap().users.get(&id).cloned()
     }
 
@@ -43,11 +44,11 @@ impl UserService {
             .unwrap()
             .users
             .values()
-            .find(|u| u.username == username)
+            .find(|u| u.name == username)
             .cloned()
     }
 
-    pub fn remove(&self, id: u32) {
+    pub fn remove(&self, id: Uuid) {
         self.data.lock().unwrap().users.remove(&id);
     }
 }
