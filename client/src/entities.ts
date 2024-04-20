@@ -12,6 +12,7 @@ export const Hit = z.object({
     title: z.string(),
     year: z.number(),
     pack: z.string(),
+    belongs_to: z.string(),
 })
 
 export type Hit = z.infer<typeof Hit>

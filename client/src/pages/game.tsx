@@ -58,19 +58,15 @@ export function Game() {
     let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
     let hNoInterception = new Howl({
         src: [noInterception],
-        preload: false,
     })
     let hPayToken = new Howl({
         src: [payToken],
-        preload: false,
     })
     let hYouScore = new Howl({
         src: [youScore],
-        preload: false,
     })
     let hYouFail = new Howl({
         src: [youFail],
-        preload: false,
     })
 
     const canSkip = () => {

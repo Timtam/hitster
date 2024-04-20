@@ -42,12 +42,19 @@ pub enum Pack {
     #[strum(serialize = "K-Pop")]
     #[serde(rename = "K-Pop")]
     KPop,
+    #[strum(serialize = "Weihnachtsparty")]
+    #[serde(rename = "Weihnachtsparty")]
+    Weihnachtsparty,
+    #[strum(serialize = "Film- und Serien-Soundtracks")]
+    #[serde(rename = "Film- und Serien-Soundtracks")]
+    FilmundSerienSoundtracks,
 }
 
 #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Hit {
     pub artist: String,
     pub title: String,
+    pub belongs_to: String,
     pub year: u32,
     pub pack: Pack,
     #[serde(skip)]

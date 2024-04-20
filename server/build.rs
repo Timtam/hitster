@@ -13,7 +13,7 @@ fn main() {
     for result in csv_reader.records() {
         let record = result.unwrap();
 
-        if record.get(4).unwrap() != "" {
+        if record.get(5).unwrap() != "" {
             file_content += format!(
                 "Hit {{
             artist: \"{}\".into(),
@@ -22,13 +22,15 @@ fn main() {
             yt_url: \"{}\".into(),
             playback_offset: {},
             pack: Pack::from_str(\"{}\").unwrap(),
+            belongs_to: \"{}\".into(),
         }},",
                 record.get(0).unwrap(),
                 record.get(2).unwrap(),
                 record.get(1).unwrap(),
-                record.get(4).unwrap(),
-                record.get(5).unwrap_or("0"),
+                record.get(5).unwrap(),
+                record.get(6).unwrap_or("0"),
                 record.get(3).unwrap(),
+                record.get(4).unwrap(),
             )
             .as_str();
         }
