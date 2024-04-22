@@ -1,6 +1,6 @@
 use crate::{
     games::{Game, GameMode, GameSettingsPayload, GameState, Player, PlayerState, Slot},
-    hits::{Hit, Pack},
+    hits::Hit,
     responses::{
         ConfirmSlotError, CurrentHitError, GuessSlotError, JoinGameError, LeaveGameError,
         SkipHitError, StartGameError, StopGameError, UpdateGameError,
@@ -17,7 +17,6 @@ use std::{
     collections::{HashMap, HashSet, VecDeque},
     sync::Mutex,
 };
-use strum::VariantArray;
 
 pub struct GameServiceData {
     games: HashMap<String, Game>,
@@ -63,7 +62,17 @@ impl GameService {
             start_tokens: 2,
             goal: 10,
             hit: None,
-            packs: Vec::from(Pack::VARIANTS),
+            packs: self
+                .hit_service
+                .lock()
+                .get_all()
+                .into_iter()
+                .fold(HashSet::new(), |mut p, h| {
+                    p.insert(h.pack);
+                    p
+                })
+                .into_iter()
+                .collect::<Vec<_>>(),
             mode,
         };
 
@@ -777,7 +786,16 @@ impl GameService {
 
             if let Some(packs) = &settings.packs {
                 game.packs = if packs.is_empty() {
-                    Vec::from(Pack::VARIANTS)
+                    self.hit_service
+                        .lock()
+                        .get_all()
+                        .into_iter()
+                        .fold(HashSet::new(), |mut p, h| {
+                            p.insert(h.pack);
+                            p
+                        })
+                        .into_iter()
+                        .collect::<Vec<_>>()
                 } else {
                     packs.clone()
                 };

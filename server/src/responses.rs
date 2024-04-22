@@ -1,4 +1,4 @@
-use crate::{games::Game, hits::Pack, users::User};
+use crate::{games::Game, users::User};
 use rocket::{
     http::{ContentType, Status},
     request::Request,
@@ -653,5 +653,5 @@ pub struct UsersResponse {
 
 #[derive(Serialize, Deserialize, JsonSchema)]
 pub struct PacksResponse {
-    pub packs: HashMap<Pack, usize>,
+    pub packs: HashMap<String, usize>,
 }

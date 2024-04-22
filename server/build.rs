@@ -21,7 +21,7 @@ fn main() {
             year: {},
             yt_url: \"{}\".into(),
             playback_offset: {},
-            pack: Pack::from_str(\"{}\").unwrap(),
+            pack: \"{}\".into(),
             belongs_to: \"{}\".into(),
         }},",
                 record.get(0).unwrap(),

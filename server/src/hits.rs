@@ -12,7 +12,6 @@ use std::{
     hash::{Hash, Hasher},
     path::{Path, PathBuf},
     process::Command,
-    str::FromStr,
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc,
@@ -20,40 +19,8 @@ use std::{
     thread,
     time::Duration,
 };
-use strum::{EnumString, VariantArray};
 
 include!(concat!(env!("OUT_DIR"), "/hits.rs"));
-
-#[derive(
-    EnumString,
-    Eq,
-    PartialEq,
-    Debug,
-    Clone,
-    Serialize,
-    Deserialize,
-    JsonSchema,
-    VariantArray,
-    Hash,
-    Copy,
-)]
-pub enum Pack {
-    Basic,
-    Schlagerparty,
-    Eurovision,
-    #[strum(serialize = "Custom Basic")]
-    #[serde(rename = "Custom Basic")]
-    CustomBasic,
-    #[strum(serialize = "K-Pop")]
-    #[serde(rename = "K-Pop")]
-    KPop,
-    #[strum(serialize = "Weihnachtsparty")]
-    #[serde(rename = "Weihnachtsparty")]
-    Weihnachtsparty,
-    #[strum(serialize = "Film- und Serien-Soundtracks")]
-    #[serde(rename = "Film- und Serien-Soundtracks")]
-    FilmundSerienSoundtracks,
-}
 
 #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Hit {
@@ -61,7 +28,7 @@ pub struct Hit {
     pub title: String,
     pub belongs_to: String,
     pub year: u32,
-    pub pack: Pack,
+    pub pack: String,
     #[serde(skip)]
     pub yt_url: String,
     #[serde(skip)]
