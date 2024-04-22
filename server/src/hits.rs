@@ -173,13 +173,18 @@ impl Fairing for HitsterDownloader {
                                 let loudness: Loudness = {
                                     let json: String = {
                                         let lines: Vec<&str> = output_s.lines().collect();
-                                        let (_, lines) = lines.split_at(lines.len() - 14);
-                                        lines
-                                            .into_iter()
-                                            .take(12)
-                                            .map(|s| *s)
-                                            .collect::<Vec<_>>()
-                                            .join("\n")
+                                        if cfg!(windows) {
+                                            let (_, lines) = lines.split_at(lines.len() - 14);
+                                            lines
+                                                .into_iter()
+                                                .take(12)
+                                                .map(|s| *s)
+                                                .collect::<Vec<_>>()
+                                                .join("\n")
+                                        } else {
+                                            let (_, lines) = lines.split_at(lines.len() - 12);
+                                            lines.join("\n")
+                                        }
                                     };
                                     serde_json::from_str(&json).unwrap()
                                 };
