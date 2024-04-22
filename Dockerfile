@@ -40,7 +40,12 @@ ENV CLIENT_DIRECTORY=/hitster/client
 # prepare the OS
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install --no-install-recommends libssl-dev ca-certificates ffmpeg && \
+    apt-get -y install --no-install-recommends libssl-dev ca-certificates software-properties-common && \
+    add-apt-repository "deb https://deb.debian.org/debian unstable main" &&\
+    add-apt-repository "deb https://deb.debian.org/debian experimental main" &&\
+    apt-get -y --no-install-recommends install ffmpeg && \
+    apt-get -y remove software-properties-common && \
+    apt-get -y autoremove && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
