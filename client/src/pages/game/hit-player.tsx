@@ -23,11 +23,9 @@ export default function HitPlayer({
     let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
     let hPlayHit = new Howl({
         src: [playHit],
-        preload: false,
     })
     let hStopHit = new Howl({
         src: [stopHit],
-        preload: false,
     })
 
     const play = () => {

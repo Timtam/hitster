@@ -1,7 +1,4 @@
-use crate::{
-    hits::{Hit, Pack},
-    users::User,
-};
+use crate::{hits::Hit, users::User};
 use rocket::serde::json::Json;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
@@ -22,7 +19,7 @@ pub struct GameSettingsPayload {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub goal: Option<u8>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub packs: Option<Vec<Pack>>,
+    pub packs: Option<Vec<String>>,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -83,7 +80,7 @@ pub struct Game {
     pub start_tokens: u8,
     pub goal: u8,
     pub hit: Option<Hit>,
-    pub packs: Vec<Pack>,
+    pub packs: Vec<String>,
     pub mode: GameMode,
 }
 

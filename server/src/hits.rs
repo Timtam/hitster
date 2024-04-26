@@ -1,4 +1,3 @@
-use ffmpeg_cli::{FfmpegBuilder, File, Parameter};
 use regex::Regex;
 use rocket::{
     fairing::{self, Fairing, Info, Kind},
@@ -12,44 +11,24 @@ use std::{
     fs::{create_dir_all, remove_file},
     hash::{Hash, Hasher},
     path::{Path, PathBuf},
-    process::Stdio,
-    str::FromStr,
+    process::Command,
+    sync::{
+        atomic::{AtomicBool, Ordering},
+        Arc,
+    },
+    thread,
+    time::Duration,
 };
-use strum::{EnumString, VariantArray};
 
 include!(concat!(env!("OUT_DIR"), "/hits.rs"));
-
-#[derive(
-    EnumString,
-    Eq,
-    PartialEq,
-    Debug,
-    Clone,
-    Serialize,
-    Deserialize,
-    JsonSchema,
-    VariantArray,
-    Hash,
-    Copy,
-)]
-pub enum Pack {
-    Basic,
-    Schlagerparty,
-    Eurovision,
-    #[strum(serialize = "Custom Basic")]
-    #[serde(rename = "Custom Basic")]
-    CustomBasic,
-    #[strum(serialize = "K-Pop")]
-    #[serde(rename = "K-Pop")]
-    KPop,
-}
 
 #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
 pub struct Hit {
     pub artist: String,
     pub title: String,
+    pub belongs_to: String,
     pub year: u32,
-    pub pack: Pack,
+    pub pack: String,
     #[serde(skip)]
     pub yt_url: String,
     #[serde(skip)]
@@ -96,6 +75,33 @@ impl Hash for Hit {
     }
 }
 
+// alot of stuff copied from ffmpeg-loudness-norm
+
+#[derive(Serialize, Deserialize, Debug)]
+struct Loudness {
+    input_i: String,
+    input_tp: String,
+    input_lra: String,
+    input_thresh: String,
+    target_offset: String,
+}
+
+fn progress_thread() -> (Arc<AtomicBool>, thread::JoinHandle<()>) {
+    const PROGRESS_CHARS: [&str; 12] = ["⠂", "⠃", "⠁", "⠉", "⠈", "⠘", "⠐", "⠰", "⠠", "⠤", "⠄", "⠆"];
+    let finished = Arc::new(AtomicBool::new(false));
+    let stop_signal = Arc::clone(&finished);
+    let handle = thread::spawn(move || {
+        for pc in PROGRESS_CHARS.iter().cycle() {
+            if stop_signal.load(Ordering::Relaxed) {
+                break;
+            };
+            eprint!("Processing {}\r", pc);
+            thread::sleep(Duration::from_millis(250));
+        }
+    });
+    (finished, handle)
+}
+
 #[derive(Default)]
 pub struct HitsterDownloader {}
 
@@ -136,30 +142,87 @@ impl Fairing for HitsterDownloader {
                             .await
                             .is_ok()
                         {
-                            println!("Post-processing opus to mp3...");
-
                             let in_file = format!("{}/{}.opus", download_dir.as_str(), id);
                             let out_file = format!("{}/{}.mp3", download_dir.as_str(), id);
                             let offset = format!("{}", hit.playback_offset);
 
-                            let builder = FfmpegBuilder::new()
-                                .stderr(Stdio::piped())
-                                .option(Parameter::Single("nostdin"))
-                                .option(Parameter::Single("y"))
-                                .input(File::new(in_file.as_str()))
-                                .output(
-                                    File::new(out_file.as_str())
-                                        .option(Parameter::KeyValue("ss", offset.as_str()))
-                                        .option(Parameter::Single("vn"))
-                                        .option(Parameter::Single("sn"))
-                                        .option(Parameter::Single("dn")),
+                            println!("Measure loudness of song...");
+
+                            let mut command = Command::new("ffmpeg");
+                            command
+                                .current_dir(&env::current_dir().unwrap())
+                                .arg("-i")
+                                .arg(&in_file)
+                                .arg("-hide_banner")
+                                .args(&["-vn", "-af"])
+                                .arg(format!(
+                                    "loudnorm=I={}:LRA={}:tp={}:print_format=json",
+                                    -18.0, 12.0, -1.0
+                                ))
+                                .args(&["-f", "null", "-"]);
+
+                            let output = {
+                                let (finished, _) = progress_thread();
+                                let output_res = command.output();
+                                finished.store(true, Ordering::SeqCst);
+                                output_res.expect("Failed to execute ffmpeg process!")
+                            };
+
+                            let output_s = String::from_utf8_lossy(&output.stderr);
+                            if output.status.success() {
+                                let loudness: Loudness = {
+                                    let json: String = {
+                                        let lines: Vec<&str> = output_s.lines().collect();
+                                        if cfg!(windows) {
+                                            let (_, lines) = lines.split_at(lines.len() - 14);
+                                            lines
+                                                .into_iter()
+                                                .take(12)
+                                                .map(|s| *s)
+                                                .collect::<Vec<_>>()
+                                                .join("\n")
+                                        } else {
+                                            let (_, lines) = lines.split_at(lines.len() - 12);
+                                            lines.join("\n")
+                                        }
+                                    };
+                                    serde_json::from_str(&json).unwrap()
+                                };
+
+                                let af = format!("loudnorm=linear=true:I={}:LRA={}:TP={}:measured_I={}:measured_TP={}:measured_LRA={}:measured_thresh={}:offset={}:print_format=summary",
+                                    -18.0, 12.0, -1.0,
+                                    loudness.input_i,
+                                    loudness.input_tp,
+                                    loudness.input_lra,
+                                    loudness.input_thresh,
+                                    loudness.target_offset,
                                 );
 
-                            let ffmpeg = builder.run().await.unwrap();
+                                println!("Processing opus to mp3...");
 
-                            ffmpeg.process.wait_with_output().unwrap();
+                                let mut command = Command::new("ffmpeg");
+                                command
+                                    .current_dir(&env::current_dir().unwrap())
+                                    .arg("-nostdin")
+                                    .arg("-y")
+                                    .arg("-i")
+                                    .arg(&in_file)
+                                    .args(["-ss", offset.as_str()])
+                                    .arg("-vn")
+                                    .arg("-sn")
+                                    .arg("-dn")
+                                    .args(["-af", af.as_str()])
+                                    .arg(&out_file);
 
-                            remove_file(in_file.as_str()).unwrap();
+                                {
+                                    let (finished, _) = progress_thread();
+                                    let output_res = command.output();
+                                    finished.store(true, Ordering::SeqCst);
+                                    output_res.expect("Failed to execute ffmpeg process!");
+                                }
+
+                                remove_file(in_file.as_str()).unwrap();
+                            }
                         } else {
                             println!("Unable to download video.");
                         }

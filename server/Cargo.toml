@@ -9,7 +9,6 @@ edition = "2021"
 argon2 = "0.5.3"
 deref-derive = "0.1.0"
 dotenvy = "0.15.7"
-ffmpeg-cli = "0.1.0"
 itertools = "0.12.1"
 parking_lot = "0.12.1"
 petname = {version = "2.0.0-beta.4", default-features = false, features = ["default-rng", "default-words"]}
