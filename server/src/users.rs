@@ -1,10 +1,7 @@
 use crate::{responses::MessageResponse, services::ServiceStore, HitsterConfig};
 use deref_derive::{Deref, DerefMut};
-use petname::{Generator, Petnames};
-use rand::{prelude::thread_rng, RngCore, SeedableRng};
-use rand_chacha::ChaCha8Rng;
 use rocket::{
-    http::{Cookie, CookieJar, Status},
+    http::{CookieJar, Status},
     request::{self, FromRequest, Outcome, Request},
     serde::json::Json,
     State,
@@ -19,7 +16,7 @@ use rocket_okapi::{
     request::{OpenApiFromRequest, RequestHeaderInput},
 };
 use serde::{Deserialize, Serialize};
-use time::{Duration, OffsetDateTime};
+use time::OffsetDateTime;
 use uuid::Uuid;
 
 /*
@@ -33,7 +30,7 @@ pub struct UserLoginPayload {
 #[derive(
     Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Hash, Deref, DerefMut,
 )]
-pub struct Time(#[schemars(with = "String")] OffsetDateTime);
+pub struct Time(#[schemars(with = "String")] pub OffsetDateTime);
 
 impl Default for Time {
     fn default() -> Self {
@@ -82,95 +79,6 @@ impl<'r> FromRequest<'r> for User {
         let serv = req.guard::<&State<ServiceStore>>().await.unwrap();
         let mut db = req.guard::<Connection<HitsterConfig>>().await.unwrap();
 
-        let generate_token = || -> String {
-            let mut rng = thread_rng();
-            let mut token_gen = ChaCha8Rng::seed_from_u64(rng.next_u64());
-            let mut b = [0u8; 16];
-            token_gen.fill_bytes(&mut b);
-
-            u128::from_le_bytes(b).to_string()
-        };
-
-        let generate_virtual_user = || -> (User, Token) {
-            let mut u = User {
-                id: Uuid::new_v4(),
-                name: Petnames::default().generate_one(3, "-").unwrap(),
-                r#virtual: true,
-                tokens: vec![],
-                password: "".into(),
-            };
-
-            let t = Token {
-                token: generate_token(),
-                expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
-                refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
-            };
-
-            u.tokens.push(t.clone());
-
-            serv.user_service().lock().add(u.clone());
-
-            (u, t)
-        };
-
-        let set_cookies = |user: &User, token: &Token| {
-            cookies.add_private(
-                Cookie::build(("id", token.token.clone())).expires(token.refresh_time.0),
-            );
-            cookies.add(
-                Cookie::build(("user", serde_json::to_string(user).unwrap()))
-                    .http_only(false)
-                    .expires(token.refresh_time.0),
-            );
-        };
-
-        let handle_existing_token = |token: &str, user: &User| -> User {
-            if let Some(mut u) = serv
-                .user_service()
-                .lock()
-                .get_by_username(user.name.as_str())
-            {
-                if let Some(t) = u.tokens.iter().find(|t| t.token == token) {
-                    if t.expiration_time.0 < OffsetDateTime::now_utc()
-                        && t.refresh_time.0 > OffsetDateTime::now_utc()
-                    {
-                        let t = Token {
-                            token: generate_token(),
-                            expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
-                            refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
-                        };
-
-                        let pos = u.tokens.iter().position(|ti| ti.token == token).unwrap();
-
-                        std::mem::replace(&mut u.tokens[pos], t.clone());
-
-                        serv.user_service().lock().add(u.clone());
-
-                        set_cookies(&u, &t);
-                        return u;
-                    } else if t.refresh_time.0 < OffsetDateTime::now_utc() {
-                        let (u, t) = generate_virtual_user();
-
-                        set_cookies(&u, &t);
-                        return u;
-                    } else {
-                        return u;
-                    }
-                }
-
-                let (u, t) = generate_virtual_user();
-
-                set_cookies(&u, &t);
-                u
-            } else {
-                // access DB
-                let (u, t) = generate_virtual_user();
-
-                set_cookies(&u, &t);
-                u
-            }
-        };
-
         let token = cookies
             .get_private("id")
             .map(|cookie| cookie.value().to_string());
@@ -180,17 +88,88 @@ impl<'r> FromRequest<'r> for User {
             .and_then(|cookie| serde_json::from_str::<User>(cookie.value()).ok());
 
         if user.is_some() && token.is_some() {
-            return Outcome::Success(handle_existing_token(
-                token.as_ref().unwrap(),
-                user.as_ref().unwrap(),
-            ));
-        } else {
-            let (u, t) = generate_virtual_user();
+            let user = user.unwrap();
 
-            set_cookies(&u, &t);
+            if let Some(u) = serv
+                .user_service()
+                .lock()
+                .get_by_username(user.name.as_str())
+            {
+                if let Some(t) = u
+                    .tokens
+                    .iter()
+                    .find(|t| &t.token == token.as_ref().unwrap())
+                {
+                    if t.expiration_time.0 >= OffsetDateTime::now_utc() {
+                        return Outcome::Success(u);
+                    }
+                }
 
-            Outcome::Success(u)
+                return Outcome::Error((
+                    Status::Unauthorized,
+                    Json(MessageResponse {
+                        message: "token needs to be refreshed".into(),
+                        r#type: "error".into(),
+                    }),
+                ));
+            }
+
+            if user.r#virtual {
+                return Outcome::Error((
+                    Status::Unauthorized,
+                    Json(MessageResponse {
+                        message: "token needs to be refreshed".into(),
+                        r#type: "error".into(),
+                    }),
+                ));
+            }
+
+            return sqlx::query("SELECT * FROM users where name = ?")
+                .bind(user.name.as_str())
+                .fetch_optional(&mut **db)
+                .await
+                .unwrap()
+                .and_then(|user| {
+                    let u = User {
+                        id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
+                        name: user.get::<String, &str>("name"),
+                        password: user.get::<String, &str>("password"),
+                        r#virtual: false,
+                        tokens: serde_json::from_str::<Vec<Token>>(
+                            &user.get::<String, &str>("tokens"),
+                        )
+                        .unwrap(),
+                    };
+
+                    if let Some(t) = u
+                        .tokens
+                        .iter()
+                        .find(|t| &t.token == token.as_ref().unwrap())
+                    {
+                        if t.expiration_time.0 >= OffsetDateTime::now_utc() {
+                            serv.user_service().lock().add(u.clone());
+
+                            return Some(Outcome::Success(u));
+                        }
+                    }
+                    None
+                })
+                .unwrap_or(Outcome::Error((
+                    Status::Unauthorized,
+                    Json(MessageResponse {
+                        message: "token needs to be refreshed".into(),
+                        r#type: "error".into(),
+                    }),
+                )));
         }
+
+        Outcome::Error((
+            Status::Unauthorized,
+            Json(MessageResponse {
+                message: "token needs to be refreshed".into(),
+                r#type: "error".into(),
+            }),
+        ))
     }
 }
 

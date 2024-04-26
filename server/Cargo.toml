@@ -10,7 +10,7 @@ argon2 = "0.5.3"
 deref-derive = "0.1.0"
 dotenvy = "0.15.7"
 itertools = "0.12.1"
-parking_lot = "0.12.1"
+parking_lot = { version = "0.12.1", features = [ "send_guard"]}
 petname = {version = "2.0.0-beta.4", default-features = false, features = ["default-rng", "default-words"]}
 rand = "0.8.5"
 rand_chacha = "0.3.1"

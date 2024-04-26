@@ -1,13 +1,16 @@
 use crate::{
     responses::{MessageResponse, UsersResponse},
     services::ServiceStore,
-    users::User,
+    users::{Time, Token, User},
     HitsterConfig,
 };
 use argon2::{
     password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
     Argon2,
 };
+use petname::{Generator, Petnames};
+use rand::{prelude::thread_rng, RngCore, SeedableRng};
+use rand_chacha::ChaCha8Rng;
 use rocket::{
     http::{Cookie, CookieJar},
     response::status::NotFound,
@@ -21,6 +24,193 @@ use rocket_db_pools::{
 use rocket_okapi::openapi;
 use serde_json;
 use time::{Duration, OffsetDateTime};
+use uuid::Uuid;
+
+/// internals
+
+fn generate_token() -> String {
+    let mut rng = thread_rng();
+    let mut token_gen = ChaCha8Rng::seed_from_u64(rng.next_u64());
+    let mut b = [0u8; 16];
+    token_gen.fill_bytes(&mut b);
+
+    u128::from_le_bytes(b).to_string()
+}
+
+fn generate_virtual_user(svc: &ServiceStore) -> (User, Token) {
+    let mut u = User {
+        id: Uuid::new_v4(),
+        name: Petnames::default().generate_one(3, "-").unwrap(),
+        r#virtual: true,
+        tokens: vec![],
+        password: "".into(),
+    };
+
+    let t = Token {
+        token: generate_token(),
+        expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
+        refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+    };
+
+    u.tokens.push(t.clone());
+
+    svc.user_service().lock().add(u.clone());
+
+    (u, t)
+}
+
+fn set_cookies(user: &User, token: &Token, cookies: &CookieJar<'_>) {
+    cookies.add_private(Cookie::build(("id", token.token.clone())).expires(token.refresh_time.0));
+    cookies.add(
+        Cookie::build(("user", serde_json::to_string(user).unwrap()))
+            .http_only(false)
+            .expires(token.refresh_time.0),
+    );
+}
+
+async fn handle_existing_token(
+    token: &str,
+    user: &User,
+    svc: &ServiceStore,
+    cookies: &CookieJar<'_>,
+    mut db: Connection<HitsterConfig>,
+) -> User {
+    if let Some(mut u) = svc
+        .user_service()
+        .lock()
+        .get_by_username(user.name.as_str())
+    {
+        // the user already exists within the user service
+        if let Some(t) = u.tokens.iter().find(|t| t.token == token) {
+            // the token exists for the user
+            if t.expiration_time.0 < OffsetDateTime::now_utc()
+                && t.refresh_time.0 > OffsetDateTime::now_utc()
+            {
+                // token expired, but can still be refreshed
+                let t = Token {
+                    token: generate_token(),
+                    expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
+                    refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+                };
+
+                let pos = u.tokens.iter().position(|ti| ti.token == token).unwrap();
+
+                std::mem::replace(&mut u.tokens[pos], t.clone());
+
+                svc.user_service().lock().add(u.clone());
+
+                if !u.r#virtual {
+                    sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
+                        .bind(serde_json::to_string(&u.tokens).unwrap())
+                        .bind(u.id.to_string())
+                        .execute(&mut **db)
+                        .await;
+                }
+
+                set_cookies(&u, &t, cookies);
+                return u;
+            }
+
+            if t.refresh_time.0 < OffsetDateTime::now_utc() {
+                // token refresh time is up and you're not logged in anymore
+                let (u, t) = generate_virtual_user(svc);
+
+                set_cookies(&u, &t, cookies);
+                return u;
+            }
+
+            // token didn't expire yet, so just return the user as-is
+            return u;
+        }
+
+        // user exists, but token doesn't exist anymore
+        // we'll generate a new virtual user for you
+
+        let (u, t) = generate_virtual_user(svc);
+
+        set_cookies(&u, &t, cookies);
+        return u;
+    }
+    // user doesn't exist within the user service, but might still exist within the db
+    if user.r#virtual {
+        // nope, its a virtual one
+        let (u, t) = generate_virtual_user(svc);
+
+        set_cookies(&u, &t, cookies);
+        return u;
+    }
+
+    if let Some(mut u) = sqlx::query("SELECT * FROM users where name = ?")
+        .bind(user.name.as_str())
+        .fetch_optional(&mut **db)
+        .await
+        .unwrap()
+        .map(|user| User {
+            id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
+            name: user.get::<String, &str>("name"),
+            password: user.get::<String, &str>("password"),
+            r#virtual: false,
+            tokens: serde_json::from_str::<Vec<Token>>(&user.get::<String, &str>("tokens"))
+                .unwrap(),
+        })
+    {
+        // user exists within the db
+        if let Some(t) = u.tokens.iter().find(|t| t.token == token) {
+            // we found the token
+            if t.expiration_time.0 < OffsetDateTime::now_utc()
+                && t.refresh_time.0 > OffsetDateTime::now_utc()
+            {
+                // token expired, but can still be refreshed
+                let t = Token {
+                    token: generate_token(),
+                    expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
+                    refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+                };
+
+                let pos = u.tokens.iter().position(|ti| ti.token == token).unwrap();
+
+                std::mem::replace(&mut u.tokens[pos], t.clone());
+
+                svc.user_service().lock().add(u.clone());
+
+                sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
+                    .bind(serde_json::to_string(&u.tokens).unwrap())
+                    .bind(u.id.to_string())
+                    .execute(&mut **db)
+                    .await;
+
+                set_cookies(&u, &t, cookies);
+                return u;
+            }
+
+            if t.refresh_time.0 < OffsetDateTime::now_utc() {
+                // token refresh time is up and you're not logged in anymore
+                let (u, t) = generate_virtual_user(svc);
+
+                set_cookies(&u, &t, cookies);
+                return u;
+            }
+
+            // token didn't expire yet, so just return the user as-is
+            svc.user_service().lock().add(u.clone());
+
+            return u;
+        }
+
+        // user exists, but token doesn't exist anymore
+        // we'll generate a new virtual user for you
+
+        let (u, t) = generate_virtual_user(svc);
+
+        set_cookies(&u, &t, cookies);
+        return u;
+    }
+    // user doesn't even exist within the db
+    let (u, t) = generate_virtual_user(svc);
+
+    set_cookies(&u, &t, cookies);
+    u
+}
 
 /// Retrieve a list of all users
 ///
@@ -28,13 +218,12 @@ use time::{Duration, OffsetDateTime};
 
 #[openapi(tag = "Users")]
 #[get("/users")]
-pub fn get_all_users(serv: &State<ServiceStore>) -> Json<UsersResponse> {
+pub fn get_all(serv: &State<ServiceStore>) -> Json<UsersResponse> {
     Json(UsersResponse {
         users: serv.user_service().lock().get_all(),
     })
 }
 
-/*
 /// Get all info about a certain user
 ///
 /// Retrieve all known info about a specific user. user_id must be identical to a user's id, either returned by POST /users, or by GET /users.
@@ -44,19 +233,27 @@ pub fn get_all_users(serv: &State<ServiceStore>) -> Json<UsersResponse> {
 
 #[openapi(tag = "Users")]
 #[get("/users/<user_id>")]
-pub fn get_user(
-    user_id: u32,
+pub fn get(
+    user_id: &str,
     serv: &State<ServiceStore>,
 ) -> Result<Json<User>, NotFound<Json<MessageResponse>>> {
-    match serv.user_service().lock().get_by_id(user_id) {
-        Some(u) => Ok(Json(u)),
-        None => Err(NotFound(Json(MessageResponse {
-            message: "user id not found".into(),
+    if let Ok(u) = Uuid::parse_str(user_id) {
+        match serv.user_service().lock().get_by_id(u) {
+            Some(u) => Ok(Json(u)),
+            None => Err(NotFound(Json(MessageResponse {
+                message: "user id not found".into(),
+                r#type: "error".into(),
+            }))),
+        }
+    } else {
+        Err(NotFound(Json(MessageResponse {
+            message: "user id is not valid".into(),
             r#type: "error".into(),
-        }))),
+        })))
     }
 }
 
+/*
 /// User login
 ///
 /// The user will log in with the provided username and password
@@ -223,3 +420,44 @@ pub async fn logout(
     })
 }
 */
+
+#[openapi(tag = "Users")]
+#[get("/users/auth")]
+pub async fn authorize(
+    db: Connection<HitsterConfig>,
+    cookies: &CookieJar<'_>,
+    serv: &State<ServiceStore>,
+) -> Json<MessageResponse> {
+    let token = cookies
+        .get_private("id")
+        .map(|cookie| cookie.value().to_string());
+
+    let user = cookies
+        .get_private("user")
+        .and_then(|cookie| serde_json::from_str::<User>(cookie.value()).ok());
+
+    if user.is_some() && token.is_some() {
+        handle_existing_token(
+            token.as_ref().unwrap(),
+            user.as_ref().unwrap(),
+            serv,
+            cookies,
+            db,
+        )
+        .await;
+
+        Json(MessageResponse {
+            message: "success".into(),
+            r#type: "success".into(),
+        })
+    } else {
+        let (u, t) = generate_virtual_user(serv);
+
+        set_cookies(&u, &t, cookies);
+
+        Json(MessageResponse {
+            message: "success".into(),
+            r#type: "success".into(),
+        })
+    }
+}
