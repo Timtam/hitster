@@ -154,12 +154,12 @@ impl Fairing for HitsterDownloader {
                                 .arg("-i")
                                 .arg(&in_file)
                                 .arg("-hide_banner")
-                                .args(&["-vn", "-af"])
+                                .args(["-vn", "-af"])
                                 .arg(format!(
                                     "loudnorm=I={}:LRA={}:tp={}:print_format=json",
                                     -18.0, 12.0, -1.0
                                 ))
-                                .args(&["-f", "null", "-"]);
+                                .args(["-f", "null", "-"]);
 
                             let output = {
                                 let (finished, _) = progress_thread();
@@ -176,9 +176,9 @@ impl Fairing for HitsterDownloader {
                                         if cfg!(windows) {
                                             let (_, lines) = lines.split_at(lines.len() - 14);
                                             lines
-                                                .into_iter()
+                                                .iter()
                                                 .take(12)
-                                                .map(|s| *s)
+                                                .copied()
                                                 .collect::<Vec<_>>()
                                                 .join("\n")
                                         } else {

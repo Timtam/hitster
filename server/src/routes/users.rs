@@ -99,12 +99,18 @@ async fn handle_existing_token(
 
                 let pos = u.tokens.iter().position(|ti| ti.token == token).unwrap();
 
-                std::mem::replace(&mut u.tokens[pos], t.clone());
+                let _ = std::mem::replace(&mut u.tokens[pos], t.clone());
+
+                u.tokens = u
+                    .tokens
+                    .into_iter()
+                    .filter(|t| t.refresh_time.0 >= OffsetDateTime::now_utc())
+                    .collect::<_>();
 
                 svc.user_service().lock().add(u.clone());
 
                 if !u.r#virtual {
-                    sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
+                    let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
                         .bind(serde_json::to_string(&u.tokens).unwrap())
                         .bind(u.id.to_string())
                         .execute(&mut **db)
@@ -173,11 +179,17 @@ async fn handle_existing_token(
 
                 let pos = u.tokens.iter().position(|ti| ti.token == token).unwrap();
 
-                std::mem::replace(&mut u.tokens[pos], t.clone());
+                let _ = std::mem::replace(&mut u.tokens[pos], t.clone());
+
+                u.tokens = u
+                    .tokens
+                    .into_iter()
+                    .filter(|t| t.refresh_time.0 >= OffsetDateTime::now_utc())
+                    .collect::<_>();
 
                 svc.user_service().lock().add(u.clone());
 
-                sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
+                let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
                     .bind(serde_json::to_string(&u.tokens).unwrap())
                     .bind(u.id.to_string())
                     .execute(&mut **db)
@@ -265,20 +277,21 @@ pub fn get(
 #[post("/users/login", format = "json", data = "<credentials>")]
 pub async fn login(
     credentials: Json<UserLoginPayload>,
+    user: Option<User>,
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
 ) -> Result<Json<User>, NotFound<Json<MessageResponse>>> {
-    if let Some(mut user) = serv
+    if let Some(mut u) = serv
         .user_service()
         .lock()
         .get_by_username(credentials.username.as_str())
     {
-        let password_hash = PasswordHash::new(&user.password).unwrap();
+        let password_hash = PasswordHash::new(&u.password).unwrap();
         if Argon2::default()
             .verify_password(credentials.password.as_bytes(), &password_hash)
             .is_ok()
-            && !user.r#virtual
+            && !u.r#virtual
         {
             let t = Token {
                 token: generate_token(),
@@ -286,13 +299,29 @@ pub async fn login(
                 refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
             };
 
-            set_cookies(&user, &t, cookies);
+            set_cookies(&u, &t, cookies);
 
-            user.tokens.push(t);
+            if let Some(cu) = user {
+                serv.user_service().lock().remove(cu.id);
+            }
 
-            serv.user_service().lock().add(user.clone());
+            u.tokens.push(t);
 
-            return Ok(Json(user));
+            u.tokens = u
+                .tokens
+                .into_iter()
+                .filter(|t| t.refresh_time.0 >= OffsetDateTime::now_utc())
+                .collect::<_>();
+
+            let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
+                .bind(serde_json::to_string(&u.tokens).unwrap())
+                .bind(u.id.to_string())
+                .execute(&mut **db)
+                .await;
+
+            serv.user_service().lock().add(u.clone());
+
+            return Ok(Json(u));
         } else {
             return Err(NotFound(Json(MessageResponse {
                 message: "incorrect user credentials".into(),
@@ -301,46 +330,62 @@ pub async fn login(
         }
     }
 
-    sqlx::query("SELECT * FROM users where name = ?")
+    if let Some(mut u) = sqlx::query("SELECT * FROM users where name = ?")
         .bind(credentials.username.as_str())
         .fetch_optional(&mut **db)
         .await
         .unwrap()
-        .and_then(|user| {
-            let mut u = User {
-                id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
-                name: user.get::<String, &str>("name"),
-                password: user.get::<String, &str>("password"),
-                r#virtual: false,
-                tokens: serde_json::from_str::<Vec<Token>>(&user.get::<String, &str>("tokens"))
-                    .unwrap(),
+        .map(|user| User {
+            id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
+            name: user.get::<String, &str>("name"),
+            password: user.get::<String, &str>("password"),
+            r#virtual: false,
+            tokens: serde_json::from_str::<Vec<Token>>(&user.get::<String, &str>("tokens"))
+                .unwrap(),
+        })
+    {
+        let password_hash = PasswordHash::new(&u.password).unwrap();
+        if Argon2::default()
+            .verify_password(credentials.password.as_bytes(), &password_hash)
+            .is_ok()
+        {
+            let t = Token {
+                token: generate_token(),
+                expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
+                refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
             };
 
-            let password_hash = PasswordHash::new(&u.password).unwrap();
-            if Argon2::default()
-                .verify_password(credentials.password.as_bytes(), &password_hash)
-                .is_ok()
-            {
-                let t = Token {
-                    token: generate_token(),
-                    expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
-                    refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
-                };
+            set_cookies(&u, &t, cookies);
 
-                set_cookies(&u, &t, cookies);
+            u.tokens.push(t);
 
-                u.tokens.push(t);
-                serv.user_service().lock().add(u.clone());
+            u.tokens = u
+                .tokens
+                .into_iter()
+                .filter(|t| t.refresh_time.0 >= OffsetDateTime::now_utc())
+                .collect::<_>();
 
-                Some(Json(u))
-            } else {
-                None
-            }
-        })
-        .ok_or(NotFound(Json(MessageResponse {
-            message: "incorrect user credentials".into(),
-            r#type: "error".into(),
-        })))
+            let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
+                .bind(serde_json::to_string(&u.tokens).unwrap())
+                .bind(u.id.to_string())
+                .execute(&mut **db)
+                .await;
+
+            serv.user_service().lock().add(u.clone());
+
+            return Ok(Json(u));
+        } else {
+            return Err(NotFound(Json(MessageResponse {
+                message: "incorrect user credentials".into(),
+                r#type: "error".into(),
+            })));
+        }
+    }
+
+    Err(NotFound(Json(MessageResponse {
+        message: "incorrect user credentials".into(),
+        r#type: "error".into(),
+    })))
 }
 
 /// Register a new user

@@ -195,7 +195,7 @@ impl From<&User> for UserCookie {
     fn from(src: &User) -> Self {
         Self {
             name: src.name.clone(),
-            id: src.id.clone(),
+            id: src.id,
             r#virtual: src.r#virtual,
             valid_until: OffsetDateTime::now_utc(),
         }

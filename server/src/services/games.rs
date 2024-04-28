@@ -234,7 +234,7 @@ impl GameService {
 
                 game.players.remove(pos);
 
-                if game.players.iter().filter(|p| p.r#virtual == false).count() == 0 {
+                if game.players.iter().filter(|p| !p.r#virtual).count() == 0 {
                     data.games.remove(game_id);
                 } else if game.players.len() == 1 && game.state != GameState::Open {
                     drop(data);

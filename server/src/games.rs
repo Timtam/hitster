@@ -134,7 +134,7 @@ impl Default for Player {
 impl From<&User> for Player {
     fn from(u: &User) -> Self {
         Self {
-            id: u.id.clone(),
+            id: u.id,
             name: u.name.clone(),
             r#virtual: false,
             ..Default::default()
