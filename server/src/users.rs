@@ -16,6 +16,7 @@ use rocket_okapi::{
     request::{OpenApiFromRequest, RequestHeaderInput},
 };
 use serde::{Deserialize, Serialize};
+use std::convert::From;
 use time::OffsetDateTime;
 use uuid::Uuid;
 
@@ -84,8 +85,8 @@ impl<'r> FromRequest<'r> for User {
             .map(|cookie| cookie.value().to_string());
 
         let user = cookies
-            .get_private("user")
-            .and_then(|cookie| serde_json::from_str::<User>(cookie.value()).ok());
+            .get("user")
+            .and_then(|cookie| serde_json::from_str::<UserCookie>(cookie.value()).ok());
 
         if user.is_some() && token.is_some() {
             let user = user.unwrap();
@@ -180,5 +181,25 @@ impl<'r> OpenApiFromRequest<'r> for User {
         _required: bool,
     ) -> rocket_okapi::Result<RequestHeaderInput> {
         Ok(RequestHeaderInput::None)
+    }
+}
+
+#[derive(Deserialize, Serialize, Clone, Eq, PartialEq, Debug, Hash)]
+pub struct UserCookie {
+    pub id: Uuid,
+    pub name: String,
+    pub r#virtual: bool,
+    #[serde(with = "time::serde::rfc3339")]
+    pub valid_until: OffsetDateTime,
+}
+
+impl From<&User> for UserCookie {
+    fn from(src: &User) -> Self {
+        Self {
+            name: src.name.clone(),
+            id: src.id.clone(),
+            r#virtual: src.r#virtual,
+            valid_until: OffsetDateTime::now_utc(),
+        }
     }
 }

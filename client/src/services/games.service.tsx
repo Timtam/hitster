@@ -141,7 +141,7 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async kickPlayer(game_id: string, player_id: number) {
+    async kickPlayer(game_id: string, player_id: string) {
         let res = await fetch(`/api/games/${game_id}/leave/${player_id}`, {
             method: "PATCH",
             credentials: "include",

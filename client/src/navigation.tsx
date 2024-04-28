@@ -27,7 +27,7 @@ export default function Navigation({ user }: { user: User | null }) {
                         <NavDropdown
                             className="me-2"
                             title={t("loggedInAs", {
-                                username: user.username,
+                                username: user.name,
                             })}
                         >
                             <NavDropdown.Item as="div" className="me-2">

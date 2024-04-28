@@ -1,7 +1,7 @@
 use crate::{
     responses::{MessageResponse, UsersResponse},
     services::ServiceStore,
-    users::{Time, Token, User},
+    users::{Time, Token, User, UserCookie},
     HitsterConfig,
 };
 use argon2::{
@@ -60,9 +60,13 @@ fn generate_virtual_user(svc: &ServiceStore) -> (User, Token) {
 }
 
 fn set_cookies(user: &User, token: &Token, cookies: &CookieJar<'_>) {
+    let mut uc = UserCookie::from(user);
+
+    uc.valid_until = token.expiration_time.0;
+
     cookies.add_private(Cookie::build(("id", token.token.clone())).expires(token.refresh_time.0));
     cookies.add(
-        Cookie::build(("user", serde_json::to_string(user).unwrap()))
+        Cookie::build(("user", serde_json::to_string(&uc).unwrap()))
             .http_only(false)
             .expires(token.refresh_time.0),
     );
@@ -70,7 +74,7 @@ fn set_cookies(user: &User, token: &Token, cookies: &CookieJar<'_>) {
 
 async fn handle_existing_token(
     token: &str,
-    user: &User,
+    user: &UserCookie,
     svc: &ServiceStore,
     cookies: &CookieJar<'_>,
     mut db: Connection<HitsterConfig>,
@@ -433,8 +437,8 @@ pub async fn authorize(
         .map(|cookie| cookie.value().to_string());
 
     let user = cookies
-        .get_private("user")
-        .and_then(|cookie| serde_json::from_str::<User>(cookie.value()).ok());
+        .get("user")
+        .and_then(|cookie| serde_json::from_str::<UserCookie>(cookie.value()).ok());
 
     if user.is_some() && token.is_some() {
         handle_existing_token(

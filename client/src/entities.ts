@@ -1,8 +1,10 @@
 import { z } from "zod"
 
 export const User = z.object({
-    username: z.string(),
-    id: z.number(),
+    name: z.string(),
+    id: z.string(),
+    virtual: z.boolean(),
+    valid_until: z.coerce.date(),
 })
 
 export type User = z.infer<typeof User>
@@ -46,7 +48,7 @@ export enum PlayerState {
 }
 
 export const Player = z.object({
-    id: z.number(),
+    id: z.string(),
     name: z.string(),
     state: z.nativeEnum(PlayerState),
     creator: z.boolean(),
