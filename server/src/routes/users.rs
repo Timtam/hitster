@@ -1,7 +1,7 @@
 use crate::{
     responses::{MessageResponse, UsersResponse},
     services::ServiceStore,
-    users::{Time, Token, User, UserCookie},
+    users::{Time, Token, User, UserCookie, UserLoginPayload},
     HitsterConfig,
 };
 use argon2::{
@@ -257,7 +257,6 @@ pub fn get(
     }
 }
 
-/*
 /// User login
 ///
 /// The user will log in with the provided username and password
@@ -270,7 +269,7 @@ pub async fn login(
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
 ) -> Result<Json<User>, NotFound<Json<MessageResponse>>> {
-    if let Some(user) = serv
+    if let Some(mut user) = serv
         .user_service()
         .lock()
         .get_by_username(credentials.username.as_str())
@@ -279,17 +278,20 @@ pub async fn login(
         if Argon2::default()
             .verify_password(credentials.password.as_bytes(), &password_hash)
             .is_ok()
+            && !user.r#virtual
         {
-            cookies.add_private(Cookie::new(
-                "login",
-                serde_json::to_string(&*credentials).unwrap(),
-            ));
+            let t = Token {
+                token: generate_token(),
+                expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
+                refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+            };
 
-            cookies.add(
-                Cookie::build(("logged_in", serde_json::to_string(&user).unwrap()))
-                    .http_only(false)
-                    .expires(OffsetDateTime::now_utc() + Duration::days(7)),
-            );
+            set_cookies(&user, &t, cookies);
+
+            user.tokens.push(t);
+
+            serv.user_service().lock().add(user.clone());
+
             return Ok(Json(user));
         } else {
             return Err(NotFound(Json(MessageResponse {
@@ -299,16 +301,19 @@ pub async fn login(
         }
     }
 
-    sqlx::query("SELECT * FROM users where username = ?")
+    sqlx::query("SELECT * FROM users where name = ?")
         .bind(credentials.username.as_str())
         .fetch_optional(&mut **db)
         .await
         .unwrap()
         .and_then(|user| {
-            let u = User {
-                id: user.get::<u32, &str>("id"),
-                username: user.get::<String, &str>("username"),
+            let mut u = User {
+                id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
+                name: user.get::<String, &str>("name"),
                 password: user.get::<String, &str>("password"),
+                r#virtual: false,
+                tokens: serde_json::from_str::<Vec<Token>>(&user.get::<String, &str>("tokens"))
+                    .unwrap(),
             };
 
             let password_hash = PasswordHash::new(&u.password).unwrap();
@@ -316,18 +321,16 @@ pub async fn login(
                 .verify_password(credentials.password.as_bytes(), &password_hash)
                 .is_ok()
             {
+                let t = Token {
+                    token: generate_token(),
+                    expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
+                    refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+                };
+
+                set_cookies(&u, &t, cookies);
+
+                u.tokens.push(t);
                 serv.user_service().lock().add(u.clone());
-
-                cookies.add_private(Cookie::new(
-                    "login",
-                    serde_json::to_string(&*credentials).unwrap(),
-                ));
-
-                cookies.add(
-                    Cookie::build(("logged_in", serde_json::to_string(&u).unwrap()))
-                        .http_only(false)
-                        .expires(OffsetDateTime::now_utc() + Duration::days(7)),
-                );
 
                 Some(Json(u))
             } else {
@@ -345,10 +348,9 @@ pub async fn login(
 /// Register a new user with a given username and password
 
 #[openapi(tag = "Users")]
-#[post("/users/signup", format = "json", data = "<credentials>")]
-pub async fn signup(
+#[post("/users/register", format = "json", data = "<credentials>")]
+pub async fn register(
     mut credentials: Json<UserLoginPayload>,
-    serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
     let salt = SaltString::generate(&mut OsRng);
@@ -358,7 +360,7 @@ pub async fn signup(
         .unwrap()
         .to_string();
 
-    if sqlx::query("SELECT * FROM users WHERE username = ?")
+    if sqlx::query("SELECT * FROM users WHERE name = ?")
         .bind(credentials.username.as_str())
         .fetch_optional(&mut **db)
         .await
@@ -369,18 +371,15 @@ pub async fn signup(
             message: "username is already in use".into(),
             r#type: "error".into(),
         })))
-    } else if let Ok(result) = sqlx::query("INSERT INTO users (username, password) VALUES (?1, ?2)")
+    } else if sqlx::query("INSERT INTO users (id, name, password, tokens) VALUES (?1, ?2, ?3, ?4)")
+        .bind(Uuid::new_v4().to_string())
         .bind(credentials.username.as_str())
         .bind(credentials.password.as_str())
+        .bind("")
         .execute(&mut **db)
         .await
+        .is_ok()
     {
-        serv.user_service().lock().add(User {
-            id: result.last_insert_rowid() as u32,
-            username: credentials.username.clone(),
-            password: credentials.password.clone(),
-        });
-
         Ok(Json(MessageResponse {
             message: "user created".into(),
             r#type: "success".into(),
@@ -414,8 +413,8 @@ pub async fn logout(
     let user_srv = serv.user_service();
     let users = user_srv.lock();
 
-    cookies.remove_private("login");
-    cookies.remove("logged_in");
+    cookies.remove_private("id");
+    cookies.remove("user");
     users.remove(user.id);
 
     Json(MessageResponse {
@@ -423,7 +422,6 @@ pub async fn logout(
         r#type: "success".into(),
     })
 }
-*/
 
 #[openapi(tag = "Users")]
 #[get("/users/auth")]

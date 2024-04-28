@@ -20,13 +20,11 @@ use std::convert::From;
 use time::OffsetDateTime;
 use uuid::Uuid;
 
-/*
 #[derive(Deserialize, Serialize, JsonSchema)]
 pub struct UserLoginPayload {
     pub username: String,
     pub password: String,
 }
-*/
 
 #[derive(
     Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Hash, Deref, DerefMut,
