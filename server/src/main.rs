@@ -25,6 +25,7 @@ use std::{
     env,
     path::{Path, PathBuf},
 };
+use users::UserCleanupService;
 
 #[macro_use]
 extern crate rocket;
@@ -81,6 +82,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .attach(CachedCompression::path_suffix_fairing(
             CachedCompression::static_paths(vec![".js", ".js", ".html", ".htm", ".json", ".mp3"]),
         ))
+        .attach(UserCleanupService::default())
         .mount("/", routes![index, files,])
         .mount("/api/", routes![api_index, games_routes::events])
         .mount(

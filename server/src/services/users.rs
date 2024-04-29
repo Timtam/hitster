@@ -1,5 +1,6 @@
 use crate::users::User;
 use std::{collections::HashMap, sync::Mutex};
+use time::{Duration, OffsetDateTime};
 use uuid::Uuid;
 
 struct UserServiceData {
@@ -50,5 +51,24 @@ impl UserService {
 
     pub fn remove(&self, id: Uuid) {
         self.data.lock().unwrap().users.remove(&id);
+    }
+
+    pub fn cleanup_tokens(&self, user: Uuid) -> bool {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(u) = data.users.get_mut(&user) {
+            u.tokens = u
+                .tokens
+                .clone()
+                .into_iter()
+                .filter(|t| t.refresh_time.0 > OffsetDateTime::now_utc())
+                .collect::<_>();
+            // we'll consider all users who didn't refresh their expired token in an hour to be logged off
+            !u.tokens
+                .iter()
+                .any(|t| t.expiration_time.0 + Duration::hours(1) > OffsetDateTime::now_utc())
+        } else {
+            false
+        }
     }
 }

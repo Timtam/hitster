@@ -1,10 +1,11 @@
 use crate::{responses::MessageResponse, services::ServiceStore, HitsterConfig};
 use deref_derive::{Deref, DerefMut};
 use rocket::{
+    fairing::{Fairing, Info, Kind},
     http::{CookieJar, Status},
     request::{self, FromRequest, Outcome, Request},
     serde::json::Json,
-    State,
+    Data, State,
 };
 use rocket_db_pools::{
     sqlx::{self, Row},
@@ -198,6 +199,36 @@ impl From<&User> for UserCookie {
             id: src.id,
             r#virtual: src.r#virtual,
             valid_until: OffsetDateTime::now_utc(),
+        }
+    }
+}
+
+#[derive(Default)]
+pub struct UserCleanupService {}
+
+#[rocket::async_trait]
+impl Fairing for UserCleanupService {
+    fn info(&self) -> Info {
+        Info {
+            name: "User cleanup service",
+            kind: Kind::Request,
+        }
+    }
+
+    async fn on_request(&self, req: &mut Request<'_>, _: &mut Data<'_>) {
+        let svc = req.guard::<&State<ServiceStore>>().await.unwrap();
+        let usvc = svc.user_service();
+        let gsvc = svc.game_service();
+        let games = gsvc.lock();
+        let users = usvc.lock();
+
+        for user in users.get_all().iter() {
+            if users.cleanup_tokens(user.id) {
+                for game in games.get_all(Some(user)).iter() {
+                    let _ = games.leave(&game.id, user, None);
+                }
+                users.remove(user.id);
+            }
         }
     }
 }
