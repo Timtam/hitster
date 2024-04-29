@@ -1,7 +1,7 @@
 use crate::{
     responses::{MessageResponse, UsersResponse},
     services::ServiceStore,
-    users::{Time, Token, User, UserCookie, UserLoginPayload},
+    users::{Token, User, UserCookie, UserLoginPayload},
     HitsterConfig,
 };
 use argon2::{
@@ -48,8 +48,8 @@ fn generate_virtual_user(svc: &ServiceStore) -> (User, Token) {
 
     let t = Token {
         token: generate_token(),
-        expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
-        refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+        expiration_time: OffsetDateTime::now_utc() + Duration::hours(1),
+        refresh_time: OffsetDateTime::now_utc() + Duration::days(7),
     };
 
     u.tokens.push(t.clone());
@@ -62,13 +62,13 @@ fn generate_virtual_user(svc: &ServiceStore) -> (User, Token) {
 fn set_cookies(user: &User, token: &Token, cookies: &CookieJar<'_>) {
     let mut uc = UserCookie::from(user);
 
-    uc.valid_until = token.expiration_time.0;
+    uc.valid_until = token.expiration_time;
 
-    cookies.add_private(Cookie::build(("id", token.token.clone())).expires(token.refresh_time.0));
+    cookies.add_private(Cookie::build(("id", token.token.clone())).expires(token.refresh_time));
     cookies.add(
         Cookie::build(("user", serde_json::to_string(&uc).unwrap()))
             .http_only(false)
-            .expires(token.refresh_time.0),
+            .expires(token.refresh_time),
     );
 }
 
@@ -87,14 +87,14 @@ async fn handle_existing_token(
         // the user already exists within the user service
         if let Some(t) = u.tokens.iter().find(|t| t.token == token) {
             // the token exists for the user
-            if t.expiration_time.0 < OffsetDateTime::now_utc()
-                && t.refresh_time.0 > OffsetDateTime::now_utc()
+            if t.expiration_time < OffsetDateTime::now_utc()
+                && t.refresh_time > OffsetDateTime::now_utc()
             {
                 // token expired, but can still be refreshed
                 let t = Token {
                     token: generate_token(),
-                    expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
-                    refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+                    expiration_time: OffsetDateTime::now_utc() + Duration::hours(1),
+                    refresh_time: OffsetDateTime::now_utc() + Duration::days(7),
                 };
 
                 let pos = u.tokens.iter().position(|ti| ti.token == token).unwrap();
@@ -104,7 +104,7 @@ async fn handle_existing_token(
                 u.tokens = u
                     .tokens
                     .into_iter()
-                    .filter(|t| t.refresh_time.0 >= OffsetDateTime::now_utc())
+                    .filter(|t| t.refresh_time >= OffsetDateTime::now_utc())
                     .collect::<_>();
 
                 svc.user_service().lock().add(u.clone());
@@ -121,7 +121,7 @@ async fn handle_existing_token(
                 return u;
             }
 
-            if t.refresh_time.0 < OffsetDateTime::now_utc() {
+            if t.refresh_time < OffsetDateTime::now_utc() {
                 // token refresh time is up and you're not logged in anymore
                 let (u, t) = generate_virtual_user(svc);
 
@@ -167,14 +167,14 @@ async fn handle_existing_token(
         // user exists within the db
         if let Some(t) = u.tokens.iter().find(|t| t.token == token) {
             // we found the token
-            if t.expiration_time.0 < OffsetDateTime::now_utc()
-                && t.refresh_time.0 > OffsetDateTime::now_utc()
+            if t.expiration_time < OffsetDateTime::now_utc()
+                && t.refresh_time > OffsetDateTime::now_utc()
             {
                 // token expired, but can still be refreshed
                 let t = Token {
                     token: generate_token(),
-                    expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
-                    refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+                    expiration_time: OffsetDateTime::now_utc() + Duration::hours(1),
+                    refresh_time: OffsetDateTime::now_utc() + Duration::days(7),
                 };
 
                 let pos = u.tokens.iter().position(|ti| ti.token == token).unwrap();
@@ -184,7 +184,7 @@ async fn handle_existing_token(
                 u.tokens = u
                     .tokens
                     .into_iter()
-                    .filter(|t| t.refresh_time.0 >= OffsetDateTime::now_utc())
+                    .filter(|t| t.refresh_time >= OffsetDateTime::now_utc())
                     .collect::<_>();
 
                 svc.user_service().lock().add(u.clone());
@@ -199,7 +199,7 @@ async fn handle_existing_token(
                 return u;
             }
 
-            if t.refresh_time.0 < OffsetDateTime::now_utc() {
+            if t.refresh_time < OffsetDateTime::now_utc() {
                 // token refresh time is up and you're not logged in anymore
                 let (u, t) = generate_virtual_user(svc);
 
@@ -295,8 +295,8 @@ pub async fn login(
         {
             let t = Token {
                 token: generate_token(),
-                expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
-                refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+                expiration_time: OffsetDateTime::now_utc() + Duration::hours(1),
+                refresh_time: OffsetDateTime::now_utc() + Duration::days(7),
             };
 
             set_cookies(&u, &t, cookies);
@@ -310,7 +310,7 @@ pub async fn login(
             u.tokens = u
                 .tokens
                 .into_iter()
-                .filter(|t| t.refresh_time.0 >= OffsetDateTime::now_utc())
+                .filter(|t| t.refresh_time >= OffsetDateTime::now_utc())
                 .collect::<_>();
 
             let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
@@ -351,8 +351,8 @@ pub async fn login(
         {
             let t = Token {
                 token: generate_token(),
-                expiration_time: Time(OffsetDateTime::now_utc() + Duration::hours(1)),
-                refresh_time: Time(OffsetDateTime::now_utc() + Duration::days(7)),
+                expiration_time: OffsetDateTime::now_utc() + Duration::hours(1),
+                refresh_time: OffsetDateTime::now_utc() + Duration::days(7),
             };
 
             set_cookies(&u, &t, cookies);
@@ -362,7 +362,7 @@ pub async fn login(
             u.tokens = u
                 .tokens
                 .into_iter()
-                .filter(|t| t.refresh_time.0 >= OffsetDateTime::now_utc())
+                .filter(|t| t.refresh_time >= OffsetDateTime::now_utc())
                 .collect::<_>();
 
             let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")

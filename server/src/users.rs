@@ -1,5 +1,4 @@
 use crate::{responses::MessageResponse, services::ServiceStore, HitsterConfig};
-use deref_derive::{Deref, DerefMut};
 use rocket::{
     fairing::{Fairing, Info, Kind},
     http::{CookieJar, Status},
@@ -27,34 +26,21 @@ pub struct UserLoginPayload {
     pub password: String,
 }
 
-#[derive(
-    Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Hash, Deref, DerefMut,
-)]
-pub struct Time(#[schemars(with = "String")] pub OffsetDateTime);
-
-impl Default for Time {
-    fn default() -> Self {
-        Self(OffsetDateTime::now_utc())
-    }
-}
-
-#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Hash)]
+#[derive(Deserialize, Serialize, Clone, Eq, PartialEq, Debug, Hash)]
 pub struct Token {
     pub token: String,
-    #[serde(skip)]
-    #[schemars(with = "String")]
-    pub expiration_time: Time,
-    #[serde(skip)]
-    #[schemars(with = "String")]
-    pub refresh_time: Time,
+    #[serde(with = "time::serde::rfc3339")]
+    pub expiration_time: OffsetDateTime,
+    #[serde(with = "time::serde::rfc3339")]
+    pub refresh_time: OffsetDateTime,
 }
 
 impl Default for Token {
     fn default() -> Self {
         Self {
             token: "".into(),
-            expiration_time: Time(OffsetDateTime::now_utc()),
-            refresh_time: Time(OffsetDateTime::now_utc()),
+            expiration_time: OffsetDateTime::now_utc(),
+            refresh_time: OffsetDateTime::now_utc(),
         }
     }
 }
@@ -100,7 +86,7 @@ impl<'r> FromRequest<'r> for User {
                     .iter()
                     .find(|t| &t.token == token.as_ref().unwrap())
                 {
-                    if t.expiration_time.0 >= OffsetDateTime::now_utc() {
+                    if t.expiration_time >= OffsetDateTime::now_utc() {
                         return Outcome::Success(u);
                     }
                 }
@@ -146,7 +132,7 @@ impl<'r> FromRequest<'r> for User {
                         .iter()
                         .find(|t| &t.token == token.as_ref().unwrap())
                     {
-                        if t.expiration_time.0 >= OffsetDateTime::now_utc() {
+                        if t.expiration_time >= OffsetDateTime::now_utc() {
                             serv.user_service().lock().add(u.clone());
 
                             return Some(Outcome::Success(u));
