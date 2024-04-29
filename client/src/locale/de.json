@@ -12,7 +12,7 @@
         "language": "Sprache",
         "username": "Benutzername",
         "password": "Passwort",
-        "registrationSuccessful": "Du wurdest erfolgreich registriert. Du kannst jetzt mit der <1>Anmeldung</1> fortfahren.",
+        "registrationSuccessful": "Du wurdest erfolgreich registriert und angemeldet.",
         "repeatPassword": "Passwort wiederholen",
         "createNewGameNotLoggedIn": "Du musst angemeldet sein, um ein neues Spiel erstellen zu können",
         "createNewGame": "Spiel erstellen",

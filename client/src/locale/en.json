@@ -12,7 +12,7 @@
         "language": "Language",
         "username": "Username",
         "password": "Password",
-        "registrationSuccessful": "You've been registered successfully. You can now move on to <1>login</1>.",
+        "registrationSuccessful": "You've been registered and logged in successfully.",
         "repeatPassword": "Repeat password",
         "createNewGameNotLoggedIn": "You need to be logged in to create a new game",
         "createNewGame": "Create new game",

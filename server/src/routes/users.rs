@@ -396,7 +396,10 @@ pub async fn login(
 #[post("/users/register", format = "json", data = "<credentials>")]
 pub async fn register(
     mut credentials: Json<UserLoginPayload>,
+    mut user: User,
     mut db: Connection<HitsterConfig>,
+    cookies: &CookieJar<'_>,
+    svc: &State<ServiceStore>,
 ) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
     let salt = SaltString::generate(&mut OsRng);
     let argon2 = Argon2::default();
@@ -416,17 +419,36 @@ pub async fn register(
             message: "username is already in use".into(),
             r#type: "error".into(),
         })))
+    } else if !user.r#virtual {
+        Err(NotFound(Json(MessageResponse {
+            message: "this user is already registered".into(),
+            r#type: "error".into(),
+        })))
     } else if sqlx::query("INSERT INTO users (id, name, password, tokens) VALUES (?1, ?2, ?3, ?4)")
-        .bind(Uuid::new_v4().to_string())
+        .bind(user.id.to_string())
         .bind(credentials.username.as_str())
         .bind(credentials.password.as_str())
-        .bind("")
+        .bind(serde_json::to_string(&user.tokens).unwrap())
         .execute(&mut **db)
         .await
         .is_ok()
     {
+        user.name = credentials.username.clone();
+        user.password = credentials.password.clone();
+        user.r#virtual = false;
+
+        let token = cookies
+            .get_private("id")
+            .map(|c| c.value().to_string())
+            .and_then(|t| user.tokens.iter().find(|ti| ti.token == t))
+            .unwrap();
+
+        set_cookies(&user, token, cookies);
+
+        svc.user_service().lock().add(user);
+
         Ok(Json(MessageResponse {
-            message: "user created".into(),
+            message: "user registered".into(),
             r#type: "success".into(),
         }))
     } else {

@@ -2,14 +2,15 @@ import { useState } from "react"
 import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
 import { Helmet } from "react-helmet-async"
-import { Trans, useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next"
 import type { ActionFunction } from "react-router"
-import { Form, Link, useActionData } from "react-router-dom"
+import { Form, useActionData } from "react-router-dom"
+import { useUser } from "../contexts"
 import Error from "../error"
 
 export const action: ActionFunction = async ({ request }) => {
     let formData = await request.formData()
-    let res = await fetch("/api/users/signup", {
+    let res = await fetch("/api/users/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -25,11 +26,12 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export function Registration() {
+    let { user } = useUser()
     let response = useActionData() as {
         success: boolean
         message: string
     }
-    let [username, setUsername] = useState("")
+    let [username, setUsername] = useState(user?.name ?? "")
     let [password, setPassword] = useState("")
     let [passwordRepetition, setPasswordRepetition] = useState("")
     let { t } = useTranslation()
@@ -40,12 +42,7 @@ export function Registration() {
                 <title>{t("register")} - Hitster</title>
             </Helmet>
             {response && response.success === true ? (
-                <p>
-                    <Trans i18nKey="registrationSuccessful">
-                        You've been registered successfully. You can now move on
-                        to <Link to="/login">login</Link>
-                    </Trans>
-                </p>
+                <p>{t("registrationSuccessful")}</p>
             ) : (
                 <>
                     <Error
