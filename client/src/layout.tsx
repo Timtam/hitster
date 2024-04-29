@@ -21,6 +21,7 @@ export default function Layout() {
     let { t } = useTranslation()
     let [cookies] = useCookies(["user"])
     let [user, setUser] = useState<User | null>(null)
+    let [loading, setLoading] = useState(true)
 
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout> | null = null
@@ -40,9 +41,13 @@ export default function Layout() {
 
                 timer = setTimeout(
                     async () => {
+                        setLoading(false)
                         await updateUserAuth()
                     },
-                    Math.max(user.valid_until.getTime() - Date.now(), 0),
+                    Math.max(
+                        loading ? 0 : user.valid_until.getTime() - Date.now(),
+                        0,
+                    ),
                 )
             } catch {
                 setUser(null)

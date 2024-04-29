@@ -311,7 +311,7 @@ impl GameService {
         }
     }
 
-    pub fn stop(&self, game_id: &str, user: Option<&User>) -> Result<(), StopGameError> {
+    pub fn stop(&self, game_id: &str, user: Option<&User>) -> Result<Game, StopGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -348,7 +348,7 @@ impl GameService {
                 p.guess = None;
             }
 
-            Ok(())
+            Ok(game.clone())
         } else {
             Err(StopGameError {
                 http_status_code: 404,

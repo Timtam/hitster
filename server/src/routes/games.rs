@@ -199,11 +199,12 @@ pub async fn stop_game(
     serv.game_service()
         .lock()
         .stop(game_id, Some(&user))
-        .map(|_| {
+        .map(|g| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(GameState::Open),
+                players: Some(g.players),
                 ..Default::default()
             });
 
