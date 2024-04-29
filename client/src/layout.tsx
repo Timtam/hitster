@@ -5,7 +5,6 @@ import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
 import Spinner from "react-bootstrap/Spinner"
 import { useCookies } from "react-cookie"
-import useTimer from "react-hook-time"
 import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router-dom"
 import type { UserContext } from "./contexts"
@@ -22,15 +21,13 @@ export default function Layout() {
     let { t } = useTranslation()
     let [cookies] = useCookies(["user"])
     let [user, setUser] = useState<User | null>(null)
-    let authTimer = useTimer({
-        stopUpdate: true,
-        onEnd: () => {
-            updateUserAuth()
-        },
-    })
 
     useEffect(() => {
+        let timer: ReturnType<typeof setTimeout> | null = null
+
         if (cookies.user !== undefined) {
+            if (timer !== null) clearTimeout(timer)
+
             try {
                 let user = User.parse({
                     name: cookies.user.name,
@@ -41,8 +38,12 @@ export default function Layout() {
 
                 setUser(user)
 
-                authTimer.setTime(user.valid_until)
-                authTimer.start()
+                timer = setTimeout(
+                    async () => {
+                        await updateUserAuth()
+                    },
+                    Math.max(user.valid_until.getTime() - Date.now(), 0),
+                )
             } catch {
                 setUser(null)
                 updateUserAuth()
@@ -50,7 +51,15 @@ export default function Layout() {
         } else {
             updateUserAuth()
         }
+
+        return () => {
+            if (timer !== null) clearTimeout(timer)
+        }
     }, [cookies])
+
+    useEffect(() => {
+        updateUserAuth()
+    }, [])
 
     return (
         <Container fluid className="justify-content-center">
