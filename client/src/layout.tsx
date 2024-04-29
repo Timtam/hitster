@@ -57,10 +57,6 @@ export default function Layout() {
         }
     }, [cookies])
 
-    useEffect(() => {
-        updateUserAuth()
-    }, [])
-
     return (
         <Container fluid className="justify-content-center">
             {user === null ? (
