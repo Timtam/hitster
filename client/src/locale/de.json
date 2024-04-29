@@ -3,6 +3,7 @@
         "navigationHeading": "Navigation",
         "gameLobby": "Spielelobby",
         "loggedInAs": "Angemeldet als {{username}}",
+        "knownAs": "Du bist derzeit bekannt als {{username}}",
         "logout": "Abmelden",
         "deleteAccount": "Benutzerkonto löschen",
         "notLoggedIn": "Nicht angemeldet",

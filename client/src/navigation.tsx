@@ -23,11 +23,11 @@ export default function Navigation({ user }: { user: User | null }) {
                             <Nav.Link>{t("gameLobby")}</Nav.Link>
                         </LinkContainer>
                     </Nav.Item>
-                    {user !== null ? (
+                    {user?.virtual === false ? (
                         <NavDropdown
                             className="me-2"
                             title={t("loggedInAs", {
-                                username: user.name,
+                                username: user?.name,
                             })}
                         >
                             <NavDropdown.Item as="div" className="me-2">
@@ -53,7 +53,12 @@ export default function Navigation({ user }: { user: User | null }) {
                             </NavDropdown.Item>
                         </NavDropdown>
                     ) : (
-                        <NavDropdown title={t("notLoggedIn")} className="me-2">
+                        <NavDropdown
+                            title={t("knownAs", {
+                                username: user?.name,
+                            })}
+                            className="me-2"
+                        >
                             <NavDropdown.Item as="div" className="me-2">
                                 <LinkContainer to="/login">
                                     <Nav.Link>{t("login")}</Nav.Link>
