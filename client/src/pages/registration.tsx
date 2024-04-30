@@ -5,7 +5,7 @@ import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
 import type { ActionFunction } from "react-router"
 import { Form, useActionData } from "react-router-dom"
-import { useUser } from "../contexts"
+import { useContext } from "../context"
 import Error from "../error"
 
 export const action: ActionFunction = async ({ request }) => {
@@ -26,7 +26,7 @@ export const action: ActionFunction = async ({ request }) => {
 }
 
 export function Registration() {
-    let { user } = useUser()
+    let { user } = useContext()
     let response = useActionData() as {
         success: boolean
         message: string

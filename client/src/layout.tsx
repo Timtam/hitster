@@ -7,9 +7,10 @@ import Spinner from "react-bootstrap/Spinner"
 import { useCookies } from "react-cookie"
 import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router-dom"
-import type { UserContext } from "./contexts"
+import type { Context } from "./context"
 import { User } from "./entities"
 import Navigation from "./navigation"
+import SfxPlayer from "./sfx-player"
 
 const updateUserAuth = async () => {
     await fetch("/api/users/auth", {
@@ -75,7 +76,14 @@ export default function Layout() {
                     </Row>
                     <Row>
                         <Col>
-                            <Outlet context={{ user } satisfies UserContext} />
+                            <SfxPlayer />
+                            <Outlet
+                                context={
+                                    {
+                                        user,
+                                    } satisfies Context
+                                }
+                            />
                         </Col>
                     </Row>
                 </>

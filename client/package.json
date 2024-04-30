@@ -11,6 +11,7 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@lomray/event-manager": "^2.0.2",
         "@uidotdev/usehooks": "^2.4.1",
         "bootstrap": "^5.3.3",
         "deepcopy": "^2.1.0",

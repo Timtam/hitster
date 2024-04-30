@@ -1,14 +1,12 @@
-import { useLocalStorage } from "@uidotdev/usehooks"
-import { Howl } from "howler"
+import EventManager from "@lomray/event-manager"
 import { useEffect } from "react"
 import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
 import { useImmer } from "use-immer"
-import youLose from "../../../sfx/you_lose.mp3"
-import youWin from "../../../sfx/you_win.mp3"
-import { useUser } from "../../contexts"
+import { useContext } from "../../context"
 import type { Game, Player } from "../../entities"
+import { Events, Sfx } from "../../events"
 import { isSlotCorrect } from "./utils"
 
 export default ({
@@ -20,16 +18,9 @@ export default ({
     show: boolean
     onHide: () => void
 }) => {
-    let { user } = useUser()
+    let { user } = useContext()
     let { t } = useTranslation()
     let [winner, setWinner] = useImmer<Player | undefined>(undefined)
-    let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
-    let hYouLose = new Howl({
-        src: [youLose],
-    })
-    let hYouWin = new Howl({
-        src: [youWin],
-    })
 
     useEffect(() => {
         setWinner(
@@ -45,11 +36,9 @@ export default ({
             game.players.find((p) => p.id === user?.id) !== undefined &&
             winner.id !== user?.id
         ) {
-            hYouLose.volume(parseFloat(sfxVolume))
-            hYouLose.play()
+            EventManager.publish(Events.playSfx, { sfx: Sfx.youLose })
         } else if (winner !== undefined && winner.id === user?.id) {
-            hYouWin.volume(parseFloat(sfxVolume))
-            hYouWin.play()
+            EventManager.publish(Events.playSfx, { sfx: Sfx.youWin })
         }
     }, [game])
 

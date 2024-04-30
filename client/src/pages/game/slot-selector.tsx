@@ -5,13 +5,13 @@ import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
-import { useUser } from "../../contexts"
+import { useContext } from "../../context"
 import type { Game } from "../../entities"
 import { GameState, PlayerState } from "../../entities"
 import GameService from "../../services/games.service"
 
 export default ({ game }: { game: Game }) => {
-    const { user } = useUser()
+    const { user } = useContext()
     const [selectedSlot, setSelectedSlot] = useImmer("0")
     const navigate = useNavigate()
     let { t } = useTranslation()

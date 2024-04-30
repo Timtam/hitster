@@ -1,6 +1,5 @@
-import { useLocalStorage } from "@uidotdev/usehooks"
+import EventManager from "@lomray/event-manager"
 import deepcopy from "deepcopy"
-import { Howl } from "howler"
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
@@ -10,11 +9,7 @@ import { Trans, useTranslation } from "react-i18next"
 import type { LoaderFunction } from "react-router"
 import { json, useLoaderData, useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
-import noInterception from "../../sfx/no_interception.mp3"
-import payToken from "../../sfx/pay_token.mp3"
-import youFail from "../../sfx/you_fail.mp3"
-import youScore from "../../sfx/you_score.mp3"
-import { useUser } from "../contexts"
+import { useContext } from "../context"
 import type { Game as GameType } from "../entities"
 import {
     Game as GameEntity,
@@ -24,6 +19,7 @@ import {
     Player,
     PlayerState,
 } from "../entities"
+import { Events, Sfx } from "../events"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
@@ -48,7 +44,7 @@ export const loader: LoaderFunction = async ({
 
 export function Game() {
     let gameService = useMemo(() => new GameService(), [])
-    let { user } = useUser()
+    let { user } = useContext()
     let [game, setGame] = useImmer(useLoaderData() as GameEntity)
     let [hitSrc, setHitSrc] = useImmer("")
     let [showHits, setShowHits] = useImmer<boolean[]>([])
@@ -57,19 +53,6 @@ export function Game() {
     let [showAddPlayer, setShowAddPlayer] = useImmer(false)
     let navigate = useNavigate()
     let { t } = useTranslation()
-    let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
-    let hNoInterception = new Howl({
-        src: [noInterception],
-    })
-    let hPayToken = new Howl({
-        src: [payToken],
-    })
-    let hYouScore = new Howl({
-        src: [youScore],
-    })
-    let hYouFail = new Howl({
-        src: [youFail],
-    })
 
     const canSkip = () => {
         return (
@@ -98,13 +81,11 @@ export function Game() {
                             isSlotCorrect(ge.hit ?? null, p.guess),
                     ) !== undefined
                 ) {
-                    hYouScore.volume(parseFloat(sfxVolume))
-                    hYouScore.play()
+                    EventManager.publish(Events.playSfx, { sfx: Sfx.youScore })
                 } else if (
                     ge.players?.find((p) => p.id === user?.id)?.guess !== null
                 ) {
-                    hYouFail.volume(parseFloat(sfxVolume))
-                    hYouFail.play()
+                    EventManager.publish(Events.playSfx, { sfx: Sfx.youFail })
                 }
             }
 
@@ -150,11 +131,11 @@ export function Game() {
 
             if (ge.players !== undefined) {
                 if (ge.players[0].guess === null) {
-                    hNoInterception.volume(parseFloat(sfxVolume))
-                    hNoInterception.play()
+                    EventManager.publish(Events.playSfx, {
+                        sfx: Sfx.noInterception,
+                    })
                 } else {
-                    hPayToken.volume(parseFloat(sfxVolume))
-                    hPayToken.play()
+                    EventManager.publish(Events.playSfx, { sfx: Sfx.payToken })
                 }
             }
         })

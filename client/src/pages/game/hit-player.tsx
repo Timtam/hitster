@@ -1,10 +1,10 @@
+import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { Howl } from "howler"
 import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import { useTranslation } from "react-i18next"
-import playHit from "../../../sfx/play_hit.mp3"
-import stopHit from "../../../sfx/stop_hit.mp3"
+import { Events, Sfx } from "../../events"
 
 export default function HitPlayer({
     src,
@@ -21,12 +21,6 @@ export default function HitPlayer({
     let { t } = useTranslation()
     let [volume] = useLocalStorage("musicVolume", "1.0")
     let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
-    let hPlayHit = new Howl({
-        src: [playHit],
-    })
-    let hStopHit = new Howl({
-        src: [stopHit],
-    })
 
     const play = () => {
         if (timer !== undefined) {
@@ -45,8 +39,7 @@ export default function HitPlayer({
         setPlayer(plr)
         if (parseFloat(sfxVolume) > 0) {
             setTimeout(() => plr.play(), 250)
-            hPlayHit.volume(parseFloat(sfxVolume))
-            hPlayHit.play()
+            EventManager.publish(Events.playSfx, { sfx: Sfx.playHit })
         } else {
             plr.play()
         }
@@ -76,8 +69,7 @@ export default function HitPlayer({
             }
             player?.pause()
             if (src !== "" && parseFloat(sfxVolume) > 0) {
-                hStopHit.volume(parseFloat(sfxVolume))
-                hStopHit.play()
+                EventManager.publish(Events.playSfx, { sfx: Sfx.stopHit })
             }
             setPlayer(undefined)
         }
