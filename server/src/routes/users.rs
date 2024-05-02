@@ -79,11 +79,12 @@ async fn handle_existing_token(
     cookies: &CookieJar<'_>,
     mut db: Connection<HitsterConfig>,
 ) -> User {
-    if let Some(mut u) = svc
+    let u = svc
         .user_service()
         .lock()
-        .get_by_username(user.name.as_str())
-    {
+        .get_by_username(user.name.as_str());
+
+    if let Some(mut u) = u {
         // the user already exists within the user service
         if let Some(t) = u.tokens.iter().find(|t| t.token == token) {
             // the token exists for the user
@@ -282,11 +283,12 @@ pub async fn login(
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
 ) -> Result<Json<User>, NotFound<Json<MessageResponse>>> {
-    if let Some(mut u) = serv
+    let u = serv
         .user_service()
         .lock()
-        .get_by_username(credentials.username.as_str())
-    {
+        .get_by_username(credentials.username.as_str());
+
+    if let Some(mut u) = u {
         let password_hash = PasswordHash::new(&u.password).unwrap();
         if Argon2::default()
             .verify_password(credentials.password.as_bytes(), &password_hash)
