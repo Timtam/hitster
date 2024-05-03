@@ -19,7 +19,7 @@ import {
     Player,
     PlayerState,
 } from "../entities"
-import { Events, Sfx } from "../events"
+import { Events, GameEndedData, GameStartedData, ScoredData } from "../events"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
@@ -53,6 +53,7 @@ export function Game() {
     let [showAddPlayer, setShowAddPlayer] = useImmer(false)
     let navigate = useNavigate()
     let { t } = useTranslation()
+    let [winner, setWinner] = useImmer<Player | null>(null)
 
     const canSkip = () => {
         return (
@@ -74,23 +75,33 @@ export function Game() {
             } else if (ge.state === GameState.Open) {
                 setHitSrc("")
             } else if (ge.state === GameState.Confirming) {
-                if (
-                    ge.players?.find(
-                        (p) =>
-                            p.id === user?.id &&
-                            isSlotCorrect(ge.hit ?? null, p.guess),
-                    ) !== undefined
-                ) {
-                    EventManager.publish(Events.playSfx, { sfx: Sfx.youScore })
-                } else if (
-                    ge.players?.find((p) => p.id === user?.id)?.guess !== null
-                ) {
-                    EventManager.publish(Events.playSfx, { sfx: Sfx.youFail })
-                }
+                let winner: string | null = null
+                let winners = (ge.players ?? []).filter((p) =>
+                    isSlotCorrect(ge.hit ?? null, p.guess),
+                )
+                if (winners.length == 1) winner = winners[0].id
+                else if (winners.length == 2)
+                    winner = winners.find((p) => p.turn_player)?.id ?? null
+                EventManager.publish(Events.scored, {
+                    winner,
+                    players: deepcopy(ge.players ?? []),
+                } satisfies ScoredData)
             }
 
             setGame((g) => {
-                if (ge.state === GameState.Open) setGameEndedState(deepcopy(g))
+                if (ge.state === GameState.Open) {
+                    EventManager.publish(Events.gameEnded, {
+                        game: deepcopy(g),
+                        winner: ge.winner ?? null,
+                    } satisfies GameEndedData)
+                } else if (
+                    ge.state === GameState.Guessing &&
+                    g.state === GameState.Open
+                ) {
+                    EventManager.publish(Events.gameStarted, {
+                        game_id: g.id,
+                    } satisfies GameStartedData)
+                }
 
                 g.state = ge.state as GameState
                 g.hit = ge.hit ?? null
@@ -130,13 +141,10 @@ export function Game() {
             })
 
             if (ge.players !== undefined) {
-                if (ge.players[0].guess === null) {
-                    EventManager.publish(Events.playSfx, {
-                        sfx: Sfx.noInterception,
-                    })
-                } else {
-                    EventManager.publish(Events.playSfx, { sfx: Sfx.payToken })
-                }
+                EventManager.publish(Events.guessed, {
+                    player_id: ge.players[0].id,
+                    guess: ge.players[0].guess,
+                })
             }
         })
 
@@ -164,11 +172,20 @@ export function Game() {
             })
         })
 
+        let unsubscribeGameEnded = EventManager.subscribe(
+            Events.gameEnded,
+            (e: GameEndedData) => {
+                setGameEndedState(e.game)
+                setWinner(e.winner)
+            },
+        )
+
         if (game.state !== GameState.Open)
             setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
 
         return () => {
             eventSource.close()
+            unsubscribeGameEnded()
         }
     }, [])
 
@@ -451,8 +468,10 @@ export function Game() {
                 <GameEndScreen
                     game={gameEndedState}
                     show={true}
+                    winner={winner}
                     onHide={() => {
                         setGameEndedState(null)
+                        setWinner(null)
                     }}
                 />
             ) : (

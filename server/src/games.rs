@@ -156,6 +156,8 @@ pub struct GameEvent {
     pub hit: Option<Hit>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub settings: Option<GameSettingsPayload>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub winner: Option<Player>,
 }
 
 impl Default for GameEvent {
@@ -167,6 +169,7 @@ impl Default for GameEvent {
             state: None,
             hit: None,
             settings: None,
+            winner: None,
         }
     }
 }

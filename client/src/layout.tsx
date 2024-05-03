@@ -76,7 +76,7 @@ export default function Layout() {
                     </Row>
                     <Row>
                         <Col>
-                            <SfxPlayer />
+                            <SfxPlayer user={user} />
                             <Outlet
                                 context={
                                     {

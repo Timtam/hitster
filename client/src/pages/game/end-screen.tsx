@@ -1,46 +1,22 @@
-import EventManager from "@lomray/event-manager"
-import { useEffect } from "react"
 import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
-import { useImmer } from "use-immer"
 import { useContext } from "../../context"
 import type { Game, Player } from "../../entities"
-import { Events, Sfx } from "../../events"
-import { isSlotCorrect } from "./utils"
 
 export default ({
     game,
     show,
     onHide,
+    winner,
 }: {
     game: Game
     show: boolean
     onHide: () => void
+    winner: Player | null
 }) => {
-    let { user } = useContext()
     let { t } = useTranslation()
-    let [winner, setWinner] = useImmer<Player | undefined>(undefined)
-
-    useEffect(() => {
-        setWinner(
-            game.players.find(
-                (p) =>
-                    p.hits.length === game.goal - 1 &&
-                    isSlotCorrect(game.hit, p.guess),
-            ),
-        )
-
-        if (
-            winner !== undefined &&
-            game.players.find((p) => p.id === user?.id) !== undefined &&
-            winner.id !== user?.id
-        ) {
-            EventManager.publish(Events.playSfx, { sfx: Sfx.youLose })
-        } else if (winner !== undefined && winner.id === user?.id) {
-            EventManager.publish(Events.playSfx, { sfx: Sfx.youWin })
-        }
-    }, [game])
+    let { user } = useContext()
 
     return (
         <Modal show={show} onHide={onHide}>
@@ -49,9 +25,9 @@ export default ({
             </Modal.Header>
             <Modal.Body>
                 <h2 className="h4">
-                    {winner !== undefined && winner.id === user?.id
+                    {winner?.id === user?.id
                         ? t("youWin")
-                        : winner !== undefined
+                        : winner !== null
                           ? t("otherWins", { player: winner.name })
                           : t("nooneWins")}
                 </h2>

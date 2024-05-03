@@ -350,12 +350,13 @@ pub fn confirm_slot(
     serv.game_service()
         .lock()
         .confirm(game_id, &user, confirmation.confirm)
-        .map(|game| {
+        .map(|(game, winner)| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(game.state),
                 players: Some(game.players),
+                winner,
                 ..Default::default()
             });
 

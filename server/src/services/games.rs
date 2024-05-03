@@ -533,7 +533,7 @@ impl GameService {
         game_id: &str,
         user: &User,
         confirm: bool,
-    ) -> Result<Game, ConfirmSlotError> {
+    ) -> Result<(Game, Option<Player>), ConfirmSlotError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(mut game) = data.games.get_mut(game_id) {
@@ -596,11 +596,13 @@ impl GameService {
 
             game.hits_remaining.pop_front();
 
-            if game
+            let winner = game
                 .players
                 .iter()
-                .any(|p| p.hits.len() >= game.goal as usize)
-            {
+                .find(|p| p.hits.len() >= game.goal as usize)
+                .cloned();
+
+            if winner.is_some() {
                 drop(data);
                 let _ = self.stop(game_id, None);
                 data = self.data.lock().unwrap();
@@ -642,7 +644,7 @@ impl GameService {
                 }
             }
 
-            Ok(game.clone())
+            Ok((game.clone(), winner))
         } else {
             Err(ConfirmSlotError {
                 message: "game not found".into(),

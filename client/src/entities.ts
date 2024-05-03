@@ -95,6 +95,7 @@ export const GameEvent = z.object({
     players: z.optional(z.array(Player)),
     hit: z.optional(Hit),
     settings: z.optional(GameSettings),
+    winner: z.optional(Player),
 })
 
 export type GameEvent = z.infer<typeof GameEvent>
