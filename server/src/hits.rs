@@ -14,7 +14,7 @@ use std::{
     process::Command,
     sync::{
         atomic::{AtomicBool, Ordering},
-        Arc,
+        Arc, OnceLock,
     },
     thread,
     time::Duration,
@@ -22,15 +22,15 @@ use std::{
 
 include!(concat!(env!("OUT_DIR"), "/hits.rs"));
 
-#[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
+#[derive(Clone, Eq, Debug, Serialize, JsonSchema)]
 pub struct Hit {
-    pub artist: String,
-    pub title: String,
-    pub belongs_to: String,
+    pub artist: &'static str,
+    pub title: &'static str,
+    pub belongs_to: &'static str,
     pub year: u32,
-    pub pack: String,
+    pub pack: &'static str,
     #[serde(skip)]
-    pub yt_url: String,
+    pub yt_url: &'static str,
     #[serde(skip)]
     pub playback_offset: u16,
 }
@@ -42,9 +42,7 @@ impl Hit {
         )
         .unwrap();
 
-        yt_id
-            .captures(self.yt_url.as_str())
-            .map(|caps| caps[7].to_string())
+        yt_id.captures(self.yt_url).map(|caps| caps[7].to_string())
     }
 
     pub fn download_dir() -> String {
@@ -132,8 +130,8 @@ impl Fairing for HitsterDownloader {
                     if let Ok(video) = Video::new_with_options(id.as_str(), options) {
                         println!(
                             "Download {}: {} to {}.opus",
-                            hit.artist.as_str(),
-                            hit.title.as_str(),
+                            hit.artist,
+                            hit.title,
                             id.as_str()
                         );
 

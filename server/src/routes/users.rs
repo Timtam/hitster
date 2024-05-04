@@ -435,8 +435,8 @@ pub async fn register(
         .await
         .is_ok()
     {
-        user.name = credentials.username.clone();
-        user.password = credentials.password.clone();
+        user.name.clone_from(&credentials.username);
+        user.password.clone_from(&credentials.password);
         user.r#virtual = false;
 
         let token = cookies

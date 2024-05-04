@@ -635,7 +635,7 @@ impl<'r> Responder<'r, 'static> for UpdateGameError {
     }
 }
 
-#[derive(Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, JsonSchema)]
 pub struct GamesResponse {
     pub games: Vec<Game>,
 }
@@ -646,12 +646,12 @@ pub struct MessageResponse {
     pub message: String,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, JsonSchema)]
 pub struct UsersResponse {
     pub users: Vec<User>,
 }
 
-#[derive(Serialize, Deserialize, JsonSchema)]
+#[derive(Serialize, JsonSchema)]
 pub struct PacksResponse {
-    pub packs: HashMap<String, usize>,
+    pub packs: HashMap<&'static str, usize>,
 }

@@ -73,6 +73,7 @@ impl GameService {
                     p
                 })
                 .into_iter()
+                .map(|p| p.to_string())
                 .collect::<Vec<_>>(),
             mode,
         };
@@ -282,15 +283,12 @@ impl GameService {
                 game.state = GameState::Guessing;
                 game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
                 game.players.get_mut(0).unwrap().turn_player = true;
-                game.hits_remaining = self
-                    .hit_service
-                    .lock()
-                    .get_all()
-                    .into_iter()
-                    .filter(|h| game.packs.is_empty() || game.packs.contains(&h.pack))
-                    .collect::<HashSet<_>>()
-                    .into_iter()
-                    .collect::<_>();
+                game.hits_remaining =
+                    filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
+                        .into_iter()
+                        .collect::<HashSet<_>>()
+                        .into_iter()
+                        .collect::<_>();
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
 
                 for i in 0..game.players.len() {
@@ -357,7 +355,7 @@ impl GameService {
         }
     }
 
-    pub fn get_current_hit(&self, game_id: &str) -> Result<Hit, CurrentHitError> {
+    pub fn get_current_hit(&self, game_id: &str) -> Result<&'static Hit, CurrentHitError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -367,7 +365,7 @@ impl GameService {
                     http_status_code: 409,
                 })
             } else {
-                game.hits_remaining.front().cloned().ok_or(CurrentHitError {
+                game.hits_remaining.front().copied().ok_or(CurrentHitError {
                     message: "no hit found".into(),
                     http_status_code: 500,
                 })
@@ -380,7 +378,7 @@ impl GameService {
         }
     }
 
-    pub fn get_slots(&self, hits: &[Hit]) -> Vec<Slot> {
+    pub fn get_slots(&self, hits: &[&Hit]) -> Vec<Slot> {
         let mut slots = vec![];
         let years = sorted(hits.iter().map(|h| h.year).collect::<HashSet<_>>()).collect::<Vec<_>>();
 
@@ -628,18 +626,13 @@ impl GameService {
 
                 if game.hits_remaining.is_empty() {
                     let mut rng = thread_rng();
-                    game.hits_remaining = self
-                        .hit_service
-                        .lock()
-                        .get_all()
-                        .into_iter()
-                        .filter(|h| {
-                            !game.players.iter().any(|p| p.hits.contains(h))
-                                && (game.packs.is_empty() || game.packs.contains(&h.pack))
-                        })
-                        .collect::<HashSet<_>>()
-                        .into_iter()
-                        .collect::<VecDeque<_>>();
+                    game.hits_remaining =
+                        filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
+                            .into_iter()
+                            .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                            .collect::<HashSet<_>>()
+                            .into_iter()
+                            .collect::<VecDeque<_>>();
                     game.hits_remaining.make_contiguous().shuffle(&mut rng);
                 }
             }
@@ -684,18 +677,13 @@ impl GameService {
 
             if game.hits_remaining.is_empty() {
                 let mut rng = thread_rng();
-                game.hits_remaining = self
-                    .hit_service
-                    .lock()
-                    .get_all()
-                    .into_iter()
-                    .filter(|h| {
-                        !game.players.iter().any(|p| p.hits.contains(h))
-                            && (game.packs.is_empty() || game.packs.contains(&h.pack))
-                    })
-                    .collect::<HashSet<_>>()
-                    .into_iter()
-                    .collect::<VecDeque<_>>();
+                game.hits_remaining =
+                    filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
+                        .into_iter()
+                        .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                        .collect::<HashSet<_>>()
+                        .into_iter()
+                        .collect::<VecDeque<_>>();
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
             }
 
@@ -751,6 +739,7 @@ impl GameService {
                             p
                         })
                         .into_iter()
+                        .map(|p| p.to_string())
                         .collect::<Vec<_>>()
                 } else {
                     packs.clone()
@@ -769,4 +758,11 @@ impl GameService {
             })
         }
     }
+}
+
+fn filter_hits_by_packs(hits: Vec<&'static Hit>, packs: &[String]) -> Vec<&'static Hit> {
+    let packs = packs.iter().map(|p| p.as_str()).collect::<Vec<_>>();
+    hits.into_iter()
+        .filter(|h| packs.is_empty() || packs.contains(&h.pack))
+        .collect::<Vec<_>>()
 }

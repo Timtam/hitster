@@ -16,13 +16,13 @@ fn main() {
         if record.get(5).unwrap() != "" {
             file_content += format!(
                 "Hit {{
-            artist: \"{}\".into(),
-            title: \"{}\".into(),
+            artist: \"{}\",
+            title: \"{}\",
             year: {},
-            yt_url: \"{}\".into(),
+            yt_url: \"{}\",
             playback_offset: {},
-            pack: \"{}\".into(),
-            belongs_to: \"{}\".into(),
+            pack: \"{}\",
+            belongs_to: \"{}\",
         }},",
                 record.get(0).unwrap(),
                 record.get(2).unwrap(),
@@ -39,9 +39,11 @@ fn main() {
     fs::write(
         dest_path,
         format!(
-            "pub fn get_all() -> Vec<Hit> {{
+            "pub fn get_all() -> &'static Vec<Hit> {{
+            static HITS: OnceLock<Vec<Hit>> = OnceLock::new();
+            HITS.get_or_init(|| {{
             vec![{}]
-         }}
+         }})}}
         ",
             file_content
         ),
