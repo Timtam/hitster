@@ -94,6 +94,12 @@ export function Game() {
 
             setGame((g) => {
                 if (ge.state === GameState.Open) {
+                    if (ge.winner !== undefined)
+                        g.players[
+                            g.players.findIndex(
+                                (p) => p.id === ge.winner?.id,
+                            ) as number
+                        ] = ge.winner
                     EventManager.publish(Events.gameEnded, {
                         game: deepcopy(g),
                         winner: ge.winner ?? null,
