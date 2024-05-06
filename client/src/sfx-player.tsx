@@ -105,7 +105,10 @@ export default function SfxPlayer({ user }: { user: User | null }) {
         let unsubscribeScored = EventManager.subscribe(
             Events.scored,
             (e: ScoredData) => {
-                if (e.winner === user?.id)
+                if (
+                    e.winner === user?.id ||
+                    (e.winner !== null && e.game_mode === GameMode.Local)
+                )
                     EventManager.publish(Events.playSfx, {
                         sfx: Sfx.youScore,
                     } satisfies PlaySfxData)

@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import Button from "react-bootstrap/Button"
 import ToggleButton from "react-bootstrap/ToggleButton"
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
-import { useTranslation } from "react-i18next"
+import { Trans, useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
 import { useContext } from "../../context"
@@ -84,41 +84,65 @@ export default ({ game }: { game: Game }) => {
     return (
         <>
             <h2 className="h4">
-                {actionRequired() === PlayerState.Waiting
-                    ? t("waitingForPlayerHeading", {
-                          count: game.players.filter(
-                              (p) => p.state != PlayerState.Waiting,
-                          ).length,
-                          player: joinString(
-                              game.players
-                                  .filter((p) => p.state != PlayerState.Waiting)
-                                  .map((p) => p.name),
-                          ),
-                      })
-                    : actionRequired() === PlayerState.Guessing
-                      ? actionPlayer()?.id === user?.id
-                          ? t("youGuessHeading")
-                          : t("otherGuessHeading", {
+                {actionRequired() === PlayerState.Waiting ? (
+                    t("waitingForPlayerHeading", {
+                        count: game.players.filter(
+                            (p) => p.state != PlayerState.Waiting,
+                        ).length,
+                        player: joinString(
+                            game.players
+                                .filter((p) => p.state != PlayerState.Waiting)
+                                .map((p) => p.name),
+                        ),
+                    })
+                ) : actionRequired() === PlayerState.Guessing ? (
+                    game.mode !== GameMode.Local &&
+                    actionPlayer()?.id === user?.id ? (
+                        t("youGuessHeading")
+                    ) : (
+                        <Trans
+                            i18nKey="otherGuessHeading"
+                            values={{
                                 player: actionPlayer()?.name,
-                            })
-                      : actionRequired() === PlayerState.Intercepting
-                        ? actionPlayer()?.id === user?.id
-                            ? t("youInterceptHeading")
-                            : t("otherInterceptHeading", {
-                                  player: actionPlayer()?.name,
-                              })
-                        : t("confirmHeading", {
-                              player: game.players.find((p) => p.turn_player)
-                                  ?.name,
-                          })}
+                            }}
+                            components={[<b />]}
+                        />
+                    )
+                ) : actionRequired() === PlayerState.Intercepting ? (
+                    game.mode !== GameMode.Local &&
+                    actionPlayer()?.id === user?.id ? (
+                        t("youInterceptHeading")
+                    ) : (
+                        <Trans
+                            i18nKey="otherInterceptHeading"
+                            values={{
+                                player: actionPlayer()?.name,
+                            }}
+                            components={[<b />]}
+                        />
+                    )
+                ) : (
+                    <Trans
+                        i18nKey="confirmHeading"
+                        values={{
+                            player: game.players.find((p) => p.turn_player)
+                                ?.name,
+                        }}
+                        components={[<b />]}
+                    />
+                )}
             </h2>
             {actionRequired() === PlayerState.Confirming ? (
                 <>
                     <p>
-                        {t("confirmText", {
-                            player: game.players.find((p) => p.turn_player)
-                                ?.name,
-                        })}
+                        <Trans
+                            i18nKey="confirmText"
+                            values={{
+                                player: game.players.find((p) => p.turn_player)
+                                    ?.name,
+                            }}
+                            components={[<b />]}
+                        />
                     </p>
                     <Button
                         className="me-2"
@@ -141,6 +165,29 @@ export default ({ game }: { game: Game }) => {
                             ? t("guessText")
                             : t("waitingText")}
                     </p>
+                    {actionRequired() === PlayerState.Intercepting ? (
+                        <>
+                            <ToggleButtonGroup
+                                name="selected-slot-none"
+                                type="radio"
+                                defaultValue="0"
+                                value={selectedSlot}
+                                onChange={(e) => setSelectedSlot(e)}
+                            >
+                                <ToggleButton
+                                    className="me-2 mb-2 border-0"
+                                    id="0"
+                                    value="0"
+                                    type="radio"
+                                >
+                                    {t("dontIntercept")}
+                                </ToggleButton>
+                            </ToggleButtonGroup>
+                            <br aria-hidden />
+                        </>
+                    ) : (
+                        ""
+                    )}
                     <ToggleButtonGroup
                         name="selected-slot"
                         type="radio"
@@ -148,18 +195,6 @@ export default ({ game }: { game: Game }) => {
                         value={selectedSlot}
                         onChange={(e) => setSelectedSlot(e)}
                     >
-                        {actionRequired() === PlayerState.Intercepting ? (
-                            <ToggleButton
-                                className="me-2 mb-2"
-                                id="0"
-                                value="0"
-                                type="radio"
-                            >
-                                {t("dontIntercept")}
-                            </ToggleButton>
-                        ) : (
-                            ""
-                        )}
                         {game.players
                             .find((p) => p.turn_player === true)
                             ?.slots.map((slot) => {

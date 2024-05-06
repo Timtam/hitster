@@ -89,6 +89,7 @@ export function Game() {
                 EventManager.publish(Events.scored, {
                     winner,
                     players: deepcopy(ge.players ?? []),
+                    game_mode: game.mode,
                 } satisfies ScoredData)
             }
 

@@ -72,7 +72,9 @@ export default function Layout() {
             ) : (
                 <>
                     <Row>
-                        <Navigation user={user} />
+                        <Col>
+                            <Navigation user={user} />
+                        </Col>
                     </Row>
                     <Row>
                         <Col>

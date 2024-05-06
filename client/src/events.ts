@@ -1,4 +1,4 @@
-import { Game, Player, Slot } from "./entities"
+import { Game, GameMode, Player, Slot } from "./entities"
 
 export enum Sfx {
     noInterception,
@@ -36,6 +36,7 @@ export interface GameEndedData {
 export interface ScoredData {
     winner: string | null
     players: Player[]
+    game_mode: GameMode
 }
 
 export enum Events {
