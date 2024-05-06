@@ -75,17 +75,20 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async guess(game_id: string, slot_id: number | null) {
-        let res = await fetch(`/api/games/${game_id}/guess`, {
-            body: JSON.stringify({
-                id: slot_id,
-            }),
-            headers: {
-                "Content-Type": "application/json",
+    async guess(game_id: string, slot_id: number | null, player_id?: string) {
+        let res = await fetch(
+            `/api/games/${game_id}/guess/${player_id ?? ""}`,
+            {
+                body: JSON.stringify({
+                    id: slot_id,
+                }),
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                method: "POST",
+                credentials: "include",
             },
-            method: "POST",
-            credentials: "include",
-        })
+        )
 
         if (res.status == 200) return
         throw json({ message: (await res.json()).message, status: res.status })
@@ -107,8 +110,8 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
-    async skip(game_id: string) {
-        let res = await fetch(`/api/games/${game_id}/skip`, {
+    async skip(game_id: string, player_id?: string) {
+        let res = await fetch(`/api/games/${game_id}/skip/${player_id ?? ""}`, {
             method: "POST",
             credentials: "include",
         })

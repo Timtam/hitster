@@ -297,6 +297,7 @@ pub fn guess_slot(
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, GuessSlotError> {
+    let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     let state = serv
         .game_service()
         .lock()
@@ -305,12 +306,7 @@ pub fn guess_slot(
         .unwrap_or(GameState::Guessing);
     serv.game_service()
         .lock()
-        .guess(
-            game_id,
-            &user,
-            slot.id,
-            player_id.to_str().and_then(|p| Uuid::parse_str(p).ok()),
-        )
+        .guess(game_id, &user, slot.id, player_id)
         .map(|game| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
@@ -318,7 +314,7 @@ pub fn guess_slot(
                 players: game
                     .players
                     .iter()
-                    .find(|p| p.id == user.id)
+                    .find(|p| p.id == player_id.unwrap_or(user.id))
                     .cloned()
                     .map(|p| vec![p]),
                 ..Default::default()

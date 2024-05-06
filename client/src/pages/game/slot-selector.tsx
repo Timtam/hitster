@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 import { useImmer } from "use-immer"
 import { useContext } from "../../context"
 import type { Game } from "../../entities"
-import { GameState, PlayerState } from "../../entities"
+import { GameMode, GameState, Player, PlayerState } from "../../entities"
 import GameService from "../../services/games.service"
 
 export default ({ game }: { game: Game }) => {
@@ -15,12 +15,36 @@ export default ({ game }: { game: Game }) => {
     const [selectedSlot, setSelectedSlot] = useImmer("0")
     const navigate = useNavigate()
     let { t } = useTranslation()
+
     const actionRequired = (): PlayerState => {
         if (user === null) return PlayerState.Waiting
-        return (
-            game.players.find((p) => p.id === user.id)?.state ??
-            PlayerState.Waiting
-        )
+        return actionPlayer()?.state ?? PlayerState.Waiting
+    }
+
+    const actionPlayer = (): Player | null => {
+        if (game.state === GameState.Open) return null
+
+        let me = game.players.find((p) => p.id === user?.id)
+
+        if (game.mode !== GameMode.Local)
+            return me?.state === PlayerState.Guessing ||
+                me?.state === PlayerState.Intercepting
+                ? me ?? null
+                : null
+        else {
+            return game.state === GameState.Guessing
+                ? game.players.find((p) => p.turn_player) ?? null
+                : game.state === GameState.Intercepting
+                  ? game.players
+                        .concat(game.players)
+                        .slice(
+                            (game.players.findIndex((p) => p.turn_player) ??
+                                -1) + 1,
+                        )
+                        .find((p) => p.state === PlayerState.Intercepting) ??
+                    null
+                  : game.players.find((p) => p.creator) ?? null
+        }
     }
 
     const joinString = (parts: string[]): string => {
@@ -72,9 +96,17 @@ export default ({ game }: { game: Game }) => {
                           ),
                       })
                     : actionRequired() === PlayerState.Guessing
-                      ? t("guessHeading")
+                      ? actionPlayer()?.id === user?.id
+                          ? t("youGuessHeading")
+                          : t("otherGuessHeading", {
+                                player: actionPlayer()?.name,
+                            })
                       : actionRequired() === PlayerState.Intercepting
-                        ? t("interceptHeading")
+                        ? actionPlayer()?.id === user?.id
+                            ? t("youInterceptHeading")
+                            : t("otherInterceptHeading", {
+                                  player: actionPlayer()?.name,
+                              })
                         : t("confirmHeading", {
                               player: game.players.find((p) => p.turn_player)
                                   ?.name,
@@ -194,6 +226,9 @@ export default ({ game }: { game: Game }) => {
                                     parseInt(selectedSlot, 10) > 0
                                         ? parseInt(selectedSlot, 10)
                                         : null,
+                                    game.mode === GameMode.Local
+                                        ? actionPlayer()?.id
+                                        : undefined,
                                 )
                                 setSelectedSlot("0")
                             } catch (e) {

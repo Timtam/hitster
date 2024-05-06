@@ -58,9 +58,13 @@ export function Game() {
     const canSkip = () => {
         return (
             user !== null &&
-            (game.players.find((p) => p.id === user.id)?.state ??
-                PlayerState.Waiting) === PlayerState.Guessing &&
-            (game.players.find((p) => p.id === user.id)?.tokens ?? 0) > 0
+            ((game.mode === GameMode.Local &&
+                game.players.find((p) => p.turn_player)?.state ===
+                    PlayerState.Guessing) ||
+                (game.mode !== GameMode.Local &&
+                    game.players.find((p) => p.id === user.id)?.state ===
+                        PlayerState.Guessing)) &&
+            (game.players.find((p) => p.turn_player)?.tokens ?? 0) > 0
         )
     }
 
@@ -449,7 +453,14 @@ export function Game() {
             <Button
                 className="me-2"
                 disabled={!canSkip()}
-                onClick={async () => await gameService.skip(game.id)}
+                onClick={async () =>
+                    await gameService.skip(
+                        game.id,
+                        game.mode === GameMode.Local
+                            ? game.players.find((p) => p.turn_player)?.id
+                            : undefined,
+                    )
+                }
             >
                 {canSkip()
                     ? t("skipHit")
