@@ -414,6 +414,7 @@ impl GameService {
         game_id: &str,
         user: &User,
         slot_id: Option<u8>,
+        player_id: Option<Uuid>,
     ) -> Result<Game, GuessSlotError> {
         let mut data = self.data.lock().unwrap();
 
@@ -423,10 +424,30 @@ impl GameService {
                     message: "user is not part of this game".into(),
                     http_status_code: 409,
                 });
+            } else if player_id.is_some() && game.mode != GameMode::Local {
+                return Err(GuessSlotError {
+                    message: "guesses for other players can only be submitted in local games"
+                        .into(),
+                    http_status_code: 409,
+                });
+            } else if player_id.is_some()
+                && game.mode == GameMode::Local
+                && !game
+                    .players
+                    .iter()
+                    .find(|p| p.id == user.id)
+                    .map(|p| p.creator)
+                    .unwrap_or(false)
+            {
+                return Err(GuessSlotError {
+                    message: "only the creator can submit guesses for virtual players".into(),
+                    http_status_code: 409,
+                });
             }
 
+            let player_id = player_id.unwrap_or(user.id);
             let turn_player_pos = game.players.iter().position(|p| p.turn_player).unwrap();
-            let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+            let pos = game.players.iter().position(|p| p.id == player_id).unwrap();
 
             if game.players.get(pos).unwrap().state != PlayerState::Guessing
                 && game.players.get(pos).unwrap().state != PlayerState::Intercepting
@@ -511,10 +532,15 @@ impl GameService {
                 let len = game.players.len();
                 game.state = GameState::Confirming;
                 game.hit = game.hits_remaining.front().cloned();
-                game.players
-                    .get_mut((turn_player_pos + 1) % len)
-                    .unwrap()
-                    .state = PlayerState::Confirming;
+                if game.mode == GameMode::Local {
+                    let creator_pos = game.players.iter().position(|p| p.creator).unwrap();
+                    game.players.get_mut(creator_pos).unwrap().state = PlayerState::Confirming;
+                } else {
+                    game.players
+                        .get_mut((turn_player_pos + 1) % len)
+                        .unwrap()
+                        .state = PlayerState::Confirming;
+                }
             }
 
             Ok(game.clone())
@@ -646,7 +672,12 @@ impl GameService {
         }
     }
 
-    pub fn skip(&self, game_id: &str, user: &User) -> Result<Game, SkipHitError> {
+    pub fn skip(
+        &self,
+        game_id: &str,
+        user: &User,
+        player_id: Option<Uuid>,
+    ) -> Result<Game, SkipHitError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -655,9 +686,28 @@ impl GameService {
                     message: "user is not part of this game".into(),
                     http_status_code: 409,
                 });
+            } else if player_id.is_some() && game.mode != GameMode::Local {
+                return Err(SkipHitError {
+                    message: "hits of other players can only be skipped in local games".into(),
+                    http_status_code: 409,
+                });
+            } else if player_id.is_some()
+                && game.mode == GameMode::Local
+                && !game
+                    .players
+                    .iter()
+                    .find(|p| p.id == user.id)
+                    .map(|p| p.creator)
+                    .unwrap_or(false)
+            {
+                return Err(SkipHitError {
+                    message: "only the creator can skip hits of virtual players".into(),
+                    http_status_code: 409,
+                });
             }
 
-            let pos = game.players.iter().position(|p| p.id == user.id).unwrap();
+            let player_id = player_id.unwrap_or(user.id);
+            let pos = game.players.iter().position(|p| p.id == player_id).unwrap();
 
             if game.players.get(pos).unwrap().state != PlayerState::Guessing {
                 return Err(SkipHitError {

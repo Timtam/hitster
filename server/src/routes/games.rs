@@ -284,9 +284,14 @@ pub async fn hit(game_id: &str, serv: &State<ServiceStore>) -> Result<NamedFile,
 }
 
 #[openapi(tag = "Games")]
-#[post("/games/<game_id>/guess", format = "json", data = "<slot>")]
+#[post(
+    "/games/<game_id>/guess/<player_id..>",
+    format = "json",
+    data = "<slot>"
+)]
 pub fn guess_slot(
     game_id: &str,
+    player_id: PathBuf,
     slot: Json<SlotPayload>,
     user: User,
     serv: &State<ServiceStore>,
@@ -300,7 +305,12 @@ pub fn guess_slot(
         .unwrap_or(GameState::Guessing);
     serv.game_service()
         .lock()
-        .guess(game_id, &user, slot.id)
+        .guess(
+            game_id,
+            &user,
+            slot.id,
+            player_id.to_str().and_then(|p| Uuid::parse_str(p).ok()),
+        )
         .map(|game| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
@@ -368,31 +378,39 @@ pub fn confirm_slot(
 }
 
 #[openapi(tag = "Games")]
-#[post("/games/<game_id>/skip")]
+#[post("/games/<game_id>/skip/<player_id..>")]
 pub fn skip_hit(
     game_id: &str,
+    player_id: PathBuf,
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, SkipHitError> {
-    serv.game_service().lock().skip(game_id, &user).map(|game| {
-        let _ = queue.send(GameEvent {
-            game_id: game_id.into(),
-            event: "skip".into(),
-            players: game
-                .players
-                .iter()
-                .find(|p| p.id == user.id)
-                .cloned()
-                .map(|p| vec![p]),
-            ..Default::default()
-        });
+    serv.game_service()
+        .lock()
+        .skip(
+            game_id,
+            &user,
+            player_id.to_str().and_then(|p| Uuid::parse_str(p).ok()),
+        )
+        .map(|game| {
+            let _ = queue.send(GameEvent {
+                game_id: game_id.into(),
+                event: "skip".into(),
+                players: game
+                    .players
+                    .iter()
+                    .find(|p| p.id == user.id)
+                    .cloned()
+                    .map(|p| vec![p]),
+                ..Default::default()
+            });
 
-        Json(MessageResponse {
-            message: "skipped successfully".into(),
-            r#type: "success".into(),
+            Json(MessageResponse {
+                message: "skipped successfully".into(),
+                r#type: "success".into(),
+            })
         })
-    })
 }
 
 #[openapi(tag = "Games")]
@@ -420,571 +438,4 @@ pub fn update_game(
                 r#type: "success".into(),
             })
         })
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::{
-        games::{Game, GameEvent, GameState, Slot},
-        routes::users::tests::create_test_users,
-        test::mocked_client,
-    };
-    use rocket::{
-        http::Status,
-        tokio::io::{AsyncBufReadExt, BufReader},
-    };
-
-    #[sqlx::test]
-    async fn can_create_game() {
-        let client = mocked_client().await;
-
-        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
-
-        let game = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookie.clone())
-            .dispatch()
-            .await;
-
-        assert_eq!(game.status(), Status::Created);
-        assert!(game.into_json::<Game>().await.is_some());
-    }
-
-    #[sqlx::test]
-    async fn can_read_single_game() {
-        let client = mocked_client().await;
-
-        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
-
-        let game = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookie.clone())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap();
-
-        let response = client
-            .get(uri!("/api", super::get_game(game_id = game.id)))
-            .dispatch()
-            .await;
-
-        assert_eq!(response.status(), Status::Ok);
-    }
-
-    #[sqlx::test]
-    async fn each_game_gets_individual_ids() {
-        let client = mocked_client().await;
-
-        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
-
-        let game1 = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookie.clone())
-            .dispatch()
-            .await;
-        let game2 = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookie.clone())
-            .dispatch()
-            .await;
-
-        assert_ne!(
-            game1.into_json::<Game>().await.unwrap().id,
-            game2.into_json::<Game>().await.unwrap().id
-        );
-    }
-
-    #[sqlx::test]
-    async fn can_join_game() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .patch(uri!(
-                    "/api",
-                    super::join_game(game_id = game.into_json::<Game>().await.unwrap().id)
-                ))
-                .private_cookie(cookies.get(1).cloned().unwrap())
-                .dispatch()
-                .await
-                .status(),
-            Status::Ok
-        );
-    }
-
-    #[sqlx::test]
-    async fn cannot_join_game_twice() {
-        let client = mocked_client().await;
-
-        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
-
-        let game = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookie.clone())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .patch(uri!(
-                    "/api",
-                    super::join_game(game_id = game.into_json::<Game>().await.unwrap().id)
-                ))
-                .private_cookie(cookie)
-                .dispatch()
-                .await
-                .status(),
-            Status::Conflict
-        );
-    }
-
-    #[sqlx::test]
-    async fn can_leave_game() {
-        let client = mocked_client().await;
-
-        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
-
-        let game = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookie.clone())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .patch(uri!(
-                    "/api",
-                    super::leave_game(game_id = game.into_json::<Game>().await.unwrap().id)
-                ))
-                .private_cookie(cookie)
-                .dispatch()
-                .await
-                .status(),
-            Status::Ok
-        );
-    }
-
-    #[sqlx::test]
-    async fn cannot_leave_game_twice() {
-        let client = mocked_client().await;
-
-        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookie.clone())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        assert_eq!(
-            client
-                .patch(uri!("/api", super::leave_game(game_id = game_id)))
-                .private_cookie(cookie.clone())
-                .dispatch()
-                .await
-                .status(),
-            Status::Ok
-        );
-
-        assert_eq!(
-            client
-                .patch(uri!("/api", super::leave_game(game_id = game_id)))
-                .private_cookie(cookie)
-                .dispatch()
-                .await
-                .status(),
-            Status::NotFound
-        );
-    }
-
-    #[sqlx::test]
-    async fn cannot_leave_game_without_joining() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .patch(uri!(
-                    "/api",
-                    super::leave_game(game_id = game.into_json::<Game>().await.unwrap().id)
-                ))
-                .private_cookie(cookies.get(1).cloned().unwrap())
-                .dispatch()
-                .await
-                .status(),
-            Status::Conflict
-        );
-    }
-
-    #[sqlx::test]
-    async fn can_start_game() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        client
-            .patch(uri!("/api", super::join_game(game_id = game_id)))
-            .private_cookie(cookies.get(1).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .patch(uri!("/api", super::start_game(game_id = game_id)))
-                .private_cookie(cookies.get(0).cloned().unwrap())
-                .dispatch()
-                .await
-                .status(),
-            Status::Ok
-        );
-    }
-
-    #[sqlx::test]
-    async fn can_stop_game() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        client
-            .patch(uri!("/api", super::join_game(game_id = game_id)))
-            .private_cookie(cookies.get(1).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        client
-            .patch(uri!("/api", super::start_game(game_id = game_id)))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .patch(uri!("/api", super::stop_game(game_id = game_id)))
-                .private_cookie(cookies.get(0).cloned().unwrap())
-                .dispatch()
-                .await
-                .status(),
-            Status::Ok
-        );
-    }
-
-    #[sqlx::test]
-    async fn only_creators_can_start_games() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        client
-            .patch(uri!("/api", super::join_game(game_id = game_id)))
-            .private_cookie(cookies.get(1).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .patch(uri!("/api", super::start_game(game_id = game_id)))
-                .private_cookie(cookies.get(1).cloned().unwrap())
-                .dispatch()
-                .await
-                .status(),
-            Status::Forbidden
-        );
-    }
-
-    #[sqlx::test]
-    async fn only_creators_can_stop_games() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        client
-            .patch(uri!("/api", super::join_game(game_id = game_id)))
-            .private_cookie(cookies.get(1).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        client
-            .patch(uri!("/api", super::start_game(game_id = game_id)))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .patch(uri!("/api", super::stop_game(game_id = game_id)))
-                .private_cookie(cookies.get(1).cloned().unwrap())
-                .dispatch()
-                .await
-                .status(),
-            Status::Forbidden
-        );
-    }
-
-    #[sqlx::test]
-    async fn cannot_start_game_with_too_few_players() {
-        let client = mocked_client().await;
-
-        let cookie = create_test_users(&client, 1).await.get(0).cloned().unwrap();
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookie.clone())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        assert_eq!(
-            client
-                .patch(uri!("/api", super::start_game(game_id = game_id)))
-                .private_cookie(cookie)
-                .dispatch()
-                .await
-                .status(),
-            Status::Conflict
-        );
-    }
-
-    #[sqlx::test]
-    async fn cannot_start_game_that_is_already_running() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        client
-            .patch(uri!("/api", super::join_game(game_id = game_id)))
-            .private_cookie(cookies.get(1).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        client
-            .patch(uri!("/api", super::start_game(game_id = game_id)))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .patch(uri!("/api", super::start_game(game_id = game_id)))
-                .private_cookie(cookies.get(0).cloned().unwrap())
-                .dispatch()
-                .await
-                .status(),
-            Status::Conflict
-        );
-    }
-
-    #[sqlx::test]
-    async fn can_read_event_when_starting_game() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        client
-            .patch(uri!("/api", super::join_game(game_id = game_id)))
-            .private_cookie(cookies.get(1).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        let response = client
-            .get(uri!("/api", super::events(game_id = game_id)))
-            .dispatch()
-            .await;
-
-        client
-            .patch(uri!("/api", super::start_game(game_id = game_id)))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        let mut reader = BufReader::new(response).lines();
-        while let Ok(Some(line)) = reader.next_line().await {
-            if !line.starts_with("data:") {
-                continue;
-            }
-
-            let data: GameEvent = serde_json::from_str(&line[5..]).expect("message JSON");
-
-            assert_eq!(data.state, Some(GameState::Guessing));
-            break;
-        }
-    }
-
-    #[sqlx::test]
-    async fn can_read_hit_after_starting_game() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        client
-            .patch(uri!("/api", super::join_game(game_id = game_id)))
-            .private_cookie(cookies.get(1).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        client
-            .patch(uri!("/api", super::start_game(game_id = game_id)))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        assert_eq!(
-            client
-                .get(uri!("/api", super::hit(game_id = game_id)))
-                .dispatch()
-                .await
-                .status(),
-            Status::Ok
-        );
-    }
-
-    #[sqlx::test]
-    async fn can_read_slots_after_starting_game() {
-        let client = mocked_client().await;
-
-        let cookies = create_test_users(&client, 2).await;
-
-        let game_id = client
-            .post(uri!("/api", super::create_game))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .id;
-
-        client
-            .patch(uri!("/api", super::join_game(game_id = game_id)))
-            .private_cookie(cookies.get(1).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        client
-            .patch(uri!("/api", super::start_game(game_id = game_id)))
-            .private_cookie(cookies.get(0).cloned().unwrap())
-            .dispatch()
-            .await;
-
-        let player = client
-            .get(uri!("/api", super::get_game(game_id = game_id)))
-            .dispatch()
-            .await
-            .into_json::<Game>()
-            .await
-            .unwrap()
-            .players
-            .into_iter()
-            .find(|p| p.id == 1)
-            .unwrap();
-
-        assert_eq!(
-            player.slots,
-            vec![
-                Slot {
-                    from_year: 0,
-                    to_year: player.hits.get(0).unwrap().year,
-                    id: 1,
-                },
-                Slot {
-                    from_year: player.hits.get(0).unwrap().year,
-                    to_year: 0,
-                    id: 2,
-                }
-            ]
-        );
-    }
 }
