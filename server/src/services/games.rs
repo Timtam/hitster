@@ -94,11 +94,11 @@ impl GameService {
                 g.mode == GameMode::Public
                     || (user.is_some()
                         && (g.mode == GameMode::Private
-                            && g.players.iter().any(|p| p.id == user.as_ref().unwrap().id))
-                        || (g.mode == GameMode::Local
-                            && g.players
-                                .iter()
-                                .any(|p| p.id == user.as_ref().unwrap().id && p.creator)))
+                            && g.players.iter().any(|p| p.id == user.as_ref().unwrap().id)
+                            || (g.mode == GameMode::Local
+                                && g.players
+                                    .iter()
+                                    .any(|p| p.id == user.as_ref().unwrap().id && p.creator))))
             })
             .collect::<_>()
     }
@@ -281,6 +281,7 @@ impl GameService {
                 let mut rng = thread_rng();
 
                 game.state = GameState::Guessing;
+                game.players.shuffle(&mut rng);
                 game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
                 game.players.get_mut(0).unwrap().turn_player = true;
                 game.hits_remaining =

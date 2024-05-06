@@ -382,13 +382,10 @@ pub fn skip_hit(
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, SkipHitError> {
+    let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     serv.game_service()
         .lock()
-        .skip(
-            game_id,
-            &user,
-            player_id.to_str().and_then(|p| Uuid::parse_str(p).ok()),
-        )
+        .skip(game_id, &user, player_id)
         .map(|game| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
@@ -396,7 +393,7 @@ pub fn skip_hit(
                 players: game
                     .players
                     .iter()
-                    .find(|p| p.id == user.id)
+                    .find(|p| p.id == player_id.unwrap_or(user.id))
                     .cloned()
                     .map(|p| vec![p]),
                 ..Default::default()
