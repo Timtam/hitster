@@ -2,7 +2,7 @@ import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { Howl } from "howler"
 import { useEffect } from "react"
-import { User } from "./entities"
+import { GameMode, User } from "./entities"
 import {
     Events,
     GameEndedData,
@@ -122,13 +122,17 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             Events.gameEnded,
             (e: GameEndedData) => {
                 if (
+                    e.game.mode !== GameMode.Local &&
                     e.winner?.id !== user?.id &&
                     e.game.players.find((p) => p.id === user?.id) !== undefined
                 )
                     EventManager.publish(Events.playSfx, {
                         sfx: Sfx.youLose,
                     } satisfies PlaySfxData)
-                else if (e.winner?.id === user?.id)
+                else if (
+                    e.winner?.id === user?.id ||
+                    (e.game.mode === GameMode.Local && e.winner !== null)
+                )
                     EventManager.publish(Events.playSfx, {
                         sfx: Sfx.youWin,
                     } satisfies PlaySfxData)
