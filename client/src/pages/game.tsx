@@ -434,7 +434,7 @@ export function Game() {
                     t("hitNoGameRunning")
                 ) : game.hit === null ? (
                     t("hitUnknown")
-                ) : (
+                ) : game.hit?.belongs_to === "" ? (
                     <Trans
                         i18nKey="hitRevealed"
                         values={{
@@ -447,7 +447,23 @@ export function Game() {
                                     isSlotCorrect(game.hit, p.guess),
                                 )?.name ?? t("noone"),
                         }}
-                        components={[<b />, <b />, <b />, <b />]}
+                        components={[<b />, <b />, <b />, <b />, <b />]}
+                    />
+                ) : (
+                    <Trans
+                        i18nKey="hitRevealedBelonging"
+                        values={{
+                            title: game.hit?.title,
+                            artist: game.hit?.artist,
+                            year: game.hit?.year,
+                            pack: game.hit.pack,
+                            belongs_to: game.hit.belongs_to,
+                            player:
+                                game.players.find((p) =>
+                                    isSlotCorrect(game.hit, p.guess),
+                                )?.name ?? t("noone"),
+                        }}
+                        components={[<b />, <b />, <b />, <b />, <b />, <b />]}
                     />
                 )}
             </p>
