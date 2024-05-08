@@ -56,6 +56,7 @@ export function Lobby() {
                     <tr>
                         <th>{t("gameId")}</th>
                         <th>{t("player", { count: 2 })}</th>
+                        <th>{t("mode")}</th>
                         <th>{t("state")}</th>
                     </tr>
                 </thead>
@@ -69,6 +70,7 @@ export function Lobby() {
                                     </Link>
                                 </td>
                                 <td>{game.players.length}</td>
+                                <td>{t(game.mode)}</td>
                                 <td>
                                     {game.state === GameState.Open
                                         ? t("open")

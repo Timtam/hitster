@@ -104,6 +104,10 @@
         "addPlayer": "Add local player",
         "addPlayerNotLocalGame": "You can only add local players in a local game",
         "addPlayerNotWaiting": "You can only add local players while the game isn't running",
-        "kick": "Kick"
+        "kick": "Kick",
+        "mode": "Mode",
+        "Public": "public",
+        "Private": "private",
+        "Local": "local"
     }
 }
