@@ -5,6 +5,7 @@ import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
 import Spinner from "react-bootstrap/Spinner"
 import { useCookies } from "react-cookie"
+import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router-dom"
 import type { Context } from "./context"
@@ -19,7 +20,10 @@ const updateUserAuth = async () => {
 }
 
 export default function Layout() {
-    let { t } = useTranslation()
+    let {
+        t,
+        i18n: { language },
+    } = useTranslation()
     let [cookies] = useCookies(["user"])
     let [user, setUser] = useState<User | null>(null)
     let [loading, setLoading] = useState(true)
@@ -64,32 +68,37 @@ export default function Layout() {
     }, [cookies])
 
     return (
-        <Container fluid className="justify-content-center">
-            {user === null ? (
-                <Spinner animation="border" role="status">
-                    <span className="visually-hidden">{t("loading")}</span>
-                </Spinner>
-            ) : (
-                <>
-                    <Row>
-                        <Col>
-                            <Navigation user={user} />
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <SfxPlayer user={user} />
-                            <Outlet
-                                context={
-                                    {
-                                        user,
-                                    } satisfies Context
-                                }
-                            />
-                        </Col>
-                    </Row>
-                </>
-            )}
-        </Container>
+        <>
+            <Helmet>
+                <html lang={language} />
+            </Helmet>
+            <Container fluid className="justify-content-center">
+                {user === null ? (
+                    <Spinner animation="border" role="status">
+                        <span className="visually-hidden">{t("loading")}</span>
+                    </Spinner>
+                ) : (
+                    <>
+                        <Row>
+                            <Col>
+                                <Navigation user={user} />
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col>
+                                <SfxPlayer user={user} />
+                                <Outlet
+                                    context={
+                                        {
+                                            user,
+                                        } satisfies Context
+                                    }
+                                />
+                            </Col>
+                        </Row>
+                    </>
+                )}
+            </Container>
+        </>
     )
 }
