@@ -8,14 +8,15 @@ import { Helmet } from "react-helmet-async"
 import { Trans, useTranslation } from "react-i18next"
 import type { LoaderFunction } from "react-router"
 import { json, useLoaderData, useNavigate } from "react-router-dom"
+import { titleCase } from "title-case"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
-import type { Game as GameType } from "../entities"
 import {
     Game as GameEntity,
     GameEvent,
     GameMode,
     GameState,
+    Hit,
     Player,
     PlayerState,
 } from "../entities"
@@ -48,7 +49,7 @@ export function Game() {
     let [game, setGame] = useImmer(useLoaderData() as GameEntity)
     let [hitSrc, setHitSrc] = useImmer("")
     let [showHits, setShowHits] = useImmer<boolean[]>([])
-    let [gameEndedState, setGameEndedState] = useImmer<GameType | null>(null)
+    let [gameEndedState, setGameEndedState] = useImmer<GameEntity | null>(null)
     let [showSettings, setShowSettings] = useImmer<boolean>(false)
     let [showAddPlayer, setShowAddPlayer] = useImmer(false)
     let navigate = useNavigate()
@@ -68,6 +69,20 @@ export function Game() {
         )
     }
 
+    const getWinner = (data?: {
+        players: Player[]
+        hit: Hit | null
+    }): Player | null => {
+        let p = data?.players ?? game.players
+        let h = data?.hit ?? game.hit
+        let winner: Player | null = null
+        let winners = (p ?? []).filter((p) => isSlotCorrect(h ?? null, p.guess))
+        if (winners.length == 1) winner = winners[0]
+        else if (winners.length == 2)
+            winner = winners.find((p) => p.turn_player) ?? null
+        return winner
+    }
+
     useEffect(() => {
         let eventSource = new EventSource(`/api/games/${game.id}/events`)
 
@@ -79,15 +94,12 @@ export function Game() {
             } else if (ge.state === GameState.Open) {
                 setHitSrc("")
             } else if (ge.state === GameState.Confirming) {
-                let winner: string | null = null
-                let winners = (ge.players ?? []).filter((p) =>
-                    isSlotCorrect(ge.hit ?? null, p.guess),
-                )
-                if (winners.length == 1) winner = winners[0].id
-                else if (winners.length == 2)
-                    winner = winners.find((p) => p.turn_player)?.id ?? null
                 EventManager.publish(Events.scored, {
-                    winner,
+                    winner:
+                        getWinner({
+                            players: ge?.players ?? [],
+                            hit: ge.hit ?? null,
+                        })?.name ?? null,
                     players: deepcopy(ge.players ?? []),
                     game_mode: game.mode,
                 } satisfies ScoredData)
@@ -458,10 +470,7 @@ export function Game() {
                             year: game.hit?.year,
                             pack: game.hit.pack,
                             belongs_to: game.hit.belongs_to,
-                            player:
-                                game.players.find((p) =>
-                                    isSlotCorrect(game.hit, p.guess),
-                                )?.name ?? t("noone"),
+                            player: titleCase(getWinner()?.name ?? t("noone")),
                         }}
                         components={[<b />, <b />, <b />, <b />, <b />, <b />]}
                     />
