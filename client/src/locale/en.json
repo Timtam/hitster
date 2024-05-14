@@ -92,6 +92,8 @@
         "startTokens": "Start tokens",
         "gameSettingsHitDuration": "How many seconds of a hit will every player hear when guessing?",
         "hitDuration": "Hit duration",
+        "gameSettingsRememberHits": "Should hits be remembered across games to prevent duplicates for as long as possible?",
+        "rememberHits": "Remember hits across games?",
         "gameSettingsNotOpen": "The game needs to be stopped to change its settings",
         "loading": "Loading...",
         "pack_one": "Pack",

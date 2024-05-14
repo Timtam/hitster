@@ -76,6 +76,8 @@ impl GameService {
                 .map(|p| p.to_string())
                 .collect::<Vec<_>>(),
             mode,
+            remember_hits: true,
+            remembered_hits: vec![],
         };
 
         data.games.insert(id.clone(), game.clone());
@@ -280,6 +282,10 @@ impl GameService {
             } else {
                 let mut rng = thread_rng();
 
+                if !game.remember_hits {
+                    game.remembered_hits.clear();
+                }
+
                 game.state = GameState::Guessing;
                 game.players.shuffle(&mut rng);
                 game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
@@ -287,6 +293,7 @@ impl GameService {
                 game.hits_remaining =
                     filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
                         .into_iter()
+                        .filter(|h| !game.remembered_hits.contains(h))
                         .collect::<HashSet<_>>()
                         .into_iter()
                         .collect::<_>();
@@ -294,8 +301,10 @@ impl GameService {
 
                 for i in 0..game.players.len() {
                     let player = game.players.get_mut(i).unwrap();
+                    let hit = game.hits_remaining.pop_front().unwrap();
 
-                    player.hits.push(game.hits_remaining.pop_front().unwrap());
+                    player.hits.push(hit);
+                    game.remembered_hits.push(hit);
                     player.tokens = game.start_tokens;
                     player.slots = self.get_slots(&player.hits);
                 }
@@ -619,7 +628,8 @@ impl GameService {
                 player.slots = self.get_slots(&player.hits);
             }
 
-            game.hits_remaining.pop_front();
+            game.remembered_hits
+                .push(game.hits_remaining.pop_front().unwrap());
 
             let winner = game
                 .players
@@ -656,7 +666,7 @@ impl GameService {
                     game.hits_remaining =
                         filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
                             .into_iter()
-                            .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                            .filter(|h| !game.remembered_hits.contains(h))
                             .collect::<HashSet<_>>()
                             .into_iter()
                             .collect::<VecDeque<_>>();
@@ -724,14 +734,15 @@ impl GameService {
 
             game.players.get_mut(pos).unwrap().tokens -= 1;
 
-            game.hits_remaining.pop_front();
+            game.remembered_hits
+                .push(game.hits_remaining.pop_front().unwrap());
 
             if game.hits_remaining.is_empty() {
                 let mut rng = thread_rng();
                 game.hits_remaining =
                     filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
                         .into_iter()
-                        .filter(|h| !game.players.iter().any(|p| p.hits.contains(h)))
+                        .filter(|h| !game.remembered_hits.contains(h))
                         .collect::<HashSet<_>>()
                         .into_iter()
                         .collect::<VecDeque<_>>();
@@ -800,6 +811,7 @@ impl GameService {
             game.start_tokens = settings.start_tokens.unwrap_or(game.start_tokens);
             game.goal = settings.goal.unwrap_or(game.goal);
             game.hit_duration = settings.hit_duration.unwrap_or(game.hit_duration);
+            game.remember_hits = settings.remember_hits.unwrap_or(game.remember_hits);
 
             Ok(game.clone())
         } else {

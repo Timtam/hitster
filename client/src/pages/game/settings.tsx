@@ -30,12 +30,14 @@ export default ({
         {},
     )
     let [packs, setPacks] = useState<string[]>([])
+    let [rememberHits, setRememberHits] = useState(true)
 
     useEffect(() => {
         setGoal(game.goal)
         setStartTokens(game.start_tokens)
         setHitDuration(game.hit_duration)
         setPacks(game.packs)
+        setRememberHits(game.remember_hits)
     }, [game])
 
     useEffect(() => {
@@ -118,30 +120,48 @@ export default ({
                                                 }
                                             />
                                         </Form.Group>
+                                        <p>{t("gameSettingsHitDuration")}</p>
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>
+                                                {t("hitDuration")}
+                                            </Form.Label>
+                                            <Form.Control
+                                                type="number"
+                                                min={1}
+                                                placeholder={t("hitDuration")}
+                                                value={hitDuration}
+                                                onChange={(e) =>
+                                                    setHitDuration(
+                                                        e.currentTarget
+                                                            .value === ""
+                                                            ? 1
+                                                            : parseInt(
+                                                                  e
+                                                                      .currentTarget
+                                                                      .value,
+                                                                  10,
+                                                              ),
+                                                    )
+                                                }
+                                            />
+                                        </Form.Group>
+                                        <p>{t("gameSettingsRememberHits")}</p>
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>
+                                                {t("rememberHits")}
+                                            </Form.Label>
+                                            <Form.Check
+                                                type="checkbox"
+                                                placeholder={t("rememberHits")}
+                                                checked={rememberHits}
+                                                onChange={() => {
+                                                    setRememberHits(
+                                                        !rememberHits,
+                                                    )
+                                                }}
+                                            />
+                                        </Form.Group>
                                     </Form>
-                                    <p>{t("gameSettingsHitDuration")}</p>
-                                    <Form.Group className="mb-2">
-                                        <Form.Label>
-                                            {t("hitDuration")}
-                                        </Form.Label>
-                                        <Form.Control
-                                            type="number"
-                                            min={1}
-                                            placeholder={t("hitDuration")}
-                                            value={hitDuration}
-                                            onChange={(e) =>
-                                                setHitDuration(
-                                                    e.currentTarget.value === ""
-                                                        ? 1
-                                                        : parseInt(
-                                                              e.currentTarget
-                                                                  .value,
-                                                              10,
-                                                          ),
-                                                )
-                                            }
-                                        />
-                                    </Form.Group>
                                 </Col>
                             </Row>
                             <Row>
@@ -189,6 +209,8 @@ export default ({
                                                         start_tokens:
                                                             startTokens,
                                                         packs: packs,
+                                                        remember_hits:
+                                                            rememberHits,
                                                     }),
                                                 )
                                                 onHide()

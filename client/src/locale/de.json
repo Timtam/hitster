@@ -92,6 +92,8 @@
         "startTokens": "Start-Chips",
         "gameSettingsHitDuration": "Wie viele Sekunden eines Hits werden zu jeder Spielrunde abgespielt?",
         "hitDuration": "Abspielzeit der Hits",
+        "gameSettingsRememberHits": "Sollen Hits zwischen den Spielen gespeichert werden, damit so selten wie möglich doppelte Hits erraten werden müssen?",
+        "rememberHits": "Hits zwischen Spielen speichern?",
         "gameSettingsNotOpen": "Das Spiel muss gestoppt sein, um die Spieleinstellungen zu ändern",
         "loading": "Lädt, bitte warten...",
         "pack_one": "Pack",

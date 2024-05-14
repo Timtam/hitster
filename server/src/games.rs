@@ -19,6 +19,8 @@ pub struct GameSettingsPayload {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub goal: Option<u8>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub remember_hits: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub packs: Option<Vec<String>>,
 }
 
@@ -37,6 +39,7 @@ impl From<Json<GameSettingsPayload>> for GameSettingsPayload {
             hit_duration: src.hit_duration,
             start_tokens: src.start_tokens,
             packs: src.packs.clone(),
+            remember_hits: src.remember_hits,
         }
     }
 }
@@ -82,6 +85,9 @@ pub struct Game {
     pub hit: Option<&'static Hit>,
     pub packs: Vec<String>,
     pub mode: GameMode,
+    pub remember_hits: bool,
+    #[serde(skip)]
+    pub remembered_hits: Vec<&'static Hit>,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]

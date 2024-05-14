@@ -71,6 +71,7 @@ export const Game = z.object({
     hit: z.nullable(Hit),
     packs: z.array(z.string()),
     mode: z.nativeEnum(GameMode),
+    remember_hits: z.boolean(),
 })
 
 export type Game = z.infer<typeof Game>
@@ -86,6 +87,7 @@ export const GameSettings = z.object({
     hit_duration: z.optional(z.number()),
     goal: z.optional(z.number()),
     packs: z.optional(z.array(z.string())),
+    remember_hits: z.optional(z.boolean()),
 })
 
 export type GameSettings = z.infer<typeof GameSettings>
