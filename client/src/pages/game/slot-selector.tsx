@@ -27,10 +27,7 @@ export default ({ game }: { game: Game }) => {
         let me = game.players.find((p) => p.id === user?.id)
 
         if (game.mode !== GameMode.Local)
-            return me?.state === PlayerState.Guessing ||
-                me?.state === PlayerState.Intercepting
-                ? me ?? null
-                : null
+            return me?.state !== PlayerState.Waiting ? me ?? null : null
         else {
             return game.state === GameState.Guessing
                 ? game.players.find((p) => p.turn_player) ?? null
