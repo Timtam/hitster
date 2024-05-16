@@ -82,16 +82,22 @@ export default ({ game }: { game: Game }) => {
         <>
             <h2 className="h4">
                 {actionRequired() === PlayerState.Waiting ? (
-                    t("waitingForPlayerHeading", {
-                        count: game.players.filter(
-                            (p) => p.state != PlayerState.Waiting,
-                        ).length,
-                        player: joinString(
-                            game.players
-                                .filter((p) => p.state != PlayerState.Waiting)
-                                .map((p) => p.name),
-                        ),
-                    })
+                    <Trans
+                        i18nKey="waitingForPlayerHeading"
+                        values={{
+                            count: game.players.filter(
+                                (p) => p.state != PlayerState.Waiting,
+                            ).length,
+                            player: joinString(
+                                game.players
+                                    .filter(
+                                        (p) => p.state != PlayerState.Waiting,
+                                    )
+                                    .map((p) => p.name),
+                            ),
+                        }}
+                        components={[<b />]}
+                    />
                 ) : actionRequired() === PlayerState.Guessing ? (
                     game.mode !== GameMode.Local &&
                     actionPlayer()?.id === user?.id ? (
