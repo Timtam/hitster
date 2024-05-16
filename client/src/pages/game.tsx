@@ -99,7 +99,7 @@ export function Game() {
                         getWinner({
                             players: ge?.players ?? [],
                             hit: ge.hit ?? null,
-                        })?.name ?? null,
+                        })?.id ?? null,
                     players: deepcopy(ge.players ?? []),
                     game_mode: game.mode,
                 } satisfies ScoredData)
