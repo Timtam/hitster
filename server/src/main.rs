@@ -149,10 +149,6 @@ fn rocket() -> _ {
                 "url" => env::var("DATABASE_URL").expect("DATABASE_URL required"),
                 ],
                     ],
-            ))
-            .merge((
-                "secret_key",
-                env::var("SECRET_KEY").expect("SECRET_KEY is required"),
             )),
     )
 }
