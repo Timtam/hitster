@@ -1,4 +1,4 @@
-import { Howl } from "@catalogworks/howler"
+import { Howl } from "howler"
 import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { useEffect, useState } from "react"

@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 argon2 = "0.5.3"
 dotenvy = "0.15.7"
-itertools = "0.12.1"
+itertools = "0.13.0"
 parking_lot = { version = "0.12.1"}
 petname = {version = "2.0.0-beta.4", default-features = false, features = ["default-rng", "default-words"]}
 rand = "0.8.5"
