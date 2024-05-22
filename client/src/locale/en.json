@@ -1,6 +1,6 @@
 {
     "translation": {
-        "navigationHeading": "Navigation",
+        "navigation": "Navigation",
         "gameLobby": "Game Lobby",
         "loggedInAs": "Logged in as {{username}}",
         "knownAs": "You are currently known as {{username}}",

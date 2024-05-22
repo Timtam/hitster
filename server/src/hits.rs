@@ -50,8 +50,9 @@ impl Hit {
     }
 
     pub fn file(&self) -> Option<PathBuf> {
-        self.yt_id()
-            .map(|id| Path::new(&Hit::download_dir()).join(format!("{}.mp3", id)))
+        self.yt_id().map(|id| {
+            Path::new(&Hit::download_dir()).join(format!("{}_{}.mp3", id, self.playback_offset))
+        })
     }
 
     pub fn exists(&self) -> bool {
@@ -141,7 +142,12 @@ impl Fairing for HitsterDownloader {
                             .is_ok()
                         {
                             let in_file = format!("{}/{}.opus", download_dir.as_str(), id);
-                            let out_file = format!("{}/{}.mp3", download_dir.as_str(), id);
+                            let out_file = format!(
+                                "{}/{}_{}.mp3",
+                                download_dir.as_str(),
+                                id,
+                                hit.playback_offset
+                            );
                             let offset = format!("{}", hit.playback_offset);
 
                             println!("Measure loudness of song...");

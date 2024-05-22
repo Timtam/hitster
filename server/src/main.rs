@@ -140,17 +140,14 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
 fn rocket() -> _ {
     let _ = dotenv();
 
-    rocket_from_config(
-        Config::figment()
-            .merge((
-                "databases",
-                map![
-                "hitster_config" => map![
-                "url" => env::var("DATABASE_URL").expect("DATABASE_URL required"),
-                ],
-                    ],
-            )),
-    )
+    rocket_from_config(Config::figment().merge((
+        "databases",
+        map![
+        "hitster_config" => map![
+        "url" => env::var("DATABASE_URL").expect("DATABASE_URL required"),
+        ],
+            ],
+    )))
 }
 
 #[cfg(test)]

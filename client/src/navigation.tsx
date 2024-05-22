@@ -15,74 +15,89 @@ export default function Navigation({ user }: { user: User | null }) {
 
     return (
         <>
-            <Navbar className="fixed-top" bg="light" variant="light">
+            <Navbar
+                aria-label={t('navigation')}
+                className="fixed-top"
+                bg="light"
+                variant="light"
+            >
                 <Navbar.Collapse>
-                    <Nav.Item className="me-2">
-                        <LinkContainer to="/">
-                            <Nav.Link>{t("welcome")}</Nav.Link>
-                        </LinkContainer>
-                    </Nav.Item>
-                    <Nav.Item className="me-2">
-                        <LinkContainer to="/lobby">
-                            <Nav.Link>{t("gameLobby")}</Nav.Link>
-                        </LinkContainer>
-                    </Nav.Item>
-                    {user?.virtual === false ? (
-                        <NavDropdown
+                    <Nav activeKey={location.pathname}>
+                        <Nav.Item
+                            aria-current={location.pathname === "/"}
                             className="me-2"
-                            title={t("loggedInAs", {
-                                username: user?.name,
-                            })}
                         >
-                            <NavDropdown.Item as="div" className="me-2">
-                                <Nav.Link
-                                    onClick={async () => {
-                                        let res = await fetch(
-                                            "/api/users/logout",
-                                            {
-                                                method: "POST",
-                                                credentials: "include",
-                                            },
-                                        )
+                            <LinkContainer to="/">
+                                <Nav.Link>{t("welcome")}</Nav.Link>
+                            </LinkContainer>
+                        </Nav.Item>
+                        <Nav.Item
+                            aria-current={location.pathname === "/lobby"}
+                            className="me-2"
+                        >
+                            <LinkContainer to="/lobby">
+                                <Nav.Link>{t("gameLobby")}</Nav.Link>
+                            </LinkContainer>
+                        </Nav.Item>
+                        {user?.virtual === false ? (
+                            <NavDropdown
+                                className="me-2"
+                                title={t("loggedInAs", {
+                                    username: user?.name,
+                                })}
+                            >
+                                <NavDropdown.Item as="div" className="me-2">
+                                    <Nav.Link
+                                        onClick={async () => {
+                                            let res = await fetch(
+                                                "/api/users/logout",
+                                                {
+                                                    method: "POST",
+                                                    credentials: "include",
+                                                },
+                                            )
 
-                                        if (res.status === 200)
-                                            navigate("", { replace: true })
-                                    }}
-                                >
-                                    {t("logout")}
-                                </Nav.Link>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item as="div" className="me-2">
-                                <Navbar.Text>{t("deleteAccount")}</Navbar.Text>
-                            </NavDropdown.Item>
-                        </NavDropdown>
-                    ) : (
-                        <NavDropdown
-                            title={t("knownAs", {
-                                username: user?.name,
-                            })}
-                            className="me-2"
-                        >
-                            <NavDropdown.Item as="div" className="me-2">
-                                <LinkContainer to="/login">
-                                    <Nav.Link>{t("login")}</Nav.Link>
-                                </LinkContainer>
-                            </NavDropdown.Item>
-                            <NavDropdown.Item as="div" className="me-2">
-                                <LinkContainer to="/register">
-                                    <Nav.Link>{t("register")}</Nav.Link>
-                                </LinkContainer>
-                            </NavDropdown.Item>
-                        </NavDropdown>
-                    )}
-                    <Nav.Item className="me-2">
-                        <Nav.Link
-                            aria-expanded="false"
-                            onClick={() => setShowSettings(true)}
-                        >
-                            {t("settings")}
-                        </Nav.Link>
-                    </Nav.Item>
+                                            if (res.status === 200)
+                                                navigate("", { replace: true })
+                                        }}
+                                    >
+                                        {t("logout")}
+                                    </Nav.Link>
+                                </NavDropdown.Item>
+                                <NavDropdown.Item as="div" className="me-2">
+                                    <Navbar.Text>
+                                        {t("deleteAccount")}
+                                    </Navbar.Text>
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        ) : (
+                            <NavDropdown
+                                title={t("knownAs", {
+                                    username: user?.name,
+                                })}
+                                className="me-2"
+                            >
+                                <NavDropdown.Item as="div" className="me-2">
+                                    <LinkContainer to="/login">
+                                        <Nav.Link>{t("login")}</Nav.Link>
+                                    </LinkContainer>
+                                </NavDropdown.Item>
+                                <NavDropdown.Item as="div" className="me-2">
+                                    <LinkContainer to="/register">
+                                        <Nav.Link>{t("register")}</Nav.Link>
+                                    </LinkContainer>
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                        )}
+                        <Nav.Item className="me-2">
+                            <Nav.Link
+                                aria-expanded="false"
+                                onClick={() => setShowSettings(true)}
+                            >
+                                {t("settings")}
+                            </Nav.Link>
+                        </Nav.Item>
+                    </Nav>{" "}
                 </Navbar.Collapse>
             </Navbar>
             <Settings
