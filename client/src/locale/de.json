@@ -111,6 +111,15 @@
         "mode": "Modus",
         "Public": "öffentlich",
         "Private": "privat",
-        "Local": "lokal"
+        "Local": "lokal",
+        "welcome": "Willkommen",
+        "welcomeText": "Willkommen zum inoffiziellen Hitster Online-Kartenspiel! Hier gilt es zu raten, wann ein bestimmter Song veröffentlicht wurde, aber keine Angst, es ist nicht so schwer wie es sich anhört. Aber lies doch einfach weiter.",
+        "features": "Funktionen",
+        "packsFeature": "insgesamt {{hits}} Hits in {{packs}} Packs, welche du erraten kannst",
+        "accessibilityFeature": "entwickelt mit Fokus auf Barrierefreiheit, sodass sehbehinderte und sehende Spieler gemeinsam spielen können",
+        "publicAndPrivateGamesFeature": "spiele ein öffentliches Spiel mit jedem verfügbaren Spieler, oder ein privates Spiel mit deinen Freunden",
+        "localGamesFeature": "spiele ein lokales Spiel mit Freunden und Familie, genau wie das Kartenspiel, nur ohne Karten",
+        "noRegistrationFeature": "keine Registrierung notwendig, einfach ein Spiel erstellen und los geht's",
+        "howToPlay": "Wie wird gespielt?"
     }
 }

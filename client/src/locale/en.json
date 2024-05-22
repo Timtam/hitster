@@ -111,6 +111,15 @@
         "mode": "Mode",
         "Public": "public",
         "Private": "private",
-        "Local": "local"
+        "Local": "local",
+        "welcome": "Welcome",
+        "welcomeText": "Welcome to the unofficial Hitster online card game! Here you will try to guess when a certain song was released, but don't worry, its not as hard as it sounds. Read on to find out what its all about.",
+        "features": "Features",
+        "packsFeature": "a total of {{hits}} hits in {{packs}} packs available for you to guess",
+        "accessibilityFeature": "developed with screen reader accessibility in mind, so that sighted and visually impaired people can play together",
+        "publicAndPrivateGamesFeature": "play a public game to play with everyone who's currently available, or play a private game for just you and your friends",
+        "localGamesFeature": "play a local game with friends and family, just like the card game, but you don't need to have the cards around",
+        "noRegistrationFeature": "no registration necessary, just create a game and play",
+        "howToPlay": "How to play the game"
     }
 }

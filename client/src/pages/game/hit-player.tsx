@@ -1,6 +1,6 @@
-import { Howl } from "howler"
 import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
+import { Howl } from "howler"
 import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import { useTranslation } from "react-i18next"

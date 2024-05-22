@@ -1,6 +1,6 @@
-import { Howl } from "howler"
 import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
+import { Howl } from "howler"
 import { useEffect } from "react"
 import { GameMode, User } from "./entities"
 import {

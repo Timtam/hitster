@@ -15,11 +15,15 @@ export default function Navigation({ user }: { user: User | null }) {
 
     return (
         <>
-            <h2 className="h4">{t("navigationHeading")}</h2>
             <Navbar className="fixed-top" bg="light" variant="light">
                 <Navbar.Collapse>
                     <Nav.Item className="me-2">
                         <LinkContainer to="/">
+                            <Nav.Link>{t("welcome")}</Nav.Link>
+                        </LinkContainer>
+                    </Nav.Item>
+                    <Nav.Item className="me-2">
+                        <LinkContainer to="/lobby">
                             <Nav.Link>{t("gameLobby")}</Nav.Link>
                         </LinkContainer>
                     </Nav.Item>
