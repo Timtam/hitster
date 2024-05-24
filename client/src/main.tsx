@@ -14,20 +14,14 @@ import {
     Registration,
     action as RegistrationAction,
 } from "./pages/registration"
-import { Welcome, loader as WelcomeLoader } from "./pages/welcome"
 
 const router = createBrowserRouter([
     {
         element: <Layout />,
         children: [
             {
-                element: <Welcome />,
-                path: "/",
-                loader: WelcomeLoader,
-            },
-            {
                 element: <Lobby />,
-                path: "/lobby",
+                path: "/",
                 loader: LobbyLoader,
             },
             {

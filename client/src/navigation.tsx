@@ -1,3 +1,4 @@
+import { useLocalStorage } from "@uidotdev/usehooks"
 import { useState } from "react"
 import Nav from "react-bootstrap/Nav"
 import NavDropdown from "react-bootstrap/NavDropdown"
@@ -12,11 +13,12 @@ export default function Navigation({ user }: { user: User | null }) {
     let navigate = useNavigate()
     const { t } = useTranslation()
     let [showSettings, setShowSettings] = useState(false)
+    let [_, setWelcome] = useLocalStorage("welcome")
 
     return (
         <>
             <Navbar
-                aria-label={t('navigation')}
+                aria-label={t("navigation")}
                 className="fixed-top"
                 bg="light"
                 variant="light"
@@ -28,14 +30,6 @@ export default function Navigation({ user }: { user: User | null }) {
                             className="me-2"
                         >
                             <LinkContainer to="/">
-                                <Nav.Link>{t("welcome")}</Nav.Link>
-                            </LinkContainer>
-                        </Nav.Item>
-                        <Nav.Item
-                            aria-current={location.pathname === "/lobby"}
-                            className="me-2"
-                        >
-                            <LinkContainer to="/lobby">
                                 <Nav.Link>{t("gameLobby")}</Nav.Link>
                             </LinkContainer>
                         </Nav.Item>
@@ -89,6 +83,14 @@ export default function Navigation({ user }: { user: User | null }) {
                                 </NavDropdown.Item>
                             </NavDropdown>
                         )}
+                        <Nav.Item className="me-2">
+                            <Nav.Link
+                                aria-expanded="false"
+                                onClick={() => setWelcome("false")}
+                            >
+                                {t("welcome")}
+                            </Nav.Link>
+                        </Nav.Item>
                         <Nav.Item className="me-2">
                             <Nav.Link
                                 aria-expanded="false"

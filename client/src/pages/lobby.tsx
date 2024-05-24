@@ -33,6 +33,7 @@ export function Lobby() {
             <Helmet>
                 <title>{t("gameLobby")} - Hitster</title>
             </Helmet>
+            <h2>{t("gameLobby")}</h2>
             <Dropdown>
                 <Dropdown.Toggle variant="success" disabled={user === null}>
                     {user === null

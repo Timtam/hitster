@@ -13,6 +13,7 @@
     "dependencies": {
         "@lomray/event-manager": "^2.0.2",
         "@uidotdev/usehooks": "^2.4.1",
+        "boolify-string": "^2.0.2",
         "bootstrap": "^5.3.3",
         "deepcopy": "^2.1.0",
         "howler": "^2.2.4",
@@ -33,6 +34,7 @@
         "zod": "^3.22.4"
     },
     "devDependencies": {
+        "@types/boolify-string": "^0.0.32",
         "@types/howler": "^2.2.11",
         "@types/react": "^18.2.56",
         "@types/react-bootstrap": "^0.32.36",

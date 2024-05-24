@@ -1,3 +1,5 @@
+import { useLocalStorage } from "@uidotdev/usehooks"
+import boolifyString from "boolify-string"
 import "bootstrap/dist/css/bootstrap.min.css"
 import { useEffect, useState } from "react"
 import Col from "react-bootstrap/Col"
@@ -11,6 +13,7 @@ import { Outlet } from "react-router-dom"
 import type { Context } from "./context"
 import { User } from "./entities"
 import Navigation from "./navigation"
+import { Welcome } from "./pages/welcome"
 import SfxPlayer from "./sfx-player"
 
 const updateUserAuth = async () => {
@@ -27,6 +30,7 @@ export default function Layout() {
     let [cookies] = useCookies(["user"])
     let [user, setUser] = useState<User | null>(null)
     let [loading, setLoading] = useState(true)
+    let [welcome, setWelcome] = useLocalStorage("welcome")
 
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout> | null = null
@@ -87,6 +91,10 @@ export default function Layout() {
                         <Row>
                             <Col>
                                 <SfxPlayer user={user} />
+                                <Welcome
+                                    show={!boolifyString(welcome)}
+                                    onHide={() => setWelcome("true")}
+                                />
                                 <Outlet
                                     context={
                                         {
