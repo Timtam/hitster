@@ -7,8 +7,9 @@ use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
 use serde::{Deserialize, Serialize};
 use std::{
+    collections::HashSet,
     env,
-    fs::{create_dir_all, remove_file},
+    fs::{create_dir_all, read_dir, remove_file},
     hash::{Hash, Hasher},
     path::{Path, PathBuf},
     process::Command,
@@ -236,6 +237,33 @@ impl Fairing for HitsterDownloader {
         }
 
         println!("Download finished.");
+
+        println!("Cleaning up unused hits...");
+
+        let paths = read_dir(Hit::download_dir()).unwrap();
+        let mut files: HashSet<String> = HashSet::new();
+
+        for p in paths.flatten() {
+            files.insert(p.file_name().into_string().unwrap());
+        }
+
+        for hit in get_all().iter() {
+            files.remove(&format!(
+                "{}_{}.mp3",
+                hit.yt_id().unwrap(),
+                hit.playback_offset
+            ));
+        }
+
+        for file in files.into_iter() {
+            let _ = remove_file(format!(
+                "{}/{}",
+                Hit::download_dir().as_str(),
+                file.as_str()
+            ));
+        }
+
+        println!("Finished cleanup.");
 
         Ok(rocket)
     }
