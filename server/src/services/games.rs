@@ -2,8 +2,8 @@ use crate::{
     games::{Game, GameMode, GameSettingsPayload, GameState, Player, PlayerState, Slot},
     hits::Hit,
     responses::{
-        ConfirmSlotError, CurrentHitError, GuessSlotError, JoinGameError, LeaveGameError,
-        SkipHitError, StartGameError, StopGameError, UpdateGameError,
+        ConfirmSlotError, GuessSlotError, HitError, JoinGameError, LeaveGameError, SkipHitError,
+        StartGameError, StopGameError, UpdateGameError,
     },
     services::{HitService, ServiceHandle},
     users::User,
@@ -13,11 +13,11 @@ use rand::{
     distributions::{Alphanumeric, DistString},
     prelude::{thread_rng, SliceRandom},
 };
-use rocket::serde::uuid::Uuid;
 use std::{
     collections::{HashMap, HashSet, VecDeque},
     sync::Mutex,
 };
+use uuid::Uuid;
 
 pub struct GameServiceData {
     games: HashMap<String, Game>,
@@ -365,23 +365,35 @@ impl GameService {
         }
     }
 
-    pub fn get_current_hit(&self, game_id: &str) -> Result<&'static Hit, CurrentHitError> {
+    pub fn get_hit(&self, game_id: &str, hit_id: Option<Uuid>) -> Result<&'static Hit, HitError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if game.state == GameState::Open {
-                Err(CurrentHitError {
+                Err(HitError {
                     message: "game currently isn't running".into(),
                     http_status_code: 409,
                 })
             } else {
-                game.hits_remaining.front().copied().ok_or(CurrentHitError {
-                    message: "no hit found".into(),
-                    http_status_code: 500,
-                })
+                if let Some(hit_id) = hit_id {
+                    game.players
+                        .iter()
+                        .map(|p| &p.hits)
+                        .flat_map(|it| it.clone())
+                        .find(|h| h.id == hit_id)
+                        .ok_or(HitError {
+                            message: "the hit isn't currently revealed".into(),
+                            http_status_code: 404,
+                        })
+                } else {
+                    game.hits_remaining.front().copied().ok_or(HitError {
+                        message: "no hit found".into(),
+                        http_status_code: 500,
+                    })
+                }
             }
         } else {
-            Err(CurrentHitError {
+            Err(HitError {
                 message: "game not found".into(),
                 http_status_code: 404,
             })

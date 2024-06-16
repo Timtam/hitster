@@ -2,7 +2,6 @@ import EventManager from "@lomray/event-manager"
 import deepcopy from "deepcopy"
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
-import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
 import { Helmet } from "react-helmet-async"
 import { Trans, useTranslation } from "react-i18next"
@@ -24,7 +23,8 @@ import { Events, GameEndedData, GameStartedData, ScoredData } from "../events"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
-import HitPlayer from "./game/hit-player"
+import { HitPlayer } from "./game/hit-player"
+import HitsView from "./game/hits-view"
 import GameSettings from "./game/settings"
 import SlotSelector from "./game/slot-selector"
 import { isSlotCorrect } from "./game/utils"
@@ -336,64 +336,16 @@ export function Game() {
                                         {t("hit", { count: 2 }) +
                                             `: ${p.hits.length}`}
                                     </Button>
-                                    <Modal
+                                    <HitsView
                                         show={showHits[i]}
                                         onHide={() =>
                                             setShowHits((h) => {
                                                 h[i] = false
                                             })
                                         }
-                                    >
-                                        <Modal.Header
-                                            closeButton
-                                            closeLabel={t("close")}
-                                        >
-                                            <Modal.Title>
-                                                {t("hitsForPlayer", {
-                                                    player: p.name,
-                                                })}
-                                            </Modal.Title>
-                                        </Modal.Header>
-                                        <Modal.Body>
-                                            <Table responsive>
-                                                <thead>
-                                                    <tr>
-                                                        <th>{t("artist")}</th>
-                                                        <th>{t("title")}</th>
-                                                        <th>{t("year")}</th>
-                                                        <th>
-                                                            {t("pack", {
-                                                                count: 1,
-                                                            })}
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {p.hits
-                                                        .toSorted(
-                                                            (a, b) =>
-                                                                a.year - b.year,
-                                                        )
-                                                        .map((h) => (
-                                                            <tr>
-                                                                <td>
-                                                                    {h.artist}
-                                                                </td>
-                                                                <td>
-                                                                    {h.title}
-                                                                </td>
-                                                                <td>
-                                                                    {h.year}
-                                                                </td>
-                                                                <td>
-                                                                    {h.pack}
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                </tbody>
-                                            </Table>
-                                        </Modal.Body>
-                                    </Modal>
+                                        player={p}
+                                        gameId={game.id}
+                                    />
                                 </td>
                                 {user !== null &&
                                 game.players.find((p) => p.id === user.id)

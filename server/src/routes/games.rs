@@ -4,9 +4,8 @@ use crate::{
         GameState, SlotPayload,
     },
     responses::{
-        ConfirmSlotError, CurrentHitError, GamesResponse, GuessSlotError, JoinGameError,
-        LeaveGameError, MessageResponse, SkipHitError, StartGameError, StopGameError,
-        UpdateGameError,
+        ConfirmSlotError, GamesResponse, GuessSlotError, HitError, JoinGameError, LeaveGameError,
+        MessageResponse, SkipHitError, StartGameError, StopGameError, UpdateGameError,
     },
     services::ServiceStore,
     users::User,
@@ -267,14 +266,21 @@ pub async fn events(
 }
 
 #[openapi(tag = "Games")]
-#[get("/games/<game_id>/hit")]
-pub async fn hit(game_id: &str, serv: &State<ServiceStore>) -> Result<NamedFile, CurrentHitError> {
-    let hit = serv.game_service().lock().get_current_hit(game_id);
+#[get("/games/<game_id>/hit/<hit_id..>")]
+pub async fn hit(
+    game_id: &str,
+    hit_id: PathBuf,
+    serv: &State<ServiceStore>,
+) -> Result<NamedFile, HitError> {
+    let hit = serv.game_service().lock().get_hit(
+        game_id,
+        hit_id.to_str().and_then(|h| Uuid::parse_str(h).ok()),
+    );
 
     if hit.is_ok() {
         return NamedFile::open(&hit.unwrap().file().unwrap())
             .await
-            .or(Err(CurrentHitError {
+            .or(Err(HitError {
                 message: "hit file couldn't be found".into(),
                 http_status_code: 404,
             }));

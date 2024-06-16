@@ -1,6 +1,14 @@
-use std::{env, fs, path::Path};
+use std::{
+    collections::HashMap,
+    env, fs,
+    hash::{DefaultHasher, Hash, Hasher},
+    path::Path,
+};
+use uuid::Uuid;
 
 fn main() {
+    let mut hasher: DefaultHasher;
+    let mut ids: HashMap<u64, Uuid> = HashMap::new();
     let mut file_content: String = String::from("");
     let out_dir = env::var_os("OUT_DIR").unwrap();
     let dest_path = Path::new(&out_dir).join("hits.rs");
@@ -12,6 +20,11 @@ fn main() {
 
     for result in csv_reader.records() {
         let record = result.unwrap();
+        hasher = DefaultHasher::new();
+        record.get(0).unwrap().hash(&mut hasher);
+        record.get(2).unwrap().hash(&mut hasher);
+        record.get(1).unwrap().hash(&mut hasher);
+        let id = *ids.entry(hasher.finish()).or_insert_with(|| Uuid::new_v4());
 
         if record.get(5).unwrap() != "" {
             file_content += format!(
@@ -23,6 +36,7 @@ fn main() {
             playback_offset: {},
             pack: \"{}\",
             belongs_to: \"{}\",
+            id: Uuid::parse_str(\"{}\").unwrap(),
         }},",
                 record.get(0).unwrap(),
                 record.get(2).unwrap(),
@@ -31,6 +45,7 @@ fn main() {
                 record.get(6).unwrap_or("0"),
                 record.get(3).unwrap(),
                 record.get(4).unwrap(),
+                id.to_string(),
             )
             .as_str();
         }

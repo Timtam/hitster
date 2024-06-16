@@ -20,6 +20,7 @@ use std::{
     thread,
     time::Duration,
 };
+use uuid::Uuid;
 
 include!(concat!(env!("OUT_DIR"), "/hits.rs"));
 
@@ -34,6 +35,7 @@ pub struct Hit {
     pub yt_url: &'static str,
     #[serde(skip)]
     pub playback_offset: u16,
+    pub id: Uuid,
 }
 
 impl Hit {

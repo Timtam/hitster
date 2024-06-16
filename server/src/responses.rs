@@ -286,13 +286,13 @@ impl<'r> Responder<'r, 'static> for StopGameError {
 }
 
 #[derive(Debug, Serialize, JsonSchema)]
-pub struct CurrentHitError {
+pub struct HitError {
     pub message: String,
     #[serde(skip)]
     pub http_status_code: u16,
 }
 
-impl OpenApiResponderInner for CurrentHitError {
+impl OpenApiResponderInner for HitError {
     fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
         let mut responses = Map::new();
         responses.insert(
@@ -300,7 +300,7 @@ impl OpenApiResponderInner for CurrentHitError {
             RefOr::Object(OpenApiResponse {
                 description: "\
                 # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
-                A game with that ID doesn't exist or hit file couldn't be found.\
+                A game with that ID doesn't exist, hit or file couldn't be found.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -335,15 +335,15 @@ impl OpenApiResponderInner for CurrentHitError {
     }
 }
 
-impl std::fmt::Display for CurrentHitError {
+impl std::fmt::Display for HitError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(formatter, "Current hit error `{}`", self.message,)
     }
 }
 
-impl std::error::Error for CurrentHitError {}
+impl std::error::Error for HitError {}
 
-impl<'r> Responder<'r, 'static> for CurrentHitError {
+impl<'r> Responder<'r, 'static> for HitError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         // Convert object to json
         let body = serde_json::to_string(&self).unwrap();
