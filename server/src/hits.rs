@@ -24,7 +24,7 @@ use uuid::Uuid;
 
 include!(concat!(env!("OUT_DIR"), "/hits.rs"));
 
-#[derive(Clone, Eq, Debug, Serialize, JsonSchema)]
+#[derive(Clone, Eq, Debug, Serialize, JsonSchema, PartialEq)]
 pub struct Hit {
     pub artist: &'static str,
     pub title: &'static str,
@@ -63,17 +63,9 @@ impl Hit {
     }
 }
 
-impl PartialEq for Hit {
-    fn eq(&self, other: &Self) -> bool {
-        self.artist == other.artist && self.title == other.title && self.year == other.year
-    }
-}
-
 impl Hash for Hit {
     fn hash<H: Hasher>(&self, state: &mut H) {
-        self.artist.hash(state);
-        self.title.hash(state);
-        self.year.hash(state);
+        self.yt_id().unwrap().hash(state);
     }
 }
 
