@@ -3,6 +3,7 @@ FROM node:20 AS client_build_image
 WORKDIR /app
 
 COPY ./client /app
+COPY ./server/Cargo.toml /app/Cargo.toml
 
 RUN npm install && npm run build
 

@@ -120,6 +120,12 @@
         "publicAndPrivateGamesFeature": "play a public game to play with everyone who's currently available, or play a private game for just you and your friends",
         "localGamesFeature": "play a local game with friends and family, just like the card game, but you don't need to have the cards around",
         "noRegistrationFeature": "no registration necessary, just create a game and play",
-        "howToPlay": "How to play the game"
+        "cardCorrectionFeature": "the original card game contains some tiny mistakes on the cards, but we fix them immediately",
+        "howToPlay": "How to play the game",
+        "allRightsReserved": "All rights reserved",
+        "sourceCodeAvailableAt": "Source Code available at <0>GitHub</0>",
+        "version": "Client Version: {{clientVersion}} | Server Version: {{serverVersion}}",
+        "ownedBy": "This unofficial version is based on the original Hitster card game which is owned by <0>Koninklijke Jumbo B.V.</0>.",
+        "issue": "For bug reports and general feedback please open a <0>GitHub issue</0>."
     }
 }

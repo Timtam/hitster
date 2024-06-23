@@ -120,6 +120,12 @@
         "publicAndPrivateGamesFeature": "spiele ein öffentliches Spiel mit jedem verfügbaren Spieler, oder ein privates Spiel mit deinen Freunden",
         "localGamesFeature": "spiele ein lokales Spiel mit Freunden und Familie, genau wie das Kartenspiel, nur ohne Karten",
         "noRegistrationFeature": "keine Registrierung notwendig, einfach ein Spiel erstellen und los geht's",
-        "howToPlay": "Wie wird gespielt?"
+        "cardCorrectionFeature": "das originale Kartenspiel beinhaltet einige kleine Fehler, wir beheben diese sofort",
+        "howToPlay": "Wie wird gespielt?",
+        "allRightsReserved": "Alle Rechte vorbehalten",
+        "sourceCodeAvailableAt": "Quellcode verfügbar auf <0>GitHub</0>",
+        "version": "Client-Version: {{clientVersion}} | Server-Version: {{serverVersion}}",
+        "ownedBy": "Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel, welches <0>Koninklijke Jumbo B.V.</0> gehört.",
+        "issue": "Für Lob, Kritik oder Fehlermeldungen, eröffnen Sie bitte ein <0>Issue auf GitHub</0>."
     }
 }

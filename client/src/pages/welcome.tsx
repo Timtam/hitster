@@ -53,6 +53,7 @@ export function Welcome({
                                         packs: Object.keys(packs).length,
                                     })}
                                 </li>
+                                <li>{t("cardCorrectionFeature")}</li>
                                 <li>{t("accessibilityFeature")}</li>
                             </ul>
                             <h3>{t("howToPlay")}</h3>
