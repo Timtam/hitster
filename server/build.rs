@@ -28,15 +28,16 @@ fn main() {
         hasher = DefaultHasher::new();
 
         if record.get(5).unwrap() != "" {
-            yt_id
+            let my_yt_id = yt_id
                 .captures(record.get(5).unwrap())
                 .map(|caps| caps[7].to_string())
                 .expect(&format!(
                     "no valid link found for {}: {}",
                     record.get(0).unwrap(),
                     record.get(2).unwrap()
-                ))
-                .hash(&mut hasher);
+                ));
+
+            my_yt_id.hash(&mut hasher);
 
             let id = *ids.entry(hasher.finish()).or_insert_with(|| Uuid::new_v4());
 
@@ -45,20 +46,20 @@ fn main() {
             artist: \"{}\",
             title: \"{}\",
             year: {},
-            yt_url: \"{}\",
             playback_offset: {},
             pack: \"{}\",
             belongs_to: \"{}\",
             id: Uuid::parse_str(\"{}\").unwrap(),
+            yt_id: \"{}\",
         }},",
                 record.get(0).unwrap(),
                 record.get(2).unwrap(),
                 record.get(1).unwrap(),
-                record.get(5).unwrap(),
                 record.get(6).unwrap_or("0"),
                 record.get(3).unwrap(),
                 record.get(4).unwrap(),
                 id.to_string(),
+                my_yt_id,
             )
             .as_str();
         }

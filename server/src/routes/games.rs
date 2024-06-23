@@ -278,7 +278,7 @@ pub async fn hit(
     );
 
     if hit.is_ok() {
-        return NamedFile::open(&hit.unwrap().file().unwrap())
+        return NamedFile::open(&hit.unwrap().file())
             .await
             .or(Err(HitError {
                 message: "hit file couldn't be found".into(),
