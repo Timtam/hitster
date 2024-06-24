@@ -242,21 +242,21 @@ export function Game() {
             <p>{t("gameActions")}</p>
             <Button
                 className="me-2"
-                disabled={user === null}
+                disabled={
+                    game.state !== GameState.Open &&
+                    !game.players.some((p) => p.id === user?.id)
+                }
                 onClick={async () => {
                     if (game.players.some((p) => p.id === user?.id))
                         await gameService.leave(game.id)
                     else await gameService.join(game.id)
                 }}
             >
-                {user === null
-                    ? t("joinGameNotLoggedIn")
-                    : game.players.some((p) => p.id === user.id)
-                      ? t("leaveGame")
-                      : t("joinGame")}
+                {game.players.some((p) => p.id === user?.id)
+                    ? t("leaveGame")
+                    : t("joinGame")}
             </Button>
-            {user !== null &&
-            game.players.find((p) => p.id === user.id)?.creator === true ? (
+            {game.players.find((p) => p.id === user?.id)?.creator ? (
                 <>
                     <Button
                         className="me-2"

@@ -48,7 +48,6 @@
         "cannotSubmitGuess": "You cannot submit a guess right now",
         "game_one": "Game",
         "gameActions": "Game actions:",
-        "joinGameNotLoggedIn": "You need to be logged in to participate in a game",
         "leaveGame": "Leave game",
         "joinGame": "Join game",
         "stopGame": "Stop game",

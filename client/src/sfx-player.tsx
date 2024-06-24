@@ -113,7 +113,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
                         sfx: Sfx.youScore,
                     } satisfies PlaySfxData)
                 else if (
-                    e.players.find((p) => p.id === user?.id)?.guess !== null ||
+                    e.players.find((p) => p.id === user?.id)?.guess ||
                     (e.game_mode === GameMode.Local && e.winner === null)
                 )
                     EventManager.publish(Events.playSfx, {
