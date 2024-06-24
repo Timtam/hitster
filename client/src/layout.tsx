@@ -8,7 +8,7 @@ import Row from "react-bootstrap/Row"
 import Spinner from "react-bootstrap/Spinner"
 import { useCookies } from "react-cookie"
 import { Helmet } from "react-helmet-async"
-import { Trans, useTranslation } from "react-i18next"
+import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router-dom"
 import type { Context } from "./context"
 import { User } from "./entities"
@@ -107,59 +107,6 @@ export default function Layout() {
                                     />
                                 </Col>
                             </main>
-                        </Row>
-                        <Row>
-                            <footer>
-                                <Col>
-                                    <p>
-                                        &copy;{" "}
-                                        {new Date().getFullYear() !== 2024
-                                            ? `2024 - ${new Date().getFullYear()}`
-                                            : "2024"}{" "}
-                                        Toni Barth &amp; Friends.{" "}
-                                        {t("allRightsReserved")}.
-                                    </p>
-                                    <p>
-                                        <Trans
-                                            i18nKey="sourceCodeAvailableAt"
-                                            components={[
-                                                <a
-                                                    href="https://github.com/Timtam/hitster"
-                                                    target="_blank"
-                                                />,
-                                            ]}
-                                        />
-                                    </p>
-                                    <p>
-                                        {t("version", {
-                                            clientVersion: "__CLIENT_VERSION__",
-                                            serverVersion: "__SERVER_VERSION__",
-                                        })}
-                                    </p>
-                                    <p>
-                                        <Trans
-                                            i18nKey="ownedBy"
-                                            components={[
-                                                <a
-                                                    href="https://hitstergame.com/"
-                                                    target="_blank"
-                                                />,
-                                            ]}
-                                        />
-                                    </p>
-                                    <p>
-                                        <Trans
-                                            i18nKey="issue"
-                                            components={[
-                                                <a
-                                                    href="https://github.com/Timtam/hitster/issues/new"
-                                                    target="_blank"
-                                                />,
-                                            ]}
-                                        />
-                                    </p>
-                                </Col>
-                            </footer>
                         </Row>
                     </>
                 )}

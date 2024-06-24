@@ -30,7 +30,7 @@ export default defineConfig({
         splitVendorChunkPlugin(),
         replace([
             {
-                filter: "src/layout.tsx",
+                filter: "src/navigation.tsx",
                 replace: [
                     {
                         from: /__CLIENT_VERSION__/g,
