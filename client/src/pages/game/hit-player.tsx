@@ -1,7 +1,13 @@
 import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { Howl } from "howler"
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react"
+import {
+    forwardRef,
+    useEffect,
+    useImperativeHandle,
+    useRef,
+    useState,
+} from "react"
 import Button from "react-bootstrap/Button"
 import { useTranslation } from "react-i18next"
 import { Events, Sfx } from "../../events"
@@ -23,20 +29,18 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
         { src, duration, onPlay, autoplay }: HitPlayerProps,
         ref,
     ) {
-        let [player, setPlayer] = useState<Howl | undefined>(undefined)
+        let player = useRef<Howl | null>(null)
         let [playing, setPlaying] = useState(false)
-        let [timer, setTimer] = useState<
-            ReturnType<typeof setTimeout> | undefined
-        >(undefined)
+        let timer = useRef<ReturnType<typeof setTimeout> | null>(null)
         let { t } = useTranslation()
         let [volume] = useLocalStorage("musicVolume", "1.0")
         let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
 
         const play = () => {
-            if (timer !== undefined) {
-                clearTimeout(timer)
+            if (timer.current) {
+                clearTimeout(timer.current)
             }
-            if (player !== undefined) player.stop()
+            player.current?.stop()
             let plr = new Howl({
                 src: [src],
                 format: "audio/mpeg",
@@ -46,7 +50,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             plr.once("end", () => {
                 setPlaying(false)
             })
-            setPlayer(plr)
+            player.current = plr
             if (parseFloat(sfxVolume) > 0) {
                 setTimeout(() => plr.play(), 250)
                 EventManager.publish(Events.playSfx, { sfx: Sfx.playHit })
@@ -54,11 +58,9 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                 plr.play()
             }
             if (duration > 0)
-                setTimer(
-                    setTimeout(() => {
-                        setPlaying(false)
-                    }, duration * 1000),
-                )
+                timer.current = setTimeout(() => {
+                    setPlaying(false)
+                }, duration * 1000)
             if (onPlay !== undefined) onPlay()
         }
 
@@ -91,25 +93,36 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             if (playing === true) {
                 play()
             } else {
-                if (timer !== undefined) {
-                    clearTimeout(timer)
-                    setTimer(undefined)
+                if (timer.current) {
+                    clearTimeout(timer.current)
+                    timer.current = null
                 }
-                player?.pause()
+                player.current?.pause()
                 if (
                     src !== "" &&
                     parseFloat(sfxVolume) > 0 &&
-                    player !== undefined
+                    player.current !== null
                 ) {
                     EventManager.publish(Events.playSfx, { sfx: Sfx.stopHit })
                 }
-                setPlayer(undefined)
+                player.current = null
             }
         }, [src, playing])
 
         useEffect(() => {
-            if (player !== undefined) player.volume(parseFloat(volume))
+            player.current?.volume(parseFloat(volume))
         }, [volume])
+
+        useEffect(() => {
+            return () => {
+                if (timer.current) {
+                    clearTimeout(timer.current)
+                    timer.current = null
+                }
+                player.current?.pause()
+                player.current = null
+            }
+        }, [])
 
         return (
             <>
