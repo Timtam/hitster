@@ -147,10 +147,11 @@ export default ({
                                         </Form.Group>
                                         <p>{t("gameSettingsRememberHits")}</p>
                                         <Form.Group className="mb-2">
-                                            <Form.Label>
+                                            <Form.Label htmlFor="checkbox-remember-hits">
                                                 {t("rememberHits")}
                                             </Form.Label>
                                             <Form.Check
+                                                id="checkbox-remember-hits"
                                                 type="checkbox"
                                                 placeholder={t("rememberHits")}
                                                 checked={rememberHits}

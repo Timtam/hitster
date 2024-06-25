@@ -138,6 +138,7 @@ export function Game() {
             setGame((g) => {
                 g.players = ge.players as Player[]
             })
+            EventManager.publish(Events.joinedGame)
         })
 
         eventSource.addEventListener("leave", (e) => {
@@ -147,6 +148,7 @@ export function Game() {
                     g.players = ge.players as Player[]
                 })
 
+            EventManager.publish(Events.leftGame)
             if (
                 ge.players === undefined ||
                 ge.players.some((p) => p.id === user?.id) === false

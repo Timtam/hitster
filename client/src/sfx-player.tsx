@@ -1,7 +1,7 @@
 import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { Howl } from "howler"
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { GameMode, User } from "./entities"
 import {
     Events,
@@ -49,6 +49,14 @@ const getSfx = (sfx: Sfx): Howl => {
             url = new URL("../sfx/you_win.mp3", import.meta.url).href
             break
         }
+        case Sfx.joinGame: {
+            url = new URL("../sfx/join_game.mp3", import.meta.url).href
+            break
+        }
+        case Sfx.leaveGame: {
+            url = new URL("../sfx/leave_game.mp3", import.meta.url).href
+            break
+        }
     }
     return new Howl({
         src: [url],
@@ -59,15 +67,15 @@ const getSfx = (sfx: Sfx): Howl => {
 
 export default function SfxPlayer({ user }: { user: User | null }) {
     let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
-    let sfx: Map<Sfx, Howl> = new Map()
+    let sfx = useRef<Map<Sfx, Howl>>(new Map())
 
     useEffect(() => {
         let unsubscribe = EventManager.subscribe(
             Events.playSfx,
             (e: PlaySfxData) => {
                 if (parseFloat(sfxVolume) > 0) {
-                    let s = sfx.get(e.sfx) ?? getSfx(e.sfx)
-                    sfx.set(e.sfx, s)
+                    let s = sfx.current.get(e.sfx) ?? getSfx(e.sfx)
+                    sfx.current.set(e.sfx, s)
 
                     s.volume(parseFloat(sfxVolume))
                     s.once("end", () => {
@@ -143,10 +151,30 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
+        let unsubscribeJoinedGame = EventManager.subscribe(
+            Events.joinedGame,
+            () => {
+                EventManager.publish(Events.playSfx, {
+                    sfx: Sfx.joinGame,
+                } satisfies PlaySfxData)
+            },
+        )
+
+        let unsubscribeLeftGame = EventManager.subscribe(
+            Events.leftGame,
+            () => {
+                EventManager.publish(Events.playSfx, {
+                    sfx: Sfx.leaveGame,
+                } satisfies PlaySfxData)
+            },
+        )
+
         return () => {
             unsubscribeGuessed()
             unsubscribeScored()
             unsubscribeGameEnded()
+            unsubscribeJoinedGame()
+            unsubscribeLeftGame()
         }
     }, [user])
 

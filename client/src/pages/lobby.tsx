@@ -1,3 +1,4 @@
+import EventManager from "@lomray/event-manager"
 import { useMemo } from "react"
 import Dropdown from "react-bootstrap/Dropdown"
 import Table from "react-bootstrap/Table"
@@ -6,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router-dom"
 import { useContext } from "../context"
 import { Game, GameMode, GameState } from "../entities"
+import { Events } from "../events"
 import { useRevalidateOnInterval } from "../hooks"
 import GameService from "../services/games.service"
 
@@ -25,6 +27,7 @@ export function Lobby() {
 
     const createGame = async (mode: GameMode) => {
         let game = await gameService.create(mode)
+        EventManager.publish(Events.joinedGame)
         navigate("/game/" + game.id)
     }
 

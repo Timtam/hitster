@@ -1,6 +1,8 @@
 import { Game, GameMode, Player, Slot } from "./entities"
 
 export enum Sfx {
+    joinGame,
+    leaveGame,
     noInterception,
     payToken,
     playHit,
@@ -43,6 +45,8 @@ export enum Events {
     gameEnded = "Game ended",
     gameStarted = "Game started",
     guessed = "Guessed",
+    joinedGame = "Joined",
+    leftGame = "Left",
     playSfx = "Play sfx",
     scored = "Scored",
     sfxEnded = "Sfx ended",
