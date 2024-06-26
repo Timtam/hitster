@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row"
 import Spinner from "react-bootstrap/Spinner"
 import ToggleButton from "react-bootstrap/ToggleButton"
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
+import { BsPrefixRefForwardingComponent } from "react-bootstrap/helpers"
 import { useTranslation } from "react-i18next"
 import slugify from "slugify"
 import type { Game } from "../../entities"
@@ -32,6 +33,9 @@ export default ({
     )
     let [packs, setPacks] = useState<string[]>([])
     let [rememberHits, setRememberHits] = useState(true)
+    let selectAllPacks = useRef<
+        (HTMLInputElement & BsPrefixRefForwardingComponent<"input", any>) | null
+    >(null)
 
     useEffect(() => {
         setGoal(game.goal)
@@ -53,6 +57,23 @@ export default ({
             setAvailablePacks({})
         }
     }, [show])
+
+    useEffect(() => {
+        if (selectAllPacks.current === null) return
+        if (
+            packs.length > 0 &&
+            packs.length !== Object.keys(availablePacks).length
+        ) {
+            selectAllPacks.current.checked = false
+            selectAllPacks.current.indeterminate = true
+        } else if (packs.length === 0) {
+            selectAllPacks.current.checked = false
+            selectAllPacks.current.indeterminate = false
+        } else if (packs.length === Object.keys(availablePacks).length) {
+            selectAllPacks.current.checked = true
+            selectAllPacks.current.indeterminate = false
+        }
+    }, [packs, availablePacks])
 
     return (
         <Modal show={show} onHide={onHide}>
@@ -176,6 +197,27 @@ export default ({
                             </Row>
                             <Row className="text-center">
                                 <Col className="mx-auto">
+                                    <Form.Group className="mb-2">
+                                        <Form.Label htmlFor="checkbox-select-all-packs">
+                                            {t("selectAll")}
+                                        </Form.Label>
+                                        <Form.Check
+                                            ref={selectAllPacks}
+                                            id="checkbox-select-all-packs"
+                                            type="checkbox"
+                                            placeholder={t("selectAll")}
+                                            onChange={(e) => {
+                                                if (e.currentTarget.checked)
+                                                    setPacks(
+                                                        Object.keys(
+                                                            availablePacks,
+                                                        ),
+                                                    )
+                                                else setPacks([])
+                                            }}
+                                        />
+                                    </Form.Group>
+                                    <hr />
                                     <ToggleButtonGroup
                                         vertical
                                         type="checkbox"

@@ -126,6 +126,7 @@
         "version": "Client-Version: {{clientVersion}} | Server-Version: {{serverVersion}}",
         "ownedBy": "Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel, welches <0>Koninklijke Jumbo B.V.</0> gehört.",
         "issue": "Für Lob, Kritik oder Fehlermeldungen, eröffnen Sie bitte ein <0>Issue auf GitHub</0>.",
-        "mainMenu": "Hauptmenü"
+        "mainMenu": "Hauptmenü",
+        "selectAll": "Alles auswählen"
     }
 }
