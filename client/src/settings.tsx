@@ -91,7 +91,8 @@ export default function Settings({
                                 <ToggleButton
                                     className="me-2"
                                     value={langcode}
-                                    id={langcode}
+                                    id={`lang-${langcode}`}
+                                    key={`lang-${langcode}`}
                                 >
                                     {displayName}
                                 </ToggleButton>

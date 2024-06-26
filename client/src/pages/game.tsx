@@ -317,7 +317,7 @@ export function Game() {
                 <tbody>
                     {game.players.map((p, i) => {
                         return (
-                            <tr>
+                            <tr key={`player-${p.id}`}>
                                 <td>
                                     {p.name +
                                         (p.creator === true

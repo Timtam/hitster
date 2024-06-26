@@ -8,6 +8,7 @@ import Spinner from "react-bootstrap/Spinner"
 import ToggleButton from "react-bootstrap/ToggleButton"
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
 import { useTranslation } from "react-i18next"
+import slugify from "slugify"
 import type { Game } from "../../entities"
 import { GameSettings } from "../../entities"
 import GameService from "../../services/games.service"
@@ -187,7 +188,8 @@ export default ({
                                                 <ToggleButton
                                                     className="me-2 mb-2"
                                                     value={p}
-                                                    id={`pack-${p}`}
+                                                    id={`pack-${slugify(p)}`}
+                                                    key={`pack-${slugify(p)}`}
                                                 >
                                                     {`${p} (${availablePacks[p]} ${t("hit", { count: 2 })})`}
                                                 </ToggleButton>

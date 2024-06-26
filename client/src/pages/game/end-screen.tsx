@@ -42,7 +42,7 @@ export default ({
                     </thead>
                     <tbody>
                         {game.players.map((p) => (
-                            <tr>
+                            <tr key={`player-${p.id}`}>
                                 <td>{p.name}</td>
                                 <td>{p.tokens}</td>
                                 <td>{p.hits.length}</td>

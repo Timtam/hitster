@@ -179,7 +179,8 @@ export default ({ game }: { game: Game }) => {
                             >
                                 <ToggleButton
                                     className="me-2 mb-2 border-0"
-                                    id="0"
+                                    id="slot-0"
+                                    key="slot-0"
                                     value="0"
                                     type="radio"
                                 >
@@ -220,8 +221,9 @@ export default ({ game }: { game: Game }) => {
                                 return (
                                     <ToggleButton
                                         className="me-2 mb-2"
-                                        id={slot.id.toString()}
                                         value={slot.id.toString()}
+                                        id={`slot-${slot.id.toString()}`}
+                                        key={`slot-${slot.id.toString()}`}
                                         disabled={
                                             (actionRequired() !==
                                                 PlayerState.Guessing &&

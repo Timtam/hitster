@@ -51,7 +51,7 @@ export default ({
                         {player.hits
                             .toSorted((a, b) => a.year - b.year)
                             .map((h, i) => (
-                                <tr>
+                                <tr key={`hit-${h.id}`}>
                                     <td>{h.artist}</td>
                                     <td>{h.title}</td>
                                     <td>{h.year}</td>
