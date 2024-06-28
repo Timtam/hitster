@@ -1,4 +1,4 @@
-import { Game, GameMode, Player, Slot } from "./entities"
+import { Game, GameMode, Hit, Player, Slot } from "./entities"
 
 export enum Sfx {
     joinGame,
@@ -41,13 +41,33 @@ export interface ScoredData {
     game_mode: GameMode
 }
 
+export interface TtsData {
+    text: string
+    interrupt?: boolean
+}
+
+export interface JoinedGameData {
+    player: Player | null
+}
+
+export interface LeftGameData {
+    player: Player | null
+}
+
+export interface HitRevealedData {
+    hit: Hit
+    player: Player | null
+}
+
 export enum Events {
     gameEnded = "Game ended",
     gameStarted = "Game started",
     guessed = "Guessed",
+    hitRevealed = "Hit revealed",
     joinedGame = "Joined",
     leftGame = "Left",
     playSfx = "Play sfx",
     scored = "Scored",
     sfxEnded = "Sfx ended",
+    tts = "TTS",
 }

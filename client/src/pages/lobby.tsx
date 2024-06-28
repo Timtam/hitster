@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router-dom"
 import { useContext } from "../context"
 import { Game, GameMode, GameState } from "../entities"
-import { Events } from "../events"
+import { Events, JoinedGameData } from "../events"
 import { useRevalidateOnInterval } from "../hooks"
 import GameService from "../services/games.service"
 
@@ -27,7 +27,9 @@ export function Lobby() {
 
     const createGame = async (mode: GameMode) => {
         let game = await gameService.create(mode)
-        EventManager.publish(Events.joinedGame)
+        EventManager.publish(Events.joinedGame, {
+            player: null,
+        } satisfies JoinedGameData)
         navigate("/game/" + game.id)
     }
 
@@ -39,9 +41,7 @@ export function Lobby() {
             <h2>{t("gameLobby")}</h2>
             <Dropdown>
                 <Dropdown.Toggle variant="success" disabled={user === null}>
-                    {user === null
-                        ? t("createNewGameNotLoggedIn")
-                        : t("createNewGame")}
+                    {t("createNewGame")}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     <Dropdown.Item onClick={() => createGame(GameMode.Public)}>

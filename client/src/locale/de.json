@@ -14,7 +14,6 @@
         "password": "Passwort",
         "registrationSuccessful": "Du wurdest erfolgreich registriert und angemeldet.",
         "repeatPassword": "Passwort wiederholen",
-        "createNewGameNotLoggedIn": "Du musst angemeldet sein, um ein neues Spiel erstellen zu können",
         "createNewGame": "Spiel erstellen",
         "gameId": "Spiel ID",
         "player_one": "Spieler",
@@ -69,8 +68,9 @@
         "hitUnknown": "Der Hit ist derzeit unbekannt, du musst wohl warten, bis er aufgedeckt wird.",
         "hitRevealed": "<0>{{player}}</0> hat Recht! Das ist <1>{{title}}</1> von <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem <4>{{pack}}</4> Pack. Du kannst dir den Hit jetzt in voller Länge anhören.",
         "hitRevealedBelonging": "<0>{{player}}</0> hat Recht! Das ist <1>{{title}}</1> von <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus <4>{{belongs_to}}</4> und stammt aus dem <5>{{pack}}</5> Pack. Du kannst dir den Hit jetzt in voller Länge anhören.",
+        "hitRevealedShort": "{{player}} hat Recht! Das ist {{title}} von {{artist}} aus dem Jahr {{year}}. Der Hit stammt aus dem {{pack}} Pack.",
+        "hitRevealedBelongingShort": "{{player}} hat Recht! Das ist {{title}} von {{artist}} aus dem Jahr {{year}}. Der Hit ist bekannt aus {{belongs_to}} und stammt aus dem {{pack}} Pack.",
         "skipHit": "Überspringe diesen Hit, indem du einen Chip bezahlst",
-        "skipHitNotLoggedIn": "Du bist nicht angemeldet und kannst keinen Hit überspringen",
         "skipHitNotGuessing": "Nur der Zugspieler kann einen Hit überspringen",
         "skipHitNoToken": "Du musst einen Chip bezahlen können, um einen Hit zu überspringen",
         "cannotSkipHit": "Du kannst derzeit keinen Hit überspringen",
@@ -127,6 +127,10 @@
         "ownedBy": "Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel, welches <0>Koninklijke Jumbo B.V.</0> gehört.",
         "issue": "Für Lob, Kritik oder Fehlermeldungen, eröffnen Sie bitte ein <0>Issue auf GitHub</0>.",
         "mainMenu": "Hauptmenü",
-        "selectAll": "Alles auswählen"
+        "selectAll": "Alles auswählen",
+        "youJoinedGame": "Du bist dem Spiel beigetreten",
+        "otherJoinedGame": "{{player}} ist dem Spiel beigetreten",
+        "youLeftGame": "Du hast das Spiel verlassen",
+        "otherLeftGame": "{{player}} hat das Spiel verlassen"
     }
 }

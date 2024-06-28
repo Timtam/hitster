@@ -14,7 +14,6 @@
         "password": "Password",
         "registrationSuccessful": "You've been registered and logged in successfully.",
         "repeatPassword": "Repeat password",
-        "createNewGameNotLoggedIn": "You need to be logged in to create a new game",
         "createNewGame": "Create new game",
         "gameId": "Game ID",
         "player_one": "Player",
@@ -69,8 +68,9 @@
         "hitUnknown": "The hit is currently unknown, you'll have to wait for it to be revealed.",
         "hitRevealed": "<0>{{player}}</0> is right! This is <1>{{title}}</1> by <2>{{artist}}</2> from <3>{{year}}</3>. This song belongs to the <4>{{pack}}</4> pack. You can now play it at full length.",
         "hitRevealedBelonging": "<0>{{player}}</0> is right! This is <1>{{title}}</1> by <2>{{artist}}</2> from <3>{{year}}</3>. You might know this song from <4>{{belongs_to}}</4> and it belongs to the <4>{{pack}}</4> pack. You can now play it at full length.",
+        "hitRevealedShort": "{{player}} is right! This is {{title}} by {{artist}} from {{year}}. This song belongs to the {{pack}} pack.",
+        "hitRevealedBelongingShort": "{{player}} is right! This is {{title}} by {{artist}} from {{year}}. You might know this song from {{belongs_to}} and it belongs to the {{pack}} pack.",
         "skipHit": "Skip this hit by paying one token",
-        "skipHitNotLoggedIn": "You are not logged in and cannot skip a hit",
         "skipHitNotGuessing": "Only the guessing player can skip a hit",
         "skipHitNoToken": "You need to pay a token to skip a hit",
         "cannotSkipHit": "You cannot skip a hit right now",
@@ -127,6 +127,10 @@
         "ownedBy": "This unofficial version is based on the original Hitster card game which is owned by <0>Koninklijke Jumbo B.V.</0>.",
         "issue": "For bug reports and general feedback please open a <0>GitHub issue</0>.",
         "mainMenu": "Main menu",
-        "selectAll": "Select all"
+        "selectAll": "Select all",
+        "youJoinedGame": "You joined the game",
+        "otherJoinedGame": "{{player}} joined the game",
+        "youLeftGame": "You left the game",
+        "otherLeftGame": "{{player}} left the game"
     }
 }

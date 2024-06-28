@@ -19,7 +19,15 @@ import {
     Player,
     PlayerState,
 } from "../entities"
-import { Events, GameEndedData, GameStartedData, ScoredData } from "../events"
+import {
+    Events,
+    GameEndedData,
+    GameStartedData,
+    HitRevealedData,
+    JoinedGameData,
+    LeftGameData,
+    ScoredData,
+} from "../events"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
@@ -105,6 +113,15 @@ export function Game() {
                 } satisfies ScoredData)
             }
 
+            if (ge.hit)
+                EventManager.publish(Events.hitRevealed, {
+                    hit: ge.hit,
+                    player: getWinner({
+                        players: ge.players as Player[],
+                        hit: ge.hit,
+                    }),
+                } satisfies HitRevealedData)
+
             setGame((g) => {
                 if (ge.state === GameState.Open) {
                     if (ge.winner !== undefined)
@@ -135,25 +152,40 @@ export function Game() {
 
         eventSource.addEventListener("join", (e) => {
             let ge = GameEvent.parse(JSON.parse(e.data))
+            EventManager.publish(Events.joinedGame, {
+                player: (ge.players as Player[]).filter(
+                    (p) => !game.players.find((p2) => p2.id === p.id),
+                )[0],
+            } satisfies JoinedGameData)
             setGame((g) => {
                 g.players = ge.players as Player[]
             })
-            EventManager.publish(Events.joinedGame)
         })
 
         eventSource.addEventListener("leave", (e) => {
             let ge = GameEvent.parse(JSON.parse(e.data))
-            if (ge.players !== undefined)
+            if (ge.players !== undefined) {
+                EventManager.publish(Events.leftGame, {
+                    player: game.players.filter(
+                        (p) =>
+                            !(ge.players as Player[]).find(
+                                (p2) => p2.id === p.id,
+                            ),
+                    )[0],
+                } satisfies LeftGameData)
                 setGame((g) => {
                     g.players = ge.players as Player[]
                 })
+            }
 
-            EventManager.publish(Events.leftGame)
             if (
                 ge.players === undefined ||
                 ge.players.some((p) => p.id === user?.id) === false
             )
-                navigate("/")
+                EventManager.publish(Events.leftGame, {
+                    player: null,
+                } satisfies LeftGameData)
+            navigate("/")
         })
 
         eventSource.addEventListener("guess", (e) => {
@@ -397,7 +429,7 @@ export function Game() {
                 ""
             )}
             <h2 className="h4">{t("hitHeading")}</h2>
-            <p aria-live="polite">
+            <p>
                 {game.state === GameState.Open ? (
                     t("hitNoGameRunning")
                 ) : game.hit === null ? (
@@ -410,10 +442,7 @@ export function Game() {
                             artist: game.hit?.artist,
                             year: game.hit?.year,
                             pack: game.hit.pack,
-                            player:
-                                game.players.find((p) =>
-                                    isSlotCorrect(game.hit, p.guess),
-                                )?.name ?? t("noone"),
+                            player: titleCase(getWinner()?.name ?? t("noone")),
                         }}
                         components={[<b />, <b />, <b />, <b />, <b />]}
                     />
@@ -452,15 +481,13 @@ export function Game() {
             >
                 {canSkip()
                     ? t("skipHit")
-                    : user === null
-                      ? t("skipHitNotLoggedIn")
-                      : game.players.find((p) => p.id === user.id)?.state ===
-                          PlayerState.Guessing
-                        ? t("skipHitNotGuessing")
-                        : game.players.find((p) => p.id === user.id)?.tokens ===
-                            0
-                          ? t("skipHitNoToken")
-                          : t("cannotSkipHit")}
+                    : game.players.find((p) => p.id === user?.id)?.state ===
+                        PlayerState.Guessing
+                      ? t("skipHitNotGuessing")
+                      : game.players.find((p) => p.id === user?.id)?.tokens ===
+                          0
+                        ? t("skipHitNoToken")
+                        : t("cannotSkipHit")}
             </Button>
             <SlotSelector game={game} />
             {gameEndedState !== null ? (

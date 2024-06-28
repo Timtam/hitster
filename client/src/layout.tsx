@@ -15,6 +15,7 @@ import { User } from "./entities"
 import Navigation from "./navigation"
 import { Welcome } from "./pages/welcome"
 import SfxPlayer from "./sfx-player"
+import SpeechPlayer from "./speech-player"
 
 const updateUserAuth = async () => {
     await fetch("/api/users/auth", {
@@ -105,6 +106,7 @@ export default function Layout() {
                                             } satisfies Context
                                         }
                                     />
+                                    <SpeechPlayer />
                                 </Col>
                             </main>
                         </Row>
