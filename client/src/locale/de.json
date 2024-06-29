@@ -131,6 +131,8 @@
         "youJoinedGame": "Du bist dem Spiel beigetreten",
         "otherJoinedGame": "{{player}} ist dem Spiel beigetreten",
         "youLeftGame": "Du hast das Spiel verlassen",
-        "otherLeftGame": "{{player}} hat das Spiel verlassen"
+        "otherLeftGame": "{{player}} hat das Spiel verlassen",
+        "guessNothing": "{{player}} behauptet nichts Gegenteiliges",
+        "guess": "{{player}} vermutet: {{guess}}"
     }
 }

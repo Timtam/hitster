@@ -23,6 +23,7 @@ import {
     Events,
     GameEndedData,
     GameStartedData,
+    GuessedData,
     HitRevealedData,
     JoinedGameData,
     LeftGameData,
@@ -199,9 +200,8 @@ export function Game() {
 
             if (ge.players !== undefined) {
                 EventManager.publish(Events.guessed, {
-                    player_id: ge.players[0].id,
-                    guess: ge.players[0].guess,
-                })
+                    player: ge.players[0],
+                } satisfies GuessedData)
             }
         })
 

@@ -98,7 +98,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
         let unsubscribeGuessed = EventManager.subscribe(
             Events.guessed,
             (e: GuessedData) => {
-                if (e.guess === null) {
+                if (e.player.guess === null) {
                     EventManager.publish(Events.playSfx, {
                         sfx: Sfx.noInterception,
                     } satisfies PlaySfxData)

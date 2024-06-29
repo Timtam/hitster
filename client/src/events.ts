@@ -1,4 +1,4 @@
-import { Game, GameMode, Hit, Player, Slot } from "./entities"
+import { Game, GameMode, Hit, Player } from "./entities"
 
 export enum Sfx {
     joinGame,
@@ -22,8 +22,7 @@ export interface PlaySfxData extends SfxData {}
 export interface SfxEndedData extends SfxData {}
 
 export interface GuessedData {
-    player_id: string
-    guess: Slot | null
+    player: Player
 }
 
 export interface GameStartedData {

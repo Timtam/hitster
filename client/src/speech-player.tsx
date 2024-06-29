@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
 import {
     Events,
+    GuessedData,
     HitRevealedData,
     JoinedGameData,
     LeftGameData,
@@ -16,22 +17,31 @@ export default function SpeechPlayer() {
     let output = useRef<HTMLParagraphElement | null>(null)
 
     useEffect(() => {
-        let unsubscribeTts = EventManager.subscribe(
+        const unsubscribeTts = EventManager.subscribe(
             Events.tts,
             (e: TtsData) => {
                 if (e.interrupt) setPoliteness("assertive")
                 else setPoliteness("polite")
                 setHidden(false)
                 setTimeout(() => {
-                    if (output.current) output.current.innerHTML = e.text
+                    if (output.current) {
+                        if (
+                            output.current.innerHTML !== "" &&
+                            ((e.interrupt && politeness === "assertive") ||
+                                (!e.interrupt && politeness === "polite"))
+                        )
+                            output.current.innerHTML += "<br />" + e.text
+                        else output.current.innerHTML = e.text
+                    }
                     setTimeout(() => {
                         setHidden(true)
+                        if (output.current) output.current.innerHTML = ""
                     }, 2000)
                 }, 150)
             },
         )
 
-        let unsubscribeJoinedGame = EventManager.subscribe(
+        const unsubscribeJoinedGame = EventManager.subscribe(
             Events.joinedGame,
             (e: JoinedGameData) => {
                 EventManager.publish(Events.tts, {
@@ -42,7 +52,7 @@ export default function SpeechPlayer() {
             },
         )
 
-        let unsubscribeLeftGame = EventManager.subscribe(
+        const unsubscribeLeftGame = EventManager.subscribe(
             Events.leftGame,
             (e: LeftGameData) => {
                 EventManager.publish(Events.tts, {
@@ -53,7 +63,7 @@ export default function SpeechPlayer() {
             },
         )
 
-        let unsubscribeHitRevealed = EventManager.subscribe(
+        const unsubscribeHitRevealed = EventManager.subscribe(
             Events.hitRevealed,
             (e: HitRevealedData) => {
                 EventManager.publish(Events.tts, {
@@ -78,7 +88,37 @@ export default function SpeechPlayer() {
             },
         )
 
+        const unsubscribeGuessed = EventManager.subscribe(
+            Events.guessed,
+            (e: GuessedData) => {
+                if (e.player.guess === null)
+                    EventManager.publish(Events.tts, {
+                        text: t("guessNothing", { player: e.player.name }),
+                    } satisfies TtsData)
+                else
+                    EventManager.publish(Events.tts, {
+                        text: t("guess", {
+                            player: e.player.name,
+                            guess:
+                                e.player.guess.from_year === 0
+                                    ? t("beforeYear", {
+                                          year: e.player.guess.to_year,
+                                      })
+                                    : e.player.guess.to_year === 0
+                                      ? t("afterYear", {
+                                            year: e.player.guess.from_year,
+                                        })
+                                      : t("betweenYears", {
+                                            year1: e.player.guess.from_year,
+                                            year2: e.player.guess.to_year,
+                                        }),
+                        }),
+                    })
+            },
+        )
+
         return () => {
+            unsubscribeGuessed()
             unsubscribeHitRevealed()
             unsubscribeJoinedGame()
             unsubscribeLeftGame()

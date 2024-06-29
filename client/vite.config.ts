@@ -7,7 +7,7 @@ import replace from "vite-plugin-filter-replace"
 import viteTsconfigPaths from "vite-tsconfig-paths"
 import pkg from "./package.json"
 
-let server_version: String = "UNKNOWN"
+let server_version: string = "UNKNOWN"
 
 try {
     server_version = toml.parse(

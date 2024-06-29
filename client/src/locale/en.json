@@ -131,6 +131,8 @@
         "youJoinedGame": "You joined the game",
         "otherJoinedGame": "{{player}} joined the game",
         "youLeftGame": "You left the game",
-        "otherLeftGame": "{{player}} left the game"
+        "otherLeftGame": "{{player}} left the game",
+        "guessNothing": "{{player}} doesn't intercept",
+        "guess": "{{player}} guesses: {{guess}}"
     }
 }
