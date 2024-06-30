@@ -10,34 +10,49 @@ import {
     TtsData,
 } from "./events"
 
+interface SpeechEvent {
+    text: string
+}
+
+const TIMER_DURATION: number = 150
+
 export default function SpeechPlayer() {
     let { t } = useTranslation()
     let [politeness, setPoliteness] = useState<"polite" | "assertive">("polite")
     let [hidden, setHidden] = useState<boolean>(true)
     let output = useRef<HTMLParagraphElement | null>(null)
+    let events = useRef<SpeechEvent[]>([])
+    let timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+    const handleSpeechEvent = () => {
+        if (events.current.length === 0) {
+            if (output.current) output.current.innerHTML = ""
+            setHidden(true)
+            timer.current = null
+            return
+        }
+
+        if (output.current) output.current.innerHTML = events.current[0].text
+        events.current.shift()
+        timer.current = setTimeout(handleSpeechEvent, TIMER_DURATION)
+    }
 
     useEffect(() => {
         const unsubscribeTts = EventManager.subscribe(
             Events.tts,
             (e: TtsData) => {
-                if (e.interrupt) setPoliteness("assertive")
-                else setPoliteness("polite")
-                setHidden(false)
-                setTimeout(() => {
-                    if (output.current) {
-                        if (
-                            output.current.innerHTML !== "" &&
-                            ((e.interrupt && politeness === "assertive") ||
-                                (!e.interrupt && politeness === "polite"))
-                        )
-                            output.current.innerHTML += "<br />" + e.text
-                        else output.current.innerHTML = e.text
-                    }
-                    setTimeout(() => {
-                        setHidden(true)
-                        if (output.current) output.current.innerHTML = ""
-                    }, 2000)
-                }, 150)
+                if (e.interrupt) {
+                    setPoliteness("assertive")
+                    events.current.length = 0
+                } else setPoliteness("polite")
+                events.current.push({ text: e.text } satisfies SpeechEvent)
+                if (timer.current === null) {
+                    setHidden(false)
+                    timer.current = setTimeout(
+                        handleSpeechEvent,
+                        TIMER_DURATION,
+                    )
+                }
             },
         )
 

@@ -87,6 +87,7 @@ export default function Layout() {
                         <Row>
                             <header>
                                 <Col>
+                                    <SpeechPlayer />
                                     <Navigation user={user} />
                                 </Col>
                             </header>
@@ -106,7 +107,6 @@ export default function Layout() {
                                             } satisfies Context
                                         }
                                     />
-                                    <SpeechPlayer />
                                 </Col>
                             </main>
                         </Row>
