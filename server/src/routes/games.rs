@@ -310,44 +310,55 @@ pub fn guess_slot(
         .get(game_id, Some(&user))
         .map(|g| g.state)
         .unwrap_or(GameState::Guessing);
-    serv.game_service()
+    let game = serv
+        .game_service()
         .lock()
-        .guess(game_id, &user, slot.id, player_id)
-        .map(|game| {
-            let _ = queue.send(GameEvent {
-                game_id: game_id.into(),
-                event: "guess".into(),
-                players: game
-                    .players
-                    .iter()
-                    .find(|p| p.id == player_id.unwrap_or(user.id))
-                    .cloned()
-                    .map(|p| vec![p]),
-                ..Default::default()
-            });
+        .guess(game_id, &user, slot.id, player_id);
 
-            if state != game.state {
-                let _ = queue.send(GameEvent {
-                    game_id: game_id.into(),
-                    event: "change_state".into(),
-                    state: Some(game.state),
-                    players: Some(game.players),
-                    hit: Some(game.state).and_then(|s| {
-                        if s == GameState::Confirming {
-                            game.hits_remaining.front().cloned()
-                        } else {
-                            None
-                        }
-                    }),
-                    ..Default::default()
-                });
+    game.map(|mut game| {
+        let _ = queue.send(GameEvent {
+            game_id: game_id.into(),
+            event: "guess".into(),
+            players: game
+                .players
+                .iter()
+                .find(|p| p.id == player_id.unwrap_or(user.id))
+                .cloned()
+                .map(|p| vec![p]),
+            ..Default::default()
+        });
+
+        if state != game.state {
+            let last_scored = game.last_scored.clone();
+            let winner = serv.game_service().lock().get_winner(&game);
+
+            if winner.is_some() {
+                game = serv.game_service().lock().stop(&game.id, None).unwrap();
             }
 
-            Json(MessageResponse {
-                message: "guess submitted successfully".into(),
-                r#type: "success".into(),
-            })
+            let _ = queue.send(GameEvent {
+                game_id: game_id.into(),
+                event: "change_state".into(),
+                state: Some(game.state),
+                players: Some(game.players.clone()),
+                hit: Some(game.state).and_then(|s| {
+                    if s == GameState::Confirming {
+                        game.hits_remaining.front().cloned()
+                    } else {
+                        None
+                    }
+                }),
+                last_scored,
+                winner,
+                ..Default::default()
+            });
+        }
+
+        Json(MessageResponse {
+            message: "guess submitted successfully".into(),
+            r#type: "success".into(),
         })
+    })
 }
 
 #[openapi(tag = "Games")]
@@ -362,13 +373,12 @@ pub fn confirm_slot(
     serv.game_service()
         .lock()
         .confirm(game_id, &user, confirmation.confirm)
-        .map(|(game, winner)| {
+        .map(|game| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(game.state),
                 players: Some(game.players),
-                winner,
                 ..Default::default()
             });
 

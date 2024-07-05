@@ -88,6 +88,7 @@ pub struct Game {
     pub remember_hits: bool,
     #[serde(skip)]
     pub remembered_hits: Vec<&'static Hit>,
+    pub last_scored: Option<Player>,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -164,6 +165,8 @@ pub struct GameEvent {
     pub settings: Option<GameSettingsPayload>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub winner: Option<Player>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub last_scored: Option<Player>,
 }
 
 impl Default for GameEvent {
@@ -176,6 +179,7 @@ impl Default for GameEvent {
             hit: None,
             settings: None,
             winner: None,
+            last_scored: None,
         }
     }
 }

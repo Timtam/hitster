@@ -15,7 +15,6 @@ import {
     GameEvent,
     GameMode,
     GameState,
-    Hit,
     Player,
     PlayerState,
 } from "../entities"
@@ -36,7 +35,6 @@ import { HitPlayer } from "./game/hit-player"
 import HitsView from "./game/hits-view"
 import GameSettings from "./game/settings"
 import SlotSelector from "./game/slot-selector"
-import { isSlotCorrect } from "./game/utils"
 
 export const loader: LoaderFunction = async ({
     params,
@@ -78,20 +76,6 @@ export function Game() {
         )
     }
 
-    const getWinner = (data?: {
-        players: Player[]
-        hit: Hit | null
-    }): Player | null => {
-        let p = data?.players ?? game.players
-        let h = data?.hit ?? game.hit
-        let winner: Player | null = null
-        let winners = (p ?? []).filter((p) => isSlotCorrect(h ?? null, p.guess))
-        if (winners.length == 1) winner = winners[0]
-        else if (winners.length == 2)
-            winner = winners.find((p) => p.turn_player) ?? null
-        return winner
-    }
-
     useEffect(() => {
         let eventSource = new EventSource(`/api/games/${game.id}/events`)
 
@@ -104,11 +88,7 @@ export function Game() {
                 setHitSrc("")
             } else if (ge.state === GameState.Confirming) {
                 EventManager.publish(Events.scored, {
-                    winner:
-                        getWinner({
-                            players: ge?.players ?? [],
-                            hit: ge.hit ?? null,
-                        })?.id ?? null,
+                    winner: ge.last_scored?.id ?? null,
                     players: deepcopy(ge.players ?? []),
                     game_mode: game.mode,
                 } satisfies ScoredData)
@@ -117,10 +97,7 @@ export function Game() {
             if (ge.hit)
                 EventManager.publish(Events.hitRevealed, {
                     hit: ge.hit,
-                    player: getWinner({
-                        players: ge.players as Player[],
-                        hit: ge.hit,
-                    }),
+                    player: ge.last_scored ?? null,
                 } satisfies HitRevealedData)
 
             setGame((g) => {
@@ -144,6 +121,7 @@ export function Game() {
                     } satisfies GameStartedData)
                 }
 
+                g.last_scored = ge.last_scored ?? null
                 g.state = ge.state as GameState
                 g.hit = ge.hit ?? null
 
@@ -442,7 +420,9 @@ export function Game() {
                             artist: game.hit?.artist,
                             year: game.hit?.year,
                             pack: game.hit.pack,
-                            player: titleCase(getWinner()?.name ?? t("noone")),
+                            player: titleCase(
+                                game.last_scored?.name ?? t("noone"),
+                            ),
                         }}
                         components={[<b />, <b />, <b />, <b />, <b />]}
                     />
@@ -455,7 +435,9 @@ export function Game() {
                             year: game.hit?.year,
                             pack: game.hit.pack,
                             belongs_to: game.hit.belongs_to,
-                            player: titleCase(getWinner()?.name ?? t("noone")),
+                            player: titleCase(
+                                game.last_scored?.name ?? t("noone"),
+                            ),
                         }}
                         components={[<b />, <b />, <b />, <b />, <b />, <b />]}
                     />

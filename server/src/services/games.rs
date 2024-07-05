@@ -78,6 +78,7 @@ impl GameService {
             mode,
             remember_hits: true,
             remembered_hits: vec![],
+            last_scored: None,
         };
 
         data.games.insert(id.clone(), game.clone());
@@ -355,6 +356,7 @@ impl GameService {
             }
 
             game.state = GameState::Open;
+            game.last_scored = None;
             game.hits_remaining.clear();
 
             for p in game.players.iter_mut() {
@@ -554,23 +556,73 @@ impl GameService {
                 }
             }
 
-            if game.state == GameState::Intercepting
-                && !game
+            if game.state == GameState::Intercepting {
+                if pos != turn_player_pos && slot_id.is_some() {
+                    game.players.get_mut(pos).unwrap().tokens -= 1;
+                }
+
+                if !game
                     .players
                     .iter()
                     .any(|p| p.state == PlayerState::Intercepting)
-            {
-                let len = game.players.len();
-                game.state = GameState::Confirming;
-                game.hit = game.hits_remaining.front().cloned();
-                if game.mode == GameMode::Local {
-                    let creator_pos = game.players.iter().position(|p| p.creator).unwrap();
-                    game.players.get_mut(creator_pos).unwrap().state = PlayerState::Confirming;
-                } else {
-                    game.players
-                        .get_mut((turn_player_pos + 1) % len)
-                        .unwrap()
-                        .state = PlayerState::Confirming;
+                {
+                    let len = game.players.len();
+
+                    let winners = game
+                        .players
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, p)| {
+                            p.guess
+                                .as_ref()
+                                .map(|s| {
+                                    (s.from_year == 0
+                                        && game.hits_remaining.front().unwrap().year <= s.to_year)
+                                        || (s.to_year == 0
+                                            && game.hits_remaining.front().unwrap().year
+                                                >= s.from_year)
+                                        || (s.from_year
+                                            <= game.hits_remaining.front().unwrap().year
+                                            && game.hits_remaining.front().unwrap().year
+                                                <= s.to_year)
+                                })
+                                .unwrap_or(false)
+                        })
+                        .collect::<Vec<_>>();
+
+                    if let Some(i) = winners.iter().find(|(_, p)| p.turn_player).map(|(i, _)| *i) {
+                        let player = game.players.get_mut(i).unwrap();
+
+                        player
+                            .hits
+                            .push(game.hits_remaining.front().cloned().unwrap());
+                        player.slots = self.get_slots(&player.hits);
+                        game.last_scored = Some(player.clone());
+                    } else if winners.len() == 1 {
+                        let i = winners.first().map(|(i, _)| *i).unwrap();
+                        let player = game.players.get_mut(i).unwrap();
+
+                        player
+                            .hits
+                            .push(game.hits_remaining.front().cloned().unwrap());
+                        player.slots = self.get_slots(&player.hits);
+                        game.last_scored = Some(player.clone());
+                    }
+
+                    game.remembered_hits
+                        .push(game.hits_remaining.front().unwrap());
+
+                    game.state = GameState::Confirming;
+                    game.hit = game.hits_remaining.front().cloned();
+                    if game.mode == GameMode::Local {
+                        let creator_pos = game.players.iter().position(|p| p.creator).unwrap();
+                        game.players.get_mut(creator_pos).unwrap().state = PlayerState::Confirming;
+                    } else {
+                        game.players
+                            .get_mut((turn_player_pos + 1) % len)
+                            .unwrap()
+                            .state = PlayerState::Confirming;
+                    }
                 }
             }
 
@@ -588,13 +640,18 @@ impl GameService {
         game_id: &str,
         user: &User,
         confirm: bool,
-    ) -> Result<(Game, Option<Player>), ConfirmSlotError> {
+    ) -> Result<Game, ConfirmSlotError> {
         let mut data = self.data.lock().unwrap();
 
-        if let Some(mut game) = data.games.get_mut(game_id) {
+        if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
                 return Err(ConfirmSlotError {
                     message: "user is not part of this game".into(),
+                    http_status_code: 409,
+                });
+            } else if self.get_winner(&game).is_some() {
+                return Err(ConfirmSlotError {
+                    message: "the game already has a winner".into(),
                     http_status_code: 409,
                 });
             }
@@ -613,98 +670,46 @@ impl GameService {
                 game.players.get_mut(turn_player_pos).unwrap().tokens += 1;
             }
 
-            let winners = game
-                .players
-                .iter()
-                .enumerate()
-                .filter(|(_, p)| {
-                    p.guess
-                        .as_ref()
-                        .map(|s| {
-                            (s.from_year == 0
-                                && game.hits_remaining.front().unwrap().year <= s.to_year)
-                                || (s.to_year == 0
-                                    && game.hits_remaining.front().unwrap().year >= s.from_year)
-                                || (s.from_year <= game.hits_remaining.front().unwrap().year
-                                    && game.hits_remaining.front().unwrap().year <= s.to_year)
-                        })
-                        .unwrap_or(false)
-                })
-                .collect::<Vec<_>>();
+            game.hits_remaining.pop_front().unwrap();
 
-            if let Some(i) = winners.iter().find(|(_, p)| p.turn_player).map(|(i, _)| *i) {
-                let player = game.players.get_mut(i).unwrap();
-
-                player
-                    .hits
-                    .push(game.hits_remaining.front().cloned().unwrap());
-                player.slots = self.get_slots(&player.hits);
-            } else if winners.len() == 1 {
-                let i = winners.first().map(|(i, _)| *i).unwrap();
-                let player = game.players.get_mut(i).unwrap();
-
-                player
-                    .hits
-                    .push(game.hits_remaining.front().cloned().unwrap());
-                player.slots = self.get_slots(&player.hits);
+            for p in game.players.iter_mut() {
+                p.guess = None;
+                p.state = PlayerState::Waiting;
             }
 
-            game.remembered_hits
-                .push(game.hits_remaining.pop_front().unwrap());
+            game.state = GameState::Guessing;
+            game.last_scored = None;
+            game.players.get_mut(turn_player_pos).unwrap().turn_player = false;
 
-            let winner = game
-                .players
-                .iter()
-                .find(|p| p.hits.len() >= game.goal as usize)
-                .cloned();
+            let len = game.players.len();
 
-            if winner.is_some() {
-                drop(data);
-                let _ = self.stop(game_id, None);
-                data = self.data.lock().unwrap();
-                game = data.games.get_mut(game_id).unwrap();
-            } else {
-                for p in game.players.iter_mut() {
-                    if p.guess.is_some() && !p.turn_player {
-                        p.tokens -= 1;
-                    }
-                    p.guess = None;
-                    p.state = PlayerState::Waiting;
-                }
+            if let Some(p) = game.players.get_mut((turn_player_pos + 1) % len) {
+                p.turn_player = true;
+                p.state = PlayerState::Guessing;
+            }
 
-                game.state = GameState::Guessing;
-                game.players.get_mut(turn_player_pos).unwrap().turn_player = false;
-
-                let len = game.players.len();
-
-                if let Some(p) = game.players.get_mut((turn_player_pos + 1) % len) {
-                    p.turn_player = true;
-                    p.state = PlayerState::Guessing;
-                }
-
-                if game.hits_remaining.is_empty() {
-                    let mut rng = thread_rng();
-                    game.hits_remaining =
-                        filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
-                            .into_iter()
-                            .filter(|h| !game.remembered_hits.contains(h))
-                            .fold(HashSet::<&Hit>::new(), |mut hs, h| {
-                                if let Some(ch) = hs.get(&h) {
-                                    if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
-                                        hs.replace(h);
-                                    }
-                                } else {
-                                    hs.insert(h);
+            if game.hits_remaining.is_empty() {
+                let mut rng = thread_rng();
+                game.hits_remaining =
+                    filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
+                        .into_iter()
+                        .filter(|h| !game.remembered_hits.contains(h))
+                        .fold(HashSet::<&Hit>::new(), |mut hs, h| {
+                            if let Some(ch) = hs.get(&h) {
+                                if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
+                                    hs.replace(h);
                                 }
-                                hs
-                            })
-                            .into_iter()
-                            .collect::<VecDeque<_>>();
-                    game.hits_remaining.make_contiguous().shuffle(&mut rng);
-                }
+                            } else {
+                                hs.insert(h);
+                            }
+                            hs
+                        })
+                        .into_iter()
+                        .collect::<VecDeque<_>>();
+                game.hits_remaining.make_contiguous().shuffle(&mut rng);
             }
 
-            Ok((game.clone(), winner))
+            Ok(game.clone())
         } else {
             Err(ConfirmSlotError {
                 message: "game not found".into(),
@@ -859,6 +864,13 @@ impl GameService {
                 http_status_code: 404,
             })
         }
+    }
+
+    pub fn get_winner(&self, game: &Game) -> Option<Player> {
+        game.players
+            .iter()
+            .find(|p| p.hits.len() >= game.goal as usize)
+            .cloned()
     }
 }
 
