@@ -87,7 +87,7 @@ export default function Layout() {
                         <Row>
                             <header>
                                 <Col>
-                                    <SpeechPlayer />
+                                    <SpeechPlayer user={user} />
                                     <Navigation user={user} />
                                 </Col>
                             </header>

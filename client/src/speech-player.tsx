@@ -1,6 +1,7 @@
 import EventManager from "@lomray/event-manager"
 import { useEffect, useRef, useState } from "react"
 import { useTranslation } from "react-i18next"
+import { User } from "./entities"
 import {
     Events,
     GuessedData,
@@ -16,7 +17,7 @@ interface SpeechEvent {
 
 const TIMER_DURATION: number = 150
 
-export default function SpeechPlayer() {
+export default function SpeechPlayer({ user }: { user: User | null }) {
     let { t } = useTranslation()
     let [politeness, setPoliteness] = useState<"polite" | "assertive">("polite")
     let [hidden, setHidden] = useState<boolean>(true)
@@ -71,9 +72,10 @@ export default function SpeechPlayer() {
             Events.leftGame,
             (e: LeftGameData) => {
                 EventManager.publish(Events.tts, {
-                    text: e.player
-                        ? t("otherLeftGame", { player: e.player.name })
-                        : t("youLeftGame"),
+                    text:
+                        e.player.id !== user?.id
+                            ? t("otherLeftGame", { player: e.player.name })
+                            : t("youLeftGame"),
                 } satisfies TtsData)
             },
         )

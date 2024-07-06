@@ -127,7 +127,7 @@ impl GameService {
         game_id: &str,
         user: &User,
         player: Option<&str>,
-    ) -> Result<(), JoinGameError> {
+    ) -> Result<Player, JoinGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -160,17 +160,21 @@ impl GameService {
                     http_status_code: 409,
                 })
             } else {
+                let plr: Player;
+
                 if let Some(player) = player {
-                    game.players.push(Player {
+                    plr = Player {
                         id: Uuid::new_v4(),
                         name: player.into(),
                         ..Default::default()
-                    });
+                    };
                 } else {
-                    game.players.push(user.into());
+                    plr = user.into();
                 }
 
-                Ok(())
+                game.players.push(plr.clone());
+
+                Ok(plr)
             }
         } else {
             Err(JoinGameError {
@@ -185,7 +189,7 @@ impl GameService {
         game_id: &str,
         user: &User,
         player_id: Option<Uuid>,
-    ) -> Result<(), LeaveGameError> {
+    ) -> Result<Player, LeaveGameError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -236,7 +240,7 @@ impl GameService {
                     game.hits_remaining.pop_front();
                 }
 
-                game.players.remove(pos);
+                let plr = game.players.remove(pos);
 
                 if game.players.iter().filter(|p| !p.r#virtual).count() == 0 {
                     data.games.remove(game_id);
@@ -245,7 +249,7 @@ impl GameService {
                     let _ = self.stop(game_id, None);
                 }
 
-                Ok(())
+                Ok(plr)
             }
         } else {
             Err(LeaveGameError {

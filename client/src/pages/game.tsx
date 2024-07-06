@@ -132,39 +132,28 @@ export function Game() {
         eventSource.addEventListener("join", (e) => {
             let ge = GameEvent.parse(JSON.parse(e.data))
             EventManager.publish(Events.joinedGame, {
-                player: (ge.players as Player[]).filter(
-                    (p) => !game.players.find((p2) => p2.id === p.id),
-                )[0],
+                player: (ge.players as Player[])[0],
             } satisfies JoinedGameData)
             setGame((g) => {
-                g.players = ge.players as Player[]
+                g.players.push((ge.players as Player[])[0])
             })
         })
 
         eventSource.addEventListener("leave", (e) => {
             let ge = GameEvent.parse(JSON.parse(e.data))
-            if (ge.players !== undefined) {
-                EventManager.publish(Events.leftGame, {
-                    player: game.players.filter(
-                        (p) =>
-                            !(ge.players as Player[]).find(
-                                (p2) => p2.id === p.id,
-                            ),
-                    )[0],
-                } satisfies LeftGameData)
-                setGame((g) => {
-                    g.players = ge.players as Player[]
-                })
-            }
+            EventManager.publish(Events.leftGame, {
+                player: (ge.players as Player[])[0],
+            } satisfies LeftGameData)
+            setGame((g) => {
+                g.players.splice(
+                    g.players.findIndex(
+                        (p) => p.id === (ge.players as Player[])[0].id,
+                    ),
+                    1,
+                )
 
-            if (
-                ge.players === undefined ||
-                ge.players.some((p) => p.id === user?.id) === false
-            )
-                EventManager.publish(Events.leftGame, {
-                    player: null,
-                } satisfies LeftGameData)
-            navigate("/")
+                if (g.players.length === 0) navigate("/")
+            })
         })
 
         eventSource.addEventListener("guess", (e) => {

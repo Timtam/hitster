@@ -50,7 +50,7 @@ export interface JoinedGameData {
 }
 
 export interface LeftGameData {
-    player: Player | null
+    player: Player
 }
 
 export interface HitRevealedData {

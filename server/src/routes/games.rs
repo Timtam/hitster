@@ -92,11 +92,11 @@ pub async fn join_game(
                 .to_str()
                 .and_then(|p| if !p.is_empty() { Some(p) } else { None }),
         )
-        .map(|_| {
+        .map(|p| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "join".into(),
-                players: Some(games.get(game_id, Some(&user)).unwrap().players),
+                players: Some(vec![p]),
                 ..Default::default()
             });
             Json(MessageResponse {
@@ -129,11 +129,11 @@ pub async fn leave_game(
             &user,
             player_id.to_str().and_then(|p| Uuid::parse_str(p).ok()),
         )
-        .map(|_| {
+        .map(|p| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "leave".into(),
-                players: games.get(game_id, Some(&user)).map(|g| g.players),
+                players: Some(vec![p]),
                 ..Default::default()
             });
 
@@ -147,6 +147,7 @@ pub async fn leave_game(
                     game_id: game_id.into(),
                     event: "change_state".into(),
                     state: Some(new_state),
+                    players: games.get(&game_id, Some(&user)).map(|g| g.players),
                     ..Default::default()
                 });
             }
