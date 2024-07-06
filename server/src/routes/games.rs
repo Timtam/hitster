@@ -403,7 +403,7 @@ pub fn skip_hit(
     serv.game_service()
         .lock()
         .skip(game_id, &user, player_id)
-        .map(|game| {
+        .map(|(game, hit)| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "skip".into(),
@@ -413,6 +413,7 @@ pub fn skip_hit(
                     .find(|p| p.id == player_id.unwrap_or(user.id))
                     .cloned()
                     .map(|p| vec![p]),
+                hit: Some(hit),
                 ..Default::default()
             });
 

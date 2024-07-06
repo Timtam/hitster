@@ -727,7 +727,7 @@ impl GameService {
         game_id: &str,
         user: &User,
         player_id: Option<Uuid>,
-    ) -> Result<Game, SkipHitError> {
+    ) -> Result<(Game, &'static Hit), SkipHitError> {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -773,8 +773,10 @@ impl GameService {
 
             game.players.get_mut(pos).unwrap().tokens -= 1;
 
+let hit = game.hits_remaining.pop_front().unwrap();
+
             game.remembered_hits
-                .push(game.hits_remaining.pop_front().unwrap());
+                .push(hit);
 
             if game.hits_remaining.is_empty() {
                 let mut rng = thread_rng();
@@ -797,7 +799,7 @@ impl GameService {
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
             }
 
-            Ok(game.clone())
+            Ok((game.clone(), hit))
         } else {
             Err(SkipHitError {
                 message: "game not found".into(),

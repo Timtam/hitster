@@ -13,9 +13,9 @@ import { Outlet } from "react-router-dom"
 import type { Context } from "./context"
 import { User } from "./entities"
 import Navigation from "./navigation"
+import NotificationPlayer from "./notification-player"
 import { Welcome } from "./pages/welcome"
 import SfxPlayer from "./sfx-player"
-import SpeechPlayer from "./speech-player"
 
 const updateUserAuth = async () => {
     await fetch("/api/users/auth", {
@@ -87,7 +87,7 @@ export default function Layout() {
                         <Row>
                             <header>
                                 <Col>
-                                    <SpeechPlayer user={user} />
+                                    <NotificationPlayer user={user} />
                                     <Navigation user={user} />
                                 </Col>
                             </header>

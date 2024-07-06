@@ -40,9 +40,9 @@ export interface ScoredData {
     game_mode: GameMode
 }
 
-export interface TtsData {
-    text: string
-    interrupt?: boolean
+export interface NotificationData {
+    text: string | JSX.Element
+    interruptTts?: boolean
 }
 
 export interface JoinedGameData {
@@ -50,6 +50,11 @@ export interface JoinedGameData {
 }
 
 export interface LeftGameData {
+    player: Player
+}
+
+export interface SkippedHitData {
+    hit: Hit
     player: Player
 }
 
@@ -65,8 +70,9 @@ export enum Events {
     hitRevealed = "Hit revealed",
     joinedGame = "Joined",
     leftGame = "Left",
+    notification = "Notification",
     playSfx = "Play sfx",
     scored = "Scored",
     sfxEnded = "Sfx ended",
-    tts = "TTS",
+    skippedHit = "Skipped hit",
 }

@@ -1,4 +1,5 @@
 import React from "react"
+import { ToastsProvider } from "react-bootstrap-toasts"
 import { CookiesProvider } from "react-cookie"
 import ReactDOM from "react-dom/client"
 import { HelmetProvider } from "react-helmet-async"
@@ -48,7 +49,15 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
         <HelmetProvider>
             <CookiesProvider defaultSetOptions={{ path: "/" }}>
-                <RouterProvider router={router} />
+                <ToastsProvider
+                    toastContainerProps={{
+                        position: "top-end",
+                        className: "p-3",
+                        "aria-hidden": true,
+                    }}
+                >
+                    <RouterProvider router={router} />
+                </ToastsProvider>
             </CookiesProvider>
         </HelmetProvider>
     </React.StrictMode>,

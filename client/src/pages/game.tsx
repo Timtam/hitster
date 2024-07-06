@@ -15,6 +15,7 @@ import {
     GameEvent,
     GameMode,
     GameState,
+    Hit,
     Player,
     PlayerState,
 } from "../entities"
@@ -27,6 +28,7 @@ import {
     JoinedGameData,
     LeftGameData,
     ScoredData,
+    SkippedHitData,
 } from "../events"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
@@ -174,6 +176,10 @@ export function Game() {
 
         eventSource.addEventListener("skip", (e) => {
             let ge = GameEvent.parse(JSON.parse(e.data))
+            EventManager.publish(Events.skippedHit, {
+                player: (ge.players as Player[])[0],
+                hit: ge.hit as Hit,
+            } satisfies SkippedHitData)
             setGame((g) => {
                 ge.players?.forEach((pe) => {
                     let idx = g.players.findIndex((p) => p.id === pe.id)
@@ -405,9 +411,9 @@ export function Game() {
                     <Trans
                         i18nKey="hitRevealed"
                         values={{
-                            title: game.hit?.title,
-                            artist: game.hit?.artist,
-                            year: game.hit?.year,
+                            title: game.hit.title,
+                            artist: game.hit.artist,
+                            year: game.hit.year,
                             pack: game.hit.pack,
                             player: titleCase(
                                 game.last_scored?.name ?? t("noone"),
@@ -419,9 +425,9 @@ export function Game() {
                     <Trans
                         i18nKey="hitRevealedBelonging"
                         values={{
-                            title: game.hit?.title,
-                            artist: game.hit?.artist,
-                            year: game.hit?.year,
+                            title: game.hit.title,
+                            artist: game.hit.artist,
+                            year: game.hit.year,
                             pack: game.hit.pack,
                             belongs_to: game.hit.belongs_to,
                             player: titleCase(
