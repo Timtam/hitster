@@ -43,6 +43,7 @@ export interface ScoredData {
 export interface NotificationData {
     text: string | JSX.Element
     interruptTts?: boolean
+    toast?: boolean
 }
 
 export interface JoinedGameData {

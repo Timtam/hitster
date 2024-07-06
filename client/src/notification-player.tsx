@@ -64,14 +64,15 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                             ? e.text
                             : nodeToString(e.text),
                 } satisfies SpeechEvent)
-                toasts.show({
-                    headerContent: "",
-                    bodyContent: e.text,
-                    toastProps: {
-                        autohide: true,
-                        delay: 5000,
-                    },
-                })
+                if (e.toast !== false)
+                    toasts.show({
+                        headerContent: "",
+                        bodyContent: e.text,
+                        toastProps: {
+                            autohide: true,
+                            delay: 5000,
+                        },
+                    })
                 if (timer.current === null) {
                     setHidden(false)
                     timer.current = setTimeout(
@@ -109,6 +110,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             Events.hitRevealed,
             (e: HitRevealedData) => {
                 EventManager.publish(Events.notification, {
+                    toast: false,
                     text:
                         e.hit.belongs_to !== "" ? (
                             <Trans
@@ -152,10 +154,12 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             (e: GuessedData) => {
                 if (e.player.guess === null)
                     EventManager.publish(Events.notification, {
+                        toast: false,
                         text: t("guessNothing", { player: e.player.name }),
                     } satisfies NotificationData)
                 else
                     EventManager.publish(Events.notification, {
+                        toast: false,
                         text: t("guess", {
                             player: e.player.name,
                             guess:
