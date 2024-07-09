@@ -95,6 +95,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 users_routes::logout,
                 users_routes::register,
                 //users_routes::get_user,
+                games_routes::claim_hit,
                 games_routes::confirm_slot,
                 games_routes::create_game,
                 games_routes::get_all_games,

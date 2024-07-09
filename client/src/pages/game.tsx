@@ -2,6 +2,9 @@ import EventManager from "@lomray/event-manager"
 import deepcopy from "deepcopy"
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
+import ButtonGroup from "react-bootstrap/ButtonGroup"
+import Dropdown from "react-bootstrap/Dropdown"
+import DropdownButton from "react-bootstrap/DropdownButton"
 import Table from "react-bootstrap/Table"
 import { Helmet } from "react-helmet-async"
 import { Trans, useTranslation } from "react-i18next"
@@ -20,6 +23,7 @@ import {
     PlayerState,
 } from "../entities"
 import {
+    ClaimedHitData,
     Events,
     GameEndedData,
     GameStartedData,
@@ -76,6 +80,10 @@ export function Game() {
                         PlayerState.Guessing)) &&
             (game.players.find((p) => p.turn_player)?.tokens ?? 0) > 0
         )
+    }
+
+    const canClaim = (p?: Player) => {
+        return p && p.tokens >= 3
     }
 
     useEffect(() => {
@@ -188,6 +196,21 @@ export function Game() {
             })
 
             setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
+        })
+
+        eventSource.addEventListener("claim", (e) => {
+            let ge = GameEvent.parse(JSON.parse(e.data))
+            EventManager.publish(Events.claimedHit, {
+                player: (ge.players as Player[])[0],
+                hit: ge.hit as Hit,
+                game_mode: game.mode,
+            } satisfies ClaimedHitData)
+            setGame((g) => {
+                ge.players?.forEach((pe) => {
+                    let idx = g.players.findIndex((p) => p.id === pe.id)
+                    g.players[idx] = pe
+                })
+            })
         })
 
         eventSource.addEventListener("update", (e) => {
@@ -466,6 +489,48 @@ export function Game() {
                         ? t("skipHitNoToken")
                         : t("cannotSkipHit")}
             </Button>
+            {game.mode !== GameMode.Local ? (
+                <Button
+                    className="me-2"
+                    disabled={
+                        !canClaim(game.players.find((p) => p.id === user?.id))
+                    }
+                    onClick={async () =>
+                        await gameService.claim(game.id, undefined)
+                    }
+                >
+                    {canClaim(game.players.find((p) => p.id === user?.id))
+                        ? t("claimHit")
+                        : (game.players.find((p) => p.id === user?.id)
+                                ?.tokens ?? 0) < 3
+                          ? t("claimHitNoToken")
+                          : t("cannotClaimHit")}
+                </Button>
+            ) : (
+                <DropdownButton
+                    as={ButtonGroup}
+                    title={
+                        game.players.every((p) => canClaim(p))
+                            ? t("claimHit")
+                            : t("cannotClaimHit")
+                    }
+                    className="me-2"
+                    disabled={game.players.every((p) => !canClaim(p))}
+                >
+                    {game.players.map((p) => (
+                        <Dropdown.Item
+                            as="button"
+                            eventKey={p.id}
+                            disabled={!canClaim(p)}
+                            onClick={async () =>
+                                await gameService.claim(game.id, p.id)
+                            }
+                        >
+                            {p.name}
+                        </Dropdown.Item>
+                    ))}
+                </DropdownButton>
+            )}
             <SlotSelector game={game} />
             {gameEndedState !== null ? (
                 <GameEndScreen

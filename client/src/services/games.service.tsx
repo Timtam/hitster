@@ -124,6 +124,19 @@ export default class GameService {
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
+    async claim(game_id: string, player_id?: string) {
+        let res = await fetchAuth(
+            `/api/games/${game_id}/claim/${player_id ?? ""}`,
+            {
+                method: "POST",
+                credentials: "include",
+            },
+        )
+
+        if (res.status == 200) return
+        throw json({ message: (await res.json()).message, status: res.status })
+    }
+
     async update(game_id: string, settings: GameSettings) {
         let res = await fetchAuth(`/api/games/${game_id}/update`, {
             body: JSON.stringify(settings),

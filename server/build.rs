@@ -31,15 +31,17 @@ fn main() {
             let my_yt_id = yt_id
                 .captures(record.get(5).unwrap())
                 .map(|caps| caps[7].to_string())
-                .expect(&format!(
-                    "no valid link found for {}: {}",
-                    record.get(0).unwrap(),
-                    record.get(2).unwrap()
-                ));
+                .unwrap_or_else(|| {
+                    panic!(
+                        "no valid link found for {}: {}",
+                        record.get(0).unwrap(),
+                        record.get(2).unwrap()
+                    )
+                });
 
             my_yt_id.hash(&mut hasher);
 
-            let id = *ids.entry(hasher.finish()).or_insert_with(|| Uuid::new_v4());
+            let id = *ids.entry(hasher.finish()).or_insert_with(Uuid::new_v4);
 
             file_content += format!(
                 "Hit {{
@@ -58,7 +60,7 @@ fn main() {
                 record.get(6).unwrap_or("0"),
                 record.get(3).unwrap(),
                 record.get(4).unwrap(),
-                id.to_string(),
+                id,
                 my_yt_id,
             )
             .as_str();

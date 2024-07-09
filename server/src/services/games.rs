@@ -2,8 +2,8 @@ use crate::{
     games::{Game, GameMode, GameSettingsPayload, GameState, Player, PlayerState, Slot},
     hits::Hit,
     responses::{
-        ConfirmSlotError, GuessSlotError, HitError, JoinGameError, LeaveGameError, SkipHitError,
-        StartGameError, StopGameError, UpdateGameError,
+        ClaimHitError, ConfirmSlotError, GuessSlotError, HitError, JoinGameError, LeaveGameError,
+        SkipHitError, StartGameError, StopGameError, UpdateGameError,
     },
     services::{HitService, ServiceHandle},
     users::User,
@@ -389,23 +389,21 @@ impl GameService {
                     message: "game currently isn't running".into(),
                     http_status_code: 409,
                 })
-            } else {
-                if let Some(hit_id) = hit_id {
-                    game.players
-                        .iter()
-                        .map(|p| &p.hits)
-                        .flat_map(|it| it.clone())
-                        .find(|h| h.id == hit_id)
-                        .ok_or(HitError {
-                            message: "the hit isn't currently revealed".into(),
-                            http_status_code: 404,
-                        })
-                } else {
-                    game.hits_remaining.front().copied().ok_or(HitError {
-                        message: "no hit found".into(),
-                        http_status_code: 500,
+            } else if let Some(hit_id) = hit_id {
+                game.players
+                    .iter()
+                    .map(|p| &p.hits)
+                    .flat_map(|it| it.clone())
+                    .find(|h| h.id == hit_id)
+                    .ok_or(HitError {
+                        message: "the hit isn't currently revealed".into(),
+                        http_status_code: 404,
                     })
-                }
+            } else {
+                game.hits_remaining.front().copied().ok_or(HitError {
+                    message: "no hit found".into(),
+                    http_status_code: 500,
+                })
             }
         } else {
             Err(HitError {
@@ -653,7 +651,7 @@ impl GameService {
                     message: "user is not part of this game".into(),
                     http_status_code: 409,
                 });
-            } else if self.get_winner(&game).is_some() {
+            } else if self.get_winner(game).is_some() {
                 return Err(ConfirmSlotError {
                     message: "the game already has a winner".into(),
                     http_status_code: 409,
@@ -773,10 +771,9 @@ impl GameService {
 
             game.players.get_mut(pos).unwrap().tokens -= 1;
 
-let hit = game.hits_remaining.pop_front().unwrap();
+            let hit = game.hits_remaining.pop_front().unwrap();
 
-            game.remembered_hits
-                .push(hit);
+            game.remembered_hits.push(hit);
 
             if game.hits_remaining.is_empty() {
                 let mut rng = thread_rng();
@@ -802,6 +799,91 @@ let hit = game.hits_remaining.pop_front().unwrap();
             Ok((game.clone(), hit))
         } else {
             Err(SkipHitError {
+                message: "game not found".into(),
+                http_status_code: 404,
+            })
+        }
+    }
+
+    pub fn claim(
+        &self,
+        game_id: &str,
+        user: &User,
+        player_id: Option<Uuid>,
+    ) -> Result<(Game, &'static Hit), ClaimHitError> {
+        let mut data = self.data.lock().unwrap();
+
+        if let Some(game) = data.games.get_mut(game_id) {
+            if !game.players.iter().any(|p| p.id == user.id) {
+                return Err(ClaimHitError {
+                    message: "user is not part of this game".into(),
+                    http_status_code: 409,
+                });
+            } else if player_id.is_some() && game.mode != GameMode::Local {
+                return Err(ClaimHitError {
+                    message: "hits of other players can only be claimed in local games".into(),
+                    http_status_code: 409,
+                });
+            } else if player_id.is_some()
+                && game.mode == GameMode::Local
+                && !game
+                    .players
+                    .iter()
+                    .find(|p| p.id == user.id)
+                    .map(|p| p.creator)
+                    .unwrap_or(false)
+            {
+                return Err(ClaimHitError {
+                    message: "only the creator can claim hits of virtual players".into(),
+                    http_status_code: 409,
+                });
+            }
+
+            let player_id = player_id.unwrap_or(user.id);
+            let pos = game.players.iter().position(|p| p.id == player_id).unwrap();
+
+            if game.players.get(pos).unwrap().tokens < 3 {
+                return Err(ClaimHitError {
+                    message: "this player doesn't have enough tokens to claim a hit".into(),
+                    http_status_code: 403,
+                });
+            }
+
+            game.players.get_mut(pos).unwrap().tokens -= 3;
+
+            if game.hits_remaining.len() == 1 {
+                let current_hit = game.hits_remaining.pop_front().unwrap();
+                let mut rng = thread_rng();
+                game.hits_remaining =
+                    filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
+                        .into_iter()
+                        .filter(|h| !game.remembered_hits.contains(h))
+                        .fold(HashSet::<&Hit>::new(), |mut hs, h| {
+                            if let Some(ch) = hs.get(&h) {
+                                if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
+                                    hs.replace(h);
+                                }
+                            } else {
+                                hs.insert(h);
+                            }
+                            hs
+                        })
+                        .into_iter()
+                        .collect::<VecDeque<_>>();
+                game.hits_remaining.make_contiguous().shuffle(&mut rng);
+                game.hits_remaining.push_front(current_hit);
+            }
+
+            let hit = game.hits_remaining.remove(1).unwrap();
+
+            let player = game.players.get_mut(pos).unwrap();
+            player.hits.push(hit);
+            player.slots = self.get_slots(&player.hits);
+            game.remembered_hits.push(hit);
+
+            Ok((game.clone(), hit))
+        } else {
+            Err(ClaimHitError {
                 message: "game not found".into(),
                 http_status_code: 404,
             })

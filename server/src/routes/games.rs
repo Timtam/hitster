@@ -4,8 +4,9 @@ use crate::{
         GameState, SlotPayload,
     },
     responses::{
-        ConfirmSlotError, GamesResponse, GuessSlotError, HitError, JoinGameError, LeaveGameError,
-        MessageResponse, SkipHitError, StartGameError, StopGameError, UpdateGameError,
+        ClaimHitError, ConfirmSlotError, GamesResponse, GuessSlotError, HitError, JoinGameError,
+        LeaveGameError, MessageResponse, SkipHitError, StartGameError, StopGameError,
+        UpdateGameError,
     },
     services::ServiceStore,
     users::User,
@@ -147,7 +148,7 @@ pub async fn leave_game(
                     game_id: game_id.into(),
                     event: "change_state".into(),
                     state: Some(new_state),
-                    players: games.get(&game_id, Some(&user)).map(|g| g.players),
+                    players: games.get(game_id, Some(&user)).map(|g| g.players),
                     ..Default::default()
                 });
             }
@@ -422,6 +423,54 @@ pub fn skip_hit(
                 r#type: "success".into(),
             })
         })
+}
+
+#[openapi(tag = "Games")]
+#[post("/games/<game_id>/claim/<player_id..>")]
+pub fn claim_hit(
+    game_id: &str,
+    player_id: PathBuf,
+    user: User,
+    serv: &State<ServiceStore>,
+    queue: &State<Sender<GameEvent>>,
+) -> Result<Json<MessageResponse>, ClaimHitError> {
+    let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
+    let res = serv.game_service().lock().claim(game_id, &user, player_id);
+
+    res.map(|(mut game, hit)| {
+        let _ = queue.send(GameEvent {
+            game_id: game_id.into(),
+            event: "claim".into(),
+            players: game
+                .players
+                .iter()
+                .find(|p| p.id == player_id.unwrap_or(user.id))
+                .cloned()
+                .map(|p| vec![p]),
+            hit: Some(hit),
+            ..Default::default()
+        });
+
+        let winner = serv.game_service().lock().get_winner(&game);
+
+        if winner.is_some() {
+            game = serv.game_service().lock().stop(game_id, None).unwrap();
+
+            let _ = queue.send(GameEvent {
+                game_id: game_id.into(),
+                event: "change_state".into(),
+                state: Some(game.state),
+                players: Some(game.players.clone()),
+                winner,
+                ..Default::default()
+            });
+        }
+
+        Json(MessageResponse {
+            message: "claimed hit successfully".into(),
+            r#type: "success".into(),
+        })
+    })
 }
 
 #[openapi(tag = "Games")]

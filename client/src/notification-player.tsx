@@ -6,6 +6,7 @@ import { createRoot } from "react-dom/client"
 import { Trans, useTranslation } from "react-i18next"
 import { User } from "./entities"
 import {
+    ClaimedHitData,
     Events,
     GuessedData,
     HitRevealedData,
@@ -253,7 +254,81 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             },
         )
 
+        const unsubscribeClaimedHit = EventManager.subscribe(
+            Events.claimedHit,
+            (e: ClaimedHitData) => {
+                EventManager.publish(Events.notification, {
+                    text:
+                        e.player.id !== user?.id ? (
+                            e.hit.belongs_to !== "" ? (
+                                <Trans
+                                    i18nKey="otherClaimedHitBelonging"
+                                    values={{
+                                        title: e.hit.title,
+                                        artist: e.hit.artist,
+                                        year: e.hit.year,
+                                        pack: e.hit.pack,
+                                        belongs_to: e.hit.belongs_to,
+                                        player: e.player?.name ?? t("noone"),
+                                    }}
+                                    components={[
+                                        <b />,
+                                        <b />,
+                                        <b />,
+                                        <b />,
+                                        <b />,
+                                        <b />,
+                                    ]}
+                                />
+                            ) : (
+                                <Trans
+                                    i18nKey="otherClaimedHit"
+                                    values={{
+                                        title: e.hit.title,
+                                        artist: e.hit.artist,
+                                        year: e.hit.year,
+                                        pack: e.hit.pack,
+                                        player: e.player?.name ?? t("noone"),
+                                    }}
+                                    components={[
+                                        <b />,
+                                        <b />,
+                                        <b />,
+                                        <b />,
+                                        <b />,
+                                    ]}
+                                />
+                            )
+                        ) : e.hit.belongs_to !== "" ? (
+                            <Trans
+                                i18nKey="youClaimedHitBelonging"
+                                values={{
+                                    title: e.hit.title,
+                                    artist: e.hit.artist,
+                                    year: e.hit.year,
+                                    pack: e.hit.pack,
+                                    belongs_to: e.hit.belongs_to,
+                                }}
+                                components={[<b />, <b />, <b />, <b />, <b />]}
+                            />
+                        ) : (
+                            <Trans
+                                i18nKey="youClaimedHit"
+                                values={{
+                                    title: e.hit.title,
+                                    artist: e.hit.artist,
+                                    year: e.hit.year,
+                                    pack: e.hit.pack,
+                                }}
+                                components={[<b />, <b />, <b />, <b />]}
+                            />
+                        ),
+                } satisfies NotificationData)
+            },
+        )
+
         return () => {
+            unsubscribeClaimedHit()
             unsubscribeGuessed()
             unsubscribeHitRevealed()
             unsubscribeJoinedGame()

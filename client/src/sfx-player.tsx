@@ -4,6 +4,7 @@ import { Howl } from "howler"
 import { useEffect, useRef } from "react"
 import { GameMode, User } from "./entities"
 import {
+    ClaimedHitData,
     Events,
     GameEndedData,
     GuessedData,
@@ -55,6 +56,10 @@ const getSfx = (sfx: Sfx): Howl => {
         }
         case Sfx.leaveGame: {
             url = new URL("../sfx/leave_game.mp3", import.meta.url).href
+            break
+        }
+        case Sfx.youClaim: {
+            url = new URL("../sfx/claim_hit.mp3", import.meta.url).href
             break
         }
     }
@@ -130,6 +135,16 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
+        let unsubscribeClaimed = EventManager.subscribe(
+            Events.claimedHit,
+            (e: ClaimedHitData) => {
+                if (e.player.id === user?.id || e.game_mode === GameMode.Local)
+                    EventManager.publish(Events.playSfx, {
+                        sfx: Sfx.youClaim,
+                    } satisfies PlaySfxData)
+            },
+        )
+
         let unsubscribeGameEnded = EventManager.subscribe(
             Events.gameEnded,
             (e: GameEndedData) => {
@@ -170,6 +185,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
         )
 
         return () => {
+            unsubscribeClaimed()
             unsubscribeGuessed()
             unsubscribeScored()
             unsubscribeGameEnded()
