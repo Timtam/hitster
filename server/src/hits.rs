@@ -1,3 +1,4 @@
+use filesize::PathExt;
 use rocket::{
     fairing::{self, Fairing, Info, Kind},
     Build, Rocket,
@@ -106,12 +107,14 @@ impl Fairing for HitsterDownloader {
     async fn on_ignite(&self, rocket: Rocket<Build>) -> fairing::Result {
         let download_dir = Hit::download_dir();
 
-        let _ = create_dir_all(download_dir.clone());
+        let _ = create_dir_all(download_dir.as_str());
 
         println!("Starting download of missing hits. This may take a while...");
 
         for hit in get_all().iter() {
             if !hit.exists() {
+                let in_file = Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
+                let out_file = hit.file();
                 let options = VideoOptions {
                     quality: VideoQuality::HighestAudio,
                     filter: VideoSearchOptions::Audio,
@@ -123,64 +126,86 @@ impl Fairing for HitsterDownloader {
                         hit.artist, hit.title, hit.yt_id
                     );
 
-                    if video
+                    let in_dl = video
                         .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
-                        .await
-                        .is_ok()
+                        .await;
+
+                    if in_dl.is_err()
+                        || !in_file.is_file()
+                        || in_file.size_on_disk().unwrap_or(0) == 0
                     {
-                        let in_file = format!("{}/{}.opus", download_dir.as_str(), hit.yt_id);
-                        let out_file = format!(
-                            "{}/{}_{}.mp3",
-                            download_dir.as_str(),
-                            hit.yt_id,
-                            hit.playback_offset
-                        );
-                        let offset = format!("{}", hit.playback_offset);
+                        if env::var("USE_YT_DLP").is_ok() {
+                            println!("Using yt-dlp...");
+                            if in_file.is_file() {
+                                remove_file(&in_file).unwrap();
+                            }
+                            let mut command = Command::new("yt-dlp");
+                            command
+                                .current_dir(&env::current_dir().unwrap())
+                                .args(["-f", "bestaudio"])
+                                .arg("-x")
+                                .args(["--audio-format", "opus"])
+                                .args(["-o", in_file.to_str().unwrap()])
+                                .arg(&format!("https://www.youtube.com/watch?v={}", hit.yt_id));
 
-                        println!("Measure loudness of song...");
-
-                        let mut command = Command::new("ffmpeg");
-                        command
-                            .current_dir(&env::current_dir().unwrap())
-                            .arg("-i")
-                            .arg(&in_file)
-                            .arg("-hide_banner")
-                            .args(["-vn", "-af"])
-                            .arg(format!(
-                                "loudnorm=I={}:LRA={}:tp={}:print_format=json",
-                                -18.0, 12.0, -1.0
-                            ))
-                            .args(["-f", "null", "-"]);
-
-                        let output = {
-                            let (finished, _) = progress_thread();
-                            let output_res = command.output();
-                            finished.store(true, Ordering::SeqCst);
-                            output_res.expect("Failed to execute ffmpeg process!")
-                        };
-
-                        let output_s = String::from_utf8_lossy(&output.stderr);
-                        if output.status.success() {
-                            let loudness: Loudness = {
-                                let json: String = {
-                                    let lines: Vec<&str> = output_s.lines().collect();
-                                    if cfg!(windows) {
-                                        let (_, lines) = lines.split_at(lines.len() - 14);
-                                        lines
-                                            .iter()
-                                            .take(12)
-                                            .copied()
-                                            .collect::<Vec<_>>()
-                                            .join("\n")
-                                    } else {
-                                        let (_, lines) = lines.split_at(lines.len() - 12);
-                                        lines.join("\n")
-                                    }
-                                };
-                                serde_json::from_str(&json).unwrap()
+                            let output = {
+                                let (finished, _) = progress_thread();
+                                let output_res = command.output();
+                                finished.store(true, Ordering::SeqCst);
+                                output_res.expect("Failed to execute ffmpeg process!")
                             };
 
-                            let af = format!("loudnorm=linear=true:I={}:LRA={}:TP={}:measured_I={}:measured_TP={}:measured_LRA={}:measured_thresh={}:offset={}:print_format=summary",
+                            if !output.status.success() {
+                                println!("{}", String::from_utf8_lossy(&output.stderr));
+                                println!("Download failed with yt-dlp, skipping...");
+                                continue;
+                            }
+                        } else {
+                            println!("Download failed, skipping...");
+                            continue;
+                        }
+                    }
+                    let offset = format!("{}", hit.playback_offset);
+
+                    println!("Measure loudness of song...");
+
+                    let mut command = Command::new("ffmpeg");
+                    command
+                        .current_dir(&env::current_dir().unwrap())
+                        .arg("-i")
+                        .arg(in_file.to_str().unwrap())
+                        .arg("-hide_banner")
+                        .args(["-vn", "-af"])
+                        .arg(format!(
+                            "loudnorm=I={}:LRA={}:tp={}:print_format=json",
+                            -18.0, 12.0, -1.0
+                        ))
+                        .args(["-f", "null", "-"]);
+
+                    let output = {
+                        let (finished, _) = progress_thread();
+                        let output_res = command.output();
+                        finished.store(true, Ordering::SeqCst);
+                        output_res.expect("Failed to execute ffmpeg process!")
+                    };
+
+                    let output_s = String::from_utf8_lossy(&output.stderr);
+                    if output.status.success() {
+                        let loudness: Loudness = {
+                            let json: String = {
+                                let lines: Vec<&str> = output_s.lines().collect();
+                                let (_, lines) = lines.split_at(lines.len() - 14);
+                                lines
+                                    .iter()
+                                    .take(12)
+                                    .copied()
+                                    .collect::<Vec<_>>()
+                                    .join("\n")
+                            };
+                            serde_json::from_str(&json).unwrap()
+                        };
+
+                        let af = format!("loudnorm=linear=true:I={}:LRA={}:TP={}:measured_I={}:measured_TP={}:measured_LRA={}:measured_thresh={}:offset={}:print_format=summary",
                                     -18.0, 12.0, -1.0,
                                     loudness.input_i,
                                     loudness.input_tp,
@@ -189,33 +214,30 @@ impl Fairing for HitsterDownloader {
                                     loudness.target_offset,
                                 );
 
-                            println!("Processing opus to mp3...");
+                        println!("Processing opus to mp3...");
 
-                            let mut command = Command::new("ffmpeg");
-                            command
-                                .current_dir(&env::current_dir().unwrap())
-                                .arg("-nostdin")
-                                .arg("-y")
-                                .arg("-i")
-                                .arg(&in_file)
-                                .args(["-ss", offset.as_str()])
-                                .arg("-vn")
-                                .arg("-sn")
-                                .arg("-dn")
-                                .args(["-af", af.as_str()])
-                                .arg(&out_file);
+                        let mut command = Command::new("ffmpeg");
+                        command
+                            .current_dir(&env::current_dir().unwrap())
+                            .arg("-nostdin")
+                            .arg("-y")
+                            .arg("-i")
+                            .arg(&in_file)
+                            .args(["-ss", offset.as_str()])
+                            .arg("-vn")
+                            .arg("-sn")
+                            .arg("-dn")
+                            .args(["-af", af.as_str()])
+                            .arg(&out_file);
 
-                            {
-                                let (finished, _) = progress_thread();
-                                let output_res = command.output();
-                                finished.store(true, Ordering::SeqCst);
-                                output_res.expect("Failed to execute ffmpeg process!");
-                            }
-
-                            remove_file(in_file.as_str()).unwrap();
+                        {
+                            let (finished, _) = progress_thread();
+                            let output_res = command.output();
+                            finished.store(true, Ordering::SeqCst);
+                            output_res.expect("Failed to execute ffmpeg process!");
                         }
-                    } else {
-                        println!("Unable to download video.");
+
+                        remove_file(in_file).unwrap();
                     }
                 }
             }

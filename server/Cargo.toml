@@ -1,6 +1,6 @@
 [package]
 name = "hitster-server"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 argon2 = "0.5.3"
 dotenvy = "0.15.7"
+filesize = "0.2.0"
 itertools = "0.13.0"
 parking_lot = { version = "0.12.1"}
 petname = {version = "2.0.0-beta.4", default-features = false, features = ["default-rng", "default-words"]}
