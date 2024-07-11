@@ -52,6 +52,7 @@ WORKDIR /hitster
 
 ENV CLIENT_DIRECTORY=/hitster/client
 ENV PATH="$PATH:/opt/ffmpeg/bin/"
+ENV USE_YT_DLP=true
 
 # prepare the OS
 

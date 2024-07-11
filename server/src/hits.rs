@@ -113,7 +113,8 @@ impl Fairing for HitsterDownloader {
 
         for hit in get_all().iter() {
             if !hit.exists() {
-                let in_file = Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
+                let mut in_file =
+                    Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
                 let out_file = hit.file();
                 let options = VideoOptions {
                     quality: VideoQuality::HighestAudio,
@@ -139,12 +140,11 @@ impl Fairing for HitsterDownloader {
                             if in_file.is_file() {
                                 remove_file(&in_file).unwrap();
                             }
+                            in_file.set_extension("m4a");
                             let mut command = Command::new("yt-dlp");
                             command
                                 .current_dir(&env::current_dir().unwrap())
-                                .args(["-f", "bestaudio"])
-                                .arg("-x")
-                                .args(["--audio-format", "opus"])
+                                .args(["-f", "bestaudio[ext=m4a]"])
                                 .args(["-o", in_file.to_str().unwrap()])
                                 .arg(&format!("https://www.youtube.com/watch?v={}", hit.yt_id));
 
@@ -214,7 +214,10 @@ impl Fairing for HitsterDownloader {
                                     loudness.target_offset,
                                 );
 
-                        println!("Processing opus to mp3...");
+                        println!(
+                            "Processing {} to mp3...",
+                            in_file.extension().unwrap().to_str().unwrap()
+                        );
 
                         let mut command = Command::new("ffmpeg");
                         command
