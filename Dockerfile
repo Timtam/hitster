@@ -7,19 +7,20 @@ COPY ./server/Cargo.toml /app/Cargo.toml
 
 RUN npm install && npm run build
 
-FROM rust:1.79-slim-bookworm AS server_build_image
+FROM clux/muslrust:1.79.0-stable AS server_build_image
 
 # create a new empty shell project
-RUN apt-get update && apt-get -y install libssl-dev pkg-config && \
-    USER=root cargo new --bin hitster
+RUN echo $pwd && \
+    USER=root cargo new --bin /hitster
+
 WORKDIR /hitster
 
 # copy over your manifests
 COPY ./server/Cargo.toml ./Cargo.toml
 
 # this build step will cache your dependencies
-RUN cargo build --release
-RUN rm src/*.rs
+RUN cargo build --release && \
+    rm ./src/*.rs
 
 # copy your source tree
 COPY ./server/migrations ./migrations
@@ -28,22 +29,10 @@ COPY ./server/build.rs ./build.rs
 COPY ./server/etc ./etc
 
 # build for release
-RUN rm ./target/release/deps/hitster*
-RUN cargo build --release
+RUN rm ./target/x86_64-unknown-linux-musl/release/deps/hitster* && \
+    cargo build --release
 
-# our final bases, platform-dependent
-
-# x64
-FROM debian:bookworm-slim AS build_amd64
-
-ONBUILD ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linux64-gpl.tar.xz /opt/ffmpeg.tar.xz
-
-# arm64
-FROM debian:bookworm-slim AS build_arm64
-
-ONBUILD ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffmpeg-master-latest-linuxarm64-gpl.tar.xz /opt/ffmpeg.tar.xz
-
-FROM build_${TARGETARCH}
+FROM alpine:3.20
 
 # yt-dlp version
 ARG YT_DLP_BUILD_VERSION=2024.07.09
@@ -53,23 +42,19 @@ WORKDIR /hitster
 ENV CLIENT_DIRECTORY=/hitster/client
 ENV PATH="$PATH:/opt/ffmpeg/bin/"
 ENV USE_YT_DLP=true
+ENV SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 # prepare the OS
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install --no-install-recommends libssl-dev ca-certificates python3 python3-mutagen xz-utils && \
-    mkdir /opt/ffmpeg && \
-    tar xf /opt/ffmpeg.tar.xz -C /opt/ffmpeg/ --strip-components 1 && \
-    apt-get purge -y --auto-remove xz-utils && \
-    apt-get clean && \
-    rm /opt/ffmpeg.tar.xz && \
-    rm -rf /var/lib/apt/lists/* && \
+RUN set -x && \
+    apk update && \
+    apk upgrade -a && \
+    apk add --no-cache ca-certificates ffmpeg python3 py3-mutagen && \
     mkdir /.cache && \
-    chmod 777 /.cache && \
-    echo "--ffmpeg-location /opt/ffmpeg/bin/" > /etc/yt-dlp.conf
+    chmod 777 /.cache
 
 # copy the build artifact from the build stage
-COPY --from=server_build_image /hitster/target/release/hitster-server /hitster/server/hitster
+COPY --from=server_build_image /hitster/target/x86_64-unknown-linux-musl/release/hitster-server /hitster/server/hitster
 COPY --from=client_build_image /app/dist /hitster/client
 
 # yt-dlp
