@@ -135,6 +135,9 @@ impl Fairing for HitsterDownloader {
                         || !in_file.is_file()
                         || in_file.size_on_disk().unwrap_or(0) == 0
                     {
+                        if in_dl.is_err() {
+                            println!("{}", in_dl.unwrap_err());
+                        }
                         if env::var("USE_YT_DLP").is_ok() {
                             println!("Using yt-dlp...");
                             if in_file.is_file() {
