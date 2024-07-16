@@ -5,7 +5,7 @@ use rocket::{
 };
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use std::{
     cmp::PartialEq,
     collections::HashSet,
@@ -65,16 +65,7 @@ impl Hash for Hit {
     }
 }
 
-// alot of stuff copied from ffmpeg-loudness-norm
-
-#[derive(Serialize, Deserialize, Debug)]
-struct Loudness {
-    input_i: String,
-    input_tp: String,
-    input_lra: String,
-    input_thresh: String,
-    target_offset: String,
-}
+// copied from ffmpeg-loudness-norm
 
 fn progress_thread() -> (Arc<AtomicBool>, thread::JoinHandle<()>) {
     const PROGRESS_CHARS: [&str; 12] = ["⠂", "⠃", "⠁", "⠉", "⠈", "⠘", "⠐", "⠰", "⠠", "⠤", "⠄", "⠆"];
@@ -115,7 +106,8 @@ impl Fairing for HitsterDownloader {
             if !hit.exists() {
                 let mut in_file =
                     Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
-                let out_file = hit.file();
+                let out_file = Path::new(&Hit::download_dir())
+                    .join(format!("{}_{}.mp3", hit.yt_id, hit.playback_offset));
                 let options = VideoOptions {
                     quality: VideoQuality::HighestAudio,
                     filter: VideoSearchOptions::Audio,
@@ -168,83 +160,34 @@ impl Fairing for HitsterDownloader {
                             continue;
                         }
                     }
-                    let offset = format!("{}", hit.playback_offset);
 
-                    println!("Measure loudness of song...");
+                    println!(
+                        "Processing {} to mp3...",
+                        in_file.extension().unwrap().to_str().unwrap()
+                    );
 
-                    let mut command = Command::new("ffmpeg");
+                    let mut command = Command::new("ffmpeg-normalize");
                     command
                         .current_dir(&env::current_dir().unwrap())
-                        .arg("-i")
-                        .arg(in_file.to_str().unwrap())
-                        .arg("-hide_banner")
-                        .args(["-vn", "-af"])
-                        .arg(format!(
-                            "loudnorm=I={}:LRA={}:tp={}:print_format=json",
-                            -18.0, 12.0, -1.0
-                        ))
-                        .args(["-f", "null", "-"]);
+                        .arg(&in_file)
+                        .args(["-ar", "44100"])
+                        .args(["-b:a", "128k"])
+                        .args(["-c:a", "libmp3lame"])
+                        .args(["-e", &format!("-ss {}", hit.playback_offset)])
+                        .args(["--extension", "mp3"])
+                        .args(["-o", out_file.to_str().unwrap()])
+                        .arg("-sn")
+                        .args(["-t", "-18.0"])
+                        .arg("-vn");
 
-                    let output = {
+                    {
                         let (finished, _) = progress_thread();
                         let output_res = command.output();
                         finished.store(true, Ordering::SeqCst);
-                        output_res.expect("Failed to execute ffmpeg process!")
-                    };
-
-                    let output_s = String::from_utf8_lossy(&output.stderr);
-                    if output.status.success() {
-                        let loudness: Loudness = {
-                            let json: String = {
-                                let lines: Vec<&str> = output_s.lines().collect();
-                                let (_, lines) = lines.split_at(lines.len() - 14);
-                                lines
-                                    .iter()
-                                    .take(12)
-                                    .copied()
-                                    .collect::<Vec<_>>()
-                                    .join("\n")
-                            };
-                            serde_json::from_str(&json).unwrap()
-                        };
-
-                        let af = format!("loudnorm=linear=true:I={}:LRA={}:TP={}:measured_I={}:measured_TP={}:measured_LRA={}:measured_thresh={}:offset={}:print_format=summary",
-                                    -18.0, 12.0, -1.0,
-                                    loudness.input_i,
-                                    loudness.input_tp,
-                                    loudness.input_lra,
-                                    loudness.input_thresh,
-                                    loudness.target_offset,
-                                );
-
-                        println!(
-                            "Processing {} to mp3...",
-                            in_file.extension().unwrap().to_str().unwrap()
-                        );
-
-                        let mut command = Command::new("ffmpeg");
-                        command
-                            .current_dir(&env::current_dir().unwrap())
-                            .arg("-nostdin")
-                            .arg("-y")
-                            .arg("-i")
-                            .arg(&in_file)
-                            .args(["-ss", offset.as_str()])
-                            .arg("-vn")
-                            .arg("-sn")
-                            .arg("-dn")
-                            .args(["-af", af.as_str()])
-                            .arg(&out_file);
-
-                        {
-                            let (finished, _) = progress_thread();
-                            let output_res = command.output();
-                            finished.store(true, Ordering::SeqCst);
-                            output_res.expect("Failed to execute ffmpeg process!");
-                        }
-
-                        remove_file(in_file).unwrap();
+                        output_res.expect("Failed to execute ffmpeg process!");
                     }
+
+                    remove_file(in_file).unwrap();
                 }
             }
         }

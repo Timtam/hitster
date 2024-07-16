@@ -57,10 +57,11 @@ ENV USE_YT_DLP=true
 # prepare the OS
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get -y install --no-install-recommends libssl-dev ca-certificates python3 python3-mutagen xz-utils && \
+    apt-get -y install --no-install-recommends libssl-dev ca-certificates python3 python3-mutagen python3-pip xz-utils && \
+    pip3 install --no-cache-dir --break-system-packages ffmpeg-normalize && \
     mkdir /opt/ffmpeg && \
     tar xf /opt/ffmpeg.tar.xz -C /opt/ffmpeg/ --strip-components 1 && \
-    apt-get purge -y --auto-remove xz-utils && \
+    apt-get purge -y --auto-remove python3-pip xz-utils && \
     apt-get clean && \
     rm /opt/ffmpeg.tar.xz && \
     rm -rf /var/lib/apt/lists/* && \
