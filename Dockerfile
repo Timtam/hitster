@@ -2,10 +2,17 @@ FROM node:20 AS client_build_image
 
 WORKDIR /app
 
-COPY ./client /app
-COPY ./server/Cargo.toml /app/Cargo.toml
+# build cache first
 
-RUN npm install && npm run build
+COPY ./client/package.json ./client/package-lock.json /app/
+
+RUN npm install && rm /app/*.json 
+
+# build everything else
+
+COPY ./client/ ./server/Cargo.toml /app/
+
+RUN npm run build
 
 FROM rust:1.79-slim-bookworm AS server_build_image
 
