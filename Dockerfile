@@ -53,7 +53,7 @@ ONBUILD ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffm
 FROM build_${TARGETARCH}
 
 # yt-dlp version
-ARG YT_DLP_BUILD_VERSION=2024.07.09
+ARG YT_DLP_BUILD_VERSION=2024.07.25
 
 WORKDIR /hitster
 
