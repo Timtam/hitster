@@ -12,6 +12,11 @@ import Button from "react-bootstrap/Button"
 import { useTranslation } from "react-i18next"
 import { Events, Sfx } from "../../events"
 
+interface HitPlayerTimers {
+    sfxTimer: ReturnType<typeof setTimeout> | null
+    stopTimer: ReturnType<typeof setTimeout> | null
+}
+
 export type HitPlayerProps = {
     src: string
     duration: number
@@ -31,14 +36,17 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
     ) {
         let player = useRef<Howl | null>(null)
         let [playing, setPlaying] = useState(false)
-        let timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+        let timers = useRef<HitPlayerTimers>({
+            sfxTimer: null,
+            stopTimer: null,
+        } satisfies HitPlayerTimers)
         let { t } = useTranslation()
         let [volume] = useLocalStorage("musicVolume", "1.0")
         let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
 
         const play = () => {
-            if (timer.current) {
-                clearTimeout(timer.current)
+            if (timers.current.stopTimer) {
+                clearTimeout(timers.current.stopTimer)
             }
             player.current?.stop()
             let plr = new Howl({
@@ -52,13 +60,16 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             })
             player.current = plr
             if (parseFloat(sfxVolume) > 0) {
-                setTimeout(() => plr.play(), 250)
+                timers.current.sfxTimer = setTimeout(() => {
+                    plr.play()
+                    timers.current.sfxTimer = null
+                }, 250)
                 EventManager.publish(Events.playSfx, { sfx: Sfx.playHit })
             } else {
                 plr.play()
             }
             if (duration > 0)
-                timer.current = setTimeout(() => {
+                timers.current.stopTimer = setTimeout(() => {
                     setPlaying(false)
                 }, duration * 1000)
             if (onPlay !== undefined) onPlay()
@@ -93,9 +104,13 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             if (playing === true) {
                 play()
             } else {
-                if (timer.current) {
-                    clearTimeout(timer.current)
-                    timer.current = null
+                if (timers.current.stopTimer) {
+                    clearTimeout(timers.current.stopTimer)
+                    timers.current.stopTimer = null
+                }
+                if (timers.current.sfxTimer) {
+                    clearTimeout(timers.current.sfxTimer)
+                    timers.current.sfxTimer = null
                 }
                 player.current?.pause()
                 if (
@@ -115,9 +130,13 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
 
         useEffect(() => {
             return () => {
-                if (timer.current) {
-                    clearTimeout(timer.current)
-                    timer.current = null
+                if (timers.current.stopTimer) {
+                    clearTimeout(timers.current.stopTimer)
+                    timers.current.stopTimer = null
+                }
+                if (timers.current.sfxTimer) {
+                    clearTimeout(timers.current.sfxTimer)
+                    timers.current.sfxTimer = null
                 }
                 player.current?.pause()
                 player.current = null
