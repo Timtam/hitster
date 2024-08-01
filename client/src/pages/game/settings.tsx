@@ -38,12 +38,14 @@ export default ({
     >(null)
 
     useEffect(() => {
-        setGoal(game.goal)
-        setStartTokens(game.start_tokens)
-        setHitDuration(game.hit_duration)
-        setPacks(game.packs)
-        setRememberHits(game.remember_hits)
-    }, [game])
+        if (!show) {
+            setGoal(game.goal)
+            setStartTokens(game.start_tokens)
+            setHitDuration(game.hit_duration)
+            setPacks(game.packs)
+            setRememberHits(game.remember_hits)
+        }
+    }, [game, show])
 
     useEffect(() => {
         if (show) {

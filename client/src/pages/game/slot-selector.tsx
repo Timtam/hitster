@@ -27,20 +27,20 @@ export default ({ game }: { game: Game }) => {
         let me = game.players.find((p) => p.id === user?.id)
 
         if (game.mode !== GameMode.Local)
-            return me?.state !== PlayerState.Waiting ? me ?? null : null
+            return me?.state !== PlayerState.Waiting ? (me ?? null) : null
         else {
             return game.state === GameState.Guessing
-                ? game.players.find((p) => p.turn_player) ?? null
+                ? (game.players.find((p) => p.turn_player) ?? null)
                 : game.state === GameState.Intercepting
-                  ? game.players
+                  ? (game.players
                         .concat(game.players)
                         .slice(
                             (game.players.findIndex((p) => p.turn_player) ??
                                 -1) + 1,
                         )
                         .find((p) => p.state === PlayerState.Intercepting) ??
-                    null
-                  : game.players.find((p) => p.creator) ?? null
+                    null)
+                  : (game.players.find((p) => p.creator) ?? null)
         }
     }
 
