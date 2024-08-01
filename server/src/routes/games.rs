@@ -332,6 +332,7 @@ pub fn guess_slot(
 
         if state != game.state {
             let last_scored = game.last_scored.clone();
+            let hit = game.hits_remaining.front().copied();
             let winner = serv.game_service().lock().get_winner(&game);
 
             if winner.is_some() {
@@ -343,13 +344,7 @@ pub fn guess_slot(
                 event: "change_state".into(),
                 state: Some(game.state),
                 players: Some(game.players.clone()),
-                hit: Some(game.state).and_then(|s| {
-                    if s == GameState::Confirming {
-                        game.hits_remaining.front().cloned()
-                    } else {
-                        None
-                    }
-                }),
+                hit,
                 last_scored,
                 winner,
                 ..Default::default()
