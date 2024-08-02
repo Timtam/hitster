@@ -58,8 +58,14 @@ ARG YT_DLP_BUILD_VERSION=2024.07.25
 WORKDIR /hitster
 
 ENV CLIENT_DIRECTORY=/hitster/client
+ENV DATABASE_URL=sqlite:///hitster.sqlite
+ENV DOWNLOAD_DIRECTORY=/hits
 ENV PATH="$PATH:/opt/ffmpeg/bin/"
 ENV USE_YT_DLP=true
+
+EXPOSE 8000
+
+VOLUME [ "/hits", "/hitster.sqlite" ]
 
 # prepare the OS
 
