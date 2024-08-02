@@ -60,12 +60,14 @@
         <ul>
           <li><a href="#launching-a-container">Launching a container</a></li>
           <li><a href="#volumes">Volumes</a></li>
+          <li><a href="#docker-compose">Docker Compose</a></li>
         </ul>
         <li><a href="#local">Local</a></li>
         <ul>
           <li><a href="#prerequisites">Prerequisites</a></li>
           <li><a href="#building">Building</a></li>
         </ul>
+        <li><a href="#attention">ATTENTION</a></li>
         <li><a href="#environment-variables">Environment Variables</a></li>
       </ul>
     </li>
@@ -151,7 +153,29 @@ The Docker container exposes some volumes which you can connect to to persist yo
 You can launch a docker container by specifying your volumes like follows:
 
 ```sh
-docker run -v hits:/hits -v hitster.sqlite:/hitster.sqlite tonironaldbarth/hitster
+docker run -v hits:/hits -v hitster.sqlite:/hitster.sqlite -p 8000:8000 tonironaldbarth/hitster
+```
+
+#### Docker Compose
+
+An easier way of launching a Hitster server is by utilizing Docker Compose. You can find an example docker-compose.yml file below:
+
+```yaml
+services:
+  hitster:
+    image: tonironaldbarth/hitster:latest
+    ### comment above line and uncomment if you want to build from source
+    #build:
+    #  context: .
+    restart: unless-stopped
+    volumes:
+      - ./hitster.sqlite:/hitster.sqlite
+      - ./hits:/hits
+    environment:
+      - ROCKET_SECRET_KEY=generate_me_a_secret_key
+      - ROCKET_ADDRESS=0.0.0.0
+    ports:
+      - "8000:8000"
 ```
 
 ### Local
@@ -197,6 +221,10 @@ Start by cloning this repository. Open a command line and navigate into the fold
   
 Please note that you'll need to specify a certain set of environment variables when running the application locally in order for it to start. You can find <a href="#environment-variables">the list of environment variables</a> below.
   
+### ATTENTION
+
+When launching the server, Hitster will always download all missing hits. That means that especially when starting it for the first time, downloading all hits will take quite a while. You can monitor the progress by skimming through the process output. The server will not be running while the download is in progress. It is planned to further parallelize the process to have the server running while downloading in the background.
+
 ### Environment Variables
 
 The project can be configured through environment variables. Environment variables can be populated in different ways, depending on how you are running it.
@@ -211,7 +239,7 @@ The project can be configured through environment variables. Environment variabl
   ```
 * (Docker only) handing them to the docker run command via the -e switch, e.g.:
   ```sh
-  docker run -e DATABASE_URL=sqlite://hitster.sqlite tonironaldbarth/hitster
+  docker run -e DATABASE_URL=sqlite://hitster.sqlite -p 8000:8000 tonironaldbarth/hitster
   ```
 
 The following environment variables are available. Required variables are set to default values when running via docker.
@@ -219,6 +247,7 @@ The following environment variables are available. Required variables are set to
 | variable | required | meaning |
 | -------- | -------- | ------- |
 | DATABASE_URL | yes | location of the database file, must be in the format of sqlite://path_to_file.sqlite, /hitster.sqlite in Docker containers by default |
+| CLIENT_DIRECTORY | no | specify the location of the compiled client files, usually not needed in Docker, ./client in local mode |
 | DOWNLOAD_DIRECTORY | no | download location of the songs downloaded by the server, /hits in Docker containers by default, ./hits otherwise |
 | USE_YT_DLP | no | enable the use of yt-dlp as a fallback if the server-internal YouTube downloader fails, enabled in Docker containers by default, disabled otherwise |
 
