@@ -33,6 +33,7 @@ import {
     LeftGameData,
     ScoredData,
     SkippedHitData,
+    TokenReceivedData,
 } from "../events"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
@@ -122,13 +123,26 @@ export function Game() {
                         game: deepcopy(g),
                         winner: ge.winner ?? null,
                     } satisfies GameEndedData)
-                } else if (
-                    ge.state === GameState.Guessing &&
-                    g.state === GameState.Open
-                ) {
-                    EventManager.publish(Events.gameStarted, {
-                        game_id: g.id,
-                    } satisfies GameStartedData)
+                } else if (ge.state === GameState.Guessing) {
+                    if (g.state === GameState.Open) {
+                        EventManager.publish(Events.gameStarted, {
+                            game_id: g.id,
+                        } satisfies GameStartedData)
+                    } else if (g.state === GameState.Confirming) {
+                        let turn_player = g.players.find((p) => p.turn_player)
+
+                        if (
+                            turn_player?.tokens !==
+                            (ge.players ?? []).find(
+                                (p) => p.id === turn_player?.id,
+                            )?.tokens
+                        ) {
+                            EventManager.publish(Events.tokenReceived, {
+                                player: turn_player as Player,
+                                game_mode: g.mode,
+                            } satisfies TokenReceivedData)
+                        }
+                    }
                 }
 
                 g.last_scored = ge.last_scored ?? null

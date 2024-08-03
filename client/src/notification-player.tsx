@@ -14,6 +14,7 @@ import {
     LeftGameData,
     NotificationData,
     SkippedHitData,
+    TokenReceivedData,
 } from "./events"
 
 interface SpeechEvent {
@@ -107,11 +108,25 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             },
         )
 
+        const unsubscribeTokenReceived = EventManager.subscribe(
+            Events.tokenReceived,
+            (e: TokenReceivedData) => {
+                EventManager.publish(Events.notification, {
+                    toast: false,
+                    text:
+                        e.player.id !== user?.id
+                            ? t("otherReceivedToken", { player: e.player.name })
+                            : t("youReceivedToken"),
+                } satisfies NotificationData)
+            },
+        )
+
         const unsubscribeHitRevealed = EventManager.subscribe(
             Events.hitRevealed,
             (e: HitRevealedData) => {
                 EventManager.publish(Events.notification, {
                     toast: false,
+                    interruptTts: true,
                     text:
                         e.hit.belongs_to !== "" ? (
                             <Trans
@@ -335,6 +350,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             unsubscribeLeftGame()
             unsubscribeNotification()
             unsubscribeSkippedHit()
+            unsubscribeTokenReceived()
         }
     }, [])
 

@@ -142,6 +142,8 @@
         "youLeftGame": "You left the game",
         "otherLeftGame": "{{player}} left the game",
         "guessNothing": "{{player}} doesn't intercept",
-        "guess": "{{player}} guesses: {{guess}}"
+        "guess": "{{player}} guesses: {{guess}}",
+        "youReceivedToken": "You received a token for guessing artist and title of this hit correctly",
+        "otherReceivedToken": "{{player}} received a token for guessing artist and title of this hit correctly"
     }
 }

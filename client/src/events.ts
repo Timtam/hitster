@@ -6,6 +6,7 @@ export enum Sfx {
     noInterception,
     payToken,
     playHit,
+    receiveToken,
     stopHit,
     youClaim,
     youFail,
@@ -71,6 +72,11 @@ export interface HitRevealedData {
     player: Player | null
 }
 
+export interface TokenReceivedData {
+    player: Player
+    game_mode: GameMode
+}
+
 export enum Events {
     claimedHit = "Claimed hit",
     gameEnded = "Game ended",
@@ -84,4 +90,5 @@ export enum Events {
     scored = "Scored",
     sfxEnded = "Sfx ended",
     skippedHit = "Skipped hit",
+    tokenReceived = "Token received",
 }

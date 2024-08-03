@@ -12,6 +12,7 @@ import {
     ScoredData,
     Sfx,
     SfxEndedData,
+    TokenReceivedData,
 } from "./events"
 
 const getSfx = (sfx: Sfx): Howl => {
@@ -28,6 +29,10 @@ const getSfx = (sfx: Sfx): Howl => {
         }
         case Sfx.playHit: {
             url = new URL("../sfx/play_hit.mp3", import.meta.url).href
+            break
+        }
+        case Sfx.receiveToken: {
+            url = new URL("../sfx/receive_token.mp3", import.meta.url).href
             break
         }
         case Sfx.stopHit: {
@@ -135,6 +140,16 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
+        let unsubscribeReceivedToken = EventManager.subscribe(
+            Events.tokenReceived,
+            (e: TokenReceivedData) => {
+                if (e.player.id === user?.id || e.game_mode === GameMode.Local)
+                    EventManager.publish(Events.playSfx, {
+                        sfx: Sfx.receiveToken,
+                    } satisfies PlaySfxData)
+            },
+        )
+
         let unsubscribeClaimed = EventManager.subscribe(
             Events.claimedHit,
             (e: ClaimedHitData) => {
@@ -191,6 +206,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             unsubscribeGameEnded()
             unsubscribeJoinedGame()
             unsubscribeLeftGame()
+            unsubscribeReceivedToken()
         }
     }, [user])
 
