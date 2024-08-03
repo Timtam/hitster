@@ -344,7 +344,13 @@ pub fn guess_slot(
                 event: "change_state".into(),
                 state: Some(game.state),
                 players: Some(game.players.clone()),
-                hit,
+                hit: hit.and_then(|h| {
+                    if game.state == GameState::Intercepting {
+                        None
+                    } else {
+                        Some(h)
+                    }
+                }),
                 last_scored,
                 winner,
                 ..Default::default()
