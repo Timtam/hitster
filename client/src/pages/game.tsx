@@ -1,4 +1,5 @@
 import EventManager from "@lomray/event-manager"
+import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
 import deepcopy from "deepcopy"
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
@@ -69,6 +70,14 @@ export function Game() {
     let navigate = useNavigate()
     let { t } = useTranslation()
     let [winner, setWinner] = useImmer<Player | null>(null)
+
+    const startOrStopGame = async () => {
+        if (game.state === GameState.Open) {
+            await gameService.start(game.id)
+        } else {
+            await gameService.stop(game.id)
+        }
+    }
 
     const canSkip = () => {
         return (
@@ -262,10 +271,32 @@ export function Game() {
         setShowHits(Array.from({ length: game.players.length }, () => false))
     }, [game])
 
+    // register keystrokes
+    useEffect(() => {
+        let startOrStopHandler = {
+            onPressed: () => {
+                startOrStopGame()
+            },
+        }
+
+        if (
+            !showSettings &&
+            !showHits.some((s) => s) &&
+            !showAddPlayer &&
+            !gameEndedState &&
+            canStartOrStopGame()
+        ) {
+            bindKeyCombo("alt + s", startOrStopHandler)
+        }
+
+        return () => {
+            unbindKeyCombo("alt + s", startOrStopHandler)
+        }
+    }, [showSettings, showHits, showAddPlayer, gameEndedState, game, user])
+
     const canStartOrStopGame = (): boolean => {
         return (
-            user !== null &&
-            game.players.some((p) => p.id === user.id && p.creator === true) &&
+            game.players.find((p) => p.id === user?.id)?.creator === true &&
             game.players.length >= 2
         )
     }
@@ -305,11 +336,8 @@ export function Game() {
                     <Button
                         className="me-2"
                         disabled={!canStartOrStopGame()}
-                        onClick={async () => {
-                            if (game.state === GameState.Open)
-                                await gameService.start(game.id)
-                            else await gameService.stop(game.id)
-                        }}
+                        onClick={startOrStopGame}
+                        aria-keyshortcuts="Alt+S"
                     >
                         {canStartOrStopGame()
                             ? game.state !== GameState.Open

@@ -12,6 +12,7 @@
     },
     "dependencies": {
         "@lomray/event-manager": "^2.0.2",
+        "@rwh/keystrokes": "^1.5.6",
         "@uidotdev/usehooks": "^2.4.1",
         "boolify-string": "^2.0.2",
         "bootstrap": "^5.3.3",
