@@ -127,10 +127,18 @@ Follow these steps to get a dev environment ready to run the project locally.
 The project is supposed to run inside a Docker container. As such, it holds a Dockerfile which builds the project. It also pushes docker images whenever a commit is created. If you just want to spin it up locally to give it a try, run the following command with Docker installed:
 
 ```sh
-docker run -p 8000:8000 tonironaldbarth/hitster
+docker run -p 8000:8000 tonironaldbarth/hitster:latest
 ```
 
-The Docker container currently only automatically gets built for amd64 and arm64, feel free to open an issue or pull request to add/request more build targets.
+Multiple containers are available to choose from:
+
+| tag | purpose |
+| --- | ------- |
+| latest | newest stable version |
+| dev | bleeding edge dev (might break unpredictably, contains all newest features that haven't been merged into stable) |
+| <release_name> | a specific release that won't change anymore, see the [list of available tags](https://github.com/Timtam/hitster/tags) for your possible options |
+
+The Docker containers currently only automatically gets built for amd64 and arm64, feel free to open an issue or pull request to add/request more build targets.
 
 If you want to build the container for yourself, clone the repository, open a command line and navigate into the project directory, then run the following commands:
 
