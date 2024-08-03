@@ -33,7 +33,9 @@
     An unofficial web-based implementation of the <a href="https://hitstergame.com/">Hitster card game by Koninklijke Jumbo B.V.</a>
     <br />
     <br />
-    <a href="https://hitster.toni-barth.online/">View Demo</a>
+    <a href="https://hitster.toni-barth.online/">View Stable Demo</a>
+    ·
+    <a href="https://hitster-dev.toni-barth.online/">View Development Demo</a>
     ·
     <a href="https://github.com/Timtam/hitster/issues/new?labels=bug&template=bug-report---.md">Report Bug</a>
     ·
