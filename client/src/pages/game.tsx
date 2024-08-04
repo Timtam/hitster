@@ -81,6 +81,12 @@ export function Game() {
         }
     }
 
+    const joinOrLeaveGame = async () => {
+        if (game.players.some((p) => p.id === user?.id))
+            await gameService.leave(game.id)
+        else await gameService.join(game.id)
+    }
+
     const canSkip = () => {
         return (
             user !== null &&
@@ -275,18 +281,35 @@ export function Game() {
 
     // register keystrokes
     useEffect(() => {
-        let startOrStopHandler = {
+        let handleJoinGame = {
+            onPressed: () => {
+                joinOrLeaveGame()
+            },
+        }
+        let handleLeaveGame = {
+            onPressed: () => {
+                joinOrLeaveGame()
+            },
+        }
+        let handleStartOrStopGame = {
             onPressed: () => {
                 startOrStopGame()
             },
         }
 
-        if (!modalShown && canStartOrStopGame()) {
-            bindKeyCombo("alt + s", startOrStopHandler)
+        if (!modalShown) {
+            bindKeyCombo("alt + j", handleJoinGame)
+            bindKeyCombo("alt + q", handleLeaveGame)
+
+            if (canStartOrStopGame()) {
+                bindKeyCombo("alt + s", handleStartOrStopGame)
+            }
         }
 
         return () => {
-            unbindKeyCombo("alt + s", startOrStopHandler)
+            unbindKeyCombo("alt + j", handleJoinGame)
+            unbindKeyCombo("alt + q", handleLeaveGame)
+            unbindKeyCombo("alt + s", handleStartOrStopGame)
         }
     }, [game, user, modalShown])
 
@@ -317,11 +340,7 @@ export function Game() {
                     game.state !== GameState.Open &&
                     !game.players.some((p) => p.id === user?.id)
                 }
-                onClick={async () => {
-                    if (game.players.some((p) => p.id === user?.id))
-                        await gameService.leave(game.id)
-                    else await gameService.join(game.id)
-                }}
+                onClick={joinOrLeaveGame}
             >
                 {game.players.some((p) => p.id === user?.id)
                     ? t("leaveGame")
