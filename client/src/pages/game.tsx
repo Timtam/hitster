@@ -337,7 +337,6 @@ export function Game() {
                         className="me-2"
                         disabled={!canStartOrStopGame()}
                         onClick={startOrStopGame}
-                        aria-keyshortcuts="Alt+S"
                     >
                         {canStartOrStopGame()
                             ? game.state !== GameState.Open

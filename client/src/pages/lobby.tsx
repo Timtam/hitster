@@ -1,5 +1,6 @@
 import EventManager from "@lomray/event-manager"
-import { useMemo } from "react"
+import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
+import { useEffect, useMemo } from "react"
 import Dropdown from "react-bootstrap/Dropdown"
 import Table from "react-bootstrap/Table"
 import { Helmet } from "react-helmet-async"
@@ -24,6 +25,30 @@ export function Lobby() {
     let { t } = useTranslation()
 
     useRevalidateOnInterval({ enabled: true, interval: 5000 })
+
+    useEffect(() => {
+        let handleNewPublicGame = {
+            onPressed: () => createGame(GameMode.Public),
+        }
+
+        let handleNewPrivateGame = {
+            onPressed: () => createGame(GameMode.Private),
+        }
+
+        let handleNewLocalGame = {
+            onPressed: () => createGame(GameMode.Local),
+        }
+
+        bindKeyCombo("alt + u", handleNewPublicGame)
+        bindKeyCombo("alt + r", handleNewPrivateGame)
+        bindKeyCombo("alt + l", handleNewLocalGame)
+
+        return () => {
+            unbindKeyCombo("alt + u", handleNewPublicGame)
+            unbindKeyCombo("alt + r", handleNewPrivateGame)
+            unbindKeyCombo("alt + l", handleNewLocalGame)
+        }
+    }, [])
 
     const createGame = async (mode: GameMode) => {
         let game = await gameService.create(mode)
