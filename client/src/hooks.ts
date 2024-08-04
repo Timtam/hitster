@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 export const useRevalidate = () => {
@@ -29,4 +29,20 @@ export const useRevalidateOnInterval = ({
         },
         [revalidate],
     )
+}
+
+export const useModalShown = (): boolean => {
+    let [shown, setShown] = useState(false)
+
+    useEffect(() => {
+        let id = setInterval(() => {
+            setShown(document.querySelector(".modal") !== null)
+        }, 50)
+
+        return () => {
+            clearInterval(id)
+        }
+    }, [])
+
+    return shown
 }

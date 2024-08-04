@@ -36,6 +36,7 @@ import {
     SkippedHitData,
     TokenReceivedData,
 } from "../events"
+import { useModalShown } from "../hooks"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
@@ -70,6 +71,7 @@ export function Game() {
     let navigate = useNavigate()
     let { t } = useTranslation()
     let [winner, setWinner] = useImmer<Player | null>(null)
+    let modalShown = useModalShown()
 
     const startOrStopGame = async () => {
         if (game.state === GameState.Open) {
@@ -279,20 +281,14 @@ export function Game() {
             },
         }
 
-        if (
-            !showSettings &&
-            !showHits.some((s) => s) &&
-            !showAddPlayer &&
-            !gameEndedState &&
-            canStartOrStopGame()
-        ) {
+        if (!modalShown && canStartOrStopGame()) {
             bindKeyCombo("alt + s", startOrStopHandler)
         }
 
         return () => {
             unbindKeyCombo("alt + s", startOrStopHandler)
         }
-    }, [showSettings, showHits, showAddPlayer, gameEndedState, game, user])
+    }, [game, user, modalShown])
 
     const canStartOrStopGame = (): boolean => {
         return (

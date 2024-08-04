@@ -9,7 +9,7 @@ import { Link, useLoaderData, useNavigate } from "react-router-dom"
 import { useContext } from "../context"
 import { Game, GameMode, GameState } from "../entities"
 import { Events, JoinedGameData } from "../events"
-import { useRevalidateOnInterval } from "../hooks"
+import { useModalShown, useRevalidateOnInterval } from "../hooks"
 import GameService from "../services/games.service"
 
 export async function loader(): Promise<Game[]> {
@@ -23,6 +23,7 @@ export function Lobby() {
     let games = useLoaderData() as Game[]
     let navigate = useNavigate()
     let { t } = useTranslation()
+    let modalShown = useModalShown()
 
     useRevalidateOnInterval({ enabled: true, interval: 5000 })
 
@@ -39,16 +40,18 @@ export function Lobby() {
             onPressed: () => createGame(GameMode.Local),
         }
 
-        bindKeyCombo("alt + u", handleNewPublicGame)
-        bindKeyCombo("alt + r", handleNewPrivateGame)
-        bindKeyCombo("alt + l", handleNewLocalGame)
+        if (!modalShown) {
+            bindKeyCombo("alt + u", handleNewPublicGame)
+            bindKeyCombo("alt + r", handleNewPrivateGame)
+            bindKeyCombo("alt + l", handleNewLocalGame)
+        }
 
         return () => {
             unbindKeyCombo("alt + u", handleNewPublicGame)
             unbindKeyCombo("alt + r", handleNewPrivateGame)
             unbindKeyCombo("alt + l", handleNewLocalGame)
         }
-    }, [])
+    }, [modalShown])
 
     const createGame = async (mode: GameMode) => {
         let game = await gameService.create(mode)
