@@ -73,18 +73,18 @@ export function Game() {
     let [winner, setWinner] = useImmer<Player | null>(null)
     let modalShown = useModalShown()
 
+    const joinOrLeaveGame = async () => {
+        if (game.players.some((p) => p.id === user?.id))
+            await gameService.leave(game.id)
+        else await gameService.join(game.id)
+    }
+
     const startOrStopGame = async () => {
         if (game.state === GameState.Open) {
             await gameService.start(game.id)
         } else {
             await gameService.stop(game.id)
         }
-    }
-
-    const joinOrLeaveGame = async () => {
-        if (game.players.some((p) => p.id === user?.id))
-            await gameService.leave(game.id)
-        else await gameService.join(game.id)
     }
 
     const canSkip = () => {
