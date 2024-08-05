@@ -1,18 +1,19 @@
-import { useEffect } from "react"
+import EventManager from "@lomray/event-manager"
+import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import ToggleButton from "react-bootstrap/ToggleButton"
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
 import { Trans, useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { useImmer } from "use-immer"
 import { useContext } from "../../context"
-import type { Game } from "../../entities"
+import type { Game, Slot } from "../../entities"
 import { GameMode, GameState, Player, PlayerState } from "../../entities"
+import { Events, SlotSelectedData } from "../../events"
 import GameService from "../../services/games.service"
 
 export default ({ game }: { game: Game }) => {
     const { user } = useContext()
-    const [selectedSlot, setSelectedSlot] = useImmer("0")
+    const [selectedSlot, setSelectedSlot] = useState("0")
     const navigate = useNavigate()
     let { t } = useTranslation()
 
@@ -197,7 +198,30 @@ export default ({ game }: { game: Game }) => {
                         type="radio"
                         defaultValue="0"
                         value={selectedSlot}
-                        onChange={(e) => setSelectedSlot(e)}
+                        onChange={(e) => {
+                            let p = game.players.find(
+                                (p) => p.turn_player,
+                            ) as Player
+                            let s = p.slots.find(
+                                (s) => s.id === parseInt(e, 10),
+                            ) as Slot
+
+                            EventManager.publish(Events.slotSelected, {
+                                unavailable:
+                                    (actionRequired() !==
+                                        PlayerState.Guessing &&
+                                        actionRequired() !==
+                                            PlayerState.Intercepting) ||
+                                    game.players.some(
+                                        (p) => p.guess?.id === s.id,
+                                    ),
+                                slot: s,
+                                from_year: p.slots[0].to_year,
+                                to_year: p.slots[p.slots.length - 1].from_year,
+                                slot_count: p.slots.length,
+                            } satisfies SlotSelectedData)
+                            setSelectedSlot(e)
+                        }}
                     >
                         {game.players
                             .find((p) => p.turn_player === true)
