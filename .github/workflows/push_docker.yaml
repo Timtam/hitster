@@ -30,6 +30,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - 
         name: Build and push Docker dev image
+        if: startsWith(github.ref, 'refs/heads/development')
         uses: docker/build-push-action@v6
         with:
           context: .
