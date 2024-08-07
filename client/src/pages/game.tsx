@@ -298,18 +298,18 @@ export function Game() {
         }
 
         if (!modalShown) {
-            bindKeyCombo("alt + j", handleJoinGame)
-            bindKeyCombo("alt + q", handleLeaveGame)
+            bindKeyCombo("alt + shift + j", handleJoinGame)
+            bindKeyCombo("alt + shift + q", handleLeaveGame)
 
             if (canStartOrStopGame()) {
-                bindKeyCombo("alt + s", handleStartOrStopGame)
+                bindKeyCombo("alt + shift + s", handleStartOrStopGame)
             }
         }
 
         return () => {
-            unbindKeyCombo("alt + j", handleJoinGame)
-            unbindKeyCombo("alt + q", handleLeaveGame)
-            unbindKeyCombo("alt + s", handleStartOrStopGame)
+            unbindKeyCombo("alt + shift + j", handleJoinGame)
+            unbindKeyCombo("alt + shift + q", handleLeaveGame)
+            unbindKeyCombo("alt + shift + s", handleStartOrStopGame)
         }
     }, [game, user, modalShown])
 
