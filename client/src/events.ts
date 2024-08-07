@@ -81,7 +81,7 @@ export interface TokenReceivedData {
 }
 
 export interface SlotSelectedData {
-    slot: Slot
+    slot: Slot | null
     slot_count: number
     from_year: number
     to_year: number

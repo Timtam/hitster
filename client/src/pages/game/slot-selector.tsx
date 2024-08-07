@@ -67,6 +67,27 @@ export default ({ game }: { game: Game }) => {
         }
     }
 
+    const guess = async () => {
+        if (selectedSlot === selectedKeySlot) {
+            try {
+                let gs = new GameService()
+                await gs.guess(
+                    game.id,
+                    parseInt(selectedSlot, 10) > 0
+                        ? parseInt(selectedSlot, 10)
+                        : null,
+                    game.mode === GameMode.Local
+                        ? actionPlayer()?.id
+                        : undefined,
+                )
+                setSelectedSlot("0")
+                setSelectedKeySlot("0")
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    }
+
     useEffect(() => {
         game.players.forEach((p) => {
             if (p.guess?.id === parseInt(selectedSlot, 10)) {
@@ -182,14 +203,43 @@ export default ({ game }: { game: Game }) => {
             },
         }
 
+        let handleResetSlot = {
+            onPressed: () => {
+                if (selectedKeySlot !== "0") {
+                    setSelectedKeySlot("0")
+                    setSelectedSlot("0")
+
+                    let p = game.players.find((p) => p.turn_player) as Player
+
+                    EventManager.publish(Events.slotSelected, {
+                        unavailable: true,
+                        slot: null,
+                        from_year: p.slots[0].to_year,
+                        to_year: p.slots[p.slots.length - 1].from_year,
+                        slot_count: p.slots.length,
+                    } satisfies SlotSelectedData)
+                }
+            },
+        }
+
+        let handleGuess = {
+            onPressed: () => {
+                guess()
+            },
+        }
+
         if (game.state !== GameState.Confirming) {
             bindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
             bindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
+            bindKeyCombo("alt + shift + Backspace", handleResetSlot)
+            bindKeyCombo("alt + shift + Enter", handleGuess)
         }
 
         return () => {
             unbindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
             unbindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
+            unbindKeyCombo("alt + shift + Backspace", handleResetSlot)
+            unbindKeyCombo("alt + shift + Enter", handleGuess)
         }
     }, [selectedKeySlot, game])
 
@@ -393,23 +443,7 @@ export default ({ game }: { game: Game }) => {
                                 actionRequired() === PlayerState.Guessing) ||
                             actionRequired() === PlayerState.Waiting
                         }
-                        onClick={async () => {
-                            try {
-                                let gs = new GameService()
-                                await gs.guess(
-                                    game.id,
-                                    parseInt(selectedSlot, 10) > 0
-                                        ? parseInt(selectedSlot, 10)
-                                        : null,
-                                    game.mode === GameMode.Local
-                                        ? actionPlayer()?.id
-                                        : undefined,
-                                )
-                                setSelectedSlot("0")
-                            } catch (e) {
-                                console.log(e)
-                            }
-                        }}
+                        onClick={guess}
                     >
                         {actionRequired() === PlayerState.Guessing ||
                         actionRequired() === PlayerState.Intercepting

@@ -215,22 +215,25 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             (e: SlotSelectedData) => {
                 let pan = 0
 
-                if (e.slot.from_year === 0) pan = -1
-                else if (e.slot.to_year === 0) pan = 1
-                else
-                    pan =
-                        -1 +
-                        2 *
-                            ((e.slot.from_year +
-                                (e.slot.to_year - e.slot.from_year) / 2 -
-                                e.from_year) /
-                                (e.to_year - e.from_year))
+                if (e.slot) {
+                    if (e.slot.from_year === 0) pan = -1
+                    else if (e.slot.to_year === 0) pan = 1
+                    else
+                        pan =
+                            -1 +
+                            2 *
+                                ((e.slot.from_year +
+                                    (e.slot.to_year - e.slot.from_year) / 2 -
+                                    e.from_year) /
+                                    (e.to_year - e.from_year))
 
-                EventManager.publish(Events.playSfx, {
-                    sfx: Sfx.selectSlot,
-                    pan: pan,
-                } satisfies PlaySfxData)
-                if (e.unavailable)
+                    EventManager.publish(Events.playSfx, {
+                        sfx: Sfx.selectSlot,
+                        pan: pan,
+                    } satisfies PlaySfxData)
+                }
+
+                if (e.unavailable || e.slot === null)
                     EventManager.publish(Events.playSfx, {
                         sfx: Sfx.slotUnavailable,
                         pan: pan,
