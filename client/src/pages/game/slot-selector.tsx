@@ -228,11 +228,26 @@ export default ({ game }: { game: Game }) => {
             },
         }
 
+        let handleConfirmYes = {
+            onPressed: () => {
+                confirm(true)
+            },
+        }
+
+        let handleConfirmNo = {
+            onPressed: () => {
+                confirm(false)
+            },
+        }
+
         if (game.state !== GameState.Confirming) {
             bindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
             bindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
             bindKeyCombo("alt + shift + Backspace", handleResetSlot)
             bindKeyCombo("alt + shift + Enter", handleGuess)
+        } else if (actionRequired() === PlayerState.Confirming) {
+            bindKeyCombo("alt + shift + y", handleConfirmYes)
+            bindKeyCombo("alt + shift + n", handleConfirmNo)
         }
 
         return () => {
@@ -240,6 +255,8 @@ export default ({ game }: { game: Game }) => {
             unbindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
             unbindKeyCombo("alt + shift + Backspace", handleResetSlot)
             unbindKeyCombo("alt + shift + Enter", handleGuess)
+            unbindKeyCombo("alt + shift + y", handleConfirmYes)
+            unbindKeyCombo("alt + shift + n", handleConfirmNo)
         }
     }, [selectedKeySlot, game])
 
