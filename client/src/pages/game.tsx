@@ -341,6 +341,11 @@ export function Game() {
                     !game.players.some((p) => p.id === user?.id)
                 }
                 onClick={joinOrLeaveGame}
+                aria-keyshortcuts={
+                    game.players.some((p) => p.id === user?.id)
+                        ? t("leaveGameShortcut")
+                        : t("joinGameShortcut")
+                }
             >
                 {game.players.some((p) => p.id === user?.id)
                     ? t("leaveGame")
@@ -352,6 +357,13 @@ export function Game() {
                         className="me-2"
                         disabled={!canStartOrStopGame()}
                         onClick={startOrStopGame}
+                        aria-keyshortcuts={
+                            canStartOrStopGame()
+                                ? game.state !== GameState.Open
+                                    ? t("stopGameShortcut")
+                                    : t("startGameShortcut")
+                                : ""
+                        }
                     >
                         {canStartOrStopGame()
                             ? game.state !== GameState.Open

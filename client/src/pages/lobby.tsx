@@ -72,13 +72,22 @@ export function Lobby() {
                     {t("createNewGame")}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
-                    <Dropdown.Item onClick={() => createGame(GameMode.Public)}>
+                    <Dropdown.Item
+                        onClick={() => createGame(GameMode.Public)}
+                        aria-keyshortcuts={t("publicGameShortcut")}
+                    >
                         {t("publicGame")}
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => createGame(GameMode.Private)}>
+                    <Dropdown.Item
+                        onClick={() => createGame(GameMode.Private)}
+                        aria-keyshortcuts={t("privateGameShortcut")}
+                    >
                         {t("privateGame")}
                     </Dropdown.Item>
-                    <Dropdown.Item onClick={() => createGame(GameMode.Local)}>
+                    <Dropdown.Item
+                        onClick={() => createGame(GameMode.Local)}
+                        aria-keyshortcuts={t("localGameShortcut")}
+                    >
                         {t("localGame")}
                     </Dropdown.Item>
                 </Dropdown.Menu>

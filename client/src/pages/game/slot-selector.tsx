@@ -335,12 +335,14 @@ export default ({ game }: { game: Game }) => {
                     <Button
                         className="me-2"
                         onClick={async () => await confirm(false)}
+                        aria-keyshortcuts={t("noShortcut")}
                     >
                         {t("no")}
                     </Button>
                     <Button
                         className="me-2"
                         onClick={async () => await confirm(true)}
+                        aria-keyshortcuts={t("yesShortcut")}
                     >
                         {t("yes")}
                     </Button>
