@@ -45,6 +45,7 @@
         "afterYear": "after {{year}}",
         "betweenYears": "between {{year1}} and {{year2}}",
         "submitGuess": "Submit guess",
+        "submitGuessShortcut": "Alt+Shift+Return",
         "selectSlotFirst": "Select a slot first",
         "cannotSubmitGuess": "You cannot submit a guess right now",
         "game_one": "Game",
@@ -153,6 +154,19 @@
         "guessNothing": "{{player}} doesn't intercept",
         "guess": "{{player}} guesses: {{guess}}",
         "youReceivedToken": "You received a token for guessing artist and title of this hit correctly",
-        "otherReceivedToken": "{{player}} received a token for guessing artist and title of this hit correctly"
+        "otherReceivedToken": "{{player}} received a token for guessing artist and title of this hit correctly",
+        "keyboardShortcut_one": "Keyboard shortcut",
+        "keyboardShortcut_other": "Keyboard shortcuts",
+        "section": "Abschnitt",
+        "action": "Aktion",
+        "game": "Game",
+        "confirmYes": "title and artist of the hit was guessed correctly",
+        "confirmNo": "title and artist of the hit was guessed incorrectly",
+        "selectPreviousSlot": "Select previous slot",
+        "selectPreviousSlotShortcut": "Alt+Shift+Up arrow",
+        "selectNextSlot": "Select next slot",
+        "selectNextSlotShortcut": "Alt+Shift+Down arrow",
+        "selectNoSlot": "Select no slot",
+        "selectNoSlotShortcut": "Alt+Shift+Backspace"
     }
 }

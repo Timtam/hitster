@@ -463,6 +463,13 @@ export default ({ game }: { game: Game }) => {
                             actionRequired() === PlayerState.Waiting
                         }
                         onClick={guess}
+                        aria-keyshortcuts={
+                            actionRequired() === PlayerState.Guessing ||
+                            actionRequired() === PlayerState.Intercepting ||
+                            parseInt(selectedSlot, 10) > 0
+                                ? t("submitGuessShortcut")
+                                : ""
+                        }
                     >
                         {actionRequired() === PlayerState.Guessing ||
                         actionRequired() === PlayerState.Intercepting

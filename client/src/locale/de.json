@@ -45,6 +45,7 @@
         "afterYear": "nach {{year}}",
         "betweenYears": "von {{year1}} bis {{year2}}",
         "submitGuess": "Vermutung abschicken",
+        "submitGuessShortcut": "Alt+Umschalt+Enter",
         "selectSlotFirst": "Wähle erst eine Möglichkeit",
         "cannotSubmitGuess": "Du kannst derzeit keine Vermutung abgeben",
         "game_one": "Spiel",
@@ -153,6 +154,19 @@
         "guessNothing": "{{player}} behauptet nichts Gegenteiliges",
         "guess": "{{player}} vermutet: {{guess}}",
         "youReceivedToken": "Du hast einen Token erhalten, da du Künstler und Titel dieses Hits wusstest",
-        "otherReceivedToken": "{{player}} hat einen Token erhalten, da der Künstler und Titel dieses Hits genannt wurde"
+        "otherReceivedToken": "{{player}} hat einen Token erhalten, da der Künstler und Titel dieses Hits genannt wurde",
+        "keyboardShortcut_one": "Tastenkombination",
+        "keyboardShortcut_other": "Tastenkombinationen",
+        "section": "Abschnitt",
+        "action": "Aktion",
+        "game": "Spiel",
+        "confirmYes": "Titel und Interpret des Hits wurde richtig erraten",
+        "confirmNo": "Titel und Interpret des Hits wurde nicht richtig erraten",
+        "selectPreviousSlot": "Vorherigen Slot auswählen",
+        "selectPreviousSlotShortcut": "Alt+Umschalt+Pfeil nach oben",
+        "selectNextSlot": "Nächsten Slot auswählen",
+        "selectNextSlotShortcut": "Alt+Umschalt+Pfeil nach unten",
+        "selectNoSlot": "Keinen Slot auswählen",
+        "selectNoSlotShortcut": "Alt+Umschalt+Rücktaste"
     }
 }

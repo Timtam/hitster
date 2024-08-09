@@ -9,11 +9,13 @@ import { LinkContainer } from "react-router-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { User } from "./entities"
 import Settings from "./settings"
+import Shortcuts from "./shortcuts"
 
 export default function Navigation({ user }: { user: User | null }) {
     let navigate = useNavigate()
     const { t } = useTranslation()
     let [showSettings, setShowSettings] = useState(false)
+    let [showShortcuts, setShowShortcuts] = useState(false)
     let [_, setWelcome] = useLocalStorage("welcome")
 
     return (
@@ -46,6 +48,14 @@ export default function Navigation({ user }: { user: User | null }) {
                                         onClick={() => setWelcome("false")}
                                     >
                                         {t("welcome")}
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link
+                                        aria-expanded="false"
+                                        onClick={() => setShowShortcuts(true)}
+                                    >
+                                        {t("keyboardShortcut", { count: 2 })}
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
@@ -166,6 +176,10 @@ export default function Navigation({ user }: { user: User | null }) {
             <Settings
                 show={showSettings}
                 onHide={() => setShowSettings(false)}
+            />
+            <Shortcuts
+                show={showShortcuts}
+                onHide={() => setShowShortcuts(false)}
             />
         </>
     )
