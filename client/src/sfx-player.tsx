@@ -12,7 +12,6 @@ import {
     ScoredData,
     Sfx,
     SfxEndedData,
-    SlotSelectedData,
     TokenReceivedData,
 } from "./events"
 
@@ -34,14 +33,6 @@ const getSfx = (sfx: Sfx): Howl => {
         }
         case Sfx.receiveToken: {
             url = new URL("../sfx/receive_token.opus", import.meta.url).href
-            break
-        }
-        case Sfx.selectSlot: {
-            url = new URL("../sfx/select_slot.opus", import.meta.url).href
-            break
-        }
-        case Sfx.slotUnavailable: {
-            url = new URL("../sfx/slot_unavailable.opus", import.meta.url).href
             break
         }
         case Sfx.stopHit: {
@@ -101,9 +92,6 @@ export default function SfxPlayer({ user }: { user: User | null }) {
                             sfx: e.sfx,
                         } satisfies SfxEndedData)
                     })
-
-                    if (e.pan) s.stereo(e.pan)
-                    else s.stereo(0)
 
                     s.play()
                 }
@@ -210,37 +198,6 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
-        let unsubscribeSlotSelected = EventManager.subscribe(
-            Events.slotSelected,
-            (e: SlotSelectedData) => {
-                let pan = 0
-
-                if (e.slot) {
-                    if (e.slot.from_year === 0) pan = -1
-                    else if (e.slot.to_year === 0) pan = 1
-                    else
-                        pan =
-                            -1 +
-                            2 *
-                                ((e.slot.from_year +
-                                    (e.slot.to_year - e.slot.from_year) / 2 -
-                                    e.from_year) /
-                                    (e.to_year - e.from_year))
-
-                    EventManager.publish(Events.playSfx, {
-                        sfx: Sfx.selectSlot,
-                        pan: pan,
-                    } satisfies PlaySfxData)
-                }
-
-                if (e.unavailable || e.slot === null)
-                    EventManager.publish(Events.playSfx, {
-                        sfx: Sfx.slotUnavailable,
-                        pan: pan,
-                    } satisfies PlaySfxData)
-            },
-        )
-
         return () => {
             unsubscribeClaimed()
             unsubscribeGuessed()
@@ -249,7 +206,6 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             unsubscribeJoinedGame()
             unsubscribeLeftGame()
             unsubscribeReceivedToken()
-            unsubscribeSlotSelected()
         }
     }, [user])
 

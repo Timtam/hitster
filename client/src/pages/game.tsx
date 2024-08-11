@@ -36,7 +36,6 @@ import {
     SkippedHitData,
     TokenReceivedData,
 } from "../events"
-import { useModalShown } from "../hooks"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
@@ -71,13 +70,6 @@ export function Game() {
     let navigate = useNavigate()
     let { t } = useTranslation()
     let [winner, setWinner] = useImmer<Player | null>(null)
-    let modalShown = useModalShown()
-
-    const joinOrLeaveGame = async () => {
-        if (game.players.some((p) => p.id === user?.id))
-            await gameService.leave(game.id)
-        else await gameService.join(game.id)
-    }
 
     const startOrStopGame = async () => {
         if (game.state === GameState.Open) {
@@ -281,37 +273,26 @@ export function Game() {
 
     // register keystrokes
     useEffect(() => {
-        let handleJoinGame = {
-            onPressed: () => {
-                joinOrLeaveGame()
-            },
-        }
-        let handleLeaveGame = {
-            onPressed: () => {
-                joinOrLeaveGame()
-            },
-        }
-        let handleStartOrStopGame = {
+        let startOrStopHandler = {
             onPressed: () => {
                 startOrStopGame()
             },
         }
 
-        if (!modalShown) {
-            bindKeyCombo("alt + shift + j", handleJoinGame)
-            bindKeyCombo("alt + shift + q", handleLeaveGame)
-
-            if (canStartOrStopGame()) {
-                bindKeyCombo("alt + shift + s", handleStartOrStopGame)
-            }
+        if (
+            !showSettings &&
+            !showHits.some((s) => s) &&
+            !showAddPlayer &&
+            !gameEndedState &&
+            canStartOrStopGame()
+        ) {
+            bindKeyCombo("alt + s", startOrStopHandler)
         }
 
         return () => {
-            unbindKeyCombo("alt + shift + j", handleJoinGame)
-            unbindKeyCombo("alt + shift + q", handleLeaveGame)
-            unbindKeyCombo("alt + shift + s", handleStartOrStopGame)
+            unbindKeyCombo("alt + s", startOrStopHandler)
         }
-    }, [game, user, modalShown])
+    }, [showSettings, showHits, showAddPlayer, gameEndedState, game, user])
 
     const canStartOrStopGame = (): boolean => {
         return (
@@ -340,7 +321,11 @@ export function Game() {
                     game.state !== GameState.Open &&
                     !game.players.some((p) => p.id === user?.id)
                 }
-                onClick={joinOrLeaveGame}
+                onClick={async () => {
+                    if (game.players.some((p) => p.id === user?.id))
+                        await gameService.leave(game.id)
+                    else await gameService.join(game.id)
+                }}
             >
                 {game.players.some((p) => p.id === user?.id)
                     ? t("leaveGame")
@@ -352,6 +337,7 @@ export function Game() {
                         className="me-2"
                         disabled={!canStartOrStopGame()}
                         onClick={startOrStopGame}
+                        aria-keyshortcuts="Alt+S"
                     >
                         {canStartOrStopGame()
                             ? game.state !== GameState.Open

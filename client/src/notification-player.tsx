@@ -26,6 +26,7 @@ const TIMER_DURATION: number = 150
 export default function NotificationPlayer({ user }: { user: User | null }) {
     let { t } = useTranslation()
     let [politeness, setPoliteness] = useState<"polite" | "assertive">("polite")
+    let [hidden, setHidden] = useState<boolean>(true)
     let output = useRef<HTMLParagraphElement | null>(null)
     let events = useRef<SpeechEvent[]>([])
     let timer = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -41,6 +42,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
     const handleSpeechEvent = () => {
         if (events.current.length === 0) {
             if (output.current) output.current.innerHTML = ""
+            setHidden(true)
             timer.current = null
             return
         }
@@ -74,7 +76,11 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                         },
                     })
                 if (timer.current === null) {
-                    handleSpeechEvent()
+                    setHidden(false)
+                    timer.current = setTimeout(
+                        handleSpeechEvent,
+                        TIMER_DURATION,
+                    )
                 }
             },
         )
@@ -354,6 +360,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             aria-atomic={true}
             ref={output}
             className="visually-hidden"
+            aria-hidden={hidden}
         />
     )
 }

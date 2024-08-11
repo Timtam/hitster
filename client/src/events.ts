@@ -1,4 +1,4 @@
-import { Game, GameMode, Hit, Player, Slot } from "./entities"
+import { Game, GameMode, Hit, Player } from "./entities"
 
 export enum Sfx {
     joinGame,
@@ -7,8 +7,6 @@ export enum Sfx {
     payToken,
     playHit,
     receiveToken,
-    selectSlot,
-    slotUnavailable,
     stopHit,
     youClaim,
     youFail,
@@ -19,7 +17,6 @@ export enum Sfx {
 
 export interface SfxData {
     sfx: Sfx
-    pan?: number
 }
 
 export interface PlaySfxData extends SfxData {}
@@ -80,14 +77,6 @@ export interface TokenReceivedData {
     game_mode: GameMode
 }
 
-export interface SlotSelectedData {
-    slot: Slot | null
-    slot_count: number
-    from_year: number
-    to_year: number
-    unavailable: boolean
-}
-
 export enum Events {
     claimedHit = "Claimed hit",
     gameEnded = "Game ended",
@@ -101,6 +90,5 @@ export enum Events {
     scored = "Scored",
     sfxEnded = "Sfx ended",
     skippedHit = "Skipped hit",
-    slotSelected = "Slot selected",
     tokenReceived = "Token received",
 }

@@ -1,6 +1,5 @@
 import EventManager from "@lomray/event-manager"
-import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
-import { useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import Dropdown from "react-bootstrap/Dropdown"
 import Table from "react-bootstrap/Table"
 import { Helmet } from "react-helmet-async"
@@ -9,7 +8,7 @@ import { Link, useLoaderData, useNavigate } from "react-router-dom"
 import { useContext } from "../context"
 import { Game, GameMode, GameState } from "../entities"
 import { Events, JoinedGameData } from "../events"
-import { useModalShown, useRevalidateOnInterval } from "../hooks"
+import { useRevalidateOnInterval } from "../hooks"
 import GameService from "../services/games.service"
 
 export async function loader(): Promise<Game[]> {
@@ -23,35 +22,8 @@ export function Lobby() {
     let games = useLoaderData() as Game[]
     let navigate = useNavigate()
     let { t } = useTranslation()
-    let modalShown = useModalShown()
 
     useRevalidateOnInterval({ enabled: true, interval: 5000 })
-
-    useEffect(() => {
-        let handleNewPublicGame = {
-            onPressed: () => createGame(GameMode.Public),
-        }
-
-        let handleNewPrivateGame = {
-            onPressed: () => createGame(GameMode.Private),
-        }
-
-        let handleNewLocalGame = {
-            onPressed: () => createGame(GameMode.Local),
-        }
-
-        if (!modalShown) {
-            bindKeyCombo("alt + shift + u", handleNewPublicGame)
-            bindKeyCombo("alt + shift + r", handleNewPrivateGame)
-            bindKeyCombo("alt + shift + l", handleNewLocalGame)
-        }
-
-        return () => {
-            unbindKeyCombo("alt + shift + u", handleNewPublicGame)
-            unbindKeyCombo("alt + shift + r", handleNewPrivateGame)
-            unbindKeyCombo("alt + shift + l", handleNewLocalGame)
-        }
-    }, [modalShown])
 
     const createGame = async (mode: GameMode) => {
         let game = await gameService.create(mode)
