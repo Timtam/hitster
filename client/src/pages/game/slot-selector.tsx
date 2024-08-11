@@ -73,9 +73,7 @@ export default ({ game }: { game: Game }) => {
                 let gs = new GameService()
                 await gs.guess(
                     game.id,
-                    parseInt(selectedSlot, 10) > 0
-                        ? parseInt(selectedSlot, 10)
-                        : null,
+                    selectedSlot !== "0" ? parseInt(selectedSlot, 10) : null,
                     game.mode === GameMode.Local
                         ? actionPlayer()?.id
                         : undefined,
@@ -90,12 +88,21 @@ export default ({ game }: { game: Game }) => {
 
     useEffect(() => {
         game.players.forEach((p) => {
-            if (p.guess?.id === parseInt(selectedSlot, 10)) {
+            if (p.guess?.id.toString() === selectedSlot) {
                 setSelectedSlot("0")
-                setSelectedKeySlot("0")
             }
         })
-    }, [game])
+
+        if (
+            selectedSlot === "0" &&
+            selectedKeySlot !== "0" &&
+            !game.players.some(
+                (p) => p.guess?.id.toString() === selectedKeySlot,
+            )
+        ) {
+            setSelectedSlot(selectedKeySlot)
+        }
+    }, [game, selectedKeySlot, selectedSlot])
 
     useEffect(() => {
         let handlePreviousSlot = {
@@ -466,7 +473,7 @@ export default ({ game }: { game: Game }) => {
                         aria-keyshortcuts={
                             actionRequired() === PlayerState.Guessing ||
                             actionRequired() === PlayerState.Intercepting ||
-                            parseInt(selectedSlot, 10) > 0
+                            selectedSlot !== "0"
                                 ? t("submitGuessShortcut")
                                 : ""
                         }
@@ -474,7 +481,7 @@ export default ({ game }: { game: Game }) => {
                         {actionRequired() === PlayerState.Guessing ||
                         actionRequired() === PlayerState.Intercepting
                             ? actionRequired() === PlayerState.Intercepting ||
-                              parseInt(selectedSlot, 10) > 0
+                              selectedSlot !== "0"
                                 ? t("submitGuess")
                                 : t("selectSlotFirst")
                             : t("cannotSubmitGuess")}
