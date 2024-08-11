@@ -167,6 +167,9 @@
         "selectNextSlot": "Select next slot",
         "selectNextSlotShortcut": "Alt+Shift+Down arrow",
         "selectNoSlot": "Select no slot",
-        "selectNoSlotShortcut": "Alt+Shift+Backspace"
+        "selectNoSlotShortcut": "Alt+Shift+Backspace",
+        "playerStatsNotification": "{{player}}: {{hits}} hits, {{tokens}} tokens",
+        "speakPlayerInfo": "Speak important information about player {{player}}",
+        "speakPlayerInfoShortcut": "Alt+Shift+{{player}}"
     }
 }

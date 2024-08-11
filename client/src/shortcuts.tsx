@@ -47,7 +47,7 @@ export default function Shortcuts({
                                     <td>{t("localGameShortcut")}</td>
                                 </tr>
                                 <tr>
-                                    <th rowSpan={11}>{t("game")}</th>
+                                    <th rowSpan={21}>{t("game")}</th>
                                 </tr>
                                 <tr>
                                     <td>{t("joinGame")}</td>
@@ -89,6 +89,20 @@ export default function Shortcuts({
                                     <td>{t("submitGuess")}</td>
                                     <td>{t("submitGuessShortcut")}</td>
                                 </tr>
+                                {Array.from({ length: 10 }, (_, i) => (
+                                    <tr>
+                                        <td>
+                                            {t("speakPlayerInfo", {
+                                                player: i + 1,
+                                            })}
+                                        </td>
+                                        <td>
+                                            {t("speakPlayerInfoShortcut", {
+                                                player: i !== 9 ? i + 1 : 0,
+                                            })}
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </Table>
                     </>

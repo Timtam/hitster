@@ -247,7 +247,37 @@ export default ({ game }: { game: Game }) => {
             },
         }
 
-        if (game.state !== GameState.Confirming) {
+        let handleReadPlayerStats = Array.from({ length: 10 }, (_, i) => ({
+            onPressed: () => {
+                if (!game.players[i]) {
+                    return
+                }
+
+                EventManager.publish(Events.notification, {
+                    toast: false,
+                    interruptTts: true,
+                    text: t("playerStatsNotification", {
+                        player: game.players[i].name,
+                        hits: game.players[i].hits.length,
+                        tokens: game.players[i].tokens,
+                    }),
+                } satisfies NotificationData)
+            },
+        }))
+
+        if (game.state !== GameState.Open) {
+            for (let i = 0; i < 10; i++) {
+                bindKeyCombo(
+                    "alt + shift + @Digit" + (i !== 9 ? i + 1 : 0).toString(),
+                    handleReadPlayerStats[i],
+                )
+            }
+        }
+
+        if (
+            game.state !== GameState.Confirming &&
+            game.state !== GameState.Open
+        ) {
             bindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
             bindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
             bindKeyCombo("alt + shift + Backspace", handleResetSlot)
@@ -264,6 +294,13 @@ export default ({ game }: { game: Game }) => {
             unbindKeyCombo("alt + shift + Enter", handleGuess)
             unbindKeyCombo("alt + shift + y", handleConfirmYes)
             unbindKeyCombo("alt + shift + n", handleConfirmNo)
+
+            for (let i = 0; i < 10; i++) {
+                unbindKeyCombo(
+                    "alt + shift + @Digit" + (i !== 9 ? i + 1 : 0).toString(),
+                    handleReadPlayerStats[i],
+                )
+            }
         }
     }, [selectedKeySlot, game])
 
@@ -471,9 +508,9 @@ export default ({ game }: { game: Game }) => {
                         }
                         onClick={guess}
                         aria-keyshortcuts={
-                            actionRequired() === PlayerState.Guessing ||
-                            actionRequired() === PlayerState.Intercepting ||
-                            selectedSlot !== "0"
+                            (actionRequired() === PlayerState.Guessing &&
+                                selectedSlot !== "0") ||
+                            actionRequired() === PlayerState.Intercepting
                                 ? t("submitGuessShortcut")
                                 : ""
                         }

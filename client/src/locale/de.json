@@ -167,6 +167,9 @@
         "selectNextSlot": "Nächsten Slot auswählen",
         "selectNextSlotShortcut": "Alt+Umschalt+Pfeil nach unten",
         "selectNoSlot": "Keinen Slot auswählen",
-        "selectNoSlotShortcut": "Alt+Umschalt+Rücktaste"
+        "selectNoSlotShortcut": "Alt+Umschalt+Rücktaste",
+        "playerStatsNotification": "{{player}}: {{hits}} Hits, {{tokens}} Chips",
+        "speakPlayerInfo": "Sprich wichtige Informationen zu Spieler {{player}}",
+        "speakPlayerInfoShortcut": "Alt+Umschalt+{{player}}"
     }
 }
