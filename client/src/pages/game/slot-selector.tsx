@@ -406,7 +406,24 @@ export default ({ game }: { game: Game }) => {
                                 type="radio"
                                 defaultValue="0"
                                 value={selectedSlot}
-                                onChange={(e) => setSelectedSlot(e)}
+                                onChange={(e) => {
+                                    setSelectedKeySlot(e)
+                                    setSelectedSlot(e)
+
+                                    let p = game.players.find(
+                                        (p) => p.turn_player,
+                                    ) as Player
+
+                                    EventManager.publish(Events.slotSelected, {
+                                        unavailable: true,
+                                        slot: null,
+                                        from_year: p.slots[0].to_year,
+                                        to_year:
+                                            p.slots[p.slots.length - 1]
+                                                .from_year,
+                                        slot_count: p.slots.length,
+                                    } satisfies SlotSelectedData)
+                                }}
                             >
                                 <ToggleButton
                                     className="me-2 mb-2 border-0"
