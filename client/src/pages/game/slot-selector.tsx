@@ -1,5 +1,6 @@
 import EventManager from "@lomray/event-manager"
 import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
+import { detect } from "detect-browser"
 import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import ToggleButton from "react-bootstrap/ToggleButton"
@@ -380,6 +381,11 @@ export default ({ game }: { game: Game }) => {
                         className="me-2"
                         onClick={async () => await confirm(false)}
                         aria-keyshortcuts={t("noShortcut")}
+                        aria-label={
+                            detect()?.name === "firefox"
+                                ? `${t("noShortcut")} ${t("no")}`
+                                : ""
+                        }
                     >
                         {t("no")}
                     </Button>
@@ -387,6 +393,11 @@ export default ({ game }: { game: Game }) => {
                         className="me-2"
                         onClick={async () => await confirm(true)}
                         aria-keyshortcuts={t("yesShortcut")}
+                        aria-label={
+                            detect()?.name === "firefox"
+                                ? `${t("yesShortcut")} ${t("yes")}`
+                                : ""
+                        }
                     >
                         {t("yes")}
                     </Button>
@@ -529,6 +540,14 @@ export default ({ game }: { game: Game }) => {
                                 selectedSlot !== "0") ||
                             actionRequired() === PlayerState.Intercepting
                                 ? t("submitGuessShortcut")
+                                : ""
+                        }
+                        aria-label={
+                            detect()?.name === "firefox" &&
+                            ((actionRequired() === PlayerState.Guessing &&
+                                selectedSlot !== "0") ||
+                                actionRequired() === PlayerState.Intercepting)
+                                ? `${t("submitGuessShortcut")} ${t("submitGuess")}`
                                 : ""
                         }
                     >

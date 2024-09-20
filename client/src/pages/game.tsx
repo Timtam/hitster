@@ -1,6 +1,7 @@
 import EventManager from "@lomray/event-manager"
 import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
 import deepcopy from "deepcopy"
+import { detect } from "detect-browser"
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
 import ButtonGroup from "react-bootstrap/ButtonGroup"
@@ -362,6 +363,13 @@ export function Game() {
                                 ? game.state !== GameState.Open
                                     ? t("stopGameShortcut")
                                     : t("startGameShortcut")
+                                : ""
+                        }
+                        aria-label={
+                            detect()?.name === "firefox" && canStartOrStopGame()
+                                ? game.state !== GameState.Open
+                                    ? `${t("stopGameShortcut")} ${t("stopGame")}`
+                                    : `${t("startGameShortcut")} ${t("startGame")}`
                                 : ""
                         }
                     >
