@@ -1,5 +1,6 @@
 import EventManager from "@lomray/event-manager"
 import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
+import { detect } from "detect-browser"
 import { useEffect, useMemo } from "react"
 import Dropdown from "react-bootstrap/Dropdown"
 import Table from "react-bootstrap/Table"
@@ -75,18 +76,33 @@ export function Lobby() {
                     <Dropdown.Item
                         onClick={() => createGame(GameMode.Public)}
                         aria-keyshortcuts={t("publicGameShortcut")}
+                        aria-label={
+                            detect()?.name === "firefox"
+                                ? `${t("publicGameShortcut")} ${t("publicGame")}`
+                                : ""
+                        }
                     >
                         {t("publicGame")}
                     </Dropdown.Item>
                     <Dropdown.Item
                         onClick={() => createGame(GameMode.Private)}
                         aria-keyshortcuts={t("privateGameShortcut")}
+                        aria-label={
+                            detect()?.name === "firefox"
+                                ? `${t("privateGameShortcut")} ${t("privateGame")}`
+                                : ""
+                        }
                     >
                         {t("privateGame")}
                     </Dropdown.Item>
                     <Dropdown.Item
                         onClick={() => createGame(GameMode.Local)}
                         aria-keyshortcuts={t("localGameShortcut")}
+                        aria-label={
+                            detect()?.name === "firefox"
+                                ? `${t("localGameShortcut")} ${t("localGame")}`
+                                : ""
+                        }
                     >
                         {t("localGame")}
                     </Dropdown.Item>

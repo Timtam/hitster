@@ -1,5 +1,6 @@
 import EventManager from "@lomray/event-manager"
 import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
+import { detect } from "detect-browser"
 import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import ToggleButton from "react-bootstrap/ToggleButton"
@@ -380,6 +381,11 @@ export default ({ game }: { game: Game }) => {
                         className="me-2"
                         onClick={async () => await confirm(false)}
                         aria-keyshortcuts={t("noShortcut")}
+                        aria-label={
+                            detect()?.name === "firefox"
+                                ? `${t("noShortcut")} ${t("no")}`
+                                : ""
+                        }
                     >
                         {t("no")}
                     </Button>
@@ -387,6 +393,11 @@ export default ({ game }: { game: Game }) => {
                         className="me-2"
                         onClick={async () => await confirm(true)}
                         aria-keyshortcuts={t("yesShortcut")}
+                        aria-label={
+                            detect()?.name === "firefox"
+                                ? `${t("yesShortcut")} ${t("yes")}`
+                                : ""
+                        }
                     >
                         {t("yes")}
                     </Button>
@@ -406,7 +417,24 @@ export default ({ game }: { game: Game }) => {
                                 type="radio"
                                 defaultValue="0"
                                 value={selectedSlot}
-                                onChange={(e) => setSelectedSlot(e)}
+                                onChange={(e) => {
+                                    setSelectedKeySlot(e)
+                                    setSelectedSlot(e)
+
+                                    let p = game.players.find(
+                                        (p) => p.turn_player,
+                                    ) as Player
+
+                                    EventManager.publish(Events.slotSelected, {
+                                        unavailable: true,
+                                        slot: null,
+                                        from_year: p.slots[0].to_year,
+                                        to_year:
+                                            p.slots[p.slots.length - 1]
+                                                .from_year,
+                                        slot_count: p.slots.length,
+                                    } satisfies SlotSelectedData)
+                                }}
                             >
                                 <ToggleButton
                                     className="me-2 mb-2 border-0"
@@ -512,6 +540,14 @@ export default ({ game }: { game: Game }) => {
                                 selectedSlot !== "0") ||
                             actionRequired() === PlayerState.Intercepting
                                 ? t("submitGuessShortcut")
+                                : ""
+                        }
+                        aria-label={
+                            detect()?.name === "firefox" &&
+                            ((actionRequired() === PlayerState.Guessing &&
+                                selectedSlot !== "0") ||
+                                actionRequired() === PlayerState.Intercepting)
+                                ? `${t("submitGuessShortcut")} ${t("submitGuess")}`
                                 : ""
                         }
                     >
