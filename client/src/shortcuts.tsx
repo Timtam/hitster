@@ -47,7 +47,7 @@ export default function Shortcuts({
                                     <td>{t("localGameShortcut")}</td>
                                 </tr>
                                 <tr>
-                                    <th rowSpan={21}>{t("game")}</th>
+                                    <th rowSpan={22}>{t("game")}</th>
                                 </tr>
                                 <tr>
                                     <td>{t("joinGame")}</td>
@@ -64,6 +64,10 @@ export default function Shortcuts({
                                 <tr>
                                     <td>{t("stopGame")}</td>
                                     <td>{t("stopGameShortcut")}</td>
+                                </tr>
+                                <tr>
+                                    <td>{t("gameSettings")}</td>
+                                    <td>{t("gameSettingsShortcut")}</td>
                                 </tr>
                                 <tr>
                                     <td>{t("confirmYes")}</td>

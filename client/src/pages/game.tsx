@@ -297,10 +297,21 @@ export function Game() {
                 startOrStopGame()
             },
         }
+        let handleShowSettings = {
+            onPressed: () => {
+                setShowSettings(true)
+            },
+        }
 
         if (!modalShown) {
             bindKeyCombo("alt + shift + j", handleJoinGame)
             bindKeyCombo("alt + shift + q", handleLeaveGame)
+            if (
+                game.state === GameState.Open &&
+                (game.players.find((p) => p.id === user?.id)?.creator ??
+                    false) === true
+            )
+                bindKeyCombo("alt + shift + e", handleShowSettings)
 
             if (canStartOrStopGame()) {
                 bindKeyCombo("alt + shift + s", handleStartOrStopGame)
@@ -310,6 +321,7 @@ export function Game() {
         return () => {
             unbindKeyCombo("alt + shift + j", handleJoinGame)
             unbindKeyCombo("alt + shift + q", handleLeaveGame)
+            unbindKeyCombo("alt + shift + e", handleShowSettings)
             unbindKeyCombo("alt + shift + s", handleStartOrStopGame)
         }
     }, [game, user, modalShown])
@@ -387,6 +399,21 @@ export function Game() {
                                 ?.creator ?? false) === false
                         }
                         aria-expanded={false}
+                        aria-keyshortcuts={
+                            game.state === GameState.Open &&
+                            (game.players.find((p) => p.id === user?.id)
+                                ?.creator ?? false) === true
+                                ? t("gameSettingsShortcut")
+                                : ""
+                        }
+                        aria-label={
+                            detect()?.name === "firefox" &&
+                            game.state === GameState.Open &&
+                            (game.players.find((p) => p.id === user?.id)
+                                ?.creator ?? false) === true
+                                ? `${t("gameSettingsShortcut")} ${t("gameSettings")}`
+                                : ""
+                        }
                         onClick={() => setShowSettings(true)}
                     >
                         {game.state !== GameState.Open

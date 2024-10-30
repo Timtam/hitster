@@ -101,6 +101,7 @@
         "finalScore": "And here are the final results:",
         "cancel": "Cancel",
         "gameSettings": "Game settings",
+        "gameSettingsShortcut": "Alt+Shift+E",
         "gameSettingsHitGoal": "How many hits do the players need to guess correctly in order to win?",
         "goal": "Goal",
         "gameSettingsStartTokens": "How many tokens should every player get when starting a game?",

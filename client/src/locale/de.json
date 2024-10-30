@@ -101,6 +101,7 @@
         "finalScore": "Hier sind die finalen Ergebnisse:",
         "cancel": "Abbrechen",
         "gameSettings": "Spieleinstellungen",
+        "gameSettingsShortcut": "Alt+Umschalt+E",
         "gameSettingsHitGoal": "Wie viele Hits muss ein Spieler erraten, um das Spiel zu gewinnen?",
         "goal": "Ziel",
         "gameSettingsStartTokens": "Wie viele Chips bekommt jeder Spieler zu Beginn des Spiels?",
