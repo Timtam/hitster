@@ -3,8 +3,6 @@ import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
 import { detect } from "detect-browser"
 import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
-import ToggleButton from "react-bootstrap/ToggleButton"
-import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
 import { Trans, useTranslation } from "react-i18next"
 import { useContext } from "../../context"
 import type { Game, Slot } from "../../entities"
@@ -412,68 +410,51 @@ export default ({ game }: { game: Game }) => {
                     </p>
                     {actionRequired() === PlayerState.Intercepting ? (
                         <>
-                            <ToggleButtonGroup
-                                name="selected-slot-none"
-                                type="radio"
-                                defaultValue="0"
-                                value={selectedSlot}
-                                onChange={(e) => {
-                                    setSelectedKeySlot(e)
-                                    setSelectedSlot(e)
-
-                                    let p = game.players.find(
-                                        (p) => p.turn_player,
-                                    ) as Player
-
-                                    EventManager.publish(Events.slotSelected, {
-                                        unavailable: true,
-                                        slot: null,
-                                        from_year: p.slots[0].to_year,
-                                        to_year:
-                                            p.slots[p.slots.length - 1]
-                                                .from_year,
-                                        slot_count: p.slots.length,
-                                    } satisfies SlotSelectedData)
-                                }}
-                            >
-                                <ToggleButton
-                                    className="me-2 mb-2 border-0"
+                            <div className="btn-group mb-2">
+                                <input
+                                    className="border-0 btn-check"
                                     id="slot-0"
                                     key="slot-0"
                                     value="0"
                                     type="radio"
+                                    checked={selectedSlot === "0"}
+                                    onChange={(e) => {
+                                        setSelectedKeySlot(e.target.value)
+                                        setSelectedSlot(e.target.value)
+
+                                        let p = game.players.find(
+                                            (p) => p.turn_player,
+                                        ) as Player
+
+                                        EventManager.publish(
+                                            Events.slotSelected,
+                                            {
+                                                unavailable: true,
+                                                slot: null,
+                                                from_year: p.slots[0].to_year,
+                                                to_year:
+                                                    p.slots[p.slots.length - 1]
+                                                        .from_year,
+                                                slot_count: p.slots.length,
+                                            } satisfies SlotSelectedData,
+                                        )
+                                    }}
+                                />
+                                <label
+                                    htmlFor="slot-0"
+                                    className="btn btn-outline-primary"
                                 >
                                     {t("dontIntercept")}
-                                </ToggleButton>
-                            </ToggleButtonGroup>
+                                </label>
+                            </div>
                             <br aria-hidden />
                         </>
                     ) : (
                         ""
                     )}
-                    <ToggleButtonGroup
-                        name="selected-slot"
-                        type="radio"
-                        defaultValue="0"
-                        value={selectedSlot}
-                        onChange={(e) => {
-                            let p = game.players.find(
-                                (p) => p.turn_player,
-                            ) as Player
-                            let s = p.slots.find(
-                                (s) => s.id === parseInt(e, 10),
-                            ) as Slot
-
-                            EventManager.publish(Events.slotSelected, {
-                                unavailable: false,
-                                slot: s,
-                                from_year: p.slots[0].to_year,
-                                to_year: p.slots[p.slots.length - 1].from_year,
-                                slot_count: p.slots.length,
-                            } satisfies SlotSelectedData)
-                            setSelectedKeySlot(e)
-                            setSelectedSlot(e)
-                        }}
+                    <div
+                        className="btn-group btn-group-sm mb-2"
+                        data-toggle="buttons"
                     >
                         {game.players
                             .find((p) => p.turn_player === true)
@@ -495,38 +476,96 @@ export default ({ game }: { game: Game }) => {
                                     })
 
                                 return (
-                                    <ToggleButton
-                                        className="me-2 mb-2"
-                                        value={slot.id.toString()}
-                                        id={`slot-${slot.id.toString()}`}
-                                        key={`slot-${slot.id.toString()}`}
-                                        disabled={
-                                            (actionRequired() !==
-                                                PlayerState.Guessing &&
-                                                actionRequired() !==
-                                                    PlayerState.Intercepting) ||
-                                            game.players.some(
-                                                (p) => p.guess?.id === slot.id,
-                                            )
-                                        }
-                                        type="radio"
-                                    >
-                                        {text +
-                                            (game.players.some(
-                                                (p) => p.guess?.id === slot.id,
-                                            )
-                                                ? " (" +
-                                                  game.players.find(
-                                                      (p) =>
-                                                          p.guess?.id ===
-                                                          slot.id,
-                                                  )?.name +
-                                                  ")"
-                                                : "")}
-                                    </ToggleButton>
+                                    <>
+                                        <input
+                                            className="mb-2 btn-check"
+                                            value={slot.id.toString()}
+                                            id={`slot-${slot.id.toString()}`}
+                                            key={`slot-${slot.id.toString()}`}
+                                            disabled={
+                                                (actionRequired() !==
+                                                    PlayerState.Guessing &&
+                                                    actionRequired() !==
+                                                        PlayerState.Intercepting) ||
+                                                game.players.some(
+                                                    (p) =>
+                                                        p.guess?.id === slot.id,
+                                                )
+                                            }
+                                            type="radio"
+                                            checked={
+                                                selectedSlot ===
+                                                slot.id.toString()
+                                            }
+                                            onChange={(e) => {
+                                                let p = game.players.find(
+                                                    (p) => p.turn_player,
+                                                ) as Player
+                                                let s = p.slots.find(
+                                                    (s) =>
+                                                        s.id ===
+                                                        parseInt(
+                                                            e.target.value,
+                                                            10,
+                                                        ),
+                                                ) as Slot
+
+                                                EventManager.publish(
+                                                    Events.slotSelected,
+                                                    {
+                                                        unavailable: false,
+                                                        slot: s,
+                                                        from_year:
+                                                            p.slots[0].to_year,
+                                                        to_year:
+                                                            p.slots[
+                                                                p.slots.length -
+                                                                    1
+                                                            ].from_year,
+                                                        slot_count:
+                                                            p.slots.length,
+                                                    } satisfies SlotSelectedData,
+                                                )
+                                                setSelectedKeySlot(
+                                                    e.target.value,
+                                                )
+                                                setSelectedSlot(e.target.value)
+                                            }}
+                                            aria-label={
+                                                text +
+                                                (game.players.some(
+                                                    (p) =>
+                                                        p.guess?.id === slot.id,
+                                                )
+                                                    ? " (" +
+                                                      game.players.find(
+                                                          (p) =>
+                                                              p.guess?.id ===
+                                                              slot.id,
+                                                      )?.name +
+                                                      ")"
+                                                    : "")
+                                            }
+                                        />
+                                        <label
+                                            htmlFor={`slot-${slot.id.toString()}`}
+                                            className="btn btn-outline-primary"
+                                        ></label>
+
+                                        {slot.to_year !== 0 ? (
+                                            <span
+                                                className="mx-2 mb-2 align-self-center"
+                                                aria-hidden={true}
+                                            >
+                                                {slot.to_year}
+                                            </span>
+                                        ) : (
+                                            ""
+                                        )}
+                                    </>
                                 )
                             })}
-                    </ToggleButtonGroup>
+                    </div>
                     <br aria-hidden="true" />
                     <Button
                         disabled={
