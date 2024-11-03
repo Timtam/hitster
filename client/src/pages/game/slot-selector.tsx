@@ -1,3 +1,4 @@
+import classNames from "classnames"
 import { detect } from "detect-browser"
 import { useEffect } from "react"
 import Button from "react-bootstrap/Button"
@@ -8,6 +9,7 @@ import { useContext } from "../../context"
 import type { Game } from "../../entities"
 import { GameMode, GameState, Player, PlayerState } from "../../entities"
 import GameService from "../../services/games.service"
+import "./slot-selector.css"
 
 export default ({ game }: { game: Game }) => {
     const { user } = useContext()
@@ -218,7 +220,24 @@ export default ({ game }: { game: Game }) => {
 
                                 return (
                                     <>
-                                        <label className="btn btn-outline-primary">
+                                        <label
+                                            className={classNames(
+                                                "btn",
+                                                "btn-outline-primary",
+                                                {
+                                                    "radio-disabled":
+                                                        (actionRequired() !==
+                                                            PlayerState.Guessing &&
+                                                            actionRequired() !==
+                                                                PlayerState.Intercepting) ||
+                                                        game.players.some(
+                                                            (p) =>
+                                                                p.guess?.id ===
+                                                                slot.id,
+                                                        ),
+                                                },
+                                            )}
+                                        >
                                             <input
                                                 className="mb-2 btn-check"
                                                 value={slot.id.toString()}
