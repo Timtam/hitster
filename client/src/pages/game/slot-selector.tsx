@@ -1,3 +1,4 @@
+import { detect } from "detect-browser"
 import { useEffect } from "react"
 import Button from "react-bootstrap/Button"
 import { Trans, useTranslation } from "react-i18next"
@@ -217,50 +218,72 @@ export default ({ game }: { game: Game }) => {
 
                                 return (
                                     <>
-                                        <input
-                                            className="mb-2 btn-check"
-                                            value={slot.id.toString()}
-                                            id={`slot-${slot.id.toString()}`}
-                                            key={`slot-${slot.id.toString()}`}
-                                            disabled={
-                                                (actionRequired() !==
-                                                    PlayerState.Guessing &&
-                                                    actionRequired() !==
-                                                        PlayerState.Intercepting) ||
-                                                game.players.some(
-                                                    (p) =>
-                                                        p.guess?.id === slot.id,
-                                                )
-                                            }
-                                            type="radio"
-                                            checked={
-                                                selectedSlot ===
-                                                slot.id.toString()
-                                            }
-                                            onChange={(e) =>
-                                                setSelectedSlot(e.target.value)
-                                            }
-                                            aria-label={
-                                                text +
-                                                (game.players.some(
-                                                    (p) =>
-                                                        p.guess?.id === slot.id,
-                                                )
-                                                    ? " (" +
-                                                      game.players.find(
-                                                          (p) =>
-                                                              p.guess?.id ===
-                                                              slot.id,
-                                                      )?.name +
-                                                      ")"
-                                                    : "")
-                                            }
-                                        />
-                                        <label
-                                            htmlFor={`slot-${slot.id.toString()}`}
-                                            className="btn btn-outline-primary"
-                                        ></label>
-
+                                        <label className="btn btn-outline-primary">
+                                            <input
+                                                className="mb-2 btn-check"
+                                                value={slot.id.toString()}
+                                                key={`slot-${slot.id.toString()}`}
+                                                disabled={
+                                                    (actionRequired() !==
+                                                        PlayerState.Guessing &&
+                                                        actionRequired() !==
+                                                            PlayerState.Intercepting) ||
+                                                    game.players.some(
+                                                        (p) =>
+                                                            p.guess?.id ===
+                                                            slot.id,
+                                                    )
+                                                }
+                                                type="radio"
+                                                checked={
+                                                    selectedSlot ===
+                                                    slot.id.toString()
+                                                }
+                                                onChange={(e) =>
+                                                    setSelectedSlot(
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                title={
+                                                    text +
+                                                    (game.players.some(
+                                                        (p) =>
+                                                            p.guess?.id ===
+                                                            slot.id,
+                                                    )
+                                                        ? " (" +
+                                                          game.players.find(
+                                                              (p) =>
+                                                                  p.guess
+                                                                      ?.id ===
+                                                                  slot.id,
+                                                          )?.name +
+                                                          ")"
+                                                        : "")
+                                                }
+                                            />
+                                            {detect()?.name === "firefox" ? (
+                                                <p className="visually-hidden">
+                                                    {text +
+                                                        (game.players.some(
+                                                            (p) =>
+                                                                p.guess?.id ===
+                                                                slot.id,
+                                                        )
+                                                            ? " (" +
+                                                              game.players.find(
+                                                                  (p) =>
+                                                                      p.guess
+                                                                          ?.id ===
+                                                                      slot.id,
+                                                              )?.name +
+                                                              ")"
+                                                            : "")}
+                                                </p>
+                                            ) : (
+                                                ""
+                                            )}
+                                        </label>
                                         {slot.to_year !== 0 ? (
                                             <span
                                                 className="mx-2 mb-2 align-self-center"
