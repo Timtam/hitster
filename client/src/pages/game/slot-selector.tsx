@@ -1,5 +1,6 @@
 import EventManager from "@lomray/event-manager"
 import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
+import classNames from "classnames"
 import { detect } from "detect-browser"
 import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
@@ -9,6 +10,7 @@ import type { Game, Slot } from "../../entities"
 import { GameMode, GameState, Player, PlayerState } from "../../entities"
 import { Events, NotificationData, SlotSelectedData } from "../../events"
 import GameService from "../../services/games.service"
+import "./slot-selector.css"
 
 export default ({ game }: { game: Game }) => {
     const { user } = useContext()
@@ -477,81 +479,122 @@ export default ({ game }: { game: Game }) => {
 
                                 return (
                                     <>
-                                        <input
-                                            className="mb-2 btn-check"
-                                            value={slot.id.toString()}
-                                            id={`slot-${slot.id.toString()}`}
-                                            key={`slot-${slot.id.toString()}`}
-                                            disabled={
-                                                (actionRequired() !==
-                                                    PlayerState.Guessing &&
-                                                    actionRequired() !==
-                                                        PlayerState.Intercepting) ||
-                                                game.players.some(
-                                                    (p) =>
-                                                        p.guess?.id === slot.id,
-                                                )
-                                            }
-                                            type="radio"
-                                            checked={
-                                                selectedSlot ===
-                                                slot.id.toString()
-                                            }
-                                            onChange={(e) => {
-                                                let p = game.players.find(
-                                                    (p) => p.turn_player,
-                                                ) as Player
-                                                let s = p.slots.find(
-                                                    (s) =>
-                                                        s.id ===
-                                                        parseInt(
-                                                            e.target.value,
-                                                            10,
-                                                        ),
-                                                ) as Slot
-
-                                                EventManager.publish(
-                                                    Events.slotSelected,
-                                                    {
-                                                        unavailable: false,
-                                                        slot: s,
-                                                        from_year:
-                                                            p.slots[0].to_year,
-                                                        to_year:
-                                                            p.slots[
-                                                                p.slots.length -
-                                                                    1
-                                                            ].from_year,
-                                                        slot_count:
-                                                            p.slots.length,
-                                                    } satisfies SlotSelectedData,
-                                                )
-                                                setSelectedKeySlot(
-                                                    e.target.value,
-                                                )
-                                                setSelectedSlot(e.target.value)
-                                            }}
-                                            aria-label={
-                                                text +
-                                                (game.players.some(
-                                                    (p) =>
-                                                        p.guess?.id === slot.id,
-                                                )
-                                                    ? " (" +
-                                                      game.players.find(
-                                                          (p) =>
-                                                              p.guess?.id ===
-                                                              slot.id,
-                                                      )?.name +
-                                                      ")"
-                                                    : "")
-                                            }
-                                        />
                                         <label
-                                            htmlFor={`slot-${slot.id.toString()}`}
-                                            className="btn btn-outline-primary"
-                                        ></label>
+                                            className={classNames(
+                                                "btn",
+                                                "btn-outline-primary",
+                                                {
+                                                    "radio-disabled":
+                                                        (actionRequired() !==
+                                                            PlayerState.Guessing &&
+                                                            actionRequired() !==
+                                                                PlayerState.Intercepting) ||
+                                                        game.players.some(
+                                                            (p) =>
+                                                                p.guess?.id ===
+                                                                slot.id,
+                                                        ),
+                                                },
+                                            )}
+                                        >
+                                            <input
+                                                className="mb-2 btn-check"
+                                                value={slot.id.toString()}
+                                                key={`slot-${slot.id.toString()}`}
+                                                disabled={
+                                                    (actionRequired() !==
+                                                        PlayerState.Guessing &&
+                                                        actionRequired() !==
+                                                            PlayerState.Intercepting) ||
+                                                    game.players.some(
+                                                        (p) =>
+                                                            p.guess?.id ===
+                                                            slot.id,
+                                                    )
+                                                }
+                                                type="radio"
+                                                checked={
+                                                    selectedSlot ===
+                                                    slot.id.toString()
+                                                }
+                                                onChange={(e) => {
+                                                    let p = game.players.find(
+                                                        (p) => p.turn_player,
+                                                    ) as Player
+                                                    let s = p.slots.find(
+                                                        (s) =>
+                                                            s.id ===
+                                                            parseInt(
+                                                                e.target.value,
+                                                                10,
+                                                            ),
+                                                    ) as Slot
 
+                                                    EventManager.publish(
+                                                        Events.slotSelected,
+                                                        {
+                                                            unavailable: false,
+                                                            slot: s,
+                                                            from_year:
+                                                                p.slots[0]
+                                                                    .to_year,
+                                                            to_year:
+                                                                p.slots[
+                                                                    p.slots
+                                                                        .length -
+                                                                        1
+                                                                ].from_year,
+                                                            slot_count:
+                                                                p.slots.length,
+                                                        } satisfies SlotSelectedData,
+                                                    )
+                                                    setSelectedKeySlot(
+                                                        e.target.value,
+                                                    )
+                                                    setSelectedSlot(
+                                                        e.target.value,
+                                                    )
+                                                }}
+                                                title={
+                                                    text +
+                                                    (game.players.some(
+                                                        (p) =>
+                                                            p.guess?.id ===
+                                                            slot.id,
+                                                    )
+                                                        ? " (" +
+                                                          game.players.find(
+                                                              (p) =>
+                                                                  p.guess
+                                                                      ?.id ===
+                                                                  slot.id,
+                                                          )?.name +
+                                                          ")"
+                                                        : "")
+                                                }
+                                            />
+                                            {detect()?.name === "firefox" ? (
+                                                <p className="visually-hidden">
+                                                    {text +
+                                                        (game.players.some(
+                                                            (p) =>
+                                                                p.guess?.id ===
+                                                                slot.id,
+                                                        )
+                                                            ? " (" +
+                                                              game.players.find(
+                                                                  (p) =>
+                                                                      p.guess
+                                                                          ?.id ===
+                                                                      slot.id,
+                                                              )?.name +
+                                                              ")"
+                                                            : "")}
+                                                </p>
+                                            ) : (
+                                                ""
+                                            )}
+                                        </label>
                                         {slot.to_year !== 0 ? (
                                             <span
                                                 className="mx-2 mb-2 align-self-center"
