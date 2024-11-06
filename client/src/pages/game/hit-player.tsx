@@ -170,8 +170,10 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                     disabled={src === ""}
                     aria-keyshortcuts={shortcut !== undefined ? shortcut : ""}
                     aria-label={
-                        detect()?.name === "firefox" && shortcut !== undefined
-                            ? shortcut
+                        detect()?.name === "firefox" &&
+                        shortcut !== undefined &&
+                        src !== ""
+                            ? `${shortcut} ${playing ? t("stopHit") : t("playHit")}`
                             : ""
                     }
                     onClick={() => {

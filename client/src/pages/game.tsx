@@ -596,13 +596,7 @@ export function Game() {
                     detect()?.name === "firefox"
                         ? canSkip()
                             ? `${t("skipHitShortcut")} ${t("skipHit")}`
-                            : game.players.find((p) => p.id === user?.id)
-                                    ?.state === PlayerState.Guessing
-                              ? t("skipHitNotGuessing")
-                              : game.players.find((p) => p.id === user?.id)
-                                      ?.tokens === 0
-                                ? t("skipHitNoToken")
-                                : t("cannotSkipHit")
+                            : ""
                         : ""
                 }
                 onClick={skipHit}
