@@ -105,6 +105,14 @@ export function Game() {
         return p && p.tokens >= 3
     }
 
+    const skipHit = async () =>
+        await gameService.skip(
+            game.id,
+            game.mode === GameMode.Local
+                ? game.players.find((p) => p.turn_player)?.id
+                : undefined,
+        )
+
     useEffect(() => {
         let eventSource = new EventSource(`/api/games/${game.id}/events`)
 
@@ -297,20 +305,41 @@ export function Game() {
                 startOrStopGame()
             },
         }
+        let handleShowSettings = {
+            onPressed: () => {
+                setShowSettings(true)
+            },
+        }
+        let handleSkipHit = {
+            onPressed: () => {
+                skipHit()
+            },
+        }
 
         if (!modalShown) {
             bindKeyCombo("alt + shift + j", handleJoinGame)
             bindKeyCombo("alt + shift + q", handleLeaveGame)
+            if (
+                game.state === GameState.Open &&
+                (game.players.find((p) => p.id === user?.id)?.creator ??
+                    false) === true
+            )
+                bindKeyCombo("alt + shift + e", handleShowSettings)
 
             if (canStartOrStopGame()) {
                 bindKeyCombo("alt + shift + s", handleStartOrStopGame)
+            }
+            if (canSkip()) {
+                bindKeyCombo("alt + shift + i", handleSkipHit)
             }
         }
 
         return () => {
             unbindKeyCombo("alt + shift + j", handleJoinGame)
             unbindKeyCombo("alt + shift + q", handleLeaveGame)
+            unbindKeyCombo("alt + shift + e", handleShowSettings)
             unbindKeyCombo("alt + shift + s", handleStartOrStopGame)
+            unbindKeyCombo("alt + shift + i", handleSkipHit)
         }
     }, [game, user, modalShown])
 
@@ -387,6 +416,21 @@ export function Game() {
                                 ?.creator ?? false) === false
                         }
                         aria-expanded={false}
+                        aria-keyshortcuts={
+                            game.state === GameState.Open &&
+                            (game.players.find((p) => p.id === user?.id)
+                                ?.creator ?? false) === true
+                                ? t("gameSettingsShortcut")
+                                : ""
+                        }
+                        aria-label={
+                            detect()?.name === "firefox" &&
+                            game.state === GameState.Open &&
+                            (game.players.find((p) => p.id === user?.id)
+                                ?.creator ?? false) === true
+                                ? `${t("gameSettingsShortcut")} ${t("gameSettings")}`
+                                : ""
+                        }
                         onClick={() => setShowSettings(true)}
                     >
                         {game.state !== GameState.Open
@@ -542,18 +586,20 @@ export function Game() {
                 duration={
                     game.state === GameState.Confirming ? 0 : game.hit_duration
                 }
+                shortcut={t("playOrStopHitShortcut")}
             />
             <Button
                 className="me-2"
                 disabled={!canSkip()}
-                onClick={async () =>
-                    await gameService.skip(
-                        game.id,
-                        game.mode === GameMode.Local
-                            ? game.players.find((p) => p.turn_player)?.id
-                            : undefined,
-                    )
+                aria-keyshortcuts={canSkip() ? t("skipHitShortcut") : ""}
+                aria-label={
+                    detect()?.name === "firefox"
+                        ? canSkip()
+                            ? `${t("skipHitShortcut")} ${t("skipHit")}`
+                            : ""
+                        : ""
                 }
+                onClick={skipHit}
             >
                 {canSkip()
                     ? t("skipHit")

@@ -1,5 +1,7 @@
 import EventManager from "@lomray/event-manager"
+import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
 import { useLocalStorage } from "@uidotdev/usehooks"
+import { detect } from "detect-browser"
 import { Howl } from "howler"
 import {
     forwardRef,
@@ -11,6 +13,7 @@ import {
 import Button from "react-bootstrap/Button"
 import { useTranslation } from "react-i18next"
 import { Events, Sfx } from "../../events"
+import { useModalShown } from "../../hooks"
 
 interface HitPlayerTimers {
     sfxTimer: ReturnType<typeof setTimeout> | null
@@ -22,6 +25,7 @@ export type HitPlayerProps = {
     duration: number
     onPlay?: () => void
     autoplay?: boolean
+    shortcut?: string
 }
 
 export type HitPlayerRef = {
@@ -31,7 +35,7 @@ export type HitPlayerRef = {
 
 export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
     function HitPlayer(
-        { src, duration, onPlay, autoplay }: HitPlayerProps,
+        { src, duration, onPlay, autoplay, shortcut }: HitPlayerProps,
         ref,
     ) {
         let player = useRef<Howl | null>(null)
@@ -43,6 +47,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
         let { t } = useTranslation()
         let [volume] = useLocalStorage("musicVolume", "1.0")
         let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
+        let modalShown = useModalShown()
 
         const play = () => {
             if (timers.current.stopTimer) {
@@ -122,7 +127,22 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                 }
                 player.current = null
             }
-        }, [src, playing])
+
+            let handlePlayOrStopHit = {
+                onPressed: () => {
+                    if (playing) setPlaying(false)
+                    else setPlaying(true)
+                },
+            }
+
+            if (shortcut !== undefined && src !== "" && !modalShown) {
+                bindKeyCombo("alt + shift + h", handlePlayOrStopHit)
+            }
+
+            return () => {
+                unbindKeyCombo("alt + shift + h", handlePlayOrStopHit)
+            }
+        }, [src, playing, shortcut, modalShown])
 
         useEffect(() => {
             player.current?.volume(parseFloat(volume))
@@ -148,6 +168,14 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                 <Button
                     className="me-2"
                     disabled={src === ""}
+                    aria-keyshortcuts={shortcut !== undefined ? shortcut : ""}
+                    aria-label={
+                        detect()?.name === "firefox" &&
+                        shortcut !== undefined &&
+                        src !== ""
+                            ? `${shortcut} ${playing ? t("stopHit") : t("playHit")}`
+                            : ""
+                    }
                     onClick={() => {
                         if (playing === true) {
                             setPlaying(false)
