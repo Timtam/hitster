@@ -1,5 +1,9 @@
 import EventManager from "@lomray/event-manager"
-import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
+import {
+    bindKeyCombo,
+    BrowserKeyComboEvent,
+    unbindKeyCombo,
+} from "@rwh/keystrokes"
 import deepcopy from "deepcopy"
 import { detect } from "detect-browser"
 import { useEffect, useMemo } from "react"
@@ -291,55 +295,60 @@ export function Game() {
     // register keystrokes
     useEffect(() => {
         let handleJoinGame = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 joinOrLeaveGame()
             },
         }
         let handleLeaveGame = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 joinOrLeaveGame()
             },
         }
         let handleStartOrStopGame = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 startOrStopGame()
             },
         }
         let handleShowSettings = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 setShowSettings(true)
             },
         }
         let handleSkipHit = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 skipHit()
             },
         }
 
         if (!modalShown) {
-            bindKeyCombo("alt + shift + j", handleJoinGame)
-            bindKeyCombo("alt + shift + q", handleLeaveGame)
+            bindKeyCombo("control + shift + j", handleJoinGame)
+            bindKeyCombo("control + shift + q", handleLeaveGame)
             if (
                 game.state === GameState.Open &&
                 (game.players.find((p) => p.id === user?.id)?.creator ??
                     false) === true
             )
-                bindKeyCombo("alt + shift + e", handleShowSettings)
+                bindKeyCombo("control + shift + e", handleShowSettings)
 
             if (canStartOrStopGame()) {
-                bindKeyCombo("alt + shift + s", handleStartOrStopGame)
+                bindKeyCombo("control + shift + s", handleStartOrStopGame)
             }
             if (canSkip()) {
-                bindKeyCombo("alt + shift + i", handleSkipHit)
+                bindKeyCombo("control + shift + i", handleSkipHit)
             }
         }
 
         return () => {
-            unbindKeyCombo("alt + shift + j", handleJoinGame)
-            unbindKeyCombo("alt + shift + q", handleLeaveGame)
-            unbindKeyCombo("alt + shift + e", handleShowSettings)
-            unbindKeyCombo("alt + shift + s", handleStartOrStopGame)
-            unbindKeyCombo("alt + shift + i", handleSkipHit)
+            unbindKeyCombo("control + shift + j", handleJoinGame)
+            unbindKeyCombo("control + shift + q", handleLeaveGame)
+            unbindKeyCombo("control + shift + e", handleShowSettings)
+            unbindKeyCombo("control + shift + s", handleStartOrStopGame)
+            unbindKeyCombo("control + shift + i", handleSkipHit)
         }
     }, [game, user, modalShown])
 

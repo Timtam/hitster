@@ -1,5 +1,9 @@
 import EventManager from "@lomray/event-manager"
-import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
+import {
+    bindKeyCombo,
+    BrowserKeyComboEvent,
+    unbindKeyCombo,
+} from "@rwh/keystrokes"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import { detect } from "detect-browser"
 import { Howl } from "howler"
@@ -129,18 +133,19 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             }
 
             let handlePlayOrStopHit = {
-                onPressed: () => {
+                onPressed: (e: BrowserKeyComboEvent) => {
+                    e.finalKeyEvent.preventDefault()
                     if (playing) setPlaying(false)
                     else setPlaying(true)
                 },
             }
 
             if (shortcut !== undefined && src !== "" && !modalShown) {
-                bindKeyCombo("alt + shift + h", handlePlayOrStopHit)
+                bindKeyCombo("control + shift + h", handlePlayOrStopHit)
             }
 
             return () => {
-                unbindKeyCombo("alt + shift + h", handlePlayOrStopHit)
+                unbindKeyCombo("control + shift + h", handlePlayOrStopHit)
             }
         }, [src, playing, shortcut, modalShown])
 

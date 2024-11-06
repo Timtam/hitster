@@ -1,5 +1,9 @@
 import EventManager from "@lomray/event-manager"
-import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
+import {
+    bindKeyCombo,
+    BrowserKeyComboEvent,
+    unbindKeyCombo,
+} from "@rwh/keystrokes"
 import { detect } from "detect-browser"
 import { useEffect, useMemo } from "react"
 import Dropdown from "react-bootstrap/Dropdown"
@@ -30,27 +34,36 @@ export function Lobby() {
 
     useEffect(() => {
         let handleNewPublicGame = {
-            onPressed: () => createGame(GameMode.Public),
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                createGame(GameMode.Public)
+            },
         }
 
         let handleNewPrivateGame = {
-            onPressed: () => createGame(GameMode.Private),
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                createGame(GameMode.Private)
+            },
         }
 
         let handleNewLocalGame = {
-            onPressed: () => createGame(GameMode.Local),
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                createGame(GameMode.Local)
+            },
         }
 
         if (!modalShown) {
-            bindKeyCombo("alt + shift + u", handleNewPublicGame)
-            bindKeyCombo("alt + shift + r", handleNewPrivateGame)
-            bindKeyCombo("alt + shift + l", handleNewLocalGame)
+            bindKeyCombo("control + shift + u", handleNewPublicGame)
+            bindKeyCombo("control + shift + r", handleNewPrivateGame)
+            bindKeyCombo("control + shift + l", handleNewLocalGame)
         }
 
         return () => {
-            unbindKeyCombo("alt + shift + u", handleNewPublicGame)
-            unbindKeyCombo("alt + shift + r", handleNewPrivateGame)
-            unbindKeyCombo("alt + shift + l", handleNewLocalGame)
+            unbindKeyCombo("control + shift + u", handleNewPublicGame)
+            unbindKeyCombo("control + shift + r", handleNewPrivateGame)
+            unbindKeyCombo("control + shift + l", handleNewLocalGame)
         }
     }, [modalShown])
 

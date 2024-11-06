@@ -1,5 +1,9 @@
 import EventManager from "@lomray/event-manager"
-import { bindKeyCombo, unbindKeyCombo } from "@rwh/keystrokes"
+import {
+    bindKeyCombo,
+    BrowserKeyComboEvent,
+    unbindKeyCombo,
+} from "@rwh/keystrokes"
 import { detect } from "detect-browser"
 import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
@@ -107,7 +111,8 @@ export default ({ game }: { game: Game }) => {
 
     useEffect(() => {
         let handlePreviousSlot = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 let slot = "0"
                 let p = game.players.find((p) => p.turn_player) as Player
 
@@ -158,7 +163,9 @@ export default ({ game }: { game: Game }) => {
         }
 
         let handleNextSlot = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+
                 let slot = "0"
                 let p = game.players.find((p) => p.turn_player) as Player
 
@@ -212,7 +219,8 @@ export default ({ game }: { game: Game }) => {
         }
 
         let handleResetSlot = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 if (selectedKeySlot !== "0") {
                     setSelectedKeySlot("0")
                     setSelectedSlot("0")
@@ -231,25 +239,29 @@ export default ({ game }: { game: Game }) => {
         }
 
         let handleGuess = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 guess()
             },
         }
 
         let handleConfirmYes = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 confirm(true)
             },
         }
 
         let handleConfirmNo = {
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 confirm(false)
             },
         }
 
         let handleReadPlayerStats = Array.from({ length: 10 }, (_, i) => ({
-            onPressed: () => {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
                 if (!game.players[i]) {
                     return
                 }
@@ -269,7 +281,8 @@ export default ({ game }: { game: Game }) => {
         if (game.state !== GameState.Open) {
             for (let i = 0; i < 10; i++) {
                 bindKeyCombo(
-                    "alt + shift + @Digit" + (i !== 9 ? i + 1 : 0).toString(),
+                    "control + shift + @Digit" +
+                        (i !== 9 ? i + 1 : 0).toString(),
                     handleReadPlayerStats[i],
                 )
             }
@@ -279,26 +292,27 @@ export default ({ game }: { game: Game }) => {
             game.state !== GameState.Confirming &&
             game.state !== GameState.Open
         ) {
-            bindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
-            bindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
-            bindKeyCombo("alt + shift + Backspace", handleResetSlot)
-            bindKeyCombo("alt + shift + Enter", handleGuess)
+            bindKeyCombo("control + shift + ArrowUp", handlePreviousSlot)
+            bindKeyCombo("control + shift + ArrowDown", handleNextSlot)
+            bindKeyCombo("control + shift + Backspace", handleResetSlot)
+            bindKeyCombo("control + shift + Enter", handleGuess)
         } else if (actionRequired() === PlayerState.Confirming) {
-            bindKeyCombo("alt + shift + y", handleConfirmYes)
-            bindKeyCombo("alt + shift + n", handleConfirmNo)
+            bindKeyCombo("control + shift + y", handleConfirmYes)
+            bindKeyCombo("control + shift + n", handleConfirmNo)
         }
 
         return () => {
-            unbindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
-            unbindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
-            unbindKeyCombo("alt + shift + Backspace", handleResetSlot)
-            unbindKeyCombo("alt + shift + Enter", handleGuess)
-            unbindKeyCombo("alt + shift + y", handleConfirmYes)
-            unbindKeyCombo("alt + shift + n", handleConfirmNo)
+            unbindKeyCombo("control + shift + ArrowUp", handlePreviousSlot)
+            unbindKeyCombo("control + shift + ArrowDown", handleNextSlot)
+            unbindKeyCombo("control + shift + Backspace", handleResetSlot)
+            unbindKeyCombo("control + shift + Enter", handleGuess)
+            unbindKeyCombo("control + shift + y", handleConfirmYes)
+            unbindKeyCombo("control + shift + n", handleConfirmNo)
 
             for (let i = 0; i < 10; i++) {
                 unbindKeyCombo(
-                    "alt + shift + @Digit" + (i !== 9 ? i + 1 : 0).toString(),
+                    "control + shift + @Digit" +
+                        (i !== 9 ? i + 1 : 0).toString(),
                     handleReadPlayerStats[i],
                 )
             }
