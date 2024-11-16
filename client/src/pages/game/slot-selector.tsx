@@ -281,7 +281,7 @@ export default ({ game }: { game: Game }) => {
         if (game.state !== GameState.Open) {
             for (let i = 0; i < 10; i++) {
                 bindKeyCombo(
-                    "control + shift + @Digit" +
+                    "alt + shift + @Digit" +
                         (i !== 9 ? i + 1 : 0).toString(),
                     handleReadPlayerStats[i],
                 )
@@ -292,26 +292,26 @@ export default ({ game }: { game: Game }) => {
             game.state !== GameState.Confirming &&
             game.state !== GameState.Open
         ) {
-            bindKeyCombo("control + shift + ArrowUp", handlePreviousSlot)
-            bindKeyCombo("control + shift + ArrowDown", handleNextSlot)
-            bindKeyCombo("control + shift + Backspace", handleResetSlot)
-            bindKeyCombo("control + shift + Enter", handleGuess)
+            bindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
+            bindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
+            bindKeyCombo("alt + shift + Backspace", handleResetSlot)
+            bindKeyCombo("alt + shift + Enter", handleGuess)
         } else if (actionRequired() === PlayerState.Confirming) {
-            bindKeyCombo("control + shift + y", handleConfirmYes)
-            bindKeyCombo("control + shift + n", handleConfirmNo)
+            bindKeyCombo("alt + shift + y", handleConfirmYes)
+            bindKeyCombo("alt + shift + n", handleConfirmNo)
         }
 
         return () => {
-            unbindKeyCombo("control + shift + ArrowUp", handlePreviousSlot)
-            unbindKeyCombo("control + shift + ArrowDown", handleNextSlot)
-            unbindKeyCombo("control + shift + Backspace", handleResetSlot)
-            unbindKeyCombo("control + shift + Enter", handleGuess)
-            unbindKeyCombo("control + shift + y", handleConfirmYes)
-            unbindKeyCombo("control + shift + n", handleConfirmNo)
+            unbindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
+            unbindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
+            unbindKeyCombo("alt + shift + Backspace", handleResetSlot)
+            unbindKeyCombo("alt + shift + Enter", handleGuess)
+            unbindKeyCombo("alt + shift + y", handleConfirmYes)
+            unbindKeyCombo("alt + shift + n", handleConfirmNo)
 
             for (let i = 0; i < 10; i++) {
                 unbindKeyCombo(
-                    "control + shift + @Digit" +
+                    "alt + shift + @Digit" +
                         (i !== 9 ? i + 1 : 0).toString(),
                     handleReadPlayerStats[i],
                 )

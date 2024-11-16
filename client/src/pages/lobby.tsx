@@ -55,15 +55,15 @@ export function Lobby() {
         }
 
         if (!modalShown) {
-            bindKeyCombo("control + shift + u", handleNewPublicGame)
-            bindKeyCombo("control + shift + r", handleNewPrivateGame)
-            bindKeyCombo("control + shift + l", handleNewLocalGame)
+            bindKeyCombo("alt + shift + u", handleNewPublicGame)
+            bindKeyCombo("alt + shift + r", handleNewPrivateGame)
+            bindKeyCombo("alt + shift + l", handleNewLocalGame)
         }
 
         return () => {
-            unbindKeyCombo("control + shift + u", handleNewPublicGame)
-            unbindKeyCombo("control + shift + r", handleNewPrivateGame)
-            unbindKeyCombo("control + shift + l", handleNewLocalGame)
+            unbindKeyCombo("alt + shift + u", handleNewPublicGame)
+            unbindKeyCombo("alt + shift + r", handleNewPrivateGame)
+            unbindKeyCombo("alt + shift + l", handleNewLocalGame)
         }
     }, [modalShown])
 
