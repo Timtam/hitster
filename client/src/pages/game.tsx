@@ -326,29 +326,29 @@ export function Game() {
         }
 
         if (!modalShown) {
-            bindKeyCombo("control + shift + j", handleJoinGame)
-            bindKeyCombo("control + shift + q", handleLeaveGame)
+            bindKeyCombo("alt + shift + j", handleJoinGame)
+            bindKeyCombo("alt + shift + q", handleLeaveGame)
             if (
                 game.state === GameState.Open &&
                 (game.players.find((p) => p.id === user?.id)?.creator ??
                     false) === true
             )
-                bindKeyCombo("control + shift + e", handleShowSettings)
+                bindKeyCombo("alt + shift + e", handleShowSettings)
 
             if (canStartOrStopGame()) {
-                bindKeyCombo("control + shift + s", handleStartOrStopGame)
+                bindKeyCombo("alt + shift + s", handleStartOrStopGame)
             }
             if (canSkip()) {
-                bindKeyCombo("control + shift + i", handleSkipHit)
+                bindKeyCombo("alt + shift + i", handleSkipHit)
             }
         }
 
         return () => {
-            unbindKeyCombo("control + shift + j", handleJoinGame)
-            unbindKeyCombo("control + shift + q", handleLeaveGame)
-            unbindKeyCombo("control + shift + e", handleShowSettings)
-            unbindKeyCombo("control + shift + s", handleStartOrStopGame)
-            unbindKeyCombo("control + shift + i", handleSkipHit)
+            unbindKeyCombo("alt + shift + j", handleJoinGame)
+            unbindKeyCombo("alt + shift + q", handleLeaveGame)
+            unbindKeyCombo("alt + shift + e", handleShowSettings)
+            unbindKeyCombo("alt + shift + s", handleStartOrStopGame)
+            unbindKeyCombo("alt + shift + i", handleSkipHit)
         }
     }, [game, user, modalShown])
 

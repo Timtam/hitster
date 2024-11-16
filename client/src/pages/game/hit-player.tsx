@@ -141,11 +141,11 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             }
 
             if (shortcut !== undefined && src !== "" && !modalShown) {
-                bindKeyCombo("control + shift + h", handlePlayOrStopHit)
+                bindKeyCombo("alt + shift + h", handlePlayOrStopHit)
             }
 
             return () => {
-                unbindKeyCombo("control + shift + h", handlePlayOrStopHit)
+                unbindKeyCombo("alt + shift + h", handlePlayOrStopHit)
             }
         }, [src, playing, shortcut, modalShown])
 
