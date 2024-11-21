@@ -326,8 +326,9 @@ export function Game() {
         }
 
         if (!modalShown) {
-            bindKeyCombo("alt + shift + j", handleJoinGame)
-            bindKeyCombo("alt + shift + q", handleLeaveGame)
+            if (game.players.some((p) => p.id === user?.id))
+                bindKeyCombo("alt + shift + q", handleLeaveGame)
+            else bindKeyCombo("alt + shift + j", handleJoinGame)
             if (
                 game.state === GameState.Open &&
                 (game.players.find((p) => p.id === user?.id)?.creator ??
