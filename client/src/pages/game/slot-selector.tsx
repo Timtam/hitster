@@ -281,8 +281,7 @@ export default ({ game }: { game: Game }) => {
         if (game.state !== GameState.Open) {
             for (let i = 0; i < 10; i++) {
                 bindKeyCombo(
-                    "alt + shift + @Digit" +
-                        (i !== 9 ? i + 1 : 0).toString(),
+                    "alt + shift + @Digit" + (i !== 9 ? i + 1 : 0).toString(),
                     handleReadPlayerStats[i],
                 )
             }
@@ -311,8 +310,7 @@ export default ({ game }: { game: Game }) => {
 
             for (let i = 0; i < 10; i++) {
                 unbindKeyCombo(
-                    "alt + shift + @Digit" +
-                        (i !== 9 ? i + 1 : 0).toString(),
+                    "alt + shift + @Digit" + (i !== 9 ? i + 1 : 0).toString(),
                     handleReadPlayerStats[i],
                 )
             }
