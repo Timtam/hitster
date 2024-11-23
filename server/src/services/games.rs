@@ -210,6 +210,17 @@ impl GameService {
                     message: "only the creator can kick other players from a game".into(),
                     http_status_code: 409,
                 })
+            } else if player_id.is_some()
+                && !game
+                    .players
+                    .iter()
+                    .find(|p| p.id == *player_id.as_ref().unwrap())
+                    .is_none()
+            {
+                Err(LeaveGameError {
+                    message: "a player with this id isn't part of this game".into(),
+                    http_status_code: 409,
+                })
             } else {
                 let id = player_id.unwrap_or(user.id);
                 let pos = game.players.iter().position(|p| p.id == id).unwrap();
