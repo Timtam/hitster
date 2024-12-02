@@ -139,6 +139,7 @@
         "features": "Features",
         "packsFeature": "a total of {{hits}} hits in {{packs}} packs available for you to guess",
         "accessibilityFeature": "developed with screen reader accessibility in mind, so that sighted and visually impaired people can play together",
+        "colorSchemesFeature": "support light and dark mode, and respect your device's settings by default",
         "publicAndPrivateGamesFeature": "play a public game to play with everyone who's currently available, or play a private game for just you and your friends",
         "localGamesFeature": "play a local game with friends and family, just like the card game, but you don't need to have the cards around",
         "noRegistrationFeature": "no registration necessary, just create a game and play",
@@ -174,6 +175,10 @@
         "selectNoSlotShortcut": "Alt+Shift+Backspace",
         "playerStatsNotification": "{{player}}: {{hits}} hits, {{tokens}} tokens",
         "speakPlayerInfo": "Speak important information about player {{player}}",
-        "speakPlayerInfoShortcut": "Alt+Shift+{{player}}"
+        "speakPlayerInfoShortcut": "Alt+Shift+{{player}}",
+        "colorScheme": "Color scheme",
+        "automatic": "Automatic",
+        "light": "Light",
+        "dark": "Dark"
     }
 }

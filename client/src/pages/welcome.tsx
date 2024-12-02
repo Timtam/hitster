@@ -55,6 +55,7 @@ export function Welcome({
                                 </li>
                                 <li>{t("cardCorrectionFeature")}</li>
                                 <li>{t("accessibilityFeature")}</li>
+                                <li>{t("colorSchemesFeature")}</li>
                             </ul>
                             <h3>{t("howToPlay")}</h3>
                         </>

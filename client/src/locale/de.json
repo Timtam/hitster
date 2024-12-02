@@ -139,6 +139,7 @@
         "features": "Funktionen",
         "packsFeature": "insgesamt {{hits}} Hits in {{packs}} Packs, welche du erraten kannst",
         "accessibilityFeature": "entwickelt mit Fokus auf Barrierefreiheit, sodass sehbehinderte und sehende Spieler gemeinsam spielen können",
+        "colorSchemesFeature": "entscheide dich für ein helles oder dunkles Farbschema, oder passe dich automatisch deinem verwendeten Gerät an",
         "publicAndPrivateGamesFeature": "spiele ein öffentliches Spiel mit jedem verfügbaren Spieler, oder ein privates Spiel mit deinen Freunden",
         "localGamesFeature": "spiele ein lokales Spiel mit Freunden und Familie, genau wie das Kartenspiel, nur ohne Karten",
         "noRegistrationFeature": "keine Registrierung notwendig, einfach ein Spiel erstellen und los geht's",
@@ -174,6 +175,10 @@
         "selectNoSlotShortcut": "Alt+Umschalt+Rücktaste",
         "playerStatsNotification": "{{player}}: {{hits}} Hits, {{tokens}} Chips",
         "speakPlayerInfo": "Sprich wichtige Informationen zu Spieler {{player}}",
-        "speakPlayerInfoShortcut": "Alt+Umschalt+{{player}}"
+        "speakPlayerInfoShortcut": "Alt+Umschalt+{{player}}",
+        "colorScheme": "Farbschema",
+        "automatic": "Automatisch",
+        "light": "Hell",
+        "dark": "Dunkel"
     }
 }
