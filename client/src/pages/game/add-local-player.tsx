@@ -26,24 +26,32 @@ export default ({
             </Modal.Header>
             <Modal.Body>
                 <h2 className="h4">{t("addPlayer")}</h2>
-                <Form.Group className="mb-2">
-                    <Form.Label>{t("name")}</Form.Label>
-                    <Form.Control
-                        type="input"
-                        placeholder={t("name")}
-                        value={name}
-                        onChange={(e) => setName(e.currentTarget.value)}
-                    />
-                </Form.Group>
-                <Button
-                    disabled={name === ""}
-                    onClick={async () => {
-                        await gameService.addPlayer(game.id, name)
-                        onHide()
-                    }}
-                >
-                    {t("addPlayer")}
-                </Button>
+                <Form>
+                    <Form.Group
+                        className="mb-2"
+                        controlId="formLocalPlayerName"
+                    >
+                        <Form.Label>{t("name")}</Form.Label>
+                        <Form.Control
+                            type="input"
+                            placeholder={t("name")}
+                            value={name}
+                            onChange={(e) => setName(e.currentTarget.value)}
+                        />
+                    </Form.Group>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={name === ""}
+                        onClick={async (e) => {
+                            e.preventDefault()
+                            await gameService.addPlayer(game.id, name)
+                            onHide()
+                        }}
+                    >
+                        {t("addPlayer")}
+                    </Button>
+                </Form>
             </Modal.Body>
         </Modal>
     )
