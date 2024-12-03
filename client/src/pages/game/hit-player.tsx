@@ -131,7 +131,9 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                 }
                 player.current = null
             }
+        }, [src, playing])
 
+        useEffect(() => {
             let handlePlayOrStopHit = {
                 onPressed: (e: BrowserKeyComboEvent) => {
                     e.finalKeyEvent.preventDefault()
@@ -147,7 +149,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             return () => {
                 unbindKeyCombo("alt + shift + h", handlePlayOrStopHit)
             }
-        }, [src, playing, shortcut, modalShown])
+        }, [playing, src, shortcut, modalShown])
 
         useEffect(() => {
             player.current?.volume(parseFloat(volume))
