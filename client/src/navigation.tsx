@@ -78,8 +78,7 @@ export default function Navigation({ user }: { user: User | null }) {
                                 </p>
                                 <p className="mb-6 px-2 fs-6 text-nowrap">
                                     {t("version", {
-                                        clientVersion: "__CLIENT_VERSION__",
-                                        serverVersion: "__SERVER_VERSION__",
+                                        version: "__VERSION__",
                                     })}
                                 </p>
                                 <p className="mb-3 px-2 fs-6 text-nowrap">

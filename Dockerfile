@@ -10,7 +10,7 @@ RUN npm install && rm /app/*.json
 
 # build everything else
 
-COPY ./client/ ./server/Cargo.toml /app/
+COPY ./client/ ./.git /app/
 
 RUN npm run build
 
