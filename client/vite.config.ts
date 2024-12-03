@@ -9,7 +9,7 @@ import viteTsconfigPaths from "vite-tsconfig-paths"
 export default defineConfig(async () => {
     let version: string = process.env.HITSTER_VERSION ?? await getFormattedVersion()
 
-    if(version === "0.0.0.0-null") {
+    if(version === "0.0.0-null") {
         // fallback
         version = "unknown"
     }
