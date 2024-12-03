@@ -49,7 +49,8 @@ jobs:
           tags: tonironaldbarth/hitster:dev
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: HITSTER_VERSION=${{ HITSTER_VERSION }}
+          build-args: |
+            HITSTER_VERSION=${{ HITSTER_VERSION }}
       - 
         name: Build and push Docker stable image
         if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
@@ -61,4 +62,5 @@ jobs:
           tags: tonironaldbarth/hitster:latest , tonironaldbarth/hitster:${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          build-args: HITSTER_VERSION=${{ HITSTER_VERSION }}
+          build-args: |
+            HITSTER_VERSION=${{ HITSTER_VERSION }}
