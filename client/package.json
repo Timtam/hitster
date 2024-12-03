@@ -1,14 +1,15 @@
 {
     "name": "hitster-client",
     "private": true,
-    "version": "0.2.0",
+    "version": "0.1.0",
     "type": "module",
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
         "build-dev": "tsc && vite build --sourcemap true --minify false",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "version": "node -e \"import('@corteks/gitversion').then(({getFormattedVersion: _}) => _().then((v) => console.log(v)))\""
     },
     "dependencies": {
         "@lomray/event-manager": "^2.0.2",
@@ -40,6 +41,7 @@
         "zod": "^3.22.4"
     },
     "devDependencies": {
+        "@corteks/gitversion": "^0.3.4",
         "@types/boolify-string": "^0.0.32",
         "@types/howler": "^2.2.11",
         "@types/react": "^18.2.56",
@@ -54,7 +56,6 @@
         "eslint-plugin-react-refresh": "^0.4.5",
         "prettier": "^3.2.5",
         "prettier-plugin-organize-imports": "^4.1.0",
-        "toml": "^3.0.0",
         "typescript": "^5.2.2",
         "vite": "^5.1.4",
         "vite-plugin-checker": "^0.8.0",

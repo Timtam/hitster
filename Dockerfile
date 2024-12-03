@@ -1,5 +1,7 @@
 FROM node:20 AS client_build_image
 
+ARG HITSTER_VERSION
+
 WORKDIR /app
 
 # build cache first
@@ -10,7 +12,7 @@ RUN npm install && rm /app/*.json
 
 # build everything else
 
-COPY ./client/ ./server/Cargo.toml /app/
+COPY ./client/ /app/
 
 RUN npm run build
 

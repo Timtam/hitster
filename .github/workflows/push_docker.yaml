@@ -32,6 +32,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: "get hitster version"
+        run: |
+          cd client
+          npm i @corteks/gitversion
+          export HITSTER_VERSION=$(npm run version --silent)
       - 
         name: Build and push Docker dev image
         if: startsWith(github.ref, 'refs/heads/development')
@@ -43,6 +49,7 @@ jobs:
           tags: tonironaldbarth/hitster:dev
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: HITSTER_VERSION=${{ HITSTER_VERSION }}
       - 
         name: Build and push Docker stable image
         if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
@@ -54,3 +61,4 @@ jobs:
           tags: tonironaldbarth/hitster:latest , tonironaldbarth/hitster:${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: HITSTER_VERSION=${{ HITSTER_VERSION }}
