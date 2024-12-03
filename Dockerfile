@@ -14,19 +14,21 @@ COPY ./client/ ./server/Cargo.toml /app/
 
 RUN npm run build
 
-FROM rust:1.80-slim-bookworm AS server_build_image
+FROM rust:1.82-slim-bookworm AS server_build_image
 
 # create a new empty shell project
 RUN apt-get update && apt-get -y install libssl-dev pkg-config && \
     USER=root cargo new --bin hitster
+
 WORKDIR /hitster
 
 # copy over your manifests
+COPY ./server/Cargo.lock ./Cargo.lock
 COPY ./server/Cargo.toml ./Cargo.toml
 
 # this build step will cache your dependencies
-RUN cargo build --release
-RUN rm src/*.rs
+RUN cargo build --release && \
+    rm src/*.rs
 
 # copy your source tree
 COPY ./server/migrations ./migrations
@@ -35,8 +37,8 @@ COPY ./server/build.rs ./build.rs
 COPY ./server/etc ./etc
 
 # build for release
-RUN rm ./target/release/deps/hitster*
-RUN cargo build --release
+RUN rm ./target/release/deps/hitster* && \
+    cargo build --release
 
 # our final bases, platform-dependent
 
@@ -53,7 +55,7 @@ ONBUILD ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffm
 FROM build_${TARGETARCH}
 
 # yt-dlp version
-ARG YT_DLP_BUILD_VERSION=2024.07.25
+ARG YT_DLP_BUILD_VERSION=2024.10.22
 
 WORKDIR /hitster
 
