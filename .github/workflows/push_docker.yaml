@@ -50,7 +50,7 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            HITSTER_VERSION=${{ HITSTER_VERSION }}
+            "HITSTER_VERSION=${{ HITSTER_VERSION }}"
       - 
         name: Build and push Docker stable image
         if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
@@ -63,4 +63,4 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            HITSTER_VERSION=${{ HITSTER_VERSION }}
+            "HITSTER_VERSION=${{ HITSTER_VERSION }}"
