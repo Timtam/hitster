@@ -179,6 +179,7 @@
         "colorScheme": "Color scheme",
         "automatic": "Automatic",
         "light": "Light",
-        "dark": "Dark"
+        "dark": "Dark",
+        "changelog": "Changelog"
     }
 }

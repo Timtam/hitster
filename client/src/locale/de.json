@@ -179,6 +179,7 @@
         "colorScheme": "Farbschema",
         "automatic": "Automatisch",
         "light": "Hell",
-        "dark": "Dunkel"
+        "dark": "Dunkel",
+        "changelog": "Änderungsverlauf"
     }
 }
