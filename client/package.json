@@ -9,7 +9,7 @@
         "build-dev": "tsc && vite build --sourcemap true --minify false",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
-        "version": "node -e \"import('@corteks/gitversion').then(({default: _}) => _.default().then((gv) => console.log(`${!gv.COMMITS_SINCE_TAG ? gv.LAST_TAG_NAME : gv.LAST_TAG_NAME + '+' + gv.COMMITS_SINCE_TAG + '-' + gv.CURRENT_COMMIT_SHORT_ID}`)))\""
+        "version": "node -e \"import('@corteks/gitversion').then(({default: _}) => _.default().then((gv) => console.log(!gv.COMMITS_SINCE_TAG ? gv.LAST_TAG_NAME : gv.LAST_TAG_NAME + '+' + gv.COMMITS_SINCE_TAG + '-' + gv.CURRENT_COMMIT_SHORT_ID)))\""
     },
     "dependencies": {
         "@lomray/event-manager": "^2.0.2",
