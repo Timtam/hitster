@@ -44,11 +44,13 @@ jobs:
       -
         name: "Get hitster version"
         id: version
+        shell: bash
         run: |
           cd client
           npm i @corteks/gitversion
           echo "HITSTER_VERSION=$(npm run version --silent)" >> $GITHUB_OUTPUT
       - name: Extract branch name
+        shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: branch
       - 
