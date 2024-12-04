@@ -48,7 +48,7 @@ jobs:
         run: |
           cd client
           npm i @corteks/gitversion
-          export VERSION=$(npm run version --silent)
+          export VERSION="$(npm run version --silent)"
           echo $VERSION
           echo "HITSTER_VERSION=$VERSION" >> $GITHUB_OUTPUT
       - name: Extract branch name
