@@ -63,7 +63,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            HITSTER_VERSION=${{ steps.version.outputs.HITSTER_VERSION }},HITSTER_BRANCH=${{ steps.branch.outputs.branch }}
+            HITSTER_VERSION=${{ steps.version.outputs.HITSTER_VERSION }}
+            HITSTER_BRANCH=${{ steps.branch.outputs.branch }}
       - 
         name: Build and push Docker stable image
         if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
@@ -76,7 +77,8 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           build-args: |
-            HITSTER_VERSION=${{ steps.version.outputs.HITSTER_VERSION }},HITSTER_BRANCH=${{ steps.branch.outputs.branch }}
+            HITSTER_VERSION=${{ steps.version.outputs.HITSTER_VERSION }}
+            HITSTER_BRANCH=${{ steps.branch.outputs.branch }}
       - name: Update changelog
         uses: thomaseizinger/keep-a-changelog-new-release@1.2.1
         if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
