@@ -144,6 +144,7 @@
         "guessNothing": "{{player}} doesn't intercept",
         "guess": "{{player}} guesses: {{guess}}",
         "youReceivedToken": "You received a token for guessing artist and title of this hit correctly",
-        "otherReceivedToken": "{{player}} received a token for guessing artist and title of this hit correctly"
+        "otherReceivedToken": "{{player}} received a token for guessing artist and title of this hit correctly",
+        "changelog": "Changelog"
     }
 }

@@ -79,7 +79,12 @@ export default function Navigation({ user }: { user: User | null }) {
                                 <p className="mb-6 px-2 fs-6 text-nowrap">
                                     {t("version", {
                                         version: "__VERSION__",
-                                    })}
+                                    })}{" "}
+                                    (
+                                    <a href="https://github.com/Timtam/hitster/blob/__BRANCH__/CHANGELOG.md">
+                                        {t("changelog")}
+                                    </a>
+                                    )
                                 </p>
                                 <p className="mb-3 px-2 fs-6 text-nowrap">
                                     <Trans

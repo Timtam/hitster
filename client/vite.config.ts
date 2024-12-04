@@ -1,4 +1,4 @@
-import { getFormattedVersion } from "@corteks/gitversion"
+import gitVersion from "@corteks/gitversion"
 import react from "@vitejs/plugin-react-swc"
 import { defineConfig, splitVendorChunkPlugin } from "vite"
 import checker from "vite-plugin-checker"
@@ -7,9 +7,18 @@ import viteTsconfigPaths from "vite-tsconfig-paths"
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
-    let version: string = process.env.HITSTER_VERSION ?? await getFormattedVersion()
+    let gv = await gitVersion.default()
+    let branch =
+        (process.env.HITSTER_BRANCH ?? gv.CURRENT_BRANCH) || "development"
+    let version: string = process.env.HITSTER_VERSION
 
-    if(version === "0.0.0-null") {
+    if (!version) {
+        if (!gv.COMMITS_SINCE_TAG) version = gv.LAST_TAG_NAME ?? ""
+        else
+            version = `${gv.LAST_TAG_NAME}+${gv.COMMITS_SINCE_TAG}-${gv.CURRENT_COMMIT_SHORT_ID}`
+    }
+
+    if (!version) {
         // fallback
         version = "unknown"
     }
@@ -29,6 +38,10 @@ export default defineConfig(async () => {
                         {
                             from: /__VERSION__/g,
                             to: version,
+                        },
+                        {
+                            from: /__BRANCH__/g,
+                            to: branch,
                         },
                     ],
                 },
