@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   Initial release
 
+### Fixed
+
+- [kicking a non-existing player from a game no longer crashes the server (#14)](https://github.com/Timtam/hitster/issues/14)
+
 ### Changed
 
 - [Add local player modal no longer requires you to press the "Add" button, you can also just press return within the input box now (#15)](https://github.com/Timtam/hitster/issues/15)
