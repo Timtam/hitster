@@ -11,15 +11,6 @@ jobs:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[skip ci]')"
-    permissions:
-      contents: write
-      checks: write
-      actions: read
-      issues: read
-      packages: write
-      pull-requests: read
-      repository-projects: read
-      statuses: read
     steps:
       - name: Dump job github var
         env:
@@ -49,7 +40,6 @@ jobs:
           cd client
           npm i @corteks/gitversion
           export VERSION="$(npm run version --silent)"
-          echo $VERSION
           echo "HITSTER_VERSION=$VERSION" >> $GITHUB_OUTPUT
       - name: Extract branch name
         shell: bash
@@ -83,20 +73,44 @@ jobs:
           build-args: |
             HITSTER_VERSION=${{ steps.version.outputs.HITSTER_VERSION }}
             HITSTER_BRANCH=${{ steps.branch.outputs.branch }}
+  update_changelog:
+    needs: ["push_to_registry"]
+    if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      checks: write
+      actions: read
+      issues: read
+      packages: write
+      pull-requests: read
+      repository-projects: read
+      statuses: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: 'main'
+      -
+        name: "Get hitster version"
+        id: version
+        shell: bash
+        run: |
+          cd client
+          npm i @corteks/gitversion
+          export VERSION="$(npm run version --silent)"
+          echo "HITSTER_VERSION=$VERSION" >> $GITHUB_OUTPUT
       - name: Update changelog
         uses: thomaseizinger/keep-a-changelog-new-release@1.2.1
-        if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
         with:
           version: ${{ steps.version.outputs.HITSTER_VERSION }}
       # In order to make a commit, we need to initialize a user.
       # You may choose to write something less generic here if you want, it doesn't matter functionality wise.
       - name: Initialize mandatory git config
-        if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
         run: |
           git config user.name "GitHub actions"
           git config user.email noreply@github.com
       - name: Commit changelog
-        if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
         run: |
           git add CHANGELOG.md
           git commit --message "Prepare release ${{ steps.version.outputs.HITSTER_VERSION }}"
