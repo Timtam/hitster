@@ -132,7 +132,7 @@
         "howToPlay": "Wie wird gespielt?",
         "allRightsReserved": "Alle Rechte vorbehalten",
         "sourceCodeAvailableAt": "Quellcode verfügbar auf <0>GitHub</0>",
-        "version": "Client-Version: {{clientVersion}} | Server-Version: {{serverVersion}}",
+        "version": "Version: {{version}}",
         "ownedBy": "Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel, welches <0>Koninklijke Jumbo B.V.</0> gehört.",
         "issue": "Für Lob, Kritik oder Fehlermeldungen, eröffnen Sie bitte ein <0>Issue auf GitHub</0>.",
         "mainMenu": "Hauptmenü",
@@ -144,6 +144,7 @@
         "guessNothing": "{{player}} behauptet nichts Gegenteiliges",
         "guess": "{{player}} vermutet: {{guess}}",
         "youReceivedToken": "Du hast einen Token erhalten, da du Künstler und Titel dieses Hits wusstest",
-        "otherReceivedToken": "{{player}} hat einen Token erhalten, da der Künstler und Titel dieses Hits genannt wurde"
+        "otherReceivedToken": "{{player}} hat einen Token erhalten, da der Künstler und Titel dieses Hits genannt wurde",
+        "changelog": "Änderungsverlauf"
     }
 }
