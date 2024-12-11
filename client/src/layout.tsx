@@ -7,9 +7,9 @@ import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
 import Spinner from "react-bootstrap/Spinner"
 import { useCookies } from "react-cookie"
-import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router-dom"
+import usePrefersColorScheme from "use-prefers-color-scheme"
 import type { Context } from "./context"
 import { User } from "./entities"
 import Navigation from "./navigation"
@@ -31,7 +31,9 @@ export default function Layout() {
     let [cookies] = useCookies(["user"])
     let [user, setUser] = useState<User | null>(null)
     let [loading, setLoading] = useState(true)
+    let [colorScheme] = useLocalStorage("colorScheme", "auto")
     let [welcome, setWelcome] = useLocalStorage("welcome")
+    let prefersColorScheme = usePrefersColorScheme()
 
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout> | null = null
@@ -72,47 +74,52 @@ export default function Layout() {
         }
     }, [cookies])
 
+    useEffect(() => {
+        document.documentElement.lang = language
+        document.documentElement.dataset.bsTheme =
+            colorScheme !== "auto"
+                ? colorScheme
+                : prefersColorScheme === "dark"
+                  ? "dark"
+                  : "light"
+    }, [language, colorScheme, prefersColorScheme])
+
     return (
-        <>
-            <Helmet>
-                <html lang={language} />
-            </Helmet>
-            <Container fluid className="justify-content-center">
-                {user === null ? (
-                    <Spinner animation="border" role="status">
-                        <span className="visually-hidden">{t("loading")}</span>
-                    </Spinner>
-                ) : (
-                    <>
-                        <Row>
-                            <header>
-                                <Col>
-                                    <NotificationPlayer user={user} />
-                                    <Navigation user={user} />
-                                </Col>
-                            </header>
-                        </Row>
-                        <Row>
-                            <main>
-                                <Col>
-                                    <SfxPlayer user={user} />
-                                    <Welcome
-                                        show={!boolifyString(welcome)}
-                                        onHide={() => setWelcome("true")}
-                                    />
-                                    <Outlet
-                                        context={
-                                            {
-                                                user,
-                                            } satisfies Context
-                                        }
-                                    />
-                                </Col>
-                            </main>
-                        </Row>
-                    </>
-                )}
-            </Container>
-        </>
+        <Container fluid className="justify-content-center">
+            {user === null ? (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">{t("loading")}</span>
+                </Spinner>
+            ) : (
+                <>
+                    <Row>
+                        <header>
+                            <Col>
+                                <NotificationPlayer user={user} />
+                                <Navigation user={user} />
+                            </Col>
+                        </header>
+                    </Row>
+                    <Row>
+                        <main>
+                            <Col>
+                                <SfxPlayer user={user} />
+                                <Welcome
+                                    show={!boolifyString(welcome)}
+                                    onHide={() => setWelcome("true")}
+                                />
+                                <Outlet
+                                    context={
+                                        {
+                                            user,
+                                        } satisfies Context
+                                    }
+                                />
+                            </Col>
+                        </main>
+                    </Row>
+                </>
+            )}
+        </Container>
     )
 }

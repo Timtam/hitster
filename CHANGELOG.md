@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
--   Initial release
+- [Add dark mode option (change within settings) (#16)](https://github.com/Timtam/hitster/issues/16)
 
 ### Fixed
 
