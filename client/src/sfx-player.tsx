@@ -20,58 +20,57 @@ const getSfx = (sfx: Sfx): Howl => {
 
     switch (sfx) {
         case Sfx.noInterception: {
-            url = new URL("../sfx/no_interception.mp3", import.meta.url).href
+            url = new URL("../sfx/no_interception.opus", import.meta.url).href
             break
         }
         case Sfx.payToken: {
-            url = new URL("../sfx/pay_token.mp3", import.meta.url).href
+            url = new URL("../sfx/pay_token.opus", import.meta.url).href
             break
         }
         case Sfx.playHit: {
-            url = new URL("../sfx/play_hit.mp3", import.meta.url).href
+            url = new URL("../sfx/play_hit.opus", import.meta.url).href
             break
         }
         case Sfx.receiveToken: {
-            url = new URL("../sfx/receive_token.mp3", import.meta.url).href
+            url = new URL("../sfx/receive_token.opus", import.meta.url).href
             break
         }
         case Sfx.stopHit: {
-            url = new URL("../sfx/stop_hit.mp3", import.meta.url).href
+            url = new URL("../sfx/stop_hit.opus", import.meta.url).href
             break
         }
         case Sfx.youFail: {
-            url = new URL("../sfx/you_fail.mp3", import.meta.url).href
+            url = new URL("../sfx/you_fail.opus", import.meta.url).href
             break
         }
         case Sfx.youLose: {
-            url = new URL("../sfx/you_lose.mp3", import.meta.url).href
+            url = new URL("../sfx/you_lose.opus", import.meta.url).href
             break
         }
         case Sfx.youScore: {
-            url = new URL("../sfx/you_score.mp3", import.meta.url).href
+            url = new URL("../sfx/you_score.opus", import.meta.url).href
             break
         }
         case Sfx.youWin: {
-            url = new URL("../sfx/you_win.mp3", import.meta.url).href
+            url = new URL("../sfx/you_win.opus", import.meta.url).href
             break
         }
         case Sfx.joinGame: {
-            url = new URL("../sfx/join_game.mp3", import.meta.url).href
+            url = new URL("../sfx/join_game.opus", import.meta.url).href
             break
         }
         case Sfx.leaveGame: {
-            url = new URL("../sfx/leave_game.mp3", import.meta.url).href
+            url = new URL("../sfx/leave_game.opus", import.meta.url).href
             break
         }
         case Sfx.youClaim: {
-            url = new URL("../sfx/claim_hit.mp3", import.meta.url).href
+            url = new URL("../sfx/claim_hit.opus", import.meta.url).href
             break
         }
     }
     return new Howl({
         src: [url],
-        format: "audio/mpeg",
-        html5: true,
+        format: "opus",
     })
 }
 
