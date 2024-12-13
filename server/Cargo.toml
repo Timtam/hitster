@@ -14,15 +14,15 @@ parking_lot = { version = "0.12.1"}
 petname = {version = "2.0.0-beta.4", default-features = false, features = ["default-rng", "default-words"]}
 rand = "0.8.5"
 rand_chacha = "0.3.1"
-rocket = { version = "0.5.0", features = ["json", "secrets", "uuid"]}
+rocket = { version = "0.5.1", features = ["json", "secrets", "uuid"] }
 rocket_async_compression = "0.6.0"
-rocket_db_pools = { version = "0.1.0", default-features = false, features = ["sqlx_sqlite" ]}
-rocket_okapi = { version = "0.8.0", default-features = false, features = ["swagger", "rapidoc", "secrets", "rocket_db_pools"]}
+rocket_db_pools = { version = "0.2.0", default-features = false, features = ["sqlx_sqlite"] }
+rocket_okapi = { version = "0.9", default-features = false, features = ["swagger", "rapidoc", "secrets", "rocket_db_pools"] }
 rusty_ytdl = "0.7.0"
 schemars = { version = "0.8.16", features = ["uuid1"]}
 serde = { version = "1.0.197", features = ["derive"]}
 serde_json = "1.0.114"
-sqlx = { version = "0.7.3", default-features = false, features = ["migrate", "macros"] }
+sqlx = { version = "0.7", default-features = false, features = ["migrate", "macros"] }
 time = { version = "0.3.34", features = ["serde", "serde-well-known"]}
 uuid = { version = "1.8.0", features = ["v4"] }
 
