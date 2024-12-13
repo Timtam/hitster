@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- [use ogg instead of mp3 for SFX to change from html5 to webaudio, improving browser compatibility (#12)](https://github.com/Timtam/hitster/issues/12)
+- updated several packages for client and server
+- updated CI pipeline to hopefully address some versioning issues
+
 ## [2024.12.11-1] - 2024-12-11
 
 ### Added
@@ -23,6 +29,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [Add local player modal no longer requires you to press the "Add" button, you can also just press return within the input box now (#15)](https://github.com/Timtam/hitster/issues/15)
 -   [New versioning (mixture of release date and semver) + changelog #17)](https://github.com/Timtam/hitster/issues/17)
 
-[Unreleased]: https://github.com/Timtam/hitster/compare/null+1-2b81292...HEAD
+[Unreleased]: https://github.com/Timtam/hitster/compare/2024.12.11-1...HEAD
 
-[2024.12.11-1]: https://github.com/Timtam/hitster/compare/2b812928c2f42c34374e6a0b23db19b8c028a5ed...2024.12.11-1
+[2024.12.11-1]: https://github.com/Timtam/hitster/releases/tag/2024.12.11-1
