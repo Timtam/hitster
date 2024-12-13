@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [null+1-2b81292] - 2024-12-11
+## [2024.12.11-1] - 2024-12-11
 
 ### Added
 
@@ -25,4 +25,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [Unreleased]: https://github.com/Timtam/hitster/compare/null+1-2b81292...HEAD
 
-[null+1-2b81292]: https://github.com/Timtam/hitster/compare/2b812928c2f42c34374e6a0b23db19b8c028a5ed...null+1-2b81292
+[2024.12.11-1]: https://github.com/Timtam/hitster/compare/2b812928c2f42c34374e6a0b23db19b8c028a5ed...2024.12.11-1
