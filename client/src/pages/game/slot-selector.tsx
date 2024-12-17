@@ -1,20 +1,25 @@
+import EventManager from "@lomray/event-manager"
+import {
+    bindKeyCombo,
+    BrowserKeyComboEvent,
+    unbindKeyCombo,
+} from "@rwh/keystrokes"
 import classNames from "classnames"
 import { detect } from "detect-browser"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import { Trans, useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
-import { useImmer } from "use-immer"
 import { useContext } from "../../context"
-import type { Game } from "../../entities"
+import type { Game, Slot } from "../../entities"
 import { GameMode, GameState, Player, PlayerState } from "../../entities"
+import { Events, NotificationData, SlotSelectedData } from "../../events"
 import GameService from "../../services/games.service"
 import "./slot-selector.css"
 
 export default ({ game }: { game: Game }) => {
     const { user } = useContext()
-    const [selectedSlot, setSelectedSlot] = useImmer("0")
-    const navigate = useNavigate()
+    const [selectedSlot, setSelectedSlot] = useState("0")
+    const [selectedKeySlot, setSelectedKeySlot] = useState("0")
     let { t } = useTranslation()
 
     const actionRequired = (): PlayerState => {
@@ -67,14 +72,250 @@ export default ({ game }: { game: Game }) => {
         }
     }
 
+    const guess = async () => {
+        if (selectedSlot === selectedKeySlot) {
+            try {
+                let gs = new GameService()
+                await gs.guess(
+                    game.id,
+                    selectedSlot !== "0" ? parseInt(selectedSlot, 10) : null,
+                    game.mode === GameMode.Local
+                        ? actionPlayer()?.id
+                        : undefined,
+                )
+                setSelectedSlot("0")
+                setSelectedKeySlot("0")
+            } catch (e) {
+                console.log(e)
+            }
+        }
+    }
+
     useEffect(() => {
         game.players.forEach((p) => {
-            if (p.guess?.id === parseInt(selectedSlot, 10)) {
+            if (p.guess?.id.toString() === selectedSlot) {
                 setSelectedSlot("0")
-                navigate("", { replace: true })
             }
         })
-    }, [game])
+
+        if (
+            selectedSlot === "0" &&
+            selectedKeySlot !== "0" &&
+            !game.players.some(
+                (p) => p.guess?.id.toString() === selectedKeySlot,
+            )
+        ) {
+            setSelectedSlot(selectedKeySlot)
+        }
+    }, [game, selectedKeySlot, selectedSlot])
+
+    useEffect(() => {
+        let handlePreviousSlot = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                let slot = "0"
+                let p = game.players.find((p) => p.turn_player) as Player
+
+                if (selectedKeySlot === "0" || selectedKeySlot === "1")
+                    slot = p.slots.length.toString()
+                else slot = (parseInt(selectedKeySlot, 10) - 1).toString()
+
+                let s = p.slots.find((s) => s.id === parseInt(slot, 10)) as Slot
+                let u =
+                    (actionRequired() !== PlayerState.Guessing &&
+                        actionRequired() !== PlayerState.Intercepting) ||
+                    game.players.some((p) => p.guess?.id === s.id)
+
+                let text = ""
+
+                if (s.from_year === 0)
+                    text = t("beforeYear", {
+                        year: s.to_year,
+                    })
+                else if (s.to_year === 0)
+                    text = t("afterYear", {
+                        year: s.from_year,
+                    })
+                else
+                    text = t("betweenYears", {
+                        year1: s.from_year,
+                        year2: s.to_year,
+                    })
+
+                EventManager.publish(Events.notification, {
+                    toast: false,
+                    interruptTts: true,
+                    text: text,
+                } satisfies NotificationData)
+
+                EventManager.publish(Events.slotSelected, {
+                    unavailable: u,
+                    slot: s,
+                    from_year: p.slots[0].to_year,
+                    to_year: p.slots[p.slots.length - 1].from_year,
+                    slot_count: p.slots.length,
+                } satisfies SlotSelectedData)
+
+                setSelectedKeySlot(slot)
+                if (!u) setSelectedSlot(slot)
+                else setSelectedSlot("0")
+            },
+        }
+
+        let handleNextSlot = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+
+                let slot = "0"
+                let p = game.players.find((p) => p.turn_player) as Player
+
+                if (
+                    selectedKeySlot === "0" ||
+                    selectedKeySlot === p.slots.length.toString()
+                )
+                    slot = "1"
+                else slot = (parseInt(selectedKeySlot, 10) + 1).toString()
+
+                let s = p.slots.find((s) => s.id === parseInt(slot, 10)) as Slot
+                let u =
+                    (actionRequired() !== PlayerState.Guessing &&
+                        actionRequired() !== PlayerState.Intercepting) ||
+                    game.players.some((p) => p.guess?.id === s.id)
+
+                let text = ""
+
+                if (s.from_year === 0)
+                    text = t("beforeYear", {
+                        year: s.to_year,
+                    })
+                else if (s.to_year === 0)
+                    text = t("afterYear", {
+                        year: s.from_year,
+                    })
+                else
+                    text = t("betweenYears", {
+                        year1: s.from_year,
+                        year2: s.to_year,
+                    })
+
+                EventManager.publish(Events.notification, {
+                    toast: false,
+                    interruptTts: true,
+                    text: text,
+                } satisfies NotificationData)
+
+                EventManager.publish(Events.slotSelected, {
+                    unavailable: u,
+                    slot: s,
+                    from_year: p.slots[0].to_year,
+                    to_year: p.slots[p.slots.length - 1].from_year,
+                    slot_count: p.slots.length,
+                } satisfies SlotSelectedData)
+
+                setSelectedKeySlot(slot)
+                if (!u) setSelectedSlot(slot)
+                else setSelectedSlot("0")
+            },
+        }
+
+        let handleResetSlot = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                if (selectedKeySlot !== "0") {
+                    setSelectedKeySlot("0")
+                    setSelectedSlot("0")
+
+                    let p = game.players.find((p) => p.turn_player) as Player
+
+                    EventManager.publish(Events.slotSelected, {
+                        unavailable: true,
+                        slot: null,
+                        from_year: p.slots[0].to_year,
+                        to_year: p.slots[p.slots.length - 1].from_year,
+                        slot_count: p.slots.length,
+                    } satisfies SlotSelectedData)
+                }
+            },
+        }
+
+        let handleGuess = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                guess()
+            },
+        }
+
+        let handleConfirmYes = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                confirm(true)
+            },
+        }
+
+        let handleConfirmNo = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                confirm(false)
+            },
+        }
+
+        let handleReadPlayerStats = Array.from({ length: 10 }, (_, i) => ({
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                if (!game.players[i]) {
+                    return
+                }
+
+                EventManager.publish(Events.notification, {
+                    toast: false,
+                    interruptTts: true,
+                    text: t("playerStatsNotification", {
+                        player: game.players[i].name,
+                        hits: game.players[i].hits.length,
+                        tokens: game.players[i].tokens,
+                    }),
+                } satisfies NotificationData)
+            },
+        }))
+
+        if (game.state !== GameState.Open) {
+            for (let i = 0; i < 10; i++) {
+                bindKeyCombo(
+                    "alt + shift + @Digit" + (i !== 9 ? i + 1 : 0).toString(),
+                    handleReadPlayerStats[i],
+                )
+            }
+        }
+
+        if (
+            game.state !== GameState.Confirming &&
+            game.state !== GameState.Open
+        ) {
+            bindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
+            bindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
+            bindKeyCombo("alt + shift + Backspace", handleResetSlot)
+            bindKeyCombo("alt + shift + Enter", handleGuess)
+        } else if (actionRequired() === PlayerState.Confirming) {
+            bindKeyCombo("alt + shift + y", handleConfirmYes)
+            bindKeyCombo("alt + shift + n", handleConfirmNo)
+        }
+
+        return () => {
+            unbindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
+            unbindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
+            unbindKeyCombo("alt + shift + Backspace", handleResetSlot)
+            unbindKeyCombo("alt + shift + Enter", handleGuess)
+            unbindKeyCombo("alt + shift + y", handleConfirmYes)
+            unbindKeyCombo("alt + shift + n", handleConfirmNo)
+
+            for (let i = 0; i < 10; i++) {
+                unbindKeyCombo(
+                    "alt + shift + @Digit" + (i !== 9 ? i + 1 : 0).toString(),
+                    handleReadPlayerStats[i],
+                )
+            }
+        }
+    }, [selectedKeySlot, game])
 
     if (game.state === GameState.Open)
         return <h2 className="h4">{t("gameNotStarted")}</h2>
@@ -151,12 +392,24 @@ export default ({ game }: { game: Game }) => {
                     <Button
                         className="me-2"
                         onClick={async () => await confirm(false)}
+                        aria-keyshortcuts={t("noShortcut")}
+                        aria-label={
+                            detect()?.name === "firefox"
+                                ? `${t("noShortcut")} ${t("no")}`
+                                : ""
+                        }
                     >
                         {t("no")}
                     </Button>
                     <Button
                         className="me-2"
                         onClick={async () => await confirm(true)}
+                        aria-keyshortcuts={t("yesShortcut")}
+                        aria-label={
+                            detect()?.name === "firefox"
+                                ? `${t("yesShortcut")} ${t("yes")}`
+                                : ""
+                        }
                     >
                         {t("yes")}
                     </Button>
@@ -179,9 +432,27 @@ export default ({ game }: { game: Game }) => {
                                     value="0"
                                     type="radio"
                                     checked={selectedSlot === "0"}
-                                    onChange={(e) =>
+                                    onChange={(e) => {
+                                        setSelectedKeySlot(e.target.value)
                                         setSelectedSlot(e.target.value)
-                                    }
+
+                                        let p = game.players.find(
+                                            (p) => p.turn_player,
+                                        ) as Player
+
+                                        EventManager.publish(
+                                            Events.slotSelected,
+                                            {
+                                                unavailable: true,
+                                                slot: null,
+                                                from_year: p.slots[0].to_year,
+                                                to_year:
+                                                    p.slots[p.slots.length - 1]
+                                                        .from_year,
+                                                slot_count: p.slots.length,
+                                            } satisfies SlotSelectedData,
+                                        )
+                                    }}
                                 />
                                 <label
                                     htmlFor="slot-0"
@@ -240,9 +511,35 @@ export default ({ game }: { game: Game }) => {
                                                 selectedSlot ===
                                                 slot.id.toString()
                                             }
-                                            onChange={(e) =>
+                                            onChange={(e) => {
+                                                let p = game.players.find(
+                                                    (p) => p.turn_player,
+                                                ) as Player
+                                                let s = p.slots.find(
+                                                    (s) =>
+                                                        s.id ===
+                                                        parseInt(e.target.value, 10),
+                                                ) as Slot
+
+                                                EventManager.publish(
+                                                    Events.slotSelected,
+                                                    {
+                                                        unavailable: false,
+                                                        slot: s,
+                                                        from_year:
+                                                            p.slots[0].to_year,
+                                                        to_year:
+                                                            p.slots[
+                                                                p.slots.length -
+                                                                    1
+                                                            ].from_year,
+                                                        slot_count:
+                                                            p.slots.length,
+                                                    } satisfies SlotSelectedData,
+                                                )
+                                                setSelectedKeySlot(e.target.value)
                                                 setSelectedSlot(e.target.value)
-                                            }
+                                            }}
                                             title={
                                                 text +
                                                 (game.players.some(
@@ -321,28 +618,27 @@ export default ({ game }: { game: Game }) => {
                                 actionRequired() === PlayerState.Guessing) ||
                             actionRequired() === PlayerState.Waiting
                         }
-                        onClick={async () => {
-                            try {
-                                let gs = new GameService()
-                                await gs.guess(
-                                    game.id,
-                                    parseInt(selectedSlot, 10) > 0
-                                        ? parseInt(selectedSlot, 10)
-                                        : null,
-                                    game.mode === GameMode.Local
-                                        ? actionPlayer()?.id
-                                        : undefined,
-                                )
-                                setSelectedSlot("0")
-                            } catch (e) {
-                                console.log(e)
-                            }
-                        }}
+                        onClick={guess}
+                        aria-keyshortcuts={
+                            (actionRequired() === PlayerState.Guessing &&
+                                selectedSlot !== "0") ||
+                            actionRequired() === PlayerState.Intercepting
+                                ? t("submitGuessShortcut")
+                                : ""
+                        }
+                        aria-label={
+                            detect()?.name === "firefox" &&
+                            ((actionRequired() === PlayerState.Guessing &&
+                                selectedSlot !== "0") ||
+                                actionRequired() === PlayerState.Intercepting)
+                                ? `${t("submitGuessShortcut")} ${t("submitGuess")}`
+                                : ""
+                        }
                     >
                         {actionRequired() === PlayerState.Guessing ||
                         actionRequired() === PlayerState.Intercepting
                             ? actionRequired() === PlayerState.Intercepting ||
-                              parseInt(selectedSlot, 10) > 0
+                              selectedSlot !== "0"
                                 ? t("submitGuess")
                                 : t("selectSlotFirst")
                             : t("cannotSubmitGuess")}

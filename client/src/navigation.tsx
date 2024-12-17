@@ -9,11 +9,13 @@ import { LinkContainer } from "react-router-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { User } from "./entities"
 import Settings from "./settings"
+import Shortcuts from "./shortcuts"
 
 export default function Navigation({ user }: { user: User | null }) {
     let navigate = useNavigate()
     const { t } = useTranslation()
     let [showSettings, setShowSettings] = useState(false)
+    let [showShortcuts, setShowShortcuts] = useState(false)
     let [_, setWelcome] = useLocalStorage("welcome")
 
     return (
@@ -51,6 +53,14 @@ export default function Navigation({ user }: { user: User | null }) {
                                 <Nav.Item>
                                     <Nav.Link
                                         aria-expanded="false"
+                                        onClick={() => setShowShortcuts(true)}
+                                    >
+                                        {t("keyboardShortcut", { count: 2 })}
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link
+                                        aria-expanded="false"
                                         onClick={() => setShowSettings(true)}
                                     >
                                         {t("settings")}
@@ -78,9 +88,13 @@ export default function Navigation({ user }: { user: User | null }) {
                                 </p>
                                 <p className="mb-6 px-2 fs-6 text-nowrap">
                                     {t("version", {
-                                        clientVersion: "__CLIENT_VERSION__",
-                                        serverVersion: "__SERVER_VERSION__",
-                                    })}
+                                        version: "__VERSION__",
+                                    })}{" "}
+                                    (
+                                    <a href="https://github.com/Timtam/hitster/blob/__BRANCH__/CHANGELOG.md">
+                                        {t("changelog")}
+                                    </a>
+                                    )
                                 </p>
                                 <p className="mb-3 px-2 fs-6 text-nowrap">
                                     <Trans
@@ -166,6 +180,10 @@ export default function Navigation({ user }: { user: User | null }) {
             <Settings
                 show={showSettings}
                 onHide={() => setShowSettings(false)}
+            />
+            <Shortcuts
+                show={showShortcuts}
+                onHide={() => setShowShortcuts(false)}
             />
         </>
     )

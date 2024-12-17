@@ -75,3 +75,9 @@ button:focus-visible {
     clip: rect(1px, 1px, 1px, 1px);
     margin-top: -1px;
 }
+
+// Hack to set html background to proper color
+html:has([data-bs-theme="dark"]),
+body:has([data-bs-theme="dark"]) {
+    background-color: $body-bg-dark;
+}

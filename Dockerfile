@@ -1,5 +1,11 @@
 FROM node:20 AS client_build_image
 
+ARG HITSTER_BRANCH
+ARG HITSTER_VERSION
+
+ENV HITSTER_BRANCH ${HITSTER_BRANCH}
+ENV HITSTER_VERSION ${HITSTER_VERSION}
+
 WORKDIR /app
 
 # build cache first
@@ -10,11 +16,11 @@ RUN npm install && rm /app/*.json
 
 # build everything else
 
-COPY ./client/ ./server/Cargo.toml /app/
+COPY ./client/ /app/
 
 RUN npm run build
 
-FROM rust:1.82-slim-bookworm AS server_build_image
+FROM rust:1.83-slim-bookworm AS server_build_image
 
 # create a new empty shell project
 RUN apt-get update && apt-get -y install libssl-dev pkg-config && \

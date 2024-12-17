@@ -17,6 +17,7 @@ export default function Settings({
         t,
         i18n: { changeLanguage, language, services },
     } = useTranslation()
+    let [colorScheme, setColorScheme] = useLocalStorage("colorScheme", "auto")
     let [musicVolume, setMusicVolume] = useLocalStorage("musicVolume", "1.0")
     let [sfxVolume, setSfxVolume] = useLocalStorage("sfxVolume", "1.0")
 
@@ -36,70 +37,111 @@ export default function Settings({
             </Modal.Header>
             <Modal.Body>
                 <h2 className="h4">{t("volume")}</h2>
-                <div>
-                    <Form.Label>{t("musicVolume")}</Form.Label>
-                    <Form.Range
-                        min="0"
-                        max="100"
-                        value={parseFloat(musicVolume) * 100}
-                        onChange={(e) =>
-                            setMusicVolume(
-                                (
-                                    parseFloat(e.currentTarget.value) / 100
-                                ).toString(),
-                            )
+                <Form>
+                    <Form.Group
+                        className="mb-2"
+                        controlId="settings-music-volume"
+                    >
+                        <Form.Label>{t("musicVolume")}</Form.Label>
+                        <Form.Range
+                            min="0"
+                            max="100"
+                            value={parseFloat(musicVolume) * 100}
+                            onChange={(e) =>
+                                setMusicVolume(
+                                    (
+                                        parseFloat(e.currentTarget.value) / 100
+                                    ).toString(),
+                                )
+                            }
+                        />
+                    </Form.Group>
+                    <Form.Group
+                        className="mb-2"
+                        controlId="settings-sfx-volume"
+                    >
+                        <Form.Label>{t("sfxVolume")}</Form.Label>
+                        <Form.Range
+                            min="0"
+                            max="100"
+                            value={parseFloat(sfxVolume) * 100}
+                            onChange={(e) =>
+                                setSfxVolume(
+                                    (
+                                        parseFloat(e.currentTarget.value) / 100
+                                    ).toString(),
+                                )
+                            }
+                        />
+                    </Form.Group>
+                    <h2 className="h4">{t("language")}</h2>
+                    <ToggleButtonGroup
+                        name="language"
+                        type="radio"
+                        value={language}
+                        defaultValue={
+                            Object.keys(services.resourceStore.data).find(
+                                (langcode) => language.startsWith(langcode),
+                            ) ?? "en"
                         }
-                    />
-                </div>
-                <div>
-                    <Form.Label>{t("sfxVolume")}</Form.Label>
-                    <Form.Range
-                        min="0"
-                        max="100"
-                        value={parseFloat(sfxVolume) * 100}
-                        onChange={(e) =>
-                            setSfxVolume(
-                                (
-                                    parseFloat(e.currentTarget.value) / 100
-                                ).toString(),
-                            )
-                        }
-                    />
-                </div>
-                <h2 className="h4">{t("language")}</h2>
-                <ToggleButtonGroup
-                    name="language"
-                    type="radio"
-                    value={language}
-                    defaultValue={
-                        Object.keys(services.resourceStore.data).find(
-                            (langcode) => language.startsWith(langcode),
-                        ) ?? "en"
-                    }
-                    onChange={(e) => changeLanguage(e)}
-                >
-                    {Object.keys(services.resourceStore.data).map(
-                        (langcode) => {
-                            let nameGenerator = new Intl.DisplayNames(
-                                langcode,
-                                {
-                                    type: "language",
-                                },
-                            )
-                            let displayName = nameGenerator.of(langcode)
-                            return (
-                                <ToggleButton
-                                    className="me-2"
-                                    value={langcode}
-                                    id={`lang-${langcode}`}
-                                    key={`lang-${langcode}`}
-                                >
-                                    {displayName}
-                                </ToggleButton>
-                            )
-                        },
-                    )}
-                </ToggleButtonGroup>
+                        onChange={(e) => changeLanguage(e)}
+                    >
+                        {Object.keys(services.resourceStore.data).map(
+                            (langcode) => {
+                                let nameGenerator = new Intl.DisplayNames(
+                                    langcode,
+                                    {
+                                        type: "language",
+                                    },
+                                )
+                                let displayName = nameGenerator.of(langcode)
+                                return (
+                                    <ToggleButton
+                                        className="me-2"
+                                        value={langcode}
+                                        id={`lang-${langcode}`}
+                                        key={`lang-${langcode}`}
+                                    >
+                                        {displayName}
+                                    </ToggleButton>
+                                )
+                            },
+                        )}
+                    </ToggleButtonGroup>
+                    <h2 className="h4">{t("colorScheme")}</h2>
+                    <ToggleButtonGroup
+                        name="colorScheme"
+                        type="radio"
+                        value={colorScheme}
+                        defaultValue={colorScheme}
+                        onChange={(e) => setColorScheme(e)}
+                    >
+                        <ToggleButton
+                            className="me-2"
+                            value="auto"
+                            id="cs-auto"
+                            key="cs-auto"
+                        >
+                            {t("automatic")}
+                        </ToggleButton>
+                        <ToggleButton
+                            className="me-2"
+                            value="light"
+                            id="cs-light"
+                            key="cs-light"
+                        >
+                            {t("light")}
+                        </ToggleButton>
+                        <ToggleButton
+                            className="me-2"
+                            value="dark"
+                            id="cs-dark"
+                            key="cs-dark"
+                        >
+                            {t("dark")}
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+                </Form>
             </Modal.Body>
         </Modal>
     )
