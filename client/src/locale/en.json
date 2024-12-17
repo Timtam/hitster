@@ -160,6 +160,11 @@
         "guess": "{{player}} guesses: {{guess}}",
         "youReceivedToken": "You received a token for guessing artist and title of this hit correctly",
         "otherReceivedToken": "{{player}} received a token for guessing artist and title of this hit correctly",
+        "changelog": "Changelog",
+        "colorScheme": "Color scheme",
+        "automatic": "Automatic",
+        "light": "Light",
+        "dark": "Dark",
         "keyboardShortcut_one": "Keyboard shortcut",
         "keyboardShortcut_other": "Keyboard shortcuts",
         "section": "Abschnitt",
@@ -175,11 +180,6 @@
         "selectNoSlotShortcut": "Alt+Shift+Backspace",
         "playerStatsNotification": "{{player}}: {{hits}} hits, {{tokens}} tokens",
         "speakPlayerInfo": "Speak important information about player {{player}}",
-        "speakPlayerInfoShortcut": "Alt+Shift+{{player}}",
-        "colorScheme": "Color scheme",
-        "automatic": "Automatic",
-        "light": "Light",
-        "dark": "Dark",
-        "changelog": "Changelog"
+        "speakPlayerInfoShortcut": "Alt+Shift+{{player}}"
     }
 }
