@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [added various key shortcuts across the entire app (#2)](https://github.com/Timtam/hitster/issues/2)
 
+### Changed
+
+- updated Rust to 1.83
+
 ## [2024.12.13-1] - 2024-12-13
 
 ### Changed
