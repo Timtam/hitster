@@ -1,5 +1,11 @@
 import EventManager from "@lomray/event-manager"
+import {
+    bindKeyCombo,
+    BrowserKeyComboEvent,
+    unbindKeyCombo,
+} from "@rwh/keystrokes"
 import deepcopy from "deepcopy"
+import { detect } from "detect-browser"
 import { useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
 import ButtonGroup from "react-bootstrap/ButtonGroup"
@@ -35,6 +41,7 @@ import {
     SkippedHitData,
     TokenReceivedData,
 } from "../events"
+import { useModalShown } from "../hooks"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
@@ -69,6 +76,21 @@ export function Game() {
     let navigate = useNavigate()
     let { t } = useTranslation()
     let [winner, setWinner] = useImmer<Player | null>(null)
+    let modalShown = useModalShown()
+
+    const joinOrLeaveGame = async () => {
+        if (game.players.some((p) => p.id === user?.id))
+            await gameService.leave(game.id)
+        else await gameService.join(game.id)
+    }
+
+    const startOrStopGame = async () => {
+        if (game.state === GameState.Open) {
+            await gameService.start(game.id)
+        } else {
+            await gameService.stop(game.id)
+        }
+    }
 
     const canSkip = () => {
         return (
@@ -86,6 +108,14 @@ export function Game() {
     const canClaim = (p?: Player) => {
         return p && p.tokens >= 3
     }
+
+    const skipHit = async () =>
+        await gameService.skip(
+            game.id,
+            game.mode === GameMode.Local
+                ? game.players.find((p) => p.turn_player)?.id
+                : undefined,
+        )
 
     useEffect(() => {
         let eventSource = new EventSource(`/api/games/${game.id}/events`)
@@ -262,10 +292,70 @@ export function Game() {
         setShowHits(Array.from({ length: game.players.length }, () => false))
     }, [game])
 
+    // register keystrokes
+    useEffect(() => {
+        let handleJoinGame = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                joinOrLeaveGame()
+            },
+        }
+        let handleLeaveGame = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                joinOrLeaveGame()
+            },
+        }
+        let handleStartOrStopGame = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                startOrStopGame()
+            },
+        }
+        let handleShowSettings = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                setShowSettings(true)
+            },
+        }
+        let handleSkipHit = {
+            onPressed: (e: BrowserKeyComboEvent) => {
+                e.finalKeyEvent.preventDefault()
+                skipHit()
+            },
+        }
+
+        if (!modalShown) {
+            if (game.players.some((p) => p.id === user?.id))
+                bindKeyCombo("alt + shift + q", handleLeaveGame)
+            else bindKeyCombo("alt + shift + j", handleJoinGame)
+            if (
+                game.state === GameState.Open &&
+                (game.players.find((p) => p.id === user?.id)?.creator ??
+                    false) === true
+            )
+                bindKeyCombo("alt + shift + e", handleShowSettings)
+
+            if (canStartOrStopGame()) {
+                bindKeyCombo("alt + shift + s", handleStartOrStopGame)
+            }
+            if (canSkip()) {
+                bindKeyCombo("alt + shift + i", handleSkipHit)
+            }
+        }
+
+        return () => {
+            unbindKeyCombo("alt + shift + j", handleJoinGame)
+            unbindKeyCombo("alt + shift + q", handleLeaveGame)
+            unbindKeyCombo("alt + shift + e", handleShowSettings)
+            unbindKeyCombo("alt + shift + s", handleStartOrStopGame)
+            unbindKeyCombo("alt + shift + i", handleSkipHit)
+        }
+    }, [game, user, modalShown])
+
     const canStartOrStopGame = (): boolean => {
         return (
-            user !== null &&
-            game.players.some((p) => p.id === user.id && p.creator === true) &&
+            game.players.find((p) => p.id === user?.id)?.creator === true &&
             game.players.length >= 2
         )
     }
@@ -290,11 +380,12 @@ export function Game() {
                     game.state !== GameState.Open &&
                     !game.players.some((p) => p.id === user?.id)
                 }
-                onClick={async () => {
-                    if (game.players.some((p) => p.id === user?.id))
-                        await gameService.leave(game.id)
-                    else await gameService.join(game.id)
-                }}
+                onClick={joinOrLeaveGame}
+                aria-keyshortcuts={
+                    game.players.some((p) => p.id === user?.id)
+                        ? t("leaveGameShortcut")
+                        : t("joinGameShortcut")
+                }
             >
                 {game.players.some((p) => p.id === user?.id)
                     ? t("leaveGame")
@@ -305,11 +396,21 @@ export function Game() {
                     <Button
                         className="me-2"
                         disabled={!canStartOrStopGame()}
-                        onClick={async () => {
-                            if (game.state === GameState.Open)
-                                await gameService.start(game.id)
-                            else await gameService.stop(game.id)
-                        }}
+                        onClick={startOrStopGame}
+                        aria-keyshortcuts={
+                            canStartOrStopGame()
+                                ? game.state !== GameState.Open
+                                    ? t("stopGameShortcut")
+                                    : t("startGameShortcut")
+                                : ""
+                        }
+                        aria-label={
+                            detect()?.name === "firefox" && canStartOrStopGame()
+                                ? game.state !== GameState.Open
+                                    ? `${t("stopGameShortcut")} ${t("stopGame")}`
+                                    : `${t("startGameShortcut")} ${t("startGame")}`
+                                : ""
+                        }
                     >
                         {canStartOrStopGame()
                             ? game.state !== GameState.Open
@@ -325,6 +426,21 @@ export function Game() {
                                 ?.creator ?? false) === false
                         }
                         aria-expanded={false}
+                        aria-keyshortcuts={
+                            game.state === GameState.Open &&
+                            (game.players.find((p) => p.id === user?.id)
+                                ?.creator ?? false) === true
+                                ? t("gameSettingsShortcut")
+                                : ""
+                        }
+                        aria-label={
+                            detect()?.name === "firefox" &&
+                            game.state === GameState.Open &&
+                            (game.players.find((p) => p.id === user?.id)
+                                ?.creator ?? false) === true
+                                ? `${t("gameSettingsShortcut")} ${t("gameSettings")}`
+                                : ""
+                        }
                         onClick={() => setShowSettings(true)}
                     >
                         {game.state !== GameState.Open
@@ -480,18 +596,20 @@ export function Game() {
                 duration={
                     game.state === GameState.Confirming ? 0 : game.hit_duration
                 }
+                shortcut={t("playOrStopHitShortcut")}
             />
             <Button
                 className="me-2"
                 disabled={!canSkip()}
-                onClick={async () =>
-                    await gameService.skip(
-                        game.id,
-                        game.mode === GameMode.Local
-                            ? game.players.find((p) => p.turn_player)?.id
-                            : undefined,
-                    )
+                aria-keyshortcuts={canSkip() ? t("skipHitShortcut") : ""}
+                aria-label={
+                    detect()?.name === "firefox"
+                        ? canSkip()
+                            ? `${t("skipHitShortcut")} ${t("skipHit")}`
+                            : ""
+                        : ""
                 }
+                onClick={skipHit}
             >
                 {canSkip()
                     ? t("skipHit")
