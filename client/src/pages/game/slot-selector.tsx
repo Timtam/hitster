@@ -73,21 +73,25 @@ export default ({ game }: { game: Game }) => {
     }
 
     const guess = async () => {
-        if (selectedSlot === selectedKeySlot) {
-            try {
-                let gs = new GameService()
-                await gs.guess(
-                    game.id,
-                    selectedSlot !== "0" ? parseInt(selectedSlot, 10) : null,
-                    game.mode === GameMode.Local
-                        ? actionPlayer()?.id
-                        : undefined,
-                )
-                setSelectedSlot("0")
-                setSelectedKeySlot("0")
-            } catch (e) {
-                console.log(e)
-            }
+        let slot: number | null =
+            selectedSlot !== "0" ? parseInt(selectedSlot, 10) : null
+
+        if (game.players.some((p) => p.guess?.id === slot)) slot = null
+
+        if (actionRequired() !== PlayerState.Intercepting && slot === null)
+            return
+
+        try {
+            let gs = new GameService()
+            await gs.guess(
+                game.id,
+                slot,
+                game.mode === GameMode.Local ? actionPlayer()?.id : undefined,
+            )
+            setSelectedSlot("0")
+            setSelectedKeySlot("0")
+        } catch (e) {
+            console.log(e)
         }
     }
 
