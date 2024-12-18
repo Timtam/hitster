@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - updated Rust to 1.83
+- added and fixed some hits
 
 ## [2024.12.13-1] - 2024-12-13
 
