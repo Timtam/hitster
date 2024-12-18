@@ -7,6 +7,8 @@ import {
 import { detect } from "detect-browser"
 import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
+import OverlayTrigger from "react-bootstrap/OverlayTrigger"
+import Tooltip from "react-bootstrap/Tooltip"
 import { Trans, useTranslation } from "react-i18next"
 import { useContext } from "../../context"
 import type { Game, Slot } from "../../entities"
@@ -462,6 +464,15 @@ export default ({ game }: { game: Game }) => {
                         {game.players
                             .find((p) => p.turn_player === true)
                             ?.slots.map((slot) => {
+                                let disabled =
+                                    (actionRequired() !==
+                                        PlayerState.Guessing &&
+                                        actionRequired() !==
+                                            PlayerState.Intercepting) ||
+                                    game.players.some(
+                                        (p) => p.guess?.id === slot.id,
+                                    )
+
                                 let text = ""
 
                                 if (slot.from_year === 0)
@@ -480,90 +491,117 @@ export default ({ game }: { game: Game }) => {
 
                                 return (
                                     <>
-                                        <div className="col-auto mb-2">
-                                            <input
-                                                className="form-check-input mb-2"
-                                                value={slot.id.toString()}
-                                                key={`slot-${slot.id.toString()}`}
-                                                id={`slot-${slot.id.toString()}`}
-                                                disabled={
-                                                    (actionRequired() !==
-                                                        PlayerState.Guessing &&
-                                                        actionRequired() !==
-                                                            PlayerState.Intercepting) ||
-                                                    game.players.some(
-                                                        (p) =>
-                                                            p.guess?.id ===
-                                                            slot.id,
-                                                    )
-                                                }
-                                                type="radio"
-                                                checked={
-                                                    selectedSlot ===
-                                                        slot.id.toString() ||
-                                                    game.players.some(
-                                                        (p) =>
-                                                            p.guess?.id ===
-                                                            slot.id,
-                                                    )
-                                                }
-                                                onChange={(e) => {
-                                                    let p = game.players.find(
-                                                        (p) => p.turn_player,
-                                                    ) as Player
-                                                    let s = p.slots.find(
-                                                        (s) =>
-                                                            s.id ===
-                                                            parseInt(
-                                                                e.target.value,
-                                                                10,
-                                                            ),
-                                                    ) as Slot
+                                        <OverlayTrigger
+                                            overlay={(props) =>
+                                                disabled ? (
+                                                    <Tooltip
+                                                        id={`slot-tooltip-${slot.id}`}
+                                                        {...props}
+                                                        className="opacity-100"
+                                                    >
+                                                        {" "}
+                                                        <div>
+                                                            {game.players.find(
+                                                                (p) =>
+                                                                    p.guess
+                                                                        ?.id ===
+                                                                    slot.id,
+                                                            )?.name ?? <div />}
+                                                        </div>
+                                                    </Tooltip>
+                                                ) : (
+                                                    <div />
+                                                )
+                                            }
+                                        >
+                                            <div className="col-auto mb-2">
+                                                <input
+                                                    className="form-check-input mb-2"
+                                                    value={slot.id.toString()}
+                                                    key={`slot-${slot.id.toString()}`}
+                                                    id={`slot-${slot.id.toString()}`}
+                                                    type="radio"
+                                                    disabled={disabled}
+                                                    checked={
+                                                        selectedSlot ===
+                                                            slot.id.toString() ||
+                                                        game.players.some(
+                                                            (p) =>
+                                                                p.guess?.id ===
+                                                                slot.id,
+                                                        )
+                                                    }
+                                                    onChange={(e) => {
+                                                        let p =
+                                                            game.players.find(
+                                                                (p) =>
+                                                                    p.turn_player,
+                                                            ) as Player
+                                                        let s = p.slots.find(
+                                                            (s) =>
+                                                                s.id ===
+                                                                parseInt(
+                                                                    e.target
+                                                                        .value,
+                                                                    10,
+                                                                ),
+                                                        ) as Slot
 
-                                                    EventManager.publish(
-                                                        Events.slotSelected,
-                                                        {
-                                                            unavailable: false,
-                                                            slot: s,
-                                                            from_year:
-                                                                p.slots[0]
-                                                                    .to_year,
-                                                            to_year:
-                                                                p.slots[
+                                                        EventManager.publish(
+                                                            Events.slotSelected,
+                                                            {
+                                                                unavailable:
+                                                                    false,
+                                                                slot: s,
+                                                                from_year:
+                                                                    p.slots[0]
+                                                                        .to_year,
+                                                                to_year:
+                                                                    p.slots[
+                                                                        p.slots
+                                                                            .length -
+                                                                            1
+                                                                    ].from_year,
+                                                                slot_count:
                                                                     p.slots
-                                                                        .length -
-                                                                        1
-                                                                ].from_year,
-                                                            slot_count:
-                                                                p.slots.length,
-                                                        } satisfies SlotSelectedData,
-                                                    )
-                                                    setSelectedKeySlot(
-                                                        e.target.value,
-                                                    )
-                                                    setSelectedSlot(
-                                                        e.target.value,
-                                                    )
-                                                }}
-                                                aria-label={
-                                                    text +
-                                                    (game.players.some(
-                                                        (p) =>
-                                                            p.guess?.id ===
-                                                            slot.id,
-                                                    )
-                                                        ? " (" +
-                                                          game.players.find(
-                                                              (p) =>
-                                                                  p.guess
-                                                                      ?.id ===
-                                                                  slot.id,
-                                                          )?.name +
-                                                          ")"
-                                                        : "")
-                                                }
-                                            />
-                                        </div>
+                                                                        .length,
+                                                            } satisfies SlotSelectedData,
+                                                        )
+                                                        setSelectedKeySlot(
+                                                            e.target.value,
+                                                        )
+                                                        setSelectedSlot(
+                                                            e.target.value,
+                                                        )
+                                                    }}
+                                                    aria-label={
+                                                        text +
+                                                        (game.players.some(
+                                                            (p) =>
+                                                                p.guess?.id ===
+                                                                slot.id,
+                                                        )
+                                                            ? " (" +
+                                                              game.players.find(
+                                                                  (p) =>
+                                                                      p.guess
+                                                                          ?.id ===
+                                                                      slot.id,
+                                                              )?.name +
+                                                              ")"
+                                                            : "")
+                                                    }
+                                                    style={
+                                                        disabled
+                                                            ? {
+                                                                  pointerEvents:
+                                                                      "none",
+                                                              }
+                                                            : {}
+                                                    }
+                                                />
+                                            </div>
+                                        </OverlayTrigger>
                                         {slot.to_year !== 0 ? (
                                             <div
                                                 className="col-auto g-0 mb-2"
