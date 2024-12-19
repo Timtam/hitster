@@ -1,4 +1,5 @@
 import gitVersion from "@corteks/gitversion"
+import ViteYaml from "@modyfi/vite-plugin-yaml"
 import react from "@vitejs/plugin-react-swc"
 import { defineConfig, splitVendorChunkPlugin } from "vite"
 import checker from "vite-plugin-checker"
@@ -25,6 +26,7 @@ export default defineConfig(async () => {
 
     return {
         plugins: [
+            ViteYaml(),
             react(),
             viteTsconfigPaths(),
             checker({

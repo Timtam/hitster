@@ -1,0 +1,237 @@
+Local: lokal
+Private: privat
+Public: öffentlich
+accessibilityFeature: >-
+    entwickelt mit Fokus auf Barrierefreiheit, sodass sehbehinderte und sehende
+    Spieler gemeinsam spielen können
+action: Aktion
+addPlayer: Lokalen Spieler hinzufügen
+addPlayerNotLocalGame: Du kannst lokale Spieler nur in einem lokalen Spiel hinzufügen
+addPlayerNotWaiting: Du kannst lokale Spieler nur hinzufügen, während das Spiel gestoppt ist
+afterYear: nach {{year}}
+allRightsReserved: Alle Rechte vorbehalten
+and: und
+artist: Interpret
+automatic: Automatisch
+beforeYear: vor {{year}}
+betweenYears: von {{year1}} bis {{year2}}
+cancel: Abbrechen
+cannotClaimHit: Du kannst dir derzeit keinen Hit nehmen
+cannotSkipHit: Du kannst derzeit keinen Hit überspringen
+cannotSubmitGuess: Du kannst derzeit keine Vermutung abgeben
+cardCorrectionFeature: >-
+    das originale Kartenspiel beinhaltet einige kleine Fehler, wir beheben diese
+    sofort
+changelog: Änderungsverlauf
+claimHit: Nimm dir einen Hit, indem du drei Chips bezahlst
+claimHitNoToken: Du musst drei Chips bezahlen können, um dir einen Hit nehmen zu können
+close: Schließen
+colorScheme: Farbschema
+colorSchemesFeature: >-
+    entscheide dich für ein helles oder dunkles Farbschema, oder passe dich
+    automatisch deinem verwendeten Gerät an
+confirmHeading: >-
+    Du musst nun bestätigen, ob <0>{{player}}</0> den Titel und Interpreten
+    korrekt erraten hat. Sei fair!
+confirmNo: Titel und Interpret des Hits wurde nicht richtig erraten
+confirmText: Hat <0>{{player}}</0> den Titel und Interpreten korrekt erraten?
+confirmYes: Titel und Interpret des Hits wurde richtig erraten
+createNewGame: Spiel erstellen
+creator: Ersteller
+dark: Dunkel
+deleteAccount: Benutzerkonto löschen
+dontIntercept: Keine Vermutung äußern
+features: Funktionen
+finalScore: "Hier sind die finalen Ergebnisse:"
+game: Spiel
+gameActions: "Spielaktionen:"
+gameEnded: Das Spiel ist vorbei!
+gameId: Spiel ID
+gameLobby: Spielelobby
+gameNotStarted: Das Spiel hat noch nicht begonnen.
+gameSettings: Spieleinstellungen
+gameSettingsHitDuration: Wie viele Sekunden eines Hits werden zu jeder Spielrunde abgespielt?
+gameSettingsHitGoal: Wie viele Hits muss ein Spieler erraten, um das Spiel zu gewinnen?
+gameSettingsNotOpen: Das Spiel muss gestoppt sein, um die Spieleinstellungen zu ändern
+gameSettingsPacks: "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:"
+gameSettingsRememberHits: >-
+    Sollen Hits zwischen den Spielen gespeichert werden, damit so selten wie
+    möglich doppelte Hits erraten werden müssen?
+gameSettingsShortcut: Alt+Umschalt+E
+gameSettingsStartTokens: Wie viele Chips bekommt jeder Spieler zu Beginn des Spiels?
+game_one: Spiel
+goal: Ziel
+guess: "{{player}} vermutet: {{guess}}"
+guessNothing: "{{player}} behauptet nichts Gegenteiliges"
+guessText: Wo, glaubst du, gehört dieser Hit hin?
+hitDuration: Abspielzeit der Hits
+hitHeading: Was zum Hit?
+hitNoGameRunning: Derzeit läuft kein Spiel, also gibt es auch keinen Hit für dich!
+hitRevealed: >-
+    <0>{{player}}</0> hat Recht! Das ist <1>{{title}}</1> von <2>{{artist}}</2>
+    aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem <4>{{pack}}</4> Pack.
+    Du kannst dir den Hit jetzt in voller Länge anhören.
+hitRevealedBelonging: >-
+    <0>{{player}}</0> hat Recht! Das ist <1>{{title}}</1> von <2>{{artist}}</2>
+    aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus <4>{{belongs_to}}</4>
+    und stammt aus dem <5>{{pack}}</5> Pack. Du kannst dir den Hit jetzt in
+    voller Länge anhören.
+hitUnknown: Der Hit ist derzeit unbekannt, du musst wohl warten, bis er aufgedeckt wird.
+hit_one: Hit
+hit_other: Hits
+hitsForPlayer: Hits für {{player}}
+howToPlay: Wie wird gespielt?
+issue: >-
+    Für Lob, Kritik oder Fehlermeldungen, eröffnen Sie bitte ein <0>Issue auf
+    GitHub</0>.
+joinGame: Spiel beitreten
+joinGameShortcut: Alt+Umschalt+J
+keyboardShortcut_one: Tastenkombination
+keyboardShortcut_other: Tastenkombinationen
+kick: Kicken
+knownAs: Du bist derzeit bekannt als {{username}}
+language: Sprache
+leaveGame: Spiel verlassen
+leaveGameShortcut: Alt+Umschalt+Q
+light: Hell
+loading: Lädt, bitte warten...
+localGame: Lokales Spiel
+localGameShortcut: Alt+Umschalt+L
+localGamesFeature: >-
+    spiele ein lokales Spiel mit Freunden und Familie, genau wie das
+    Kartenspiel, nur ohne Karten
+loggedInAs: Angemeldet als {{username}}
+login: Anmelden
+logout: Abmelden
+mainMenu: Hauptmenü
+mode: Modus
+musicVolume: Musiklautstärke
+name: Name
+navigation: Navigation
+"no": Nein
+noHitAvailable: Kein Hit verfügbar
+noRegistrationFeature: keine Registrierung notwendig, einfach ein Spiel erstellen und los geht's
+noShortcut: Alt+Umschalt+N
+noone: niemand
+nooneWins: Niemand hat dieses Spiel gewonnen.
+notLoggedIn: Nicht angemeldet
+open: geöffnet
+otherClaimedHit: >-
+    <0>{{player}}</0> hat sich einen Hit genommen. Das war <1>{{title}}</1> von
+    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem
+    <4>{{pack}}</4> Pack.
+otherClaimedHitBelonging: >-
+    <0>{{player}}</0> hat sich einen Hit genommen. Das war <1>{{title}}</1> von
+    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus
+    <4>{{belongs_to}}</4> und stammt aus dem <5>{{pack}}</5> Pack.
+otherGuessHeading: Du rätst jetzt für <0>{{player}}</0>
+otherInterceptHeading: Du kannst jetzt für <0>{{player}}</0> eine andere Vermutung äußern
+otherJoinedGame: "{{player}} ist dem Spiel beigetreten"
+otherLeftGame: "{{player}} hat das Spiel verlassen"
+otherReceivedToken: >-
+    {{player}} hat einen Token erhalten, da der Künstler und Titel dieses Hits
+    genannt wurde
+otherSkippedHit: >-
+    <0>{{player}}</0> hat diesen Hit übersprungen. Das war <1>{{title}}</1> von
+    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem
+    <4>{{pack}}</4> Pack.
+otherSkippedHitBelonging: >-
+    <0>{{player}}</0> hat diesen Hit übersprungen. Das war <1>{{title}}</1> von
+    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus
+    <4>{{belongs_to}}</4> und stammt aus dem <5>{{pack}}</5> Pack.
+otherWins: "{{player}} hat dieses Spiel gewonnen!"
+ownedBy: >-
+    Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel,
+    welches <0>Koninklijke Jumbo B.V.</0> gehört.
+pack_one: Pack
+pack_other: Packs
+packsFeature: insgesamt {{hits}} Hits in {{packs}} Packs, welche du erraten kannst
+password: Passwort
+playHit: Hit abspielen
+playOrStopHit: Hit abspielen oder stoppen
+playOrStopHitShortcut: Alt+Umschalt+H
+playerStatsNotification: "{{player}}: {{hits}} Hits, {{tokens}} Chips"
+player_one: Spieler
+player_other: Spieler
+privateGame: Privates Spiel
+privateGameShortcut: Alt+Umschalt+R
+publicAndPrivateGamesFeature: >-
+    spiele ein öffentliches Spiel mit jedem verfügbaren Spieler, oder ein
+    privates Spiel mit deinen Freunden
+publicGame: Öffentliches Spiel
+publicGameShortcut: Alt+Umschalt+U
+register: Registrieren
+registrationSuccessful: Du wurdest erfolgreich registriert und angemeldet.
+rememberHits: Hits zwischen Spielen speichern?
+repeatPassword: Passwort wiederholen
+running: läuft
+save: Speichern
+section: Abschnitt
+selectAll: Alles auswählen
+selectNextSlot: Nächsten Slot auswählen
+selectNextSlotShortcut: Alt+Umschalt+Pfeil nach unten
+selectNoSlot: Keinen Slot auswählen
+selectNoSlotShortcut: Alt+Umschalt+Rücktaste
+selectPreviousSlot: Vorherigen Slot auswählen
+selectPreviousSlotShortcut: Alt+Umschalt+Pfeil nach oben
+selectSlotFirst: Wähle erst eine Möglichkeit
+settings: Einstellungen
+sfxVolume: Lautstärke der Sound Effekte
+skipHit: Überspringe diesen Hit, indem du einen Chip bezahlst
+skipHitNoToken: Du musst einen Chip bezahlen können, um einen Hit zu überspringen
+skipHitNotGuessing: Nur der Zugspieler kann einen Hit überspringen
+skipHitShortcut: Alt+Umschalt+I
+sourceCodeAvailableAt: Quellcode verfügbar auf <0>GitHub</0>
+speakPlayerInfo: Sprich wichtige Informationen zu Spieler {{player}}
+speakPlayerInfoShortcut: Alt+Umschalt+{{player}}
+startGame: Spiel starten
+startGameNotEnoughPlayers: Ein Spiel benötigt mindestens zwei Mitspieler
+startGameShortcut: Alt+Umschalt+S
+startTokens: Start-Chips
+state: Status
+stopGame: Spiel stoppen
+stopGameShortcut: Alt+Umschalt+S
+stopHit: Hit stoppen
+submitGuess: Vermutung abschicken
+submitGuessShortcut: Alt+Umschalt+Enter
+title: Titel
+token_one: Chip
+token_other: Chips
+username: Benutzername
+version: "Version: {{version}}"
+volume: Lautstärke
+waitingForPlayerHeading_one: Du wartest noch auf <0>{{player}}</0>
+waitingForPlayerHeading_other: Du wartest noch auf <0>{{player}}</0>
+waitingText: "Dies sind die Möglichkeiten:"
+welcome: Willkommen
+welcomeText: >-
+    Willkommen zum inoffiziellen Hitster Online-Kartenspiel! Hier gilt es zu
+    raten, wann ein bestimmter Song veröffentlicht wurde, aber keine Angst, es
+    ist nicht so schwer wie es sich anhört. Aber lies doch einfach weiter.
+year: Jahr
+"yes": Ja
+yesShortcut: Alt+Umschalt+Y
+youClaimedHit: >-
+    Du hast dir einen Hit genommen. Das war <0>{{title}}</0> von
+    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit stammt aus dem
+    <3>{{pack}}</3> Pack.
+youClaimedHitBelonging: >-
+    Du hast dir einen Hit genommen. Das war <0>{{title}}</0> von
+    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit ist bekannt aus
+    <3>{{belongs_to}}</3> und stammt aus dem <4>{{pack}}</4> Pack.
+youGuessHeading: Na endlich, jetzt bist du mit Raten dran!
+youInterceptHeading: >-
+    Du kannst einschreiten und eine andere Vermutung äußern, denk jedoch daran,
+    es wird dich einen Chip kosten
+youJoinedGame: Du bist dem Spiel beigetreten
+youLeftGame: Du hast das Spiel verlassen
+youReceivedToken: Du hast einen Token erhalten, da du Künstler und Titel dieses Hits wusstest
+youSkippedHit: >-
+    Du hast diesen Hit übersprungen. Das war <0>{{title}}</0> von
+    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit stammt aus dem
+    <3>{{pack}}</3> Pack.
+youSkippedHitBelonging: >-
+    Du hast diesen Hit übersprungen! Das war <0>{{title}}</0> von
+    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit ist bekannt aus
+    <3>{{belongs_to}}</3> und stammt aus dem <4>{{pack}}</4> Pack.
+youWin: Gratulation, du hast das Spiel gewonnen!

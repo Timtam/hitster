@@ -1,0 +1,231 @@
+Local: local
+Private: private
+Public: public
+accessibilityFeature: >-
+    developed with screen reader accessibility in mind, so that sighted and
+    visually impaired people can play together
+action: Aktion
+addPlayer: Add local player
+addPlayerNotLocalGame: You can only add local players in a local game
+addPlayerNotWaiting: You can only add local players while the game is stopped
+afterYear: after {{year}}
+allRightsReserved: All rights reserved
+and: and
+artist: Artist
+automatic: Automatic
+beforeYear: before {{year}}
+betweenYears: between {{year1}} and {{year2}}
+cancel: Cancel
+cannotClaimHit: You cannot claim a hit right now
+cannotSkipHit: You cannot skip a hit right now
+cannotSubmitGuess: You cannot submit a guess right now
+cardCorrectionFeature: >-
+    the original card game contains some tiny mistakes on the cards, but we fix
+    them immediately
+changelog: Changelog
+claimHit: Claim a hit by paying 3 tokens
+claimHitNoToken: You need to pay 3 tokens to claim a hit
+close: Close
+colorScheme: Color scheme
+colorSchemesFeature: support light and dark mode, and respect your device's settings by default
+confirmHeading: >-
+    You now need to confirm if <0>{{player}}</0> guessed title and artist of the
+    song correctly. Be fair!
+confirmNo: title and artist of the hit was guessed incorrectly
+confirmText: Did <0>{{player}}</0> guess artist and title correctly?
+confirmYes: title and artist of the hit was guessed correctly
+createNewGame: Create new game
+creator: creator
+dark: Dark
+deleteAccount: Delete account
+dontIntercept: Don't intercept
+features: Features
+finalScore: "And here are the final results:"
+game: Game
+gameActions: "Game actions:"
+gameEnded: The game ended!
+gameId: Game ID
+gameLobby: Game Lobby
+gameNotStarted: The game hasn't started yet.
+gameSettings: Game settings
+gameSettingsHitDuration: How many seconds of a hit will every player hear when guessing?
+gameSettingsHitGoal: How many hits do the players need to guess correctly in order to win?
+gameSettingsNotOpen: The game needs to be stopped to change its settings
+gameSettingsPacks: "Check all the packs you want to use in this game:"
+gameSettingsRememberHits: >-
+    Should hits be remembered across games to prevent duplicates for as long as
+    possible?
+gameSettingsShortcut: Alt+Shift+E
+gameSettingsStartTokens: How many tokens should every player get when starting a game?
+game_one: Game
+goal: Goal
+guess: "{{player}} guesses: {{guess}}"
+guessNothing: "{{player}} doesn't intercept"
+guessText: Where do you think this hit belongs?
+hitDuration: Hit duration
+hitHeading: What the hit?
+hitNoGameRunning: No game is currently running, so no hit for you!
+hitRevealed: >-
+    <0>{{player}}</0> is right! This is <1>{{title}}</1> by <2>{{artist}}</2>
+    from <3>{{year}}</3>. This song belongs to the <4>{{pack}}</4> pack. You can
+    now play it at full length.
+hitRevealedBelonging: >-
+    <0>{{player}}</0> is right! This is <1>{{title}}</1> by <2>{{artist}}</2>
+    from <3>{{year}}</3>. You might know this song from <4>{{belongs_to}}</4>
+    and it belongs to the <4>{{pack}}</4> pack. You can now play it at full
+    length.
+hitUnknown: The hit is currently unknown, you'll have to wait for it to be revealed.
+hit_one: Hit
+hit_other: Hits
+hitsForPlayer: Hits for {{player}}
+howToPlay: How to play the game
+issue: For bug reports and general feedback please open a <0>GitHub issue</0>.
+joinGame: Join game
+joinGameShortcut: Alt+Shift+J
+keyboardShortcut_one: Keyboard shortcut
+keyboardShortcut_other: Keyboard shortcuts
+kick: Kick
+knownAs: You are currently known as {{username}}
+language: Language
+leaveGame: Leave game
+leaveGameShortcut: Alt+Shift+Q
+light: Light
+loading: Loading...
+localGame: Local game
+localGameShortcut: Alt+Shift+L
+localGamesFeature: >-
+    play a local game with friends and family, just like the card game, but you
+    don't need to have the cards around
+loggedInAs: Logged in as {{username}}
+login: Login
+logout: Logout
+mainMenu: Main menu
+mode: Mode
+musicVolume: Music volume
+name: Name
+navigation: Navigation
+"no": "No"
+noHitAvailable: No hit available
+noRegistrationFeature: no registration necessary, just create a game and play
+noShortcut: Alt+Shift+N
+noone: noone
+nooneWins: Noone won this game.
+notLoggedIn: Not logged in
+open: Open
+otherClaimedHit: >-
+    <0>{{player}}</0> claimed a hit. This was <1>{{title}}</1> by
+    <2>{{artist}}</2> from <3>{{year}}</3>. This song belongs to the
+    <4>{{pack}}</4> pack.
+otherClaimedHitBelonging: >-
+    <0>{{player}}</0> claimed a hit. This was <1>{{title}}</1> by
+    <2>{{artist}}</2> from <3>{{year}}</3>. You might know this song from
+    <4>{{belongs_to}}</4> and it belongs to the <4>{{pack}}</4> pack.
+otherGuessHeading: You're now guessing for <0>{{player}}</0>
+otherInterceptHeading: You can now make another guess for <0>{{player}}</0>
+otherJoinedGame: "{{player}} joined the game"
+otherLeftGame: "{{player}} left the game"
+otherReceivedToken: >-
+    {{player}} received a token for guessing artist and title of this hit
+    correctly
+otherSkippedHit: >-
+    <0>{{player}}</0> skipped this hit! This was <1>{{title}}</1> by
+    <2>{{artist}}</2> from <3>{{year}}</3>. This song belongs to the
+    <4>{{pack}}</4> pack.
+otherSkippedHitBelonging: >-
+    <0>{{player}}</0> skipped this hit! This was <1>{{title}}</1> by
+    <2>{{artist}}</2> from <3>{{year}}</3>. You might know this song from
+    <4>{{belongs_to}}</4> and it belongs to the <4>{{pack}}</4> pack.
+otherWins: "{{player}} is the winner of this game!"
+ownedBy: >-
+    This unofficial version is based on the original Hitster card game which is
+    owned by <0>Koninklijke Jumbo B.V.</0>.
+pack_one: Pack
+pack_other: Packs
+packsFeature: a total of {{hits}} hits in {{packs}} packs available for you to guess
+password: Password
+playHit: Play hit
+playOrStopHit: Play or stop hit
+playOrStopHitShortcut: Alt+Shift+H
+playerStatsNotification: "{{player}}: {{hits}} hits, {{tokens}} tokens"
+player_one: Player
+player_other: Players
+privateGame: Private game
+privateGameShortcut: Alt+Shift+R
+publicAndPrivateGamesFeature: >-
+    play a public game to play with everyone who's currently available, or play
+    a private game for just you and your friends
+publicGame: Public game
+publicGameShortcut: Alt+Shift+U
+register: Register
+registrationSuccessful: You've been registered and logged in successfully.
+rememberHits: Remember hits across games?
+repeatPassword: Repeat password
+running: Running
+save: Save
+section: Abschnitt
+selectAll: Select all
+selectNextSlot: Select next slot
+selectNextSlotShortcut: Alt+Shift+Down arrow
+selectNoSlot: Select no slot
+selectNoSlotShortcut: Alt+Shift+Backspace
+selectPreviousSlot: Select previous slot
+selectPreviousSlotShortcut: Alt+Shift+Up arrow
+selectSlotFirst: Select a slot first
+settings: Settings
+sfxVolume: SFX Volume
+skipHit: Skip this hit by paying one token
+skipHitNoToken: You need to pay a token to skip a hit
+skipHitNotGuessing: Only the guessing player can skip a hit
+skipHitShortcut: Alt+Shift+I
+sourceCodeAvailableAt: Source Code available at <0>GitHub</0>
+speakPlayerInfo: Speak important information about player {{player}}
+speakPlayerInfoShortcut: Alt+Shift+{{player}}
+startGame: Start game
+startGameNotEnoughPlayers: At least two players must be part of a game
+startGameShortcut: Alt+Shift+S
+startTokens: Start tokens
+state: State
+stopGame: Stop game
+stopGameShortcut: Alt+Shift+S
+stopHit: Stop hit
+submitGuess: Submit guess
+submitGuessShortcut: Alt+Shift+Return
+title: Title
+token_one: Token
+token_other: Tokens
+username: Username
+version: "Version: {{version}}"
+volume: Volume
+waitingForPlayerHeading_one: You are waiting for <0>{{player}}</0> to make their move
+waitingForPlayerHeading_other: You are waiting for <0>{{player}}</0> to make their move
+waitingText: "These are the possible slots:"
+welcome: Welcome
+welcomeText: >-
+    Welcome to the unofficial Hitster online card game! Here you will try to
+    guess when a certain song was released, but don't worry, its not as hard as
+    it sounds. Read on to find out what its all about.
+year: Year
+"yes": "Yes"
+yesShortcut: Alt+Shift+Y
+youClaimedHit: >-
+    You claimed a hit. This was <0>{{title}}</0> by <1>{{artist}}</1> from
+    <2>{{year}}</2>. This song belongs to the <3>{{pack}}</3> pack.
+youClaimedHitBelonging: >-
+    You claimed a hit. This was <0>{{title}}</0> by <1>{{artist}}</1> from
+    <2>{{year}}</2>. You might know this song from <3>{{belongs_to}}</3> and it
+    belongs to the <3>{{pack}}</3> pack.
+youGuessHeading: Finally, its your turn to guess!
+youInterceptHeading: >-
+    You can now step in and make another guess, but be aware, it'll cost you one
+    token!
+youJoinedGame: You joined the game
+youLeftGame: You left the game
+youReceivedToken: You received a token for guessing artist and title of this hit correctly
+youSkippedHit: >-
+    You skipped this hit. This was <0>{{title}}</0> by <1>{{artist}}</1> from
+    <2>{{year}}</2>. This song belongs to the <3>{{pack}}</3> pack.
+youSkippedHitBelonging: >-
+    You skipped this hit. This was <0>{{title}}</0> by <1>{{artist}}</1> from
+    <2>{{year}}</2>. You might know this song from <3>{{belongs_to}}</3> and it
+    belongs to the <3>{{pack}}</3> pack.
+youWin: Congratulations, you are the winner!
