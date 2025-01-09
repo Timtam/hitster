@@ -1,9 +1,6 @@
 Local: local
 Private: private
 Public: public
-accessibilityFeature: >-
-    developed with screen reader accessibility in mind, so that sighted and
-    visually impaired people can play together
 action: Aktion
 addPlayer: Add local player
 addPlayerNotLocalGame: You can only add local players in a local game
@@ -19,15 +16,11 @@ cancel: Cancel
 cannotClaimHit: You cannot claim a hit right now
 cannotSkipHit: You cannot skip a hit right now
 cannotSubmitGuess: You cannot submit a guess right now
-cardCorrectionFeature: >-
-    the original card game contains some tiny mistakes on the cards, but we fix
-    them immediately
 changelog: Changelog
 claimHit: Claim a hit by paying 3 tokens
 claimHitNoToken: You need to pay 3 tokens to claim a hit
 close: Close
 colorScheme: Color scheme
-colorSchemesFeature: support light and dark mode, and respect your device's settings by default
 confirmHeading: >-
     You now need to confirm if <0>{{player}}</0> guessed title and artist of the
     song correctly. Be fair!
@@ -40,6 +33,26 @@ dark: Dark
 deleteAccount: Delete account
 dontIntercept: Don't intercept
 features: Features
+featuresList: >
+    <0>no registration necessary, just create a game and play</0>
+
+    <0>play a public game to play with everyone who's currently available, or
+    play a private game for just you and your friends</0>
+
+    <0>play a local game with friends and family, just like the card game, but
+    you don't need to have the cards around</0>
+
+    <0>a total of {{hits}} hits in {{packs}} packs available for you to
+    guess</0>
+
+    <0>the original card game contains some tiny mistakes on the cards, but we
+    fix them immediately</0>
+
+    <0>developed with screen reader accessibility in mind, so that sighted and
+    visually impaired people can play together</0>
+
+    <0>support light and dark mode, and respect your device's settings by
+    default</0>
 finalScore: "And here are the final results:"
 game: Game
 gameActions: "Game actions:"
@@ -63,8 +76,8 @@ guess: "{{player}} guesses: {{guess}}"
 guessNothing: "{{player}} doesn't intercept"
 guessText: Where do you think this hit belongs?
 hitDuration: Hit duration
-hitHeading: What the hit?
-hitNoGameRunning: No game is currently running, so no hit for you!
+hitHeading: What's the hit?
+hitNoGameRunning: No game running, no hit for you!
 hitRevealed: >-
     <0>{{player}}</0> is right! This is <1>{{title}}</1> by <2>{{artist}}</2>
     from <3>{{year}}</3>. This song belongs to the <4>{{pack}}</4> pack. You can
@@ -93,20 +106,50 @@ light: Light
 loading: Loading...
 localGame: Local game
 localGameShortcut: Alt+Shift+L
-localGamesFeature: >-
-    play a local game with friends and family, just like the card game, but you
-    don't need to have the cards around
 loggedInAs: Logged in as {{username}}
 login: Login
 logout: Logout
 mainMenu: Main menu
+manualAdvanced: >
+    Are you familiar with the basic rules of Hitster yet? Great, because this is
+    a list of advanced features and settings you can configure to make your game
+    more difficult, or easier, just as you like.
+
+    <ul>
+        <li>Every game has a game settings button which allows you to:
+            <ul>
+                <li>change the amount of hits required to win a game</li>
+                <li>change the amount of tokens every player starts with</li>
+                <li>specify which card packs you want to use in your game</li>
+                <li>control wether the hits you already listened to will be saved between rounds so that you don't have to guess them again in a future round</li>
+            </ul>
+        </li>
+        <li>You can also pay 3 tokens during your turn to immediately add a random hit to your time line. Find the corresponding button within the game actions section.</li>
+        <li>You can browse the shortcuts page to get an overview over all the hidden key shortcuts across the entire game, which can make your life much easier. Said page can be found within the main menu.</li>
+    </ul>
+manualAdvancedTitle: Advanced
+manualBasic: >
+    This is how you play the game:
+
+    <ol>
+        <li>You start the game with one randomly dealt hit card, visible to all players. Each hit card displays the name of a song, the artist and the year it was released. Some hit cards also include additional information, like a film or series the song is associated with.</li>
+        <li>Each round begins with the computer drawing a random hit card, nobody sees what's on it. Everyone listens to the song on the hidden hit card for 20 seconds. During your turn, you have to guess whether this mystery hit that's playing was released before or after the song on the first card you've been dealt. If you're correct about when the song was released, the hit you've identified will get added to your collection at the end of the round when its details are revealed. Your collection is always arranged in chronological order like a timeline of when hits were released, so as your collection grows, the time periods between the hits in your collection get narrower, meaning each subsequent guess you make will need to be more specific than the last.</li>
+        <li>During your turn, you can win a token by calling out two additional facts about the hit that's playing. Typical examples are the song title, artist, a series, film or anything else that the song is known for. Any combination of facts can win a token, so long as there are two facts you've called out and they're both true. The player that comes after you confirms the accuracy of any additional facts you've offered, awarding your token if both were correct, or denying your token if either fact can't be verified. In future rounds, tokens can be spent on intercepting other players, or skipping hits that you don't recognize.</li>
+        <li>After you've entered your guess at when the hidden hit was released, the other players will either agree with you, or if any other player has a different opinion, they can pay one token to intercept. Be quick with your interceptions, the first player to correctly identify when the hidden hit was released wins that card.</li>
+        <li>Each round ends with the hidden hit being revealed. The player who guessed correctly gets to add the hit to their timeline, with the turn player taking precedence. For example, imagine it's your turn and you guess that the hidden hit was released before 1988. Another player intercepts and guesses it was released after 1988. When the hit is revealed, it turns out it was actually released in exactly 1988. It was your turn, so you would win that card.</li>
+        <li>The first player to collect 10 hit cards wins the game.</li>
+    </ol>
+
+
+    If you enjoy the game and already know how it works, feel free to check out
+    the advanced features by switching tabs.
+manualBasicTitle: Basic
 mode: Mode
 musicVolume: Music volume
 name: Name
 navigation: Navigation
 "no": "No"
 noHitAvailable: No hit available
-noRegistrationFeature: no registration necessary, just create a game and play
 noShortcut: Alt+Shift+N
 noone: noone
 nooneWins: Noone won this game.
@@ -141,7 +184,6 @@ ownedBy: >-
     owned by <0>Koninklijke Jumbo B.V.</0>.
 pack_one: Pack
 pack_other: Packs
-packsFeature: a total of {{hits}} hits in {{packs}} packs available for you to guess
 password: Password
 playHit: Play hit
 playOrStopHit: Play or stop hit
@@ -151,9 +193,6 @@ player_one: Player
 player_other: Players
 privateGame: Private game
 privateGameShortcut: Alt+Shift+R
-publicAndPrivateGamesFeature: >-
-    play a public game to play with everyone who's currently available, or play
-    a private game for just you and your friends
 publicGame: Public game
 publicGameShortcut: Alt+Shift+U
 register: Register

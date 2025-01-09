@@ -1,9 +1,6 @@
 Local: lokal
 Private: privat
 Public: öffentlich
-accessibilityFeature: >-
-    entwickelt mit Fokus auf Barrierefreiheit, sodass sehbehinderte und sehende
-    Spieler gemeinsam spielen können
 action: Aktion
 addPlayer: Lokalen Spieler hinzufügen
 addPlayerNotLocalGame: Du kannst lokale Spieler nur in einem lokalen Spiel hinzufügen
@@ -19,17 +16,11 @@ cancel: Abbrechen
 cannotClaimHit: Du kannst dir derzeit keinen Hit nehmen
 cannotSkipHit: Du kannst derzeit keinen Hit überspringen
 cannotSubmitGuess: Du kannst derzeit keine Vermutung abgeben
-cardCorrectionFeature: >-
-    das originale Kartenspiel beinhaltet einige kleine Fehler, wir beheben diese
-    sofort
 changelog: Änderungsverlauf
 claimHit: Nimm dir einen Hit, indem du drei Chips bezahlst
 claimHitNoToken: Du musst drei Chips bezahlen können, um dir einen Hit nehmen zu können
 close: Schließen
 colorScheme: Farbschema
-colorSchemesFeature: >-
-    entscheide dich für ein helles oder dunkles Farbschema, oder passe dich
-    automatisch deinem verwendeten Gerät an
 confirmHeading: >-
     Du musst nun bestätigen, ob <0>{{player}}</0> den Titel und Interpreten
     korrekt erraten hat. Sei fair!
@@ -42,6 +33,26 @@ dark: Dunkel
 deleteAccount: Benutzerkonto löschen
 dontIntercept: Keine Vermutung äußern
 features: Funktionen
+featuresList: >
+    <0>keine Registrierung notwendig, einfach ein Spiel erstellen und los
+    geht's</0>
+
+    <0>spiele ein öffentliches Spiel mit jedem verfügbaren Spieler, oder ein
+    privates Spiel mit deinen Freunden</0>
+
+    <0>spiele ein lokales Spiel mit Freunden und Familie, genau wie das
+    Kartenspiel, nur ohne Karten</0>
+
+    <0>insgesamt {{hits}} Hits in {{packs}} Packs, welche du erraten kannst</0>
+
+    <0>das originale Kartenspiel beinhaltet einige kleine Fehler, wir beheben
+    diese sofort</0>
+
+    <0>entwickelt mit Fokus auf Barrierefreiheit, sodass sehbehinderte und
+    sehende Spieler gemeinsam spielen können</0>
+
+    <0>entscheide dich für ein helles oder dunkles Farbschema, oder passe dich
+    automatisch deinem verwendeten Gerät an</0>
 finalScore: "Hier sind die finalen Ergebnisse:"
 game: Spiel
 gameActions: "Spielaktionen:"
@@ -97,20 +108,51 @@ light: Hell
 loading: Lädt, bitte warten...
 localGame: Lokales Spiel
 localGameShortcut: Alt+Umschalt+L
-localGamesFeature: >-
-    spiele ein lokales Spiel mit Freunden und Familie, genau wie das
-    Kartenspiel, nur ohne Karten
 loggedInAs: Angemeldet als {{username}}
 login: Anmelden
 logout: Abmelden
 mainMenu: Hauptmenü
+manualAdvanced: >
+    Hast du dich schon mit den grundlegenden Regeln von Hitster vertraut
+    gemacht? Perfekt, denn dies ist eine Liste mit erweiterten Funktionen und
+    Einstellungen, mit welchen du dein Spiel schwieriger oder einfacher machen
+    kannst.
+
+    <ul>
+        <li>Jedes Spiel hat einen Spieleinstellungen-Schalter, mit welchem du folgende Einstellungen anpassen kannst:
+            <ul>
+                <li>ändere die Anzahl Hits, welche für den Sieg nötig sind</li>
+                <li>ändere die Anzahl der Chips, welche jeder Spieler zu Spielbeginn erhält</li>
+                <li>lege fest, welche Packs mit Hits du in deinem Spiel verwenden möchtest</li>
+                <li>bestimme, ob bereits gespielte Hits zwischen Spielen gespeichert werden sollen, damit du in mehreren Spielrunden keine Hits doppelt bekommst</li>
+            </ul>
+        </li>
+        <li>Du kannst 3 Chips bezahlen, um deiner Zeitleiste einen weiteren Hit hinzuzufügen. Der notwendige Schalter ist in dem Spieleaktionen-Abschnitt zu finden.</li>
+        <li>Du kannst durch die Tastenkombinationen-Seite stöbern, um einen Überblick über alle Tastenkombinationen zu bekommen, welche das Leben in diesem Spiel sehr viel einfacher gestalten können. Du findest die besagte Seite im Hauptmenü.</li>
+    </ul>
+manualAdvancedTitle: Fortgeschritten
+manualBasic: >
+    So wird gespielt:
+
+    <ol>
+        <li>Zu Beginn des Spiels erhält jeder Spieler einen zufällig ausgewählten Hit, der für alle sichtbar ist. Jeder Hit enthält den Namen des Liedes, die Künstler und das Veröffentlichungsjahr. Zu einigen Hits gibt es auch noch zusätzliche Fakten, wie z. B. einen Film oder eine Serie, mit dem oder der das Lied in Verbindung gebracht wird.</li>
+        <li>Jede Runde beginnt damit, dass ein zufälliger Hit gezogen wird, ohne dass jemand die dazugehörigen Informationen sehen kann. Alle Spieler hören den Song 20 Sekunden lang. Bist du der Spieler, der gerade an der Reihe ist, gilt es zu erraten, ob der gerade gespielte Song vor oder nach deinem ersten Hit veröffentlicht wurde. Liegst du mit deiner Vermutung des Veröffentlichungsjahres richtig, wird dieser Hit am Ende der Runde zu deiner Sammlung hinzugefügt, nachdem dessen Details aufgedeckt wurden. Die Hits in deiner Sammlung sind, wie auf einer Zeitleiste, die aus den Veröffentlichungsjahren der Songs besteht, immer in chronologischer Reihenfolge angeordnet. Je mehr Songs du sammelst, desto kürzer werden die Abstände zwischen den einzelnen Hits, was bedeutet, dass du bei jedem weiteren Rateversuch präziser sein musst als beim letzten Mal.</li>
+        <li>Wenn du an der Reihe bist, kannst du dir einen Chip verdienen, wenn du zwei zusätzliche Fakten zum gerade gespielten Song nennst. Das können zum Beispiel der Titel, die Künstler, eine Serie, ein Film oder etwas anderes sein, wodurch der Song bekannt ist. Du verdienst dir einen Chip, wenn du zwei richtige Fakten genannt hast. Der Mitspieler, der nach dir an der Reihe ist, überprüft die Richtigkeit dieser Details und gibt dir einen Chip, falls beide richtig sind, oder eben nicht, wenn mindestens einer der beiden falsch ist. Die Chips können in den folgenden Runden benutzt werden, um bei Rateversuchen von anderen Spielern eine gegenteilige Meinung zu äußern oder Songs zu überspringen, die du nicht kennst.</li>
+        <li>Nachdem du deine Vermutung zum Erscheinungsjahr abgegeben hast, können deine Mitspieler dir entweder zustimmen oder, wenn ein Mitspieler anderer Meinung ist, einen Chip benutzen, um eine andere Vermutung abzugeben. Sei dabei aber schnell, denn der erste Spieler, der seine Vermutung richtig abgibt, gewinnt den Hit.</li>
+        <li>Am Ende jeder Runde wird das Geheimnis um den Song gelüftet. Der Spieler, der richtig geraten hat, fügt den Hit zu seiner Zeitleiste hinzu. Der aktuelle Spieler hat dabei immer Vorrang. Kleines Beispiel: Du bist an der Reihe und vermutest, dass der Hit vor 1988 veröffentlicht wurde, ein Mitspieler denkt eher, dass er nach 1988 veröffentlicht wurde. Bei der Auflösung stellt sich heraus, dass der Hit genau 1988 veröffentlicht wurde. Weil du an der Reihe bist, gewinnst du den Hit.</li>
+        <li>Wer zuerst 10 Hits gesammelt hat, gewinnt das Spiel.</li>
+    </ol>
+
+    Wenn dir das Spiel gefällt und du schon weißt, wie es funktioniert, dann
+    schau dir doch einfach die erweiterten Funktionen an, indem du die
+    Registerkarten wechselst.
+manualBasicTitle: Einfach
 mode: Modus
 musicVolume: Musiklautstärke
 name: Name
 navigation: Navigation
 "no": Nein
 noHitAvailable: Kein Hit verfügbar
-noRegistrationFeature: keine Registrierung notwendig, einfach ein Spiel erstellen und los geht's
 noShortcut: Alt+Umschalt+N
 noone: niemand
 nooneWins: Niemand hat dieses Spiel gewonnen.
@@ -145,7 +187,6 @@ ownedBy: >-
     welches <0>Koninklijke Jumbo B.V.</0> gehört.
 pack_one: Pack
 pack_other: Packs
-packsFeature: insgesamt {{hits}} Hits in {{packs}} Packs, welche du erraten kannst
 password: Passwort
 playHit: Hit abspielen
 playOrStopHit: Hit abspielen oder stoppen
@@ -155,9 +196,6 @@ player_one: Spieler
 player_other: Spieler
 privateGame: Privates Spiel
 privateGameShortcut: Alt+Umschalt+R
-publicAndPrivateGamesFeature: >-
-    spiele ein öffentliches Spiel mit jedem verfügbaren Spieler, oder ein
-    privates Spiel mit deinen Freunden
 publicGame: Öffentliches Spiel
 publicGameShortcut: Alt+Umschalt+U
 register: Registrieren
