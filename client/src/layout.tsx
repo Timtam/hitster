@@ -1,6 +1,5 @@
 import { useLocalStorage } from "@uidotdev/usehooks"
 import boolifyString from "boolify-string"
-import "bootstrap/dist/css/bootstrap.min.css"
 import { useEffect, useState } from "react"
 import Col from "react-bootstrap/Col"
 import Container from "react-bootstrap/Container"

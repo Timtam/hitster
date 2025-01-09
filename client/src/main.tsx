@@ -1,3 +1,4 @@
+import "bootstrap/dist/css/bootstrap.min.css"
 import React from "react"
 import { ToastsProvider } from "react-bootstrap-toasts"
 import { CookiesProvider } from "react-cookie"
