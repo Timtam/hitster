@@ -2,7 +2,9 @@ import sum from "ml-array-sum"
 import { useEffect, useState } from "react"
 import Modal from "react-bootstrap/Modal"
 import Spinner from "react-bootstrap/Spinner"
-import { useTranslation } from "react-i18next"
+import Tab from "react-bootstrap/Tab"
+import Tabs from "react-bootstrap/Tabs"
+import { Trans, useTranslation } from "react-i18next"
 import HitService from "../services/hits.service"
 
 export function Welcome({
@@ -44,20 +46,37 @@ export function Welcome({
                             <p>{t("welcomeText")}</p>
                             <h3>{t("features")}</h3>
                             <ul>
-                                <li>{t("noRegistrationFeature")}</li>
-                                <li>{t("publicAndPrivateGamesFeature")}</li>
-                                <li>{t("localGamesFeature")}</li>
-                                <li>
-                                    {t("packsFeature", {
+                                <Trans
+                                    components={[<li />]}
+                                    values={{
                                         hits: sum(Object.values(packs)),
                                         packs: Object.keys(packs).length,
-                                    })}
-                                </li>
-                                <li>{t("cardCorrectionFeature")}</li>
-                                <li>{t("accessibilityFeature")}</li>
-                                <li>{t("colorSchemesFeature")}</li>
+                                    }}
+                                    i18nKey="featuresList"
+                                />
                             </ul>
                             <h3>{t("howToPlay")}</h3>
+                            <Tabs defaultActiveKey="beginner" className="mb-3">
+                                <Tab
+                                    eventKey="beginner"
+                                    title={t("manualBasicTitle")}
+                                >
+                                    <Trans
+                                        i18nKey="manualBasic"
+                                        components={{ ol: <ol />, li: <li /> }}
+                                    />
+                                </Tab>
+                                <Tab
+                                    eventKey="advanced"
+                                    title={t("manualAdvancedTitle")}
+                                >
+                                    {" "}
+                                    <Trans
+                                        i18nKey="manualAdvanced"
+                                        components={{ ul: <ul />, li: <li /> }}
+                                    />
+                                </Tab>
+                            </Tabs>
                         </>
                     )
                 ) : (

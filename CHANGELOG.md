@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - [added various key shortcuts across the entire app (#2)](https://github.com/Timtam/hitster/issues/2)
+- [added a how to play section on the welcome page (#11)](https://github.com/Timtam/hitster/issues/11)
 
 ### Changed
 
+- [restyled the slot selector UI to look much nicer for sighted folk (#13)](https://github.com/Timtam/hitster/issues/13)
 - updated Rust to 1.83
 - added and fixed some hits
 
