@@ -20,7 +20,7 @@ COPY ./client/ /app/
 
 RUN npm run build
 
-FROM rust:1.83-slim-bookworm AS server_build_image
+FROM rust:1.84-slim-bookworm AS server_build_image
 
 # create a new empty shell project
 RUN apt-get update && apt-get -y install libssl-dev pkg-config && \
@@ -61,7 +61,7 @@ ONBUILD ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffm
 FROM build_${TARGETARCH}
 
 # yt-dlp version
-ARG YT_DLP_BUILD_VERSION=2024.10.22
+ARG YT_DLP_BUILD_VERSION=2024.12.23
 
 WORKDIR /hitster
 
