@@ -297,19 +297,16 @@ impl GameService {
                 })
             } else {
                 let mut rng = thread_rng();
+                let remembered_hits_count = if game.remember_hits {
+                    game.remembered_hits.len()
+                } else {
+                    0
+                };
 
-                if !game.remember_hits {
-                    game.remembered_hits.clear();
-                }
-
-                game.state = GameState::Guessing;
-                game.players.shuffle(&mut rng);
-                game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
-                game.players.get_mut(0).unwrap().turn_player = true;
-                game.hits_remaining =
+                let mut hits_remaining: VecDeque<&Hit> =
                     filter_hits_by_packs(self.hit_service.lock().get_all(), &game.packs)
                         .into_iter()
-                        .filter(|h| !game.remembered_hits.contains(h))
+                        .filter(|h| !game.remember_hits || !game.remembered_hits.contains(h))
                         .fold(HashSet::<&Hit>::new(), |mut hs, h| {
                             if let Some(ch) = hs.get(&h) {
                                 if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
@@ -322,7 +319,28 @@ impl GameService {
                         })
                         .into_iter()
                         .collect::<_>();
-                game.hits_remaining.make_contiguous().shuffle(&mut rng);
+
+                if hits_remaining.len() + remembered_hits_count
+                    < (game.players.len() * game.goal as usize * 2)
+                {
+                    return Err(StartGameError {
+                        http_status_code: 409,
+                        message: format!("There aren't enough hits available to start a game ({} individual hits in the currently selected packs, {} hits are required)", hits_remaining.len() + remembered_hits_count, game.players.len() * game.goal as usize * 2).into(),
+                    });
+                }
+
+                hits_remaining.make_contiguous().shuffle(&mut rng);
+
+                game.hits_remaining = hits_remaining;
+
+                if !game.remember_hits {
+                    game.remembered_hits.clear();
+                }
+
+                game.state = GameState::Guessing;
+                game.players.shuffle(&mut rng);
+                game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
+                game.players.get_mut(0).unwrap().turn_player = true;
 
                 for i in 0..game.players.len() {
                     let player = game.players.get_mut(i).unwrap();
