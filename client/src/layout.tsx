@@ -11,6 +11,7 @@ import { Outlet } from "react-router-dom"
 import usePrefersColorScheme from "use-prefers-color-scheme"
 import type { Context } from "./context"
 import { User } from "./entities"
+import ErrorModal from "./error-modal"
 import Navigation from "./navigation"
 import NotificationPlayer from "./notification-player"
 import { Welcome } from "./pages/welcome"
@@ -33,6 +34,7 @@ export default function Layout() {
     let [colorScheme] = useLocalStorage("colorScheme", "auto")
     let [welcome, setWelcome] = useLocalStorage("welcome")
     let prefersColorScheme = usePrefersColorScheme()
+    let [error, setError] = useState<string | undefined>(undefined)
 
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout> | null = null
@@ -107,10 +109,16 @@ export default function Layout() {
                                     show={!boolifyString(welcome)}
                                     onHide={() => setWelcome("true")}
                                 />
+                                <ErrorModal
+                                    error={error}
+                                    onHide={() => setError(undefined)}
+                                />
                                 <Outlet
                                     context={
                                         {
                                             user,
+                                            showError: (error) =>
+                                                setError(error),
                                         } satisfies Context
                                     }
                                 />
