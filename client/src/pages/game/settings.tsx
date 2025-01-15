@@ -10,6 +10,7 @@ import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
 import { BsPrefixRefForwardingComponent } from "react-bootstrap/helpers"
 import { useTranslation } from "react-i18next"
 import slugify from "slugify"
+import { useContext } from "../../context"
 import type { Game } from "../../entities"
 import { GameSettings } from "../../entities"
 import GameService from "../../services/games.service"
@@ -36,6 +37,7 @@ export default ({
     let selectAllPacks = useRef<
         (HTMLInputElement & BsPrefixRefForwardingComponent<"input", any>) | null
     >(null)
+    let { showError } = useContext()
 
     useEffect(() => {
         if (!show) {
@@ -262,7 +264,7 @@ export default ({
                                                 )
                                                 onHide()
                                             } catch (e) {
-                                                console.log((e as any).message)
+                                                showError((e as any).message)
                                             }
                                         }}
                                     >
