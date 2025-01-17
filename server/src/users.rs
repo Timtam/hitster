@@ -159,7 +159,7 @@ impl<'r> FromRequest<'r> for User {
     }
 }
 
-impl<'r> OpenApiFromRequest<'r> for User {
+impl OpenApiFromRequest<'_> for User {
     fn from_request_input(
         _gen: &mut OpenApiGenerator,
         _name: String,

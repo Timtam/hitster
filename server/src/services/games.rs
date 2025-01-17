@@ -214,8 +214,7 @@ impl GameService {
                 && game
                     .players
                     .iter()
-                    .find(|p| p.id == *player_id.as_ref().unwrap())
-                    .is_none()
+                    .any(|p| p.id == *player_id.as_ref().unwrap())
             {
                 Err(LeaveGameError {
                     message: "a player with this id isn't part of this game".into(),

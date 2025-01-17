@@ -138,10 +138,10 @@ impl Fairing for HitsterDownloader {
                             in_file.set_extension("m4a");
                             let mut command = Command::new("yt-dlp");
                             command
-                                .current_dir(&env::current_dir().unwrap())
+                                .current_dir(env::current_dir().unwrap())
                                 .args(["-f", "bestaudio[ext=m4a]"])
                                 .args(["-o", in_file.to_str().unwrap()])
-                                .arg(&format!("https://www.youtube.com/watch?v={}", hit.yt_id));
+                                .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
 
                             let output = {
                                 let (finished, _) = progress_thread();
@@ -168,7 +168,7 @@ impl Fairing for HitsterDownloader {
 
                     let mut command = Command::new("ffmpeg-normalize");
                     command
-                        .current_dir(&env::current_dir().unwrap())
+                        .current_dir(env::current_dir().unwrap())
                         .arg(&in_file)
                         .args(["-ar", "44100"])
                         .args(["-b:a", "128k"])
