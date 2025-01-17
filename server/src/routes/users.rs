@@ -26,7 +26,7 @@ use serde_json;
 use time::{Duration, OffsetDateTime};
 use uuid::Uuid;
 
-/// internals
+// internals
 
 fn generate_token() -> String {
     let mut rng = thread_rng();
