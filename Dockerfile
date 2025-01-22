@@ -1,4 +1,4 @@
-FROM node:20 AS client_build_image
+FROM node:22 AS client_build_image
 
 ARG HITSTER_BRANCH
 ARG HITSTER_VERSION
