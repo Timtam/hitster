@@ -11,6 +11,7 @@ and: und
 artist: Interpret
 automatic: Automatisch
 beforeYear: vor {{year}}
+belongsTo: Zugehörig zu
 betweenYears: von {{year1}} bis {{year2}}
 cancel: Abbrechen
 cannotClaimHit: Du kannst dir derzeit keinen Hit nehmen
