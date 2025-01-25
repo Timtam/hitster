@@ -211,7 +211,7 @@ impl GameService {
                     http_status_code: 409,
                 })
             } else if player_id.is_some()
-                && game
+                && !game
                     .players
                     .iter()
                     .any(|p| p.id == *player_id.as_ref().unwrap())
