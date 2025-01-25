@@ -11,6 +11,7 @@ and: and
 artist: Artist
 automatic: Automatic
 beforeYear: before {{year}}
+belongsTo: Belongs to
 betweenYears: between {{year1}} and {{year2}}
 cancel: Cancel
 cannotClaimHit: You cannot claim a hit right now
