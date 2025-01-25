@@ -39,6 +39,7 @@ export default ({
                             <th>{t("artist")}</th>
                             <th>{t("title")}</th>
                             <th>{t("year")}</th>
+                            <th>{t("belongsTo")}</th>
                             <th>
                                 {t("pack", {
                                     count: 1,
@@ -55,6 +56,7 @@ export default ({
                                     <td>{h.artist}</td>
                                     <td>{h.title}</td>
                                     <td>{h.year}</td>
+                                    <td>{h.belongs_to}</td>
                                     <td>{h.pack}</td>
                                     <td>
                                         <HitPlayer
