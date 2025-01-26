@@ -58,6 +58,7 @@ export const Player = z.object({
     slots: z.array(Slot),
     turn_player: z.boolean(),
     guess: z.nullable(Slot),
+    virtual: z.boolean(),
 })
 
 export type Player = z.infer<typeof Player>
