@@ -206,7 +206,8 @@ export function Game() {
                     1,
                 )
 
-                if (g.players.length === 0) navigate("/")
+                if (g.players.filter((p) => !p.virtual).length === 0)
+                    navigate("/")
             })
         })
 

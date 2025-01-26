@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [added a how to play section on the welcome page (#11)](https://github.com/Timtam/hitster/issues/11)
 - [added 'belongs to' field to hits view table (#21)](https://github.com/Timtam/hitster/issues/21)
 
+### Fixed
+
+- [fixed client not returning to the lobby if the creator of a local game leaves the game (#19)](https://github.com/Timtam/hitster/issues/19)
+
 ### Changed
 
 - [restyled the slot selector UI to look much nicer for sighted folk (#13)](https://github.com/Timtam/hitster/issues/13)
