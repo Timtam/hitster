@@ -7,7 +7,7 @@ import Tabs from "react-bootstrap/Tabs"
 import { Trans, useTranslation } from "react-i18next"
 import HitService from "../services/hits.service"
 
-export function Welcome({
+export default function WelcomModale({
     show,
     onHide,
 }: {

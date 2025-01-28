@@ -6,7 +6,7 @@ import ToggleButton from "react-bootstrap/ToggleButton"
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
 import { useTranslation } from "react-i18next"
 
-export default function Settings({
+export default function SettingsModal({
     show,
     onHide,
 }: {
