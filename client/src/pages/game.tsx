@@ -47,6 +47,7 @@ import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
 import { HitPlayer } from "./game/hit-player"
 import HitsView from "./game/hits-view"
+import LeaveGameQuestion from "./game/leave-game-question"
 import GameSettings from "./game/settings"
 import SlotSelector from "./game/slot-selector"
 
@@ -77,11 +78,13 @@ export function Game() {
     let { t } = useTranslation()
     let [winner, setWinner] = useImmer<Player | null>(null)
     let modalShown = useModalShown()
+    let [showLeaveGameQuestion, setShowLeaveGameQuestion] = useImmer(false)
 
     const joinOrLeaveGame = async () => {
-        if (game.players.some((p) => p.id === user?.id))
-            await gameService.leave(game.id)
-        else await gameService.join(game.id)
+        if (game.players.some((p) => p.id === user?.id)) {
+            if (game.state === "Open") await gameService.leave(game.id)
+            else setShowLeaveGameQuestion(true)
+        } else await gameService.join(game.id)
     }
 
     const startOrStopGame = async () => {
@@ -379,6 +382,13 @@ export function Game() {
             <h2 className="h4">
                 {t("gameId")}: {game.id}, {t("state")}: {game.state}
             </h2>
+            <LeaveGameQuestion
+                show={showLeaveGameQuestion}
+                onHide={(yes: boolean) => {
+                    if (yes) (async () => await gameService.leave(game.id))()
+                    setShowLeaveGameQuestion(false)
+                }}
+            />
             <p>{t("gameActions")}</p>
             <Button
                 className="me-2"

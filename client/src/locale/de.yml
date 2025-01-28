@@ -105,6 +105,7 @@ kick: Kicken
 knownAs: Du bist derzeit bekannt als {{username}}
 language: Sprache
 leaveGame: Spiel verlassen
+leaveGameQuestion: Möchtest du das Spiel wirklich verlassen, während es noch läuft?
 leaveGameShortcut: Alt+Umschalt+Q
 light: Hell
 loading: Lädt, bitte warten...
