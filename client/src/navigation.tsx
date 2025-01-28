@@ -8,8 +8,8 @@ import { Trans, useTranslation } from "react-i18next"
 import { LinkContainer } from "react-router-bootstrap"
 import { useNavigate } from "react-router-dom"
 import { User } from "./entities"
-import Settings from "./settings"
-import Shortcuts from "./shortcuts"
+import SettingsModal from "./modals/settings"
+import ShortcutsModal from "./modals/shortcuts"
 
 export default function Navigation({ user }: { user: User | null }) {
     let navigate = useNavigate()
@@ -177,11 +177,11 @@ export default function Navigation({ user }: { user: User | null }) {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            <Settings
+            <SettingsModal
                 show={showSettings}
                 onHide={() => setShowSettings(false)}
             />
-            <Shortcuts
+            <ShortcutsModal
                 show={showShortcuts}
                 onHide={() => setShowShortcuts(false)}
             />

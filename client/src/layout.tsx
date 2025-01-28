@@ -11,10 +11,10 @@ import { Outlet } from "react-router-dom"
 import usePrefersColorScheme from "use-prefers-color-scheme"
 import type { Context } from "./context"
 import { User } from "./entities"
-import ErrorModal from "./error-modal"
+import ErrorModal from "./modals/error"
+import WelcomeModal from "./modals/welcome"
 import Navigation from "./navigation"
 import NotificationPlayer from "./notification-player"
-import { Welcome } from "./pages/welcome"
 import SfxPlayer from "./sfx-player"
 
 const updateUserAuth = async () => {
@@ -105,7 +105,7 @@ export default function Layout() {
                         <main>
                             <Col>
                                 <SfxPlayer user={user} />
-                                <Welcome
+                                <WelcomeModal
                                     show={!boolifyString(welcome)}
                                     onHide={() => setWelcome("true")}
                                 />

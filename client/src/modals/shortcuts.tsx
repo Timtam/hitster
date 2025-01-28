@@ -2,7 +2,7 @@ import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
 
-export default function Shortcuts({
+export default function ShortcutsModal({
     show,
     onHide,
 }: {
