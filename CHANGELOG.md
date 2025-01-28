@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - [fixed client not returning to the lobby if the creator of a local game leaves the game (#19)](https://github.com/Timtam/hitster/issues/19)
+- [fixed a server crash when starting a game with too few hits (#18)](https://github.com/Timtam/hitster/issues/18)
 
 ### Changed
 
