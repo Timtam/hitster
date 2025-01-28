@@ -17,7 +17,6 @@ export default class GameService {
         })
 
         if (res.status == 200) return Game.parse(await res.json())
-        return undefined
     }
 
     async create(mode: GameMode): Promise<Game> {
@@ -63,7 +62,7 @@ export default class GameService {
         })
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async stop(game_id: string) {
@@ -148,7 +147,7 @@ export default class GameService {
         })
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async addPlayer(game_id: string, player_name: string) {

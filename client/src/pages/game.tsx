@@ -66,7 +66,7 @@ export const loader: LoaderFunction = async ({
 
 export function Game() {
     let gameService = useMemo(() => new GameService(), [])
-    let { user } = useContext()
+    let { user, showError } = useContext()
     let [game, setGame] = useImmer(useLoaderData() as GameEntity)
     let [hitSrc, setHitSrc] = useImmer("")
     let [showHits, setShowHits] = useImmer<boolean[]>([])
@@ -86,7 +86,12 @@ export function Game() {
 
     const startOrStopGame = async () => {
         if (game.state === GameState.Open) {
-            await gameService.start(game.id)
+            try {
+                await gameService.start(game.id)
+            } catch (e) {
+                console.log(e)
+                showError((e as any).message)
+            }
         } else {
             await gameService.stop(game.id)
         }

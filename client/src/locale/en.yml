@@ -33,6 +33,7 @@ creator: creator
 dark: Dark
 deleteAccount: Delete account
 dontIntercept: Don't intercept
+error: Error
 features: Features
 featuresList: >
     <0>no registration necessary, just create a game and play</0>
