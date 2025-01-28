@@ -1,6 +1,9 @@
+import EventManager from "@lomray/event-manager"
+import { useEffect } from "react"
 import Button from "react-bootstrap/Button"
 import Modal from "react-bootstrap/Modal"
 import { useTranslation } from "react-i18next"
+import { Events } from "../../events"
 
 export default function LeaveGameQuestion({
     show,
@@ -10,6 +13,10 @@ export default function LeaveGameQuestion({
     onHide: (yes: boolean) => void
 }) {
     let { t } = useTranslation()
+
+    useEffect(() => {
+        if (show) EventManager.publish(Events.popup)
+    }, [show])
 
     return (
         <Modal show={show} onHide={() => {}}>

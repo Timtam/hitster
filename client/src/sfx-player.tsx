@@ -76,6 +76,10 @@ const getSfx = (sfx: Sfx): Howl => {
             url = new URL("../sfx/claim_hit.opus", import.meta.url).href
             break
         }
+        case Sfx.popup: {
+            url = new URL("../sfx/popup.opus", import.meta.url).href
+            break
+        }
     }
     return new Howl({
         src: [url],
@@ -241,6 +245,12 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
+        let unsubscribePopup = EventManager.subscribe(Events.popup, () => {
+            EventManager.publish(Events.playSfx, {
+                sfx: Sfx.popup,
+            } satisfies PlaySfxData)
+        })
+
         return () => {
             unsubscribeClaimed()
             unsubscribeGuessed()
@@ -250,6 +260,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             unsubscribeLeftGame()
             unsubscribeReceivedToken()
             unsubscribeSlotSelected()
+            unsubscribePopup()
         }
     }, [user])
 
