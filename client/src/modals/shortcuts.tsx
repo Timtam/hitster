@@ -9,7 +9,7 @@ export default function ShortcutsModal({
     show: boolean
     onHide: () => void
 }) {
-    let { t } = useTranslation()
+    const { t } = useTranslation()
 
     return (
         <Modal show={show} onHide={onHide}>

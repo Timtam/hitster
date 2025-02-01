@@ -13,22 +13,22 @@ export default function SettingsModal({
     show: boolean
     onHide: () => void
 }) {
-    let {
+    const {
         t,
         i18n: { changeLanguage, language, services },
     } = useTranslation()
-    let [colorScheme, setColorScheme] = useLocalStorage("colorScheme", "auto")
-    let [musicVolume, setMusicVolume] = useLocalStorage("musicVolume", "1.0")
-    let [sfxVolume, setSfxVolume] = useLocalStorage("sfxVolume", "1.0")
+    const [colorScheme, setColorScheme] = useLocalStorage("colorScheme", "auto")
+    const [musicVolume, setMusicVolume] = useLocalStorage("musicVolume", "1.0")
+    const [sfxVolume, setSfxVolume] = useLocalStorage("sfxVolume", "1.0")
 
     useEffect(() => {
         if (!Object.keys(services.resourceStore.data).includes(language)) {
-            let lang = Object.keys(services.resourceStore.data).find(
+            const lang = Object.keys(services.resourceStore.data).find(
                 (langcode) => language.startsWith(langcode),
             )
             if (lang !== undefined) changeLanguage(lang)
         }
-    }, [language])
+    }, [changeLanguage, language, services])
 
     return (
         <Modal show={show} onHide={onHide}>
@@ -88,13 +88,13 @@ export default function SettingsModal({
                     >
                         {Object.keys(services.resourceStore.data).map(
                             (langcode) => {
-                                let nameGenerator = new Intl.DisplayNames(
+                                const nameGenerator = new Intl.DisplayNames(
                                     langcode,
                                     {
                                         type: "language",
                                     },
                                 )
-                                let displayName = nameGenerator.of(langcode)
+                                const displayName = nameGenerator.of(langcode)
                                 return (
                                     <ToggleButton
                                         className="me-2"

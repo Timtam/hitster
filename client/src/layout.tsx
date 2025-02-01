@@ -24,17 +24,17 @@ const updateUserAuth = async () => {
 }
 
 export default function Layout() {
-    let {
+    const {
         t,
         i18n: { language },
     } = useTranslation()
-    let [cookies] = useCookies(["user"])
-    let [user, setUser] = useState<User | null>(null)
-    let [loading, setLoading] = useState(true)
-    let [colorScheme] = useLocalStorage("colorScheme", "auto")
-    let [welcome, setWelcome] = useLocalStorage("welcome")
-    let prefersColorScheme = usePrefersColorScheme()
-    let [error, setError] = useState<string | undefined>(undefined)
+    const [cookies] = useCookies(["user"])
+    const [user, setUser] = useState<User | null>(null)
+    const [loading, setLoading] = useState(true)
+    const [colorScheme] = useLocalStorage("colorScheme", "auto")
+    const [welcome, setWelcome] = useLocalStorage("welcome")
+    const prefersColorScheme = usePrefersColorScheme()
+    const [error, setError] = useState<string | undefined>(undefined)
 
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout> | null = null
@@ -43,7 +43,7 @@ export default function Layout() {
             if (timer !== null) clearTimeout(timer)
 
             try {
-                let user = User.parse({
+                const user = User.parse({
                     name: cookies.user.name,
                     id: cookies.user.id,
                     virtual: cookies.user.virtual,
@@ -73,7 +73,7 @@ export default function Layout() {
         return () => {
             if (timer !== null) clearTimeout(timer)
         }
-    }, [cookies])
+    }, [cookies, loading])
 
     useEffect(() => {
         document.documentElement.lang = language

@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next"
 import { Player } from "../../entities"
 import { HitPlayer, HitPlayerRef } from "./hit-player"
 
-export default ({
+export default function HitsView({
     show,
     onHide,
     player,
@@ -15,9 +15,9 @@ export default ({
     onHide: () => void
     player: Player
     gameId: string
-}) => {
-    let players = useRef<Array<HitPlayerRef | null>>([])
-    let { t } = useTranslation()
+}) {
+    const players = useRef<Array<HitPlayerRef | null>>([])
+    const { t } = useTranslation()
 
     useEffect(() => {
         players.current = []

@@ -5,7 +5,7 @@ import {
     unbindKeyCombo,
 } from "@rwh/keystrokes"
 import { detect } from "detect-browser"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import OverlayTrigger from "react-bootstrap/OverlayTrigger"
 import Tooltip from "react-bootstrap/Tooltip"
@@ -16,21 +16,16 @@ import { GameMode, GameState, Player, PlayerState } from "../../entities"
 import { Events, NotificationData, SlotSelectedData } from "../../events"
 import GameService from "../../services/games.service"
 
-export default ({ game }: { game: Game }) => {
+export default function SlotSelector({ game }: { game: Game }) {
     const { user } = useContext()
     const [selectedSlot, setSelectedSlot] = useState("0")
     const [selectedKeySlot, setSelectedKeySlot] = useState("0")
-    let { t } = useTranslation()
+    const { t } = useTranslation()
 
-    const actionRequired = (): PlayerState => {
-        if (user === null) return PlayerState.Waiting
-        return actionPlayer()?.state ?? PlayerState.Waiting
-    }
-
-    const actionPlayer = (): Player | null => {
+    const actionPlayer = useCallback((): Player | null => {
         if (game.state === GameState.Open) return null
 
-        let me = game.players.find((p) => p.id === user?.id)
+        const me = game.players.find((p) => p.id === user?.id)
 
         if (game.mode !== GameMode.Local)
             return me?.state !== PlayerState.Waiting ? (me ?? null) : null
@@ -48,7 +43,12 @@ export default ({ game }: { game: Game }) => {
                     null)
                   : (game.players.find((p) => p.creator) ?? null)
         }
-    }
+    }, [game, user])
+
+    const actionRequired = useCallback((): PlayerState => {
+        if (user === null) return PlayerState.Waiting
+        return actionPlayer()?.state ?? PlayerState.Waiting
+    }, [actionPlayer, user])
 
     const joinString = (parts: string[]): string => {
         if (parts.length === 1) return parts[0]
@@ -63,16 +63,19 @@ export default ({ game }: { game: Game }) => {
             )
     }
 
-    const confirm = async (confirm: boolean) => {
-        try {
-            let gs = new GameService()
-            await gs.confirm(game.id, confirm)
-        } catch (e) {
-            console.log(e)
-        }
-    }
+    const confirm = useCallback(
+        async (confirm: boolean) => {
+            try {
+                const gs = new GameService()
+                await gs.confirm(game.id, confirm)
+            } catch (e) {
+                console.log(e)
+            }
+        },
+        [game],
+    )
 
-    const guess = async () => {
+    const guess = useCallback(async () => {
         let slot: number | null =
             selectedSlot !== "0" ? parseInt(selectedSlot, 10) : null
 
@@ -82,7 +85,7 @@ export default ({ game }: { game: Game }) => {
             return
 
         try {
-            let gs = new GameService()
+            const gs = new GameService()
             await gs.guess(
                 game.id,
                 slot,
@@ -93,7 +96,7 @@ export default ({ game }: { game: Game }) => {
         } catch (e) {
             console.log(e)
         }
-    }
+    }, [actionPlayer, actionRequired, game, selectedSlot])
 
     useEffect(() => {
         game.players.forEach((p) => {
@@ -114,18 +117,20 @@ export default ({ game }: { game: Game }) => {
     }, [game, selectedKeySlot, selectedSlot])
 
     useEffect(() => {
-        let handlePreviousSlot = {
+        const handlePreviousSlot = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 let slot = "0"
-                let p = game.players.find((p) => p.turn_player) as Player
+                const p = game.players.find((p) => p.turn_player) as Player
 
                 if (selectedKeySlot === "0" || selectedKeySlot === "1")
                     slot = p.slots.length.toString()
                 else slot = (parseInt(selectedKeySlot, 10) - 1).toString()
 
-                let s = p.slots.find((s) => s.id === parseInt(slot, 10)) as Slot
-                let u =
+                const s = p.slots.find(
+                    (s) => s.id === parseInt(slot, 10),
+                ) as Slot
+                const u =
                     (actionRequired() !== PlayerState.Guessing &&
                         actionRequired() !== PlayerState.Intercepting) ||
                     game.players.some((p) => p.guess?.id === s.id)
@@ -166,12 +171,12 @@ export default ({ game }: { game: Game }) => {
             },
         }
 
-        let handleNextSlot = {
+        const handleNextSlot = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
 
                 let slot = "0"
-                let p = game.players.find((p) => p.turn_player) as Player
+                const p = game.players.find((p) => p.turn_player) as Player
 
                 if (
                     selectedKeySlot === "0" ||
@@ -180,8 +185,10 @@ export default ({ game }: { game: Game }) => {
                     slot = "1"
                 else slot = (parseInt(selectedKeySlot, 10) + 1).toString()
 
-                let s = p.slots.find((s) => s.id === parseInt(slot, 10)) as Slot
-                let u =
+                const s = p.slots.find(
+                    (s) => s.id === parseInt(slot, 10),
+                ) as Slot
+                const u =
                     (actionRequired() !== PlayerState.Guessing &&
                         actionRequired() !== PlayerState.Intercepting) ||
                     game.players.some((p) => p.guess?.id === s.id)
@@ -222,14 +229,14 @@ export default ({ game }: { game: Game }) => {
             },
         }
 
-        let handleResetSlot = {
+        const handleResetSlot = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 if (selectedKeySlot !== "0") {
                     setSelectedKeySlot("0")
                     setSelectedSlot("0")
 
-                    let p = game.players.find((p) => p.turn_player) as Player
+                    const p = game.players.find((p) => p.turn_player) as Player
 
                     EventManager.publish(Events.slotSelected, {
                         unavailable: true,
@@ -242,28 +249,28 @@ export default ({ game }: { game: Game }) => {
             },
         }
 
-        let handleGuess = {
+        const handleGuess = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 guess()
             },
         }
 
-        let handleConfirmYes = {
+        const handleConfirmYes = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 confirm(true)
             },
         }
 
-        let handleConfirmNo = {
+        const handleConfirmNo = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 confirm(false)
             },
         }
 
-        let handleReadPlayerStats = Array.from({ length: 10 }, (_, i) => ({
+        const handleReadPlayerStats = Array.from({ length: 10 }, (_, i) => ({
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 if (!game.players[i]) {
@@ -319,7 +326,7 @@ export default ({ game }: { game: Game }) => {
                 )
             }
         }
-    }, [selectedKeySlot, game])
+    }, [actionRequired, confirm, game, guess, selectedKeySlot, t])
 
     if (game.state === GameState.Open)
         return <h2 className="h4">{t("gameNotStarted")}</h2>
@@ -439,7 +446,7 @@ export default ({ game }: { game: Game }) => {
                                     setSelectedKeySlot(e.target.value)
                                     setSelectedSlot(e.target.value)
 
-                                    let p = game.players.find(
+                                    const p = game.players.find(
                                         (p) => p.turn_player,
                                     ) as Player
 
@@ -468,7 +475,7 @@ export default ({ game }: { game: Game }) => {
                         {game.players
                             .find((p) => p.turn_player === true)
                             ?.slots.map((slot) => {
-                                let disabled =
+                                const disabled =
                                     (actionRequired() !==
                                         PlayerState.Guessing &&
                                         actionRequired() !==
@@ -536,12 +543,12 @@ export default ({ game }: { game: Game }) => {
                                                         )
                                                     }
                                                     onChange={(e) => {
-                                                        let p =
+                                                        const p =
                                                             game.players.find(
                                                                 (p) =>
                                                                     p.turn_player,
                                                             ) as Player
-                                                        let s = p.slots.find(
+                                                        const s = p.slots.find(
                                                             (s) =>
                                                                 s.id ===
                                                                 parseInt(

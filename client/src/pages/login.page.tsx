@@ -3,35 +3,17 @@ import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
 import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
-import type { ActionFunction } from "react-router"
-import { Form, redirect, useActionData } from "react-router-dom"
+import { Form, useActionData } from "react-router-dom"
 import Error from "../error"
 
-export const action: ActionFunction = async ({ request }) => {
-    let formData = await request.formData()
-    let res = await fetch("/api/users/login", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            username: formData.get("username"),
-            password: formData.get("password"),
-        }),
-    })
-
-    if (res.status === 200) return redirect("/")
-    return { success: false, message: await res.text() }
-}
-
-export function Login() {
-    let response = useActionData() as {
+export default function Login() {
+    const response = useActionData() as {
         success: boolean
         message: string
     }
-    let [username, setUsername] = useState("")
-    let [password, setPassword] = useState("")
-    let { t } = useTranslation()
+    const [username, setUsername] = useState("")
+    const [password, setPassword] = useState("")
+    const { t } = useTranslation()
 
     return (
         <>

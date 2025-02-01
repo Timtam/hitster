@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
 import type { Game } from "../../entities"
 import GameService from "../../services/games.service"
 
-export default ({
+export default function AddLocalPlayer({
     game,
     show,
     onHide,
@@ -14,10 +14,10 @@ export default ({
     game: Game
     show: boolean
     onHide: () => void
-}) => {
-    let gameService = useMemo(() => new GameService(), [])
-    let { t } = useTranslation()
-    let [name, setName] = useState("")
+}) {
+    const gameService = useMemo(() => new GameService(), [])
+    const { t } = useTranslation()
+    const [name, setName] = useState("")
 
     return (
         <Modal show={show} onHide={onHide}>

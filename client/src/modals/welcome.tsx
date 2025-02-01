@@ -16,14 +16,14 @@ export default function WelcomModale({
     show: boolean
     onHide: () => void
 }) {
-    let { t } = useTranslation()
-    let [packs, setPacks] = useState<Record<string, number>>({})
+    const { t } = useTranslation()
+    const [packs, setPacks] = useState<Record<string, number>>({})
 
     useEffect(() => {
         if (show) {
             ;(async () => {
-                let hs = new HitService()
-                let availablePacks = await hs.getAllPacks()
+                const hs = new HitService()
+                const availablePacks = await hs.getAllPacks()
                 setPacks(availablePacks)
             })()
             EventManager.publish(Events.popup)

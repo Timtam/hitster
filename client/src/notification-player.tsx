@@ -1,5 +1,5 @@
 import EventManager from "@lomray/event-manager"
-import { ReactNode, useEffect, useRef, useState } from "react"
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import { useToasts } from "react-bootstrap-toasts"
 import { flushSync } from "react-dom"
 import { createRoot } from "react-dom/client"
@@ -24,11 +24,13 @@ interface SpeechEvent {
 const TIMER_DURATION: number = 150
 
 export default function NotificationPlayer({ user }: { user: User | null }) {
-    let { t } = useTranslation()
-    let [politeness, setPoliteness] = useState<"polite" | "assertive">("polite")
-    let output = useRef<HTMLParagraphElement | null>(null)
-    let events = useRef<SpeechEvent[]>([])
-    let timer = useRef<ReturnType<typeof setTimeout> | null>(null)
+    const { t } = useTranslation()
+    const [politeness, setPoliteness] = useState<"polite" | "assertive">(
+        "polite",
+    )
+    const output = useRef<HTMLParagraphElement | null>(null)
+    const events = useRef<SpeechEvent[]>([])
+    const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
     const toasts = useToasts()
 
     const nodeToString = (node: ReactNode) => {
@@ -38,7 +40,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
         return div.innerText // or innerHTML or textContent
     }
 
-    const handleSpeechEvent = () => {
+    const handleSpeechEvent = useCallback(() => {
         if (events.current.length === 0) {
             if (output.current) output.current.innerHTML = ""
             timer.current = null
@@ -48,7 +50,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
         if (output.current) output.current.innerHTML = events.current[0].text
         events.current.shift()
         timer.current = setTimeout(handleSpeechEvent, TIMER_DURATION)
-    }
+    }, [])
 
     useEffect(() => {
         const unsubscribeNotification = EventManager.subscribe(
@@ -346,7 +348,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             unsubscribeSkippedHit()
             unsubscribeTokenReceived()
         }
-    }, [])
+    }, [handleSpeechEvent, t, toasts, user])
 
     return (
         <p

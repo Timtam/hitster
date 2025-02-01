@@ -12,11 +12,11 @@ import { useTranslation } from "react-i18next"
 import slugify from "slugify"
 import { useContext } from "../../context"
 import type { Game } from "../../entities"
-import { GameSettings } from "../../entities"
+import { GameSettings as GameSettingsEntity } from "../../entities"
 import GameService from "../../services/games.service"
 import HitService from "../../services/hits.service"
 
-export default ({
+export default function GameSettings({
     game,
     show,
     onHide,
@@ -24,20 +24,21 @@ export default ({
     game: Game
     show: boolean
     onHide: () => void
-}) => {
-    let { t } = useTranslation()
-    let [goal, setGoal] = useState(0)
-    let [startTokens, setStartTokens] = useState(0)
-    let [hitDuration, setHitDuration] = useState(0)
-    let [availablePacks, setAvailablePacks] = useState<Record<string, number>>(
-        {},
-    )
-    let [packs, setPacks] = useState<string[]>([])
-    let [rememberHits, setRememberHits] = useState(true)
-    let selectAllPacks = useRef<
+}) {
+    const { t } = useTranslation()
+    const [goal, setGoal] = useState(0)
+    const [startTokens, setStartTokens] = useState(0)
+    const [hitDuration, setHitDuration] = useState(0)
+    const [availablePacks, setAvailablePacks] = useState<
+        Record<string, number>
+    >({})
+    const [packs, setPacks] = useState<string[]>([])
+    const [rememberHits, setRememberHits] = useState(true)
+    const selectAllPacks = useRef<
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (HTMLInputElement & BsPrefixRefForwardingComponent<"input", any>) | null
     >(null)
-    let { showError } = useContext()
+    const { showError } = useContext()
 
     useEffect(() => {
         if (!show) {
@@ -52,15 +53,15 @@ export default ({
     useEffect(() => {
         if (show) {
             ;(async () => {
-                let hs = new HitService()
-                let availablePacks = await hs.getAllPacks()
+                const hs = new HitService()
+                const availablePacks = await hs.getAllPacks()
                 setAvailablePacks(availablePacks)
                 if (packs.length === 0) setPacks(Object.keys(availablePacks))
             })()
         } else {
             setAvailablePacks({})
         }
-    }, [show])
+    }, [packs, show])
 
     useEffect(() => {
         if (selectAllPacks.current === null) return
@@ -247,11 +248,11 @@ export default ({
                                 <Col>
                                     <Button
                                         onClick={async () => {
-                                            let gs = new GameService()
+                                            const gs = new GameService()
                                             try {
                                                 await gs.update(
                                                     game.id,
-                                                    GameSettings.parse({
+                                                    GameSettingsEntity.parse({
                                                         goal: goal,
                                                         hit_duration:
                                                             hitDuration,
@@ -264,7 +265,14 @@ export default ({
                                                 )
                                                 onHide()
                                             } catch (e) {
-                                                showError((e as any).message)
+                                                showError(
+                                                    (
+                                                        e as {
+                                                            message: string
+                                                            status: number
+                                                        }
+                                                    ).message,
+                                                )
                                             }
                                         }}
                                     >

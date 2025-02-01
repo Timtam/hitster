@@ -6,7 +6,7 @@ import {
 } from "@rwh/keystrokes"
 import deepcopy from "deepcopy"
 import { detect } from "detect-browser"
-import { useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
 import ButtonGroup from "react-bootstrap/ButtonGroup"
 import Dropdown from "react-bootstrap/Dropdown"
@@ -14,8 +14,7 @@ import DropdownButton from "react-bootstrap/DropdownButton"
 import Table from "react-bootstrap/Table"
 import { Helmet } from "react-helmet-async"
 import { Trans, useTranslation } from "react-i18next"
-import type { LoaderFunction } from "react-router"
-import { json, useLoaderData, useNavigate } from "react-router-dom"
+import { useLoaderData, useNavigate } from "react-router-dom"
 import { titleCase } from "title-case"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
@@ -51,56 +50,49 @@ import LeaveGameQuestion from "./game/leave-game-question"
 import GameSettings from "./game/settings"
 import SlotSelector from "./game/slot-selector"
 
-export const loader: LoaderFunction = async ({
-    params,
-}): Promise<GameEntity> => {
-    let gs = new GameService()
+export default function Game() {
+    const gameService = useMemo(() => new GameService(), [])
+    const { user, showError } = useContext()
+    const [game, setGame] = useImmer(useLoaderData() as GameEntity)
+    const [hitSrc, setHitSrc] = useImmer("")
+    const [showHits, setShowHits] = useImmer<boolean[]>([])
+    const [gameEndedState, setGameEndedState] = useImmer<GameEntity | null>(
+        null,
+    )
+    const [showSettings, setShowSettings] = useImmer<boolean>(false)
+    const [showAddPlayer, setShowAddPlayer] = useImmer(false)
+    const navigate = useNavigate()
+    const { t } = useTranslation()
+    const [winner, setWinner] = useImmer<Player | null>(null)
+    const modalShown = useModalShown()
+    const [showLeaveGameQuestion, setShowLeaveGameQuestion] = useImmer(false)
 
-    if (params.gameId !== undefined) {
-        let game = await gs.get(params.gameId)
+    const joinOrLeaveGame = useCallback(async () => {
+        if (game.players.some((p) => p.id === user?.id))
+            await gameService.leave(game.id)
+        else await gameService.join(game.id)
+    }, [game, gameService, user])
 
-        if (game !== undefined) return game
-        throw json({ message: "game id not found", status: 404 })
-    }
-    throw json({ message: "internal api error", status: 500 })
-}
-
-export function Game() {
-    let gameService = useMemo(() => new GameService(), [])
-    let { user, showError } = useContext()
-    let [game, setGame] = useImmer(useLoaderData() as GameEntity)
-    let [hitSrc, setHitSrc] = useImmer("")
-    let [showHits, setShowHits] = useImmer<boolean[]>([])
-    let [gameEndedState, setGameEndedState] = useImmer<GameEntity | null>(null)
-    let [showSettings, setShowSettings] = useImmer<boolean>(false)
-    let [showAddPlayer, setShowAddPlayer] = useImmer(false)
-    let navigate = useNavigate()
-    let { t } = useTranslation()
-    let [winner, setWinner] = useImmer<Player | null>(null)
-    let modalShown = useModalShown()
-    let [showLeaveGameQuestion, setShowLeaveGameQuestion] = useImmer(false)
-
-    const joinOrLeaveGame = async () => {
-        if (game.players.some((p) => p.id === user?.id)) {
-            if (game.state === "Open") await gameService.leave(game.id)
-            else setShowLeaveGameQuestion(true)
-        } else await gameService.join(game.id)
-    }
-
-    const startOrStopGame = async () => {
+    const startOrStopGame = useCallback(async () => {
         if (game.state === GameState.Open) {
             try {
                 await gameService.start(game.id)
             } catch (e) {
-                console.log(e)
-                showError((e as any).message)
+                showError(
+                    (
+                        e as {
+                            message: string
+                            status: number
+                        }
+                    ).message,
+                )
             }
         } else {
             await gameService.stop(game.id)
         }
-    }
+    }, [game, gameService, showError])
 
-    const canSkip = () => {
+    const canSkip = useCallback(() => {
         return (
             user !== null &&
             ((game.mode === GameMode.Local &&
@@ -111,25 +103,35 @@ export function Game() {
                         PlayerState.Guessing)) &&
             (game.players.find((p) => p.turn_player)?.tokens ?? 0) > 0
         )
-    }
+    }, [game, user])
 
     const canClaim = (p?: Player) => {
         return p && p.tokens >= 3
     }
 
-    const skipHit = async () =>
-        await gameService.skip(
-            game.id,
-            game.mode === GameMode.Local
-                ? game.players.find((p) => p.turn_player)?.id
-                : undefined,
+    const skipHit = useCallback(
+        async () =>
+            await gameService.skip(
+                game.id,
+                game.mode === GameMode.Local
+                    ? game.players.find((p) => p.turn_player)?.id
+                    : undefined,
+            ),
+        [game, gameService],
+    )
+
+    const canStartOrStopGame = useCallback((): boolean => {
+        return (
+            game.players.find((p) => p.id === user?.id)?.creator === true &&
+            game.players.length >= 2
         )
+    }, [game, user])
 
     useEffect(() => {
-        let eventSource = new EventSource(`/api/games/${game.id}/events`)
+        const eventSource = new EventSource(`/api/games/${game.id}/events`)
 
         eventSource.addEventListener("change_state", (e) => {
-            let ge = GameEvent.parse(JSON.parse(e.data))
+            const ge = GameEvent.parse(JSON.parse(e.data))
 
             if (ge.state === GameState.Guessing) {
                 setHitSrc(`/api/games/${game.id}/hit?key=${Math.random()}`)
@@ -167,7 +169,7 @@ export function Game() {
                             game_id: g.id,
                         } satisfies GameStartedData)
                     } else if (g.state === GameState.Confirming) {
-                        let turn_player = g.players.find((p) => p.turn_player)
+                        const turn_player = g.players.find((p) => p.turn_player)
 
                         if (
                             turn_player?.tokens !==
@@ -192,7 +194,7 @@ export function Game() {
         })
 
         eventSource.addEventListener("join", (e) => {
-            let ge = GameEvent.parse(JSON.parse(e.data))
+            const ge = GameEvent.parse(JSON.parse(e.data))
             EventManager.publish(Events.joinedGame, {
                 player: (ge.players as Player[])[0],
             } satisfies JoinedGameData)
@@ -202,7 +204,7 @@ export function Game() {
         })
 
         eventSource.addEventListener("leave", (e) => {
-            let ge = GameEvent.parse(JSON.parse(e.data))
+            const ge = GameEvent.parse(JSON.parse(e.data))
             EventManager.publish(Events.leftGame, {
                 player: (ge.players as Player[])[0],
             } satisfies LeftGameData)
@@ -220,10 +222,10 @@ export function Game() {
         })
 
         eventSource.addEventListener("guess", (e) => {
-            let ge = GameEvent.parse(JSON.parse(e.data))
+            const ge = GameEvent.parse(JSON.parse(e.data))
             setGame((g) => {
                 ge.players?.forEach((pe) => {
-                    let idx = g.players.findIndex((p) => p.id === pe.id)
+                    const idx = g.players.findIndex((p) => p.id === pe.id)
                     g.players[idx] = pe
                 })
             })
@@ -236,14 +238,14 @@ export function Game() {
         })
 
         eventSource.addEventListener("skip", (e) => {
-            let ge = GameEvent.parse(JSON.parse(e.data))
+            const ge = GameEvent.parse(JSON.parse(e.data))
             EventManager.publish(Events.skippedHit, {
                 player: (ge.players as Player[])[0],
                 hit: ge.hit as Hit,
             } satisfies SkippedHitData)
             setGame((g) => {
                 ge.players?.forEach((pe) => {
-                    let idx = g.players.findIndex((p) => p.id === pe.id)
+                    const idx = g.players.findIndex((p) => p.id === pe.id)
                     g.players[idx] = pe
                 })
             })
@@ -252,7 +254,7 @@ export function Game() {
         })
 
         eventSource.addEventListener("claim", (e) => {
-            let ge = GameEvent.parse(JSON.parse(e.data))
+            const ge = GameEvent.parse(JSON.parse(e.data))
             EventManager.publish(Events.claimedHit, {
                 player: (ge.players as Player[])[0],
                 hit: ge.hit as Hit,
@@ -260,14 +262,14 @@ export function Game() {
             } satisfies ClaimedHitData)
             setGame((g) => {
                 ge.players?.forEach((pe) => {
-                    let idx = g.players.findIndex((p) => p.id === pe.id)
+                    const idx = g.players.findIndex((p) => p.id === pe.id)
                     g.players[idx] = pe
                 })
             })
         })
 
         eventSource.addEventListener("update", (e) => {
-            let ge = GameEvent.parse(JSON.parse(e.data))
+            const ge = GameEvent.parse(JSON.parse(e.data))
             setGame((g) => {
                 if (ge.settings !== undefined) {
                     g.hit_duration = ge.settings.hit_duration ?? g.hit_duration
@@ -280,7 +282,7 @@ export function Game() {
             })
         })
 
-        let unsubscribeGameEnded = EventManager.subscribe(
+        const unsubscribeGameEnded = EventManager.subscribe(
             Events.gameEnded,
             (e: GameEndedData) => {
                 setGameEndedState(e.game)
@@ -295,39 +297,39 @@ export function Game() {
             eventSource.close()
             unsubscribeGameEnded()
         }
-    }, [])
+    }, [game, navigate, setGame, setGameEndedState, setHitSrc, setWinner])
 
     useEffect(() => {
         setShowHits(Array.from({ length: game.players.length }, () => false))
-    }, [game])
+    }, [game, setShowHits])
 
     // register keystrokes
     useEffect(() => {
-        let handleJoinGame = {
+        const handleJoinGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 joinOrLeaveGame()
             },
         }
-        let handleLeaveGame = {
+        const handleLeaveGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 joinOrLeaveGame()
             },
         }
-        let handleStartOrStopGame = {
+        const handleStartOrStopGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 startOrStopGame()
             },
         }
-        let handleShowSettings = {
+        const handleShowSettings = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 setShowSettings(true)
             },
         }
-        let handleSkipHit = {
+        const handleSkipHit = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 skipHit()
@@ -360,14 +362,17 @@ export function Game() {
             unbindKeyCombo("alt + shift + s", handleStartOrStopGame)
             unbindKeyCombo("alt + shift + i", handleSkipHit)
         }
-    }, [game, user, modalShown])
-
-    const canStartOrStopGame = (): boolean => {
-        return (
-            game.players.find((p) => p.id === user?.id)?.creator === true &&
-            game.players.length >= 2
-        )
-    }
+    }, [
+        canSkip,
+        canStartOrStopGame,
+        game,
+        joinOrLeaveGame,
+        modalShown,
+        setShowSettings,
+        skipHit,
+        startOrStopGame,
+        user,
+    ])
 
     return (
         <>
@@ -669,6 +674,7 @@ export function Game() {
                         <Dropdown.Item
                             as="button"
                             eventKey={p.id}
+                            key={p.id}
                             disabled={!canClaim(p)}
                             onClick={async () =>
                                 await gameService.claim(game.id, p.id)

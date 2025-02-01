@@ -23,9 +23,9 @@ export interface SfxData {
     pan?: number
 }
 
-export interface PlaySfxData extends SfxData {}
+export type PlaySfxData = SfxData
 
-export interface SfxEndedData extends SfxData {}
+export type SfxEndedData = SfxData
 
 export interface GuessedData {
     player: Player

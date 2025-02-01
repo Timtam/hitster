@@ -8,7 +8,7 @@ export default function ErrorModal({
     error?: string
     onHide: () => void
 }) {
-    let { t } = useTranslation()
+    const { t } = useTranslation()
 
     return (
         <Modal show={error !== undefined} onHide={onHide}>

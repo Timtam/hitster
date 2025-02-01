@@ -8,8 +8,8 @@ import viteTsconfigPaths from "vite-tsconfig-paths"
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => {
-    let gv = await gitVersion.default()
-    let branch =
+    const gv = await gitVersion.default()
+    const branch =
         (process.env.HITSTER_BRANCH ?? gv.CURRENT_BRANCH) || "development"
     let version: string = process.env.HITSTER_VERSION
 

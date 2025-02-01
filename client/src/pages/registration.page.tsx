@@ -3,38 +3,20 @@ import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
 import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
-import type { ActionFunction } from "react-router"
 import { Form, useActionData } from "react-router-dom"
 import { useContext } from "../context"
 import Error from "../error"
 
-export const action: ActionFunction = async ({ request }) => {
-    let formData = await request.formData()
-    let res = await fetch("/api/users/register", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-            username: formData.get("username"),
-            password: formData.get("password"),
-        }),
-    })
-
-    if (res.status === 200) return { success: true, message: "" }
-    return { success: false, message: await res.text() }
-}
-
-export function Registration() {
-    let { user } = useContext()
-    let response = useActionData() as {
+export default function Registration() {
+    const { user } = useContext()
+    const response = useActionData() as {
         success: boolean
         message: string
     }
-    let [username, setUsername] = useState(user?.name ?? "")
-    let [password, setPassword] = useState("")
-    let [passwordRepetition, setPasswordRepetition] = useState("")
-    let { t } = useTranslation()
+    const [username, setUsername] = useState(user?.name ?? "")
+    const [password, setPassword] = useState("")
+    const [passwordRepetition, setPasswordRepetition] = useState("")
+    const { t } = useTranslation()
 
     return (
         <>
