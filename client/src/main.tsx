@@ -9,42 +9,50 @@ import "./i18n"
 import "./index.css"
 import Layout from "./layout"
 import ErrorPage from "./pages/error-page"
-import { Game, loader as GameLoader } from "./pages/game"
-import { Lobby, loader as LobbyLoader } from "./pages/lobby"
-import { Login, action as LoginAction } from "./pages/login"
-import {
-    Registration,
-    action as RegistrationAction,
-} from "./pages/registration"
+import GameLoader from "./pages/game.loader"
+import Game from "./pages/game.page"
+import LobbyLoader from "./pages/lobby.loader"
+import Lobby from "./pages/lobby.page"
+import LoginAction from "./pages/login.action"
+import Login from "./pages/login.page"
+import RegistrationAction from "./pages/registration.action"
+import Registration from "./pages/registration.page"
 
-const router = createBrowserRouter([
+const router = createBrowserRouter(
+    [
+        {
+            element: <Layout />,
+            children: [
+                {
+                    element: <Lobby />,
+                    path: "/",
+                    loader: LobbyLoader,
+                },
+                {
+                    element: <Registration />,
+                    path: "/register",
+                    action: RegistrationAction,
+                },
+                {
+                    element: <Login />,
+                    path: "/login",
+                    action: LoginAction,
+                },
+                {
+                    element: <Game />,
+                    path: "/game/:gameId",
+                    loader: GameLoader,
+                },
+            ],
+            errorElement: <ErrorPage />,
+        },
+    ],
     {
-        element: <Layout />,
-        children: [
-            {
-                element: <Lobby />,
-                path: "/",
-                loader: LobbyLoader,
-            },
-            {
-                element: <Registration />,
-                path: "/register",
-                action: RegistrationAction,
-            },
-            {
-                element: <Login />,
-                path: "/login",
-                action: LoginAction,
-            },
-            {
-                element: <Game />,
-                path: "/game/:gameId",
-                loader: GameLoader,
-            },
-        ],
-        errorElement: <ErrorPage />,
+        future: {
+            v7_relativeSplatPath: true,
+        },
     },
-])
+)
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
@@ -57,7 +65,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                         "aria-hidden": true,
                     }}
                 >
-                    <RouterProvider router={router} />
+                    <RouterProvider
+                        future={{ v7_startTransition: true }}
+                        router={router}
+                    />
                 </ToastsProvider>
             </CookiesProvider>
         </HelmetProvider>

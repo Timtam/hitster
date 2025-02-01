@@ -27,15 +27,15 @@ export const useRevalidateOnInterval = ({
             const intervalId = setInterval(revalidate, interval)
             return () => clearInterval(intervalId)
         },
-        [revalidate],
+        [enabled, interval, revalidate],
     )
 }
 
 export const useModalShown = (): boolean => {
-    let [shown, setShown] = useState(false)
+    const [shown, setShown] = useState(false)
 
     useEffect(() => {
-        let id = setInterval(() => {
+        const id = setInterval(() => {
             setShown(document.querySelector(".modal") !== null)
         }, 50)
 

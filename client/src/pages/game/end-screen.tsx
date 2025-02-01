@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next"
 import { useContext } from "../../context"
 import type { Game, Player } from "../../entities"
 
-export default ({
+export default function GameEndScreen({
     game,
     show,
     onHide,
@@ -14,9 +14,9 @@ export default ({
     show: boolean
     onHide: () => void
     winner: Player | null
-}) => {
-    let { t } = useTranslation()
-    let { user } = useContext()
+}) {
+    const { t } = useTranslation()
+    const { user } = useContext()
 
     return (
         <Modal show={show} onHide={onHide}>

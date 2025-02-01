@@ -9,6 +9,7 @@ import { detect } from "detect-browser"
 import { Howl } from "howler"
 import {
     forwardRef,
+    useCallback,
     useEffect,
     useImperativeHandle,
     useRef,
@@ -42,23 +43,23 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
         { src, duration, onPlay, autoplay, shortcut }: HitPlayerProps,
         ref,
     ) {
-        let player = useRef<Howl | null>(null)
-        let [playing, setPlaying] = useState(false)
-        let timers = useRef<HitPlayerTimers>({
+        const player = useRef<Howl | null>(null)
+        const [playing, setPlaying] = useState(false)
+        const timers = useRef<HitPlayerTimers>({
             sfxTimer: null,
             stopTimer: null,
         } satisfies HitPlayerTimers)
-        let { t } = useTranslation()
-        let [volume] = useLocalStorage("musicVolume", "1.0")
-        let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
-        let modalShown = useModalShown()
+        const { t } = useTranslation()
+        const [volume] = useLocalStorage("musicVolume", "1.0")
+        const [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
+        const modalShown = useModalShown()
 
-        const play = () => {
+        const play = useCallback(() => {
             if (timers.current.stopTimer) {
                 clearTimeout(timers.current.stopTimer)
             }
             player.current?.stop()
-            let plr = new Howl({
+            const plr = new Howl({
                 src: [src],
                 format: "audio/mpeg",
                 html5: true,
@@ -82,7 +83,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                     setPlaying(false)
                 }, duration * 1000)
             if (onPlay !== undefined) onPlay()
-        }
+        }, [duration, onPlay, player, sfxVolume, src, timers, volume])
 
         const stop = () => {
             setPlaying(false)
@@ -107,7 +108,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             } else {
                 setPlaying(false)
             }
-        }, [src])
+        }, [autoplay, play, src])
 
         useEffect(() => {
             if (playing === true) {
@@ -131,10 +132,10 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                 }
                 player.current = null
             }
-        }, [src, playing])
+        }, [play, sfxVolume, src, playing])
 
         useEffect(() => {
-            let handlePlayOrStopHit = {
+            const handlePlayOrStopHit = {
                 onPressed: (e: BrowserKeyComboEvent) => {
                     e.finalKeyEvent.preventDefault()
                     if (playing) setPlaying(false)
@@ -155,6 +156,10 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             player.current?.volume(parseFloat(volume))
         }, [volume])
 
+        /* eslint-disable react-hooks/exhaustive-deps */
+        // eslint warns about timers.current most likely being reset already
+        // we however are using timers not for linking a node, but for storing timer ids
+
         useEffect(() => {
             return () => {
                 if (timers.current.stopTimer) {
@@ -169,6 +174,8 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                 player.current = null
             }
         }, [])
+
+        /* eslint-enable react-hooks/exhaustive-deps */
 
         return (
             <>

@@ -5,14 +5,14 @@ import fetchAuth from "../fetch"
 
 export default class GameService {
     async getAll(): Promise<Game[]> {
-        let res = await fetch("/api/games/", {
+        const res = await fetch("/api/games/", {
             method: "GET",
         })
         return GamesResponse.parse(await res.json()).games
     }
 
     async get(game_id: string): Promise<Game | undefined> {
-        let res = await fetch(`/api/games/${game_id}`, {
+        const res = await fetch(`/api/games/${game_id}`, {
             method: "GET",
         })
 
@@ -20,7 +20,7 @@ export default class GameService {
     }
 
     async create(mode: GameMode): Promise<Game> {
-        let res = await fetchAuth("/api/games", {
+        const res = await fetchAuth("/api/games", {
             method: "POST",
             credentials: "include",
             headers: {
@@ -36,7 +36,7 @@ export default class GameService {
     }
 
     async join(game_id: string) {
-        let res = await fetchAuth(`/api/games/${game_id}/join`, {
+        const res = await fetchAuth(`/api/games/${game_id}/join`, {
             method: "PATCH",
             credentials: "include",
         })
@@ -46,7 +46,7 @@ export default class GameService {
     }
 
     async leave(game_id: string) {
-        let res = await fetchAuth(`/api/games/${game_id}/leave`, {
+        const res = await fetchAuth(`/api/games/${game_id}/leave`, {
             method: "PATCH",
             credentials: "include",
         })
@@ -56,7 +56,7 @@ export default class GameService {
     }
 
     async start(game_id: string) {
-        let res = await fetchAuth(`/api/games/${game_id}/start`, {
+        const res = await fetchAuth(`/api/games/${game_id}/start`, {
             method: "PATCH",
             credentials: "include",
         })
@@ -66,7 +66,7 @@ export default class GameService {
     }
 
     async stop(game_id: string) {
-        let res = await fetchAuth(`/api/games/${game_id}/stop`, {
+        const res = await fetchAuth(`/api/games/${game_id}/stop`, {
             method: "PATCH",
             credentials: "include",
         })
@@ -76,7 +76,7 @@ export default class GameService {
     }
 
     async guess(game_id: string, slot_id: number | null, player_id?: string) {
-        let res = await fetchAuth(
+        const res = await fetchAuth(
             `/api/games/${game_id}/guess/${player_id ?? ""}`,
             {
                 body: JSON.stringify({
@@ -95,7 +95,7 @@ export default class GameService {
     }
 
     async confirm(game_id: string, confirmation: boolean) {
-        let res = await fetchAuth(`/api/games/${game_id}/confirm`, {
+        const res = await fetchAuth(`/api/games/${game_id}/confirm`, {
             body: JSON.stringify({
                 confirm: confirmation,
             }),
@@ -111,7 +111,7 @@ export default class GameService {
     }
 
     async skip(game_id: string, player_id?: string) {
-        let res = await fetchAuth(
+        const res = await fetchAuth(
             `/api/games/${game_id}/skip/${player_id ?? ""}`,
             {
                 method: "POST",
@@ -124,7 +124,7 @@ export default class GameService {
     }
 
     async claim(game_id: string, player_id?: string) {
-        let res = await fetchAuth(
+        const res = await fetchAuth(
             `/api/games/${game_id}/claim/${player_id ?? ""}`,
             {
                 method: "POST",
@@ -137,7 +137,7 @@ export default class GameService {
     }
 
     async update(game_id: string, settings: GameSettings) {
-        let res = await fetchAuth(`/api/games/${game_id}/update`, {
+        const res = await fetchAuth(`/api/games/${game_id}/update`, {
             body: JSON.stringify(settings),
             headers: {
                 "Content-Type": "application/json",
@@ -151,20 +151,26 @@ export default class GameService {
     }
 
     async addPlayer(game_id: string, player_name: string) {
-        let res = await fetchAuth(`/api/games/${game_id}/join/${player_name}`, {
-            method: "PATCH",
-            credentials: "include",
-        })
+        const res = await fetchAuth(
+            `/api/games/${game_id}/join/${player_name}`,
+            {
+                method: "PATCH",
+                credentials: "include",
+            },
+        )
 
         if (res.status == 200) return
         throw json({ message: (await res.json()).message, status: res.status })
     }
 
     async kickPlayer(game_id: string, player_id: string) {
-        let res = await fetchAuth(`/api/games/${game_id}/leave/${player_id}`, {
-            method: "PATCH",
-            credentials: "include",
-        })
+        const res = await fetchAuth(
+            `/api/games/${game_id}/leave/${player_id}`,
+            {
+                method: "PATCH",
+                credentials: "include",
+            },
+        )
 
         if (res.status == 200) return
         throw json({ message: (await res.json()).message, status: res.status })

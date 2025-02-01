@@ -84,15 +84,15 @@ const getSfx = (sfx: Sfx): Howl => {
 }
 
 export default function SfxPlayer({ user }: { user: User | null }) {
-    let [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
-    let sfx = useRef<Map<Sfx, Howl>>(new Map())
+    const [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
+    const sfx = useRef<Map<Sfx, Howl>>(new Map())
 
     useEffect(() => {
-        let unsubscribe = EventManager.subscribe(
+        const unsubscribe = EventManager.subscribe(
             Events.playSfx,
             (e: PlaySfxData) => {
                 if (parseFloat(sfxVolume) > 0) {
-                    let s = sfx.current.get(e.sfx) ?? getSfx(e.sfx)
+                    const s = sfx.current.get(e.sfx) ?? getSfx(e.sfx)
                     sfx.current.set(e.sfx, s)
 
                     s.volume(parseFloat(sfxVolume))
@@ -116,7 +116,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
     }, [sfxVolume])
 
     useEffect(() => {
-        let unsubscribeGuessed = EventManager.subscribe(
+        const unsubscribeGuessed = EventManager.subscribe(
             Events.guessed,
             (e: GuessedData) => {
                 if (e.player.guess === null) {
@@ -131,7 +131,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
-        let unsubscribeScored = EventManager.subscribe(
+        const unsubscribeScored = EventManager.subscribe(
             Events.scored,
             (e: ScoredData) => {
                 if (
@@ -151,7 +151,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
-        let unsubscribeReceivedToken = EventManager.subscribe(
+        const unsubscribeReceivedToken = EventManager.subscribe(
             Events.tokenReceived,
             (e: TokenReceivedData) => {
                 if (e.player.id === user?.id || e.game_mode === GameMode.Local)
@@ -161,7 +161,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
-        let unsubscribeClaimed = EventManager.subscribe(
+        const unsubscribeClaimed = EventManager.subscribe(
             Events.claimedHit,
             (e: ClaimedHitData) => {
                 if (e.player.id === user?.id || e.game_mode === GameMode.Local)
@@ -171,7 +171,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
-        let unsubscribeGameEnded = EventManager.subscribe(
+        const unsubscribeGameEnded = EventManager.subscribe(
             Events.gameEnded,
             (e: GameEndedData) => {
                 if (
@@ -192,7 +192,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
-        let unsubscribeJoinedGame = EventManager.subscribe(
+        const unsubscribeJoinedGame = EventManager.subscribe(
             Events.joinedGame,
             () => {
                 EventManager.publish(Events.playSfx, {
@@ -201,7 +201,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
-        let unsubscribeLeftGame = EventManager.subscribe(
+        const unsubscribeLeftGame = EventManager.subscribe(
             Events.leftGame,
             () => {
                 EventManager.publish(Events.playSfx, {
@@ -210,7 +210,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
-        let unsubscribeSlotSelected = EventManager.subscribe(
+        const unsubscribeSlotSelected = EventManager.subscribe(
             Events.slotSelected,
             (e: SlotSelectedData) => {
                 let pan = 0

@@ -5,7 +5,7 @@ import {
     unbindKeyCombo,
 } from "@rwh/keystrokes"
 import { detect } from "detect-browser"
-import { useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo } from "react"
 import Dropdown from "react-bootstrap/Dropdown"
 import Table from "react-bootstrap/Table"
 import { Helmet } from "react-helmet-async"
@@ -17,37 +17,43 @@ import { Events, JoinedGameData } from "../events"
 import { useModalShown, useRevalidateOnInterval } from "../hooks"
 import GameService from "../services/games.service"
 
-export async function loader(): Promise<Game[]> {
-    let gs = new GameService()
-    return await gs.getAll()
-}
-
-export function Lobby() {
-    let gameService = useMemo(() => new GameService(), [])
-    let { user } = useContext()
-    let games = useLoaderData() as Game[]
-    let navigate = useNavigate()
-    let { t } = useTranslation()
-    let modalShown = useModalShown()
+export default function Lobby() {
+    const gameService = useMemo(() => new GameService(), [])
+    const { user } = useContext()
+    const games = useLoaderData() as Game[]
+    const navigate = useNavigate()
+    const { t } = useTranslation()
+    const modalShown = useModalShown()
 
     useRevalidateOnInterval({ enabled: true, interval: 5000 })
 
+    const createGame = useCallback(
+        async (mode: GameMode) => {
+            const game = await gameService.create(mode)
+            EventManager.publish(Events.joinedGame, {
+                player: null,
+            } satisfies JoinedGameData)
+            navigate("/game/" + game.id)
+        },
+        [gameService, navigate],
+    )
+
     useEffect(() => {
-        let handleNewPublicGame = {
+        const handleNewPublicGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 createGame(GameMode.Public)
             },
         }
 
-        let handleNewPrivateGame = {
+        const handleNewPrivateGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 createGame(GameMode.Private)
             },
         }
 
-        let handleNewLocalGame = {
+        const handleNewLocalGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
                 createGame(GameMode.Local)
@@ -65,15 +71,7 @@ export function Lobby() {
             unbindKeyCombo("alt + shift + r", handleNewPrivateGame)
             unbindKeyCombo("alt + shift + l", handleNewLocalGame)
         }
-    }, [modalShown])
-
-    const createGame = async (mode: GameMode) => {
-        let game = await gameService.create(mode)
-        EventManager.publish(Events.joinedGame, {
-            player: null,
-        } satisfies JoinedGameData)
-        navigate("/game/" + game.id)
-    }
+    }, [createGame, modalShown])
 
     return (
         <>

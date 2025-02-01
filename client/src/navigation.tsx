@@ -12,11 +12,11 @@ import SettingsModal from "./modals/settings"
 import ShortcutsModal from "./modals/shortcuts"
 
 export default function Navigation({ user }: { user: User | null }) {
-    let navigate = useNavigate()
+    const navigate = useNavigate()
     const { t } = useTranslation()
-    let [showSettings, setShowSettings] = useState(false)
-    let [showShortcuts, setShowShortcuts] = useState(false)
-    let [_, setWelcome] = useLocalStorage("welcome")
+    const [showSettings, setShowSettings] = useState(false)
+    const [showShortcuts, setShowShortcuts] = useState(false)
+    const [, setWelcome] = useLocalStorage("welcome")
 
     return (
         <>
@@ -131,7 +131,7 @@ export default function Navigation({ user }: { user: User | null }) {
                                     <NavDropdown.Item as="div" className="me-2">
                                         <Nav.Link
                                             onClick={async () => {
-                                                let res = await fetch(
+                                                const res = await fetch(
                                                     "/api/users/logout",
                                                     {
                                                         method: "POST",
