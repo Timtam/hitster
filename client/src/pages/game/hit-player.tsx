@@ -9,7 +9,6 @@ import { detect } from "detect-browser"
 import { Howl } from "howler"
 import {
     forwardRef,
-    useCallback,
     useEffect,
     useImperativeHandle,
     useRef,
@@ -17,6 +16,7 @@ import {
 } from "react"
 import Button from "react-bootstrap/Button"
 import { useTranslation } from "react-i18next"
+import { useEffectEvent } from "use-effect-event"
 import { Events, Sfx } from "../../events"
 import { useModalShown } from "../../hooks"
 
@@ -54,7 +54,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
         const [sfxVolume] = useLocalStorage("sfxVolume", "1.0")
         const modalShown = useModalShown()
 
-        const play = useCallback(() => {
+        const play = useEffectEvent(() => {
             if (timers.current.stopTimer) {
                 clearTimeout(timers.current.stopTimer)
             }
@@ -83,7 +83,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                     setPlaying(false)
                 }, duration * 1000)
             if (onPlay !== undefined) onPlay()
-        }, [duration, onPlay, player, sfxVolume, src, timers, volume])
+        })
 
         const stop = () => {
             setPlaying(false)
@@ -108,7 +108,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             } else {
                 setPlaying(false)
             }
-        }, [autoplay, play, src])
+        }, [autoplay, setPlaying, src])
 
         useEffect(() => {
             if (playing === true) {

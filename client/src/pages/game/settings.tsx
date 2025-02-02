@@ -61,7 +61,10 @@ export default function GameSettings({
         } else {
             setAvailablePacks({})
         }
-    }, [packs, show])
+        // don't do this at home kids
+        // we're waiting for useEffectEvent to become stable
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [setAvailablePacks, setPacks, show])
 
     useEffect(() => {
         if (selectAllPacks.current === null) return

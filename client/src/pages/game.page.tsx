@@ -71,7 +71,7 @@ export default function Game() {
         if (game.players.some((p) => p.id === user?.id))
             await gameService.leave(game.id)
         else await gameService.join(game.id)
-    }, [game, gameService, user])
+    }, [game.id, game.players, gameService, user])
 
     const startOrStopGame = useCallback(async () => {
         if (game.state === GameState.Open) {
@@ -90,7 +90,7 @@ export default function Game() {
         } else {
             await gameService.stop(game.id)
         }
-    }, [game, gameService, showError])
+    }, [game.id, game.state, gameService, showError])
 
     const canSkip = useCallback(() => {
         return (
@@ -103,7 +103,7 @@ export default function Game() {
                         PlayerState.Guessing)) &&
             (game.players.find((p) => p.turn_player)?.tokens ?? 0) > 0
         )
-    }, [game, user])
+    }, [game.mode, game.players, user])
 
     const canClaim = (p?: Player) => {
         return p && p.tokens >= 3
@@ -117,7 +117,7 @@ export default function Game() {
                     ? game.players.find((p) => p.turn_player)?.id
                     : undefined,
             ),
-        [game, gameService],
+        [game.id, game.mode, game.players, gameService],
     )
 
     const canStartOrStopGame = useCallback((): boolean => {
@@ -125,7 +125,7 @@ export default function Game() {
             game.players.find((p) => p.id === user?.id)?.creator === true &&
             game.players.length >= 2
         )
-    }, [game, user])
+    }, [game.players, user])
 
     useEffect(() => {
         const eventSource = new EventSource(`/api/games/${game.id}/events`)
@@ -297,11 +297,15 @@ export default function Game() {
             eventSource.close()
             unsubscribeGameEnded()
         }
-    }, [game, navigate, setGame, setGameEndedState, setHitSrc, setWinner])
+
+        // this is by way no good practice, please don't do this at home kids
+        // we're waiting for useEffectEvent to become stable
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [navigate, setGame, setGameEndedState, setHitSrc, setWinner])
 
     useEffect(() => {
         setShowHits(Array.from({ length: game.players.length }, () => false))
-    }, [game, setShowHits])
+    }, [game.players, setShowHits])
 
     // register keystrokes
     useEffect(() => {
@@ -365,7 +369,8 @@ export default function Game() {
     }, [
         canSkip,
         canStartOrStopGame,
-        game,
+        game.state,
+        game.players,
         joinOrLeaveGame,
         modalShown,
         setShowSettings,

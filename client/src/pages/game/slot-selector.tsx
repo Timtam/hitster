@@ -43,7 +43,7 @@ export default function SlotSelector({ game }: { game: Game }) {
                     null)
                   : (game.players.find((p) => p.creator) ?? null)
         }
-    }, [game, user])
+    }, [game.mode, game.state, game.players, user])
 
     const actionRequired = useCallback((): PlayerState => {
         if (user === null) return PlayerState.Waiting
@@ -72,7 +72,7 @@ export default function SlotSelector({ game }: { game: Game }) {
                 console.log(e)
             }
         },
-        [game],
+        [game.id],
     )
 
     const guess = useCallback(async () => {
@@ -96,7 +96,14 @@ export default function SlotSelector({ game }: { game: Game }) {
         } catch (e) {
             console.log(e)
         }
-    }, [actionPlayer, actionRequired, game, selectedSlot])
+    }, [
+        actionPlayer,
+        actionRequired,
+        game.id,
+        game.mode,
+        game.players,
+        selectedSlot,
+    ])
 
     useEffect(() => {
         game.players.forEach((p) => {
@@ -114,7 +121,7 @@ export default function SlotSelector({ game }: { game: Game }) {
         ) {
             setSelectedSlot(selectedKeySlot)
         }
-    }, [game, selectedKeySlot, selectedSlot])
+    }, [game.players, selectedKeySlot, selectedSlot])
 
     useEffect(() => {
         const handlePreviousSlot = {
@@ -326,7 +333,15 @@ export default function SlotSelector({ game }: { game: Game }) {
                 )
             }
         }
-    }, [actionRequired, confirm, game, guess, selectedKeySlot, t])
+    }, [
+        actionRequired,
+        confirm,
+        game.players,
+        game.state,
+        guess,
+        selectedKeySlot,
+        t,
+    ])
 
     if (game.state === GameState.Open)
         return <h2 className="h4">{t("gameNotStarted")}</h2>
