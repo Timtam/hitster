@@ -1,3 +1,4 @@
+import { setUseWhatChange } from "@simbathesailor/use-what-changed"
 import "bootstrap/dist/css/bootstrap.min.css"
 import React from "react"
 import { ToastsProvider } from "react-bootstrap-toasts"
@@ -17,6 +18,8 @@ import LoginAction from "./pages/login.action"
 import Login from "./pages/login.page"
 import RegistrationAction from "./pages/registration.action"
 import Registration from "./pages/registration.page"
+
+setUseWhatChange(import.meta.env.DEV)
 
 const router = createBrowserRouter(
     [
