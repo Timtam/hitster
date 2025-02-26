@@ -1,7 +1,7 @@
 [package]
 name = "hitster-server"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -12,8 +12,8 @@ filesize = "0.2.0"
 itertools = "0.14.0"
 parking_lot = { version = "0.12.1"}
 petname = {version = "2.0.0-beta.4", default-features = false, features = ["default-rng", "default-words"]}
-rand = "0.8.5"
-rand_chacha = "0.3.1"
+rand = "0.9.0"
+rand_chacha = "0.9.0"
 rocket = { version = "0.5.1", features = ["json", "secrets", "uuid"] }
 rocket_async_compression = "0.6.0"
 rocket_db_pools = { version = "0.2.0", default-features = false, features = ["sqlx_sqlite"] }

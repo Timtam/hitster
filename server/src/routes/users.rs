@@ -1,25 +1,25 @@
 use crate::{
+    HitsterConfig,
     responses::{MessageResponse, UsersResponse},
     services::ServiceStore,
     users::{Token, User, UserCookie, UserLoginPayload},
-    HitsterConfig,
 };
 use argon2::{
-    password_hash::{rand_core::OsRng, PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
     Argon2,
+    password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString, rand_core::OsRng},
 };
 use petname::{Generator, Petnames};
-use rand::{prelude::thread_rng, RngCore, SeedableRng};
+use rand::{RngCore, SeedableRng, rng};
 use rand_chacha::ChaCha8Rng;
 use rocket::{
+    State,
     http::{Cookie, CookieJar},
     response::status::NotFound,
     serde::json::Json,
-    State,
 };
 use rocket_db_pools::{
-    sqlx::{self, Row},
     Connection,
+    sqlx::{self, Row},
 };
 use rocket_okapi::openapi;
 use serde_json;
@@ -29,7 +29,7 @@ use uuid::Uuid;
 // internals
 
 fn generate_token() -> String {
-    let mut rng = thread_rng();
+    let mut rng = rng();
     let mut token_gen = ChaCha8Rng::seed_from_u64(rng.next_u64());
     let mut b = [0u8; 16];
     token_gen.fill_bytes(&mut b);

@@ -1,7 +1,7 @@
 use filesize::PathExt;
 use rocket::{
-    fairing::{self, Fairing, Info, Kind},
     Build, Rocket,
+    fairing::{self, Fairing, Info, Kind},
 };
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
@@ -15,8 +15,8 @@ use std::{
     path::{Path, PathBuf},
     process::Command,
     sync::{
-        atomic::{AtomicBool, Ordering},
         Arc, OnceLock,
+        atomic::{AtomicBool, Ordering},
     },
     thread,
     time::Duration,

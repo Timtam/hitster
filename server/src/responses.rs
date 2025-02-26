@@ -5,13 +5,13 @@ use rocket::{
     response::{self, Responder, Response},
 };
 use rocket_okapi::{
-    gen::OpenApiGenerator,
+    OpenApiError,
+    r#gen::OpenApiGenerator,
     okapi::{
         openapi3::{RefOr, Response as OpenApiResponse, Responses},
         schemars::{self, JsonSchema, Map},
     },
     response::OpenApiResponderInner,
-    OpenApiError,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
