@@ -1,5 +1,5 @@
 use crate::{responses::PacksResponse, services::ServiceStore};
-use rocket::{serde::json::Json, State};
+use rocket::{State, serde::json::Json};
 use rocket_okapi::openapi;
 use std::collections::HashMap;
 

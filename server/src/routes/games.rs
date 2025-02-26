@@ -12,6 +12,7 @@ use crate::{
     users::User,
 };
 use rocket::{
+    Shutdown, State,
     fs::NamedFile,
     response::{
         status::{Created, NotFound},
@@ -20,9 +21,8 @@ use rocket::{
     serde::json::Json,
     tokio::{
         select,
-        sync::broadcast::{error::RecvError, Sender},
+        sync::broadcast::{Sender, error::RecvError},
     },
-    Shutdown, State,
 };
 use rocket_okapi::openapi;
 use std::{default::Default, path::PathBuf};

@@ -1,4 +1,4 @@
-use crate::hits::{get_all, Hit};
+use crate::hits::{Hit, get_all};
 
 pub struct HitService {
     hits: Vec<&'static Hit>,

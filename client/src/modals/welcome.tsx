@@ -1,5 +1,4 @@
 import EventManager from "@lomray/event-manager"
-import sum from "ml-array-sum"
 import { useEffect, useState } from "react"
 import Modal from "react-bootstrap/Modal"
 import Spinner from "react-bootstrap/Spinner"
@@ -52,7 +51,10 @@ export default function WelcomModale({
                                 <Trans
                                     components={[<li />]}
                                     values={{
-                                        hits: sum(Object.values(packs)),
+                                        hits: Object.values(packs).reduce(
+                                            (acc: number, e: number) => acc + e,
+                                            0,
+                                        ),
                                         packs: Object.keys(packs).length,
                                     }}
                                     i18nKey="featuresList"

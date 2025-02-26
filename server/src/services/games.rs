@@ -10,8 +10,9 @@ use crate::{
 };
 use itertools::sorted;
 use rand::{
-    distributions::{Alphanumeric, DistString},
-    prelude::{thread_rng, SliceRandom},
+    distr::{Alphanumeric, SampleString},
+    prelude::SliceRandom,
+    rng,
 };
 use std::{
     collections::{HashMap, HashSet, VecDeque},
@@ -44,7 +45,7 @@ impl GameService {
 
         player.creator = true;
 
-        let mut rng = thread_rng();
+        let mut rng = rng();
 
         let id: String = loop {
             let id: String = Alphanumeric.sample_string(&mut rng, 8);
@@ -295,7 +296,7 @@ impl GameService {
                     message: "only the creator can start a game".into(),
                 })
             } else {
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 let remembered_hits = filter_hits_by_packs(&game.remembered_hits, &game.packs);
                 let remembered_hits_count = if game.remember_hits {
                     remembered_hits.len()
@@ -325,7 +326,11 @@ impl GameService {
                 {
                     return Err(StartGameError {
                         http_status_code: 409,
-                        message: format!("There aren't enough hits available to start a game ({} individual hits in the currently selected packs, {} hits are required)", hits_remaining.len() + remembered_hits_count, game.players.len() * game.goal as usize * 2).into(),
+                        message: format!(
+                            "There aren't enough hits available to start a game ({} individual hits in the currently selected packs, {} hits are required)",
+                            hits_remaining.len() + remembered_hits_count,
+                            game.players.len() * game.goal as usize * 2
+                        ),
                     });
                 }
 
@@ -722,7 +727,7 @@ impl GameService {
             }
 
             if game.hits_remaining.is_empty() {
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 game.hits_remaining =
                     filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
                         .into_iter()
@@ -807,7 +812,7 @@ impl GameService {
             game.remembered_hits.push(hit);
 
             if game.hits_remaining.is_empty() {
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 game.hits_remaining =
                     filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
                         .into_iter()
@@ -884,7 +889,7 @@ impl GameService {
 
             if game.hits_remaining.len() == 1 {
                 let current_hit = game.hits_remaining.pop_front().unwrap();
-                let mut rng = thread_rng();
+                let mut rng = rng();
                 game.hits_remaining =
                     filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
                         .into_iter()
@@ -1004,9 +1009,13 @@ impl GameService {
                 < (game.players.len() * settings.goal.unwrap_or(game.goal) as usize * 2)
             {
                 return Err(UpdateGameError {
-                        http_status_code: 409,
-                        message: format!("There aren't enough hits available to start a game ({} individual hits in the currently selected packs, {} hits are required)", hits_remaining.len() + remembered_hits_count, game.players.len() * settings.goal.unwrap_or(game.goal) as usize * 2).into(),
-                    });
+                    http_status_code: 409,
+                    message: format!(
+                        "There aren't enough hits available to start a game ({} individual hits in the currently selected packs, {} hits are required)",
+                        hits_remaining.len() + remembered_hits_count,
+                        game.players.len() * settings.goal.unwrap_or(game.goal) as usize * 2
+                    ),
+                });
             }
 
             game.packs = packs;
@@ -1034,8 +1043,8 @@ impl GameService {
 
 fn filter_hits_by_packs(hits: &Vec<&'static Hit>, packs: &[String]) -> Vec<&'static Hit> {
     let packs = packs.iter().map(|p| p.as_str()).collect::<Vec<_>>();
-    hits.into_iter()
+    hits.iter()
         .filter(|h| packs.is_empty() || packs.contains(&h.pack))
-        .map(|h| *h)
+        .copied()
         .collect::<Vec<_>>()
 }

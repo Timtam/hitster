@@ -9,15 +9,15 @@ use dotenvy::dotenv;
 use games::GameEvent;
 use hits::HitsterDownloader;
 use rocket::{
+    Build, Config, Rocket,
     fairing::{self, AdHoc},
-    figment::{util::map, Figment},
+    figment::{Figment, util::map},
     fs::NamedFile,
     response::Redirect,
     tokio::sync::broadcast::channel,
-    Build, Config, Rocket,
 };
 use rocket_async_compression::CachedCompression;
-use rocket_db_pools::{sqlx, Database};
+use rocket_db_pools::{Database, sqlx};
 use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
 use routes::{games as games_routes, hits as hits_routes, users as users_routes};
 use services::ServiceStore;

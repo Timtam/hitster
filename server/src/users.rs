@@ -1,17 +1,17 @@
-use crate::{responses::MessageResponse, services::ServiceStore, HitsterConfig};
+use crate::{HitsterConfig, responses::MessageResponse, services::ServiceStore};
 use rocket::{
+    Data, State,
     fairing::{Fairing, Info, Kind},
     http::{CookieJar, Status},
     request::{self, FromRequest, Outcome, Request},
     serde::json::Json,
-    Data, State,
 };
 use rocket_db_pools::{
-    sqlx::{self, Row},
     Connection,
+    sqlx::{self, Row},
 };
 use rocket_okapi::{
-    gen::OpenApiGenerator,
+    r#gen::OpenApiGenerator,
     okapi::{schemars, schemars::JsonSchema},
     request::{OpenApiFromRequest, RequestHeaderInput},
 };
