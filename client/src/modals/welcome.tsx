@@ -1,9 +1,11 @@
+import EventManager from "@lomray/event-manager"
 import { useEffect, useState } from "react"
 import Modal from "react-bootstrap/Modal"
 import Spinner from "react-bootstrap/Spinner"
 import Tab from "react-bootstrap/Tab"
 import Tabs from "react-bootstrap/Tabs"
 import { Trans, useTranslation } from "react-i18next"
+import { Events } from "../events"
 import HitService from "../services/hits.service"
 
 export default function WelcomModale({
@@ -23,6 +25,7 @@ export default function WelcomModale({
                 const availablePacks = await hs.getAllPacks()
                 setPacks(availablePacks)
             })()
+            EventManager.publish(Events.popup)
         }
     }, [show])
 

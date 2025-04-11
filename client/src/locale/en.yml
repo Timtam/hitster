@@ -103,6 +103,7 @@ kick: Kick
 knownAs: You are currently known as {{username}}
 language: Language
 leaveGame: Leave game
+leaveGameQuestion: Do you want to leave the game while it's still running?
 leaveGameShortcut: Alt+Shift+Q
 light: Light
 loading: Loading...
