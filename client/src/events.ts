@@ -1,3 +1,4 @@
+import { JSX } from "react"
 import { Game, GameMode, Hit, Player, Slot } from "./entities"
 
 export enum Sfx {

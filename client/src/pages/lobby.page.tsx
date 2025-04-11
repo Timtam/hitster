@@ -1,3 +1,4 @@
+import { Helmet } from "@dr.pogodin/react-helmet"
 import EventManager from "@lomray/event-manager"
 import {
     bindKeyCombo,
@@ -8,7 +9,6 @@ import { detect } from "detect-browser"
 import { useCallback, useEffect, useMemo } from "react"
 import Dropdown from "react-bootstrap/Dropdown"
 import Table from "react-bootstrap/Table"
-import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router-dom"
 import { useContext } from "../context"

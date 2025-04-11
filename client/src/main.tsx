@@ -1,10 +1,8 @@
-import { setUseWhatChange } from "@simbathesailor/use-what-changed"
+import { HelmetProvider } from "@dr.pogodin/react-helmet"
 import "bootstrap/dist/css/bootstrap.min.css"
 import React from "react"
-import { ToastsProvider } from "react-bootstrap-toasts"
 import { CookiesProvider } from "react-cookie"
 import ReactDOM from "react-dom/client"
-import { HelmetProvider } from "react-helmet-async"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import "./i18n"
 import "./index.css"
@@ -18,44 +16,37 @@ import LoginAction from "./pages/login.action"
 import Login from "./pages/login.page"
 import RegistrationAction from "./pages/registration.action"
 import Registration from "./pages/registration.page"
+import { ToastsProvider } from "./toasts"
 
-setUseWhatChange(import.meta.env.DEV)
-
-const router = createBrowserRouter(
-    [
-        {
-            element: <Layout />,
-            children: [
-                {
-                    element: <Lobby />,
-                    path: "/",
-                    loader: LobbyLoader,
-                },
-                {
-                    element: <Registration />,
-                    path: "/register",
-                    action: RegistrationAction,
-                },
-                {
-                    element: <Login />,
-                    path: "/login",
-                    action: LoginAction,
-                },
-                {
-                    element: <Game />,
-                    path: "/game/:gameId",
-                    loader: GameLoader,
-                },
-            ],
-            errorElement: <ErrorPage />,
-        },
-    ],
+const router = createBrowserRouter([
     {
-        future: {
-            v7_relativeSplatPath: true,
-        },
+        hydrateFallbackElement: <p>Loading...</p>,
+        element: <Layout />,
+        children: [
+            {
+                element: <Lobby />,
+                path: "/",
+                loader: LobbyLoader,
+            },
+            {
+                element: <Registration />,
+                path: "/register",
+                action: RegistrationAction,
+            },
+            {
+                element: <Login />,
+                path: "/login",
+                action: LoginAction,
+            },
+            {
+                element: <Game />,
+                path: "/game/:gameId",
+                loader: GameLoader,
+            },
+        ],
+        errorElement: <ErrorPage />,
     },
-)
+])
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
     <React.StrictMode>
@@ -68,10 +59,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                         "aria-hidden": true,
                     }}
                 >
-                    <RouterProvider
-                        future={{ v7_startTransition: true }}
-                        router={router}
-                    />
+                    <RouterProvider router={router} />
                 </ToastsProvider>
             </CookiesProvider>
         </HelmetProvider>

@@ -1,7 +1,7 @@
+import { Helmet } from "@dr.pogodin/react-helmet"
 import { useState } from "react"
 import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
-import { Helmet } from "react-helmet-async"
 import { useTranslation } from "react-i18next"
 import { Form, useActionData } from "react-router-dom"
 import { useContext } from "../context"

@@ -1,6 +1,5 @@
 import EventManager from "@lomray/event-manager"
 import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
-import { useToasts } from "react-bootstrap-toasts"
 import { flushSync } from "react-dom"
 import { createRoot } from "react-dom/client"
 import { Trans, useTranslation } from "react-i18next"
@@ -16,6 +15,7 @@ import {
     SkippedHitData,
     TokenReceivedData,
 } from "./events"
+import { useToasts } from "./toasts"
 
 interface SpeechEvent {
     text: string

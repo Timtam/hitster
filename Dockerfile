@@ -20,7 +20,7 @@ COPY ./client/ /app/
 
 RUN npm run build
 
-FROM rust:1.85.0-slim-bookworm AS server_build_image
+FROM rust:1.86.0-slim-bookworm AS server_build_image
 
 # create a new empty shell project
 RUN apt-get update && apt-get -y install libssl-dev pkg-config && \

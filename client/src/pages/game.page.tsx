@@ -1,3 +1,4 @@
+import { Helmet } from "@dr.pogodin/react-helmet"
 import EventManager from "@lomray/event-manager"
 import {
     bindKeyCombo,
@@ -12,7 +13,6 @@ import ButtonGroup from "react-bootstrap/ButtonGroup"
 import Dropdown from "react-bootstrap/Dropdown"
 import DropdownButton from "react-bootstrap/DropdownButton"
 import Table from "react-bootstrap/Table"
-import { Helmet } from "react-helmet-async"
 import { Trans, useTranslation } from "react-i18next"
 import { useLoaderData, useNavigate } from "react-router-dom"
 import { titleCase } from "title-case"
