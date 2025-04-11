@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [added various key shortcuts across the entire app (#2)](https://github.com/Timtam/hitster/issues/2)
 - [added a how to play section on the welcome page (#11)](https://github.com/Timtam/hitster/issues/11)
 - [added 'belongs to' field to hits view table (#21)](https://github.com/Timtam/hitster/issues/21)
+- [added confirmation prompt when leaving a game that is currently running (#20)](https://github.com/Timtam/hitster/issues/20)
 
 ### Fixed
 
@@ -21,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [restyled the slot selector UI to look much nicer for sighted folk (#13)](https://github.com/Timtam/hitster/issues/13)
-- updated Rust to 1.84
+- updated Rust to 1.86
 - updated yt-dlp to 2025.01.15
 - updated crates
 - added and fixed some hits
