@@ -1,5 +1,5 @@
 import type { ActionFunction } from "react-router"
-import { redirect } from "react-router-dom"
+import { redirect } from "react-router"
 
 const action: ActionFunction = async ({ request }) => {
     const formData = await request.formData()

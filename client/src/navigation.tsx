@@ -5,8 +5,7 @@ import Nav from "react-bootstrap/Nav"
 import NavDropdown from "react-bootstrap/NavDropdown"
 import Navbar from "react-bootstrap/Navbar"
 import { Trans, useTranslation } from "react-i18next"
-import { LinkContainer } from "react-router-bootstrap"
-import { useNavigate } from "react-router-dom"
+import { NavLink, useNavigate } from "react-router"
 import { User } from "./entities"
 import SettingsModal from "./modals/settings"
 import ShortcutsModal from "./modals/shortcuts"
@@ -35,12 +34,10 @@ export default function Navigation({ user }: { user: User | null }) {
                             style={{ maxHeight: "100px" }}
                         >
                             <NavDropdown className="me-2" title={t("mainMenu")}>
-                                <Nav.Item
-                                    aria-current={location.pathname === "/"}
-                                >
-                                    <LinkContainer to="/">
-                                        <Nav.Link>{t("gameLobby")}</Nav.Link>
-                                    </LinkContainer>
+                                <Nav.Item>
+                                    <Nav.Link as={NavLink} to="/">
+                                        {t("gameLobby")}
+                                    </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
                                     <Nav.Link
@@ -162,14 +159,14 @@ export default function Navigation({ user }: { user: User | null }) {
                                     className="me-auto"
                                 >
                                     <NavDropdown.Item as="div" className="me-2">
-                                        <LinkContainer to="/login">
-                                            <Nav.Link>{t("login")}</Nav.Link>
-                                        </LinkContainer>
+                                        <Nav.Link as={NavLink} to="/login">
+                                            {t("login")}
+                                        </Nav.Link>
                                     </NavDropdown.Item>
                                     <NavDropdown.Item as="div" className="me-2">
-                                        <LinkContainer to="/register">
-                                            <Nav.Link>{t("register")}</Nav.Link>
-                                        </LinkContainer>
+                                        <Nav.Link as={NavLink} to="/register">
+                                            {t("register")}
+                                        </Nav.Link>
                                     </NavDropdown.Item>
                                 </NavDropdown>
                             )}

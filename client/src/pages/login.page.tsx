@@ -3,7 +3,7 @@ import { useState } from "react"
 import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
-import { Form, useActionData } from "react-router-dom"
+import { Form, useActionData } from "react-router"
 import Error from "../error"
 
 export default function Login() {
