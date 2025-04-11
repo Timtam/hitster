@@ -245,7 +245,7 @@ export default function SfxPlayer({ user }: { user: User | null }) {
             },
         )
 
-        let unsubscribePopup = EventManager.subscribe(Events.popup, () => {
+        const unsubscribePopup = EventManager.subscribe(Events.popup, () => {
             EventManager.publish(Events.playSfx, {
                 sfx: Sfx.popup,
             } satisfies PlaySfxData)
