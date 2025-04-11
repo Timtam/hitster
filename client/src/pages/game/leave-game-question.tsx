@@ -12,7 +12,7 @@ export default function LeaveGameQuestion({
     show: boolean
     onHide: (yes: boolean) => void
 }) {
-    let { t } = useTranslation()
+    const { t } = useTranslation()
 
     useEffect(() => {
         if (show) EventManager.publish(Events.popup)

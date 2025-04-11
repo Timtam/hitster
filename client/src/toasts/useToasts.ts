@@ -26,7 +26,7 @@ const useToasts = () => {
 
     const api = useMemo(() => {
         const show = (toastOptions: ToastOptions<ToastProps>): ToastIdType => {
-            let id = toastId++
+            const id = toastId++
             setToastOptsQueue((q) => [...q, { ...toastOptions, id }])
             return id
         }
@@ -68,7 +68,7 @@ const useToasts = () => {
             bg: ToastProps["bg"],
         ) => {
             const { toastProps } = toastOptions
-            let toastPropsWithBg = { ...toastProps, bg }
+            const toastPropsWithBg = { ...toastProps, bg }
             return {
                 ...toastOptions,
                 toastProps: toastPropsWithBg,
@@ -86,7 +86,7 @@ const useToasts = () => {
             dark,
             light,
         }
-    }, [ctx.current])
+    }, [ctx])
 
     useEffect(() => {
         const { current } = ctx
@@ -97,7 +97,7 @@ const useToasts = () => {
 
             setToastOptsQueue([])
         }
-    })
+    }, [ctx, toastOptsQueue])
 
     return api
 }

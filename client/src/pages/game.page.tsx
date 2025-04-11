@@ -69,9 +69,17 @@ export default function Game() {
 
     const joinOrLeaveGame = useCallback(async () => {
         if (game.players.some((p) => p.id === user?.id))
-            await gameService.leave(game.id)
+            if (game.state === "Open") await gameService.leave(game.id)
+            else setShowLeaveGameQuestion(true)
         else await gameService.join(game.id)
-    }, [game.id, game.players, gameService, user])
+    }, [
+        game.id,
+        game.players,
+        game.state,
+        gameService,
+        setShowLeaveGameQuestion,
+        user,
+    ])
 
     const startOrStopGame = useCallback(async () => {
         if (game.state === GameState.Open) {
