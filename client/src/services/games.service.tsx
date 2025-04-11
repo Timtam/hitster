@@ -1,4 +1,3 @@
-import { json } from "react-router-dom"
 import type { GameMode, GameSettings } from "../entities"
 import { Game, GamesResponse } from "../entities"
 import fetchAuth from "../fetch"
@@ -32,7 +31,7 @@ export default class GameService {
         })
 
         if (res.status === 201) return Game.parse(await res.json())
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async join(game_id: string) {
@@ -42,7 +41,7 @@ export default class GameService {
         })
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async leave(game_id: string) {
@@ -52,7 +51,7 @@ export default class GameService {
         })
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async start(game_id: string) {
@@ -72,7 +71,7 @@ export default class GameService {
         })
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async guess(game_id: string, slot_id: number | null, player_id?: string) {
@@ -91,7 +90,7 @@ export default class GameService {
         )
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async confirm(game_id: string, confirmation: boolean) {
@@ -107,7 +106,7 @@ export default class GameService {
         })
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async skip(game_id: string, player_id?: string) {
@@ -120,7 +119,7 @@ export default class GameService {
         )
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async claim(game_id: string, player_id?: string) {
@@ -133,7 +132,7 @@ export default class GameService {
         )
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async update(game_id: string, settings: GameSettings) {
@@ -160,7 +159,7 @@ export default class GameService {
         )
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 
     async kickPlayer(game_id: string, player_id: string) {
@@ -173,6 +172,6 @@ export default class GameService {
         )
 
         if (res.status == 200) return
-        throw json({ message: (await res.json()).message, status: res.status })
+        throw { message: (await res.json()).message, status: res.status }
     }
 }
