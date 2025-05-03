@@ -7,26 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2025.5.3-1] - 2025-05-03
+
 ### Added
 
-- [added various key shortcuts across the entire app (#2)](https://github.com/Timtam/hitster/issues/2)
-- [added a how to play section on the welcome page (#11)](https://github.com/Timtam/hitster/issues/11)
-- [added 'belongs to' field to hits view table (#21)](https://github.com/Timtam/hitster/issues/21)
-- [added confirmation prompt when leaving a game that is currently running (#20)](https://github.com/Timtam/hitster/issues/20)
+-   [added various key shortcuts across the entire app (#2)](https://github.com/Timtam/hitster/issues/2)
+-   [added a how to play section on the welcome page (#11)](https://github.com/Timtam/hitster/issues/11)
+-   [added 'belongs to' field to hits view table (#21)](https://github.com/Timtam/hitster/issues/21)
+-   [added confirmation prompt when leaving a game that is currently running (#20)](https://github.com/Timtam/hitster/issues/20)
 
 ### Fixed
 
-- [fixed client not returning to the lobby if the creator of a local game leaves the game (#19)](https://github.com/Timtam/hitster/issues/19)
-- [fixed a server crash when starting a game with too few hits (#18)](https://github.com/Timtam/hitster/issues/18)
+-   [fixed client not returning to the lobby if the creator of a local game leaves the game (#19)](https://github.com/Timtam/hitster/issues/19)
+-   [fixed a server crash when starting a game with too few hits (#18)](https://github.com/Timtam/hitster/issues/18)
 
 ### Changed
 
-- [restyled the slot selector UI to look much nicer for sighted folk (#13)](https://github.com/Timtam/hitster/issues/13)
-- updated Rust to 1.86
-- updated yt-dlp to 2025.03.31
-- updated crates
-- added and fixed some hits
-- [added some debug messages to inspect user authentification issues (#24)](https://github.com/Timtam/hitster/issues/24)
+-   [restyled the slot selector UI to look much nicer for sighted folk (#13)](https://github.com/Timtam/hitster/issues/13)
+-   updated Rust to 1.86
+-   updated yt-dlp to 2025.03.31
+-   updated crates
+-   added and fixed some hits
+-   [added some debug messages to inspect user authentification issues (#24)](https://github.com/Timtam/hitster/issues/24)
 
 ## [2024.12.13-1] - 2024-12-13
 
@@ -52,7 +54,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [Add local player modal no longer requires you to press the "Add" button, you can also just press return within the input box now (#15)](https://github.com/Timtam/hitster/issues/15)
 -   [New versioning (mixture of release date and semver) + changelog #17)](https://github.com/Timtam/hitster/issues/17)
 
-[Unreleased]: https://github.com/Timtam/hitster/compare/2024.12.13-1...HEAD
+[Unreleased]: https://github.com/Timtam/hitster/compare/2025.5.3-1...HEAD
+
+[2025.5.3-1]: https://github.com/Timtam/hitster/compare/2024.12.13-1...2025.5.3-1
 
 [2024.12.13-1]: https://github.com/Timtam/hitster/compare/2024.12.11-1...2024.12.13-1
 
