@@ -84,10 +84,23 @@ async fn handle_existing_token(
         .lock()
         .get_by_username(user.name.as_str());
 
+    rocket::debug!(
+        "user {} ({}) is trying to authorize with token {}",
+        user.id,
+        user.name,
+        token
+    );
+
     if let Some(mut u) = u {
         // the user already exists within the user service
+
+        rocket::debug!("user found within the user service");
+
         if let Some(t) = u.tokens.iter().find(|t| t.token == token) {
             // the token exists for the user
+
+            rocket::debug!("token found: {}", serde_json::to_string(&t).unwrap());
+
             if t.expiration_time < OffsetDateTime::now_utc()
                 && t.refresh_time > OffsetDateTime::now_utc()
             {
@@ -118,6 +131,8 @@ async fn handle_existing_token(
                         .await;
                 }
 
+                rocket::debug!("new token {} generated", t.token);
+
                 set_cookies(&u, &t, cookies);
                 return u;
             }
@@ -126,11 +141,20 @@ async fn handle_existing_token(
                 // token refresh time is up and you're not logged in anymore
                 let (u, t) = generate_virtual_user(svc);
 
+                rocket::debug!(
+                    "token cannot be refreshed anymore, new user {} ({}) with token {} generated",
+                    u.id,
+                    u.name,
+                    t.token
+                );
+
                 set_cookies(&u, &t, cookies);
                 return u;
             }
 
             // token didn't expire yet, so just return the user as-is
+            rocket::debug!("token is still valid");
+
             return u;
         }
 
@@ -139,6 +163,14 @@ async fn handle_existing_token(
 
         let (u, t) = generate_virtual_user(svc);
 
+        rocket::debug!("user exists, but token is unknown");
+        rocket::debug!(
+            "new user {} ({}) with token {} generated",
+            u.id,
+            u.name,
+            t.token
+        );
+
         set_cookies(&u, &t, cookies);
         return u;
     }
@@ -146,6 +178,13 @@ async fn handle_existing_token(
     if user.r#virtual {
         // nope, its a virtual one
         let (u, t) = generate_virtual_user(svc);
+
+        rocket::debug!(
+            "new virtual user {} ({}) with token {} generated to replace unknown virtual user",
+            u.id,
+            u.name,
+            t.token
+        );
 
         set_cookies(&u, &t, cookies);
         return u;
@@ -166,8 +205,14 @@ async fn handle_existing_token(
         })
     {
         // user exists within the db
+
+        rocket::debug!("user found within the database");
+
         if let Some(t) = u.tokens.iter().find(|t| t.token == token) {
             // we found the token
+
+            rocket::debug!("token found: {}", serde_json::to_string(&t).unwrap());
+
             if t.expiration_time < OffsetDateTime::now_utc()
                 && t.refresh_time > OffsetDateTime::now_utc()
             {
@@ -196,6 +241,8 @@ async fn handle_existing_token(
                     .execute(&mut **db)
                     .await;
 
+                rocket::debug!("new token {} generated", t.token);
+
                 set_cookies(&u, &t, cookies);
                 return u;
             }
@@ -204,12 +251,21 @@ async fn handle_existing_token(
                 // token refresh time is up and you're not logged in anymore
                 let (u, t) = generate_virtual_user(svc);
 
+                rocket::debug!(
+                    "token cannot be refreshed anymore, new user {} ({}) with token {} generated",
+                    u.id,
+                    u.name,
+                    t.token
+                );
+
                 set_cookies(&u, &t, cookies);
                 return u;
             }
 
             // token didn't expire yet, so just return the user as-is
             svc.user_service().lock().add(u.clone());
+
+            rocket::debug!("token is still valid");
 
             return u;
         }
@@ -219,6 +275,14 @@ async fn handle_existing_token(
 
         let (u, t) = generate_virtual_user(svc);
 
+        rocket::debug!("user exists, but token is unknown");
+        rocket::debug!(
+            "new user {} ({}) with token {} generated",
+            u.id,
+            u.name,
+            t.token
+        );
+
         set_cookies(&u, &t, cookies);
         return u;
     }
@@ -226,6 +290,15 @@ async fn handle_existing_token(
     let (u, t) = generate_virtual_user(svc);
 
     set_cookies(&u, &t, cookies);
+
+    rocket::debug!("user doesn't exist");
+    rocket::debug!(
+        "new user {} ({}) with token {} generated",
+        u.id,
+        u.name,
+        t.token
+    );
+
     u
 }
 
@@ -523,6 +596,13 @@ pub async fn authorize(
         })
     } else {
         let (u, t) = generate_virtual_user(serv);
+
+        rocket::debug!(
+            "new user {} ({}) authorized with token {}",
+            u.id,
+            u.name,
+            t.token
+        );
 
         set_cookies(&u, &t, cookies);
 
