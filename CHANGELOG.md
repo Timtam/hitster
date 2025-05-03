@@ -23,9 +23,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [restyled the slot selector UI to look much nicer for sighted folk (#13)](https://github.com/Timtam/hitster/issues/13)
 - updated Rust to 1.86
-- updated yt-dlp to 2025.01.15
+- updated yt-dlp to 2025.03.31
 - updated crates
 - added and fixed some hits
+- [added some debug messages to inspect user authentification issues (#24)](https://github.com/Timtam/hitster/issues/24)
 
 ## [2024.12.13-1] - 2024-12-13
 
