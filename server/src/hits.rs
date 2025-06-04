@@ -1,8 +1,5 @@
+use crossbeam_channel::unbounded;
 use filesize::PathExt;
-use rocket::{
-    Build, Rocket,
-    fairing::{self, Fairing, Info, Kind},
-};
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
 use serde::Serialize;
@@ -14,12 +11,7 @@ use std::{
     hash::{Hash, Hasher},
     path::{Path, PathBuf},
     process::Command,
-    sync::{
-        Arc, OnceLock,
-        atomic::{AtomicBool, Ordering},
-    },
-    thread,
-    time::Duration,
+    sync::OnceLock,
 };
 use uuid::Uuid;
 
@@ -65,49 +57,22 @@ impl Hash for Hit {
     }
 }
 
-// copied from ffmpeg-loudness-norm
-
-fn progress_thread() -> (Arc<AtomicBool>, thread::JoinHandle<()>) {
-    const PROGRESS_CHARS: [&str; 12] = ["⠂", "⠃", "⠁", "⠉", "⠈", "⠘", "⠐", "⠰", "⠠", "⠤", "⠄", "⠆"];
-    let finished = Arc::new(AtomicBool::new(false));
-    let stop_signal = Arc::clone(&finished);
-    let handle = thread::spawn(move || {
-        for pc in PROGRESS_CHARS.iter().cycle() {
-            if stop_signal.load(Ordering::Relaxed) {
-                break;
-            };
-            eprint!("Processing {}\r", pc);
-            thread::sleep(Duration::from_millis(250));
-        }
-    });
-    (finished, handle)
+struct DownloadHitData {
+    in_file: PathBuf,
+    hit: &'static Hit,
 }
 
-#[derive(Default)]
-pub struct HitsterDownloader {}
+pub fn download_hits() {
+    let (s, r) = unbounded::<DownloadHitData>();
+    let download_dir = Hit::download_dir();
 
-#[rocket::async_trait]
-impl Fairing for HitsterDownloader {
-    fn info(&self) -> Info {
-        Info {
-            kind: Kind::Ignite,
-            name: "Download hits",
-        }
-    }
+    let _ = create_dir_all(download_dir.as_str());
 
-    async fn on_ignite(&self, rocket: Rocket<Build>) -> fairing::Result {
-        let download_dir = Hit::download_dir();
-
-        let _ = create_dir_all(download_dir.as_str());
-
-        println!("Starting download of missing hits. This may take a while...");
-
+    rocket::tokio::spawn(async move {
         for hit in get_all().iter() {
             if !hit.exists() {
                 let mut in_file =
                     Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
-                let out_file = Path::new(&Hit::download_dir())
-                    .join(format!("{}_{}.mp3", hit.yt_id, hit.playback_offset));
                 let options = VideoOptions {
                     quality: VideoQuality::HighestAudio,
                     filter: VideoSearchOptions::Audio,
@@ -143,15 +108,11 @@ impl Fairing for HitsterDownloader {
                                 .args(["-o", in_file.to_str().unwrap()])
                                 .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
 
-                            let output = {
-                                let (finished, _) = progress_thread();
-                                let output_res = command.output();
-                                finished.store(true, Ordering::SeqCst);
-                                output_res.expect("Failed to execute ffmpeg process!")
-                            };
+                            let output_res =
+                                command.output().expect("Failed to execute ffmpeg process!");
 
-                            if !output.status.success() {
-                                println!("{}", String::from_utf8_lossy(&output.stderr));
+                            if !output_res.status.success() {
+                                println!("{}", String::from_utf8_lossy(&output_res.stderr));
                                 println!("Download failed with yt-dlp, skipping...");
                                 continue;
                             }
@@ -161,35 +122,41 @@ impl Fairing for HitsterDownloader {
                         }
                     }
 
-                    println!(
-                        "Processing {} to mp3...",
-                        in_file.extension().unwrap().to_str().unwrap()
-                    );
-
-                    let mut command = Command::new("ffmpeg-normalize");
-                    command
-                        .current_dir(env::current_dir().unwrap())
-                        .arg(&in_file)
-                        .args(["-ar", "44100"])
-                        .args(["-b:a", "128k"])
-                        .args(["-c:a", "libmp3lame"])
-                        .args(["-e", &format!("-ss {}", hit.playback_offset)])
-                        .args(["--extension", "mp3"])
-                        .args(["-o", out_file.to_str().unwrap()])
-                        .arg("-sn")
-                        .args(["-t", "-18.0"])
-                        .arg("-vn");
-
-                    {
-                        let (finished, _) = progress_thread();
-                        let output_res = command.output();
-                        finished.store(true, Ordering::SeqCst);
-                        output_res.expect("Failed to execute ffmpeg process!");
-                    }
-
-                    remove_file(in_file).unwrap();
+                    s.send(DownloadHitData { in_file, hit }).unwrap();
                 }
             }
+        }
+    });
+
+    rocket::tokio::spawn(async move {
+        while let Ok(hit_data) = r.recv() {
+            println!(
+                "Processing {} to mp3...",
+                hit_data.in_file.extension().unwrap().to_str().unwrap()
+            );
+
+            let out_file = Path::new(&Hit::download_dir()).join(format!(
+                "{}_{}.mp3",
+                hit_data.hit.yt_id, hit_data.hit.playback_offset
+            ));
+
+            let mut command = Command::new("ffmpeg-normalize");
+            command
+                .current_dir(env::current_dir().unwrap())
+                .arg(&hit_data.in_file)
+                .args(["-ar", "44100"])
+                .args(["-b:a", "128k"])
+                .args(["-c:a", "libmp3lame"])
+                .args(["-e", &format!("-ss {}", hit_data.hit.playback_offset)])
+                .args(["--extension", "mp3"])
+                .args(["-o", out_file.to_str().unwrap()])
+                .arg("-sn")
+                .args(["-t", "-18.0"])
+                .arg("-vn");
+
+            let _ = command.output().expect("Failed to execute ffmpeg process!");
+
+            remove_file(hit_data.in_file).unwrap();
         }
 
         println!("Download finished.");
@@ -216,7 +183,5 @@ impl Fairing for HitsterDownloader {
         }
 
         println!("Finished cleanup.");
-
-        Ok(rocket)
-    }
+    });
 }

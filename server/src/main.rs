@@ -7,7 +7,7 @@ mod users;
 
 use dotenvy::dotenv;
 use games::GameEvent;
-use hits::HitsterDownloader;
+use hits::download_hits;
 use rocket::{
     Build, Config, Rocket,
     fairing::{self, AdHoc},
@@ -78,7 +78,6 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
     rocket::custom(figment)
         .attach(HitsterConfig::init())
         .attach(migrations_fairing)
-        .attach(HitsterDownloader::default())
         .attach(CachedCompression::path_suffix_fairing(
             CachedCompression::static_paths(vec![".js", ".js", ".html", ".htm", ".json", ".mp3"]),
         ))
@@ -137,11 +136,11 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .manage(channel::<GameEvent>(1024).0)
 }
 
-#[launch]
-fn rocket() -> _ {
+#[rocket::main]
+async fn main() -> Result<(), rocket::Error> {
     let _ = dotenv();
 
-    rocket_from_config(Config::figment().merge((
+    let r = rocket_from_config(Config::figment().merge((
         "databases",
         map![
         "hitster_config" => map![
@@ -149,28 +148,12 @@ fn rocket() -> _ {
         ],
             ],
     )))
-}
+    .ignite()
+    .await?;
 
-#[cfg(test)]
-mod test {
-    use super::rocket_from_config;
-    use rocket::{
-        figment::{util::map, value::Map},
-        local::asynchronous::Client,
-    };
+    download_hits();
 
-    pub async fn mocked_client() -> Client {
-        let db_config: Map<_, String> = map! {
-          "url" => "sqlite::memory:".into(),
-        };
+    r.launch().await?;
 
-        let figment =
-            rocket::Config::figment().merge(("databases", map!["hitster_config" => db_config]));
-
-        let client = Client::tracked(rocket_from_config(figment))
-            .await
-            .expect("valid rocket instance");
-
-        return client;
-    }
+    Ok(())
 }
