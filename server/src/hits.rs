@@ -1,7 +1,5 @@
 use crossbeam_channel::unbounded;
-use filesize::PathExt;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
-use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
 use serde::Serialize;
 use std::{
     cmp::PartialEq,
@@ -71,55 +69,65 @@ pub fn download_hits() {
     rocket::tokio::spawn(async move {
         for hit in get_all().iter() {
             if !hit.exists() {
-                let mut in_file =
-                    Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
-                let options = VideoOptions {
-                    quality: VideoQuality::HighestAudio,
-                    filter: VideoSearchOptions::Audio,
-                    ..Default::default()
-                };
-                if let Ok(video) = Video::new_with_options(hit.yt_id, options) {
-                    println!(
-                        "Download {}: {} to {}.opus",
-                        hit.artist, hit.title, hit.yt_id
-                    );
+                #[cfg(feature = "native_dl")]
+                {
+                    use filesize::PathExt;
+                    use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
 
-                    let in_dl = video
-                        .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
-                        .await;
+                    let in_file =
+                        Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
 
-                    if in_dl.is_err()
-                        || !in_file.is_file()
-                        || in_file.size_on_disk().unwrap_or(0) == 0
-                    {
-                        if in_dl.is_err() {
-                            println!("{}", in_dl.unwrap_err());
-                        }
-                        if env::var("USE_YT_DLP").is_ok() {
-                            println!("Using yt-dlp...");
+                    let options = VideoOptions {
+                        quality: VideoQuality::HighestAudio,
+                        filter: VideoSearchOptions::Audio,
+                        ..Default::default()
+                    };
+                    if let Ok(video) = Video::new_with_options(hit.yt_id, options) {
+                        println!(
+                            "Download {}: {} to {}.opus",
+                            hit.artist, hit.title, hit.yt_id
+                        );
+
+                        let in_dl = video
+                            .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
+                            .await;
+
+                        if in_dl.is_err()
+                            || !in_file.is_file()
+                            || in_file.size_on_disk().unwrap_or(0) == 0
+                        {
+                            if in_dl.is_err() {
+                                println!("{}", in_dl.unwrap_err());
+                            }
                             if in_file.is_file() {
                                 remove_file(&in_file).unwrap();
                             }
-                            in_file.set_extension("m4a");
-                            let mut command = Command::new("yt-dlp");
-                            command
-                                .current_dir(env::current_dir().unwrap())
-                                .args(["-f", "bestaudio[ext=m4a]"])
-                                .args(["-o", in_file.to_str().unwrap()])
-                                .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
-
-                            let output_res =
-                                command.output().expect("Failed to execute ffmpeg process!");
-
-                            if !output_res.status.success() {
-                                println!("{}", String::from_utf8_lossy(&output_res.stderr));
-                                println!("Download failed with yt-dlp, skipping...");
-                                continue;
-                            }
                         } else {
-                            println!("Download failed, skipping...");
+                            let _ = s.send(DownloadHitData { in_file, hit });
                             continue;
                         }
+                    }
+                }
+
+                #[cfg(feature = "yt_dl")]
+                {
+                    let in_file =
+                        Path::new(&Hit::download_dir()).join(format!("{}.m4a", hit.yt_id));
+
+                    println!("Using yt-dlp...");
+                    let mut command = Command::new("yt-dlp");
+                    command
+                        .current_dir(env::current_dir().unwrap())
+                        .args(["-f", "bestaudio[ext=m4a]"])
+                        .args(["-o", in_file.to_str().unwrap()])
+                        .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
+
+                    let output_res = command.output().expect("Failed to execute ffmpeg process!");
+
+                    if !output_res.status.success() {
+                        println!("{}", String::from_utf8_lossy(&output_res.stderr));
+                        println!("Download failed with yt-dlp, skipping...");
+                        continue;
                     }
 
                     s.send(DownloadHitData { in_file, hit }).unwrap();
