@@ -1,3 +1,4 @@
+use crate::services::{HitService, ServiceHandle};
 use crossbeam_channel::unbounded;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::Serialize;
@@ -60,8 +61,9 @@ struct DownloadHitData {
     hit: &'static Hit,
 }
 
-pub fn download_hits() {
+pub fn download_hits(hit_service: ServiceHandle<HitService>) {
     let (s, r) = unbounded::<DownloadHitData>();
+    let dl_hit_service = hit_service.clone();
     let download_dir = Hit::download_dir();
 
     let _ = create_dir_all(download_dir.as_str());
@@ -132,6 +134,8 @@ pub fn download_hits() {
 
                     s.send(DownloadHitData { in_file, hit }).unwrap();
                 }
+            } else {
+                hit_service.lock().add(hit);
             }
         }
     });
@@ -165,6 +169,7 @@ pub fn download_hits() {
             let _ = command.output().expect("Failed to execute ffmpeg process!");
 
             remove_file(hit_data.in_file).unwrap();
+            dl_hit_service.lock().add(hit_data.hit);
         }
 
         println!("Download finished.");
@@ -191,5 +196,6 @@ pub fn download_hits() {
         }
 
         println!("Finished cleanup.");
+        dl_hit_service.lock().set_finished_downloading();
     });
 }

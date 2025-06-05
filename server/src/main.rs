@@ -151,7 +151,7 @@ async fn main() -> Result<(), rocket::Error> {
     .ignite()
     .await?;
 
-    download_hits();
+    download_hits(r.state::<ServiceStore>().unwrap().hit_service());
 
     r.launch().await?;
 
