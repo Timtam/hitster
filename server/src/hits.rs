@@ -1,6 +1,19 @@
-use crate::services::{HitService, ServiceHandle};
+use crate::{
+    responses::MessageResponse,
+    services::{HitService, ServiceHandle, ServiceStore},
+};
 use crossbeam_channel::unbounded;
-use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
+use rocket::{
+    State,
+    http::Status,
+    request::{FromRequest, Outcome, Request},
+    serde::json::Json,
+};
+use rocket_okapi::{
+    r#gen::OpenApiGenerator,
+    okapi::{schemars, schemars::JsonSchema},
+    request::{OpenApiFromRequest, RequestHeaderInput},
+};
 use serde::Serialize;
 use std::{
     cmp::PartialEq,
@@ -198,4 +211,38 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
         println!("Finished cleanup.");
         dl_hit_service.lock().set_finished_downloading();
     });
+}
+
+pub struct DownloadingGuard {}
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for DownloadingGuard {
+    type Error = Json<MessageResponse>;
+
+    async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
+        let serv = req.guard::<&State<ServiceStore>>().await.unwrap();
+        let hit_service = serv.hit_service();
+
+        if hit_service.lock().get_progress().2 {
+            Outcome::Success(Self {})
+        } else {
+            Outcome::Error((
+                Status::ServiceUnavailable,
+                Json(MessageResponse {
+                    message: "server is still downloading hits".into(),
+                    r#type: "error".into(),
+                }),
+            ))
+        }
+    }
+}
+
+impl OpenApiFromRequest<'_> for DownloadingGuard {
+    fn from_request_input(
+        _gen: &mut OpenApiGenerator,
+        _name: String,
+        _required: bool,
+    ) -> rocket_okapi::Result<RequestHeaderInput> {
+        Ok(RequestHeaderInput::None)
+    }
 }
