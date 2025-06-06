@@ -1,6 +1,6 @@
 use crate::{
     hits::DownloadingGuard,
-    responses::{PacksResponse, ServerBusyError},
+    responses::{HitsStatusResponse, PacksResponse, ServerBusyError},
     services::ServiceStore,
 };
 use rocket::{State, serde::json::Json};
@@ -24,4 +24,15 @@ pub fn get_all_packs(
             },
         ),
     }))
+}
+
+#[openapi(tag = "Hits")]
+#[get("/hits/status")]
+pub fn get_status(serv: &State<ServiceStore>) -> Json<HitsStatusResponse> {
+    let hits_status = serv.hit_service().lock().get_progress();
+    Json(HitsStatusResponse {
+        downloaded: hits_status.0,
+        all: hits_status.1,
+        finished: hits_status.2,
+    })
 }

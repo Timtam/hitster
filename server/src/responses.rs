@@ -843,6 +843,13 @@ pub struct PacksResponse {
     pub packs: HashMap<&'static str, usize>,
 }
 
+#[derive(Serialize, JsonSchema)]
+pub struct HitsStatusResponse {
+    pub all: usize,
+    pub downloaded: usize,
+    pub finished: bool,
+}
+
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct ClaimHitError {
     pub message: String,
