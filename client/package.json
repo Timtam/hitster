@@ -27,6 +27,7 @@
         "howler": "^2.2.4",
         "i18next": "^24.1.0",
         "i18next-browser-languagedetector": "^8.0.2",
+        "pick-random": "^4.0.0",
         "react": "^19.1.0",
         "react-bootstrap": "^2.10.9",
         "react-cookie": "^8.0.1",
