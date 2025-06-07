@@ -201,6 +201,7 @@ privateGame: Privates Spiel
 privateGameShortcut: Alt+Umschalt+R
 publicGame: Öffentliches Spiel
 publicGameShortcut: Alt+Umschalt+U
+randomPacksLabel: Wähle zufällige Packs aus
 register: Registrieren
 registrationSuccessful: Du wurdest erfolgreich registriert und angemeldet.
 rememberHits: Hits zwischen Spielen speichern?
@@ -208,6 +209,7 @@ repeatPassword: Passwort wiederholen
 running: läuft
 save: Speichern
 section: Abschnitt
+select: Auswählen
 selectAll: Alles auswählen
 selectNextSlot: Nächsten Slot auswählen
 selectNextSlotShortcut: Alt+Umschalt+Pfeil nach unten
