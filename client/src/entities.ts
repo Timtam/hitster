@@ -111,3 +111,11 @@ export const PacksResponse = z.object({
 })
 
 export type PacksResponse = z.infer<typeof PacksResponse>
+
+export const HitsStatus = z.object({
+    all: z.number(),
+    downloaded: z.number(),
+    finished: z.boolean(),
+})
+
+export type HitsStatus = z.infer<typeof HitsStatus>

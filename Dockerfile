@@ -33,7 +33,7 @@ COPY ./server/Cargo.lock ./Cargo.lock
 COPY ./server/Cargo.toml ./Cargo.toml
 
 # this build step will cache your dependencies
-RUN cargo build --release && \
+RUN cargo build --release --no-default-features --features yt_dl && \
     rm src/*.rs
 
 # copy your source tree
@@ -44,7 +44,7 @@ COPY ./server/etc ./etc
 
 # build for release
 RUN rm ./target/release/deps/hitster* && \
-    cargo build --release
+    cargo build --release --no-default-features --features yt_dl
 
 # our final bases, platform-dependent
 
@@ -69,7 +69,6 @@ ENV CLIENT_DIRECTORY=/hitster/client
 ENV DATABASE_URL=sqlite:///hitster.sqlite
 ENV DOWNLOAD_DIRECTORY=/hits
 ENV PATH="$PATH:/opt/ffmpeg/bin/"
-ENV USE_YT_DLP=true
 
 EXPOSE 8000
 

@@ -5,10 +5,16 @@ edition = "2024"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[features]
+native_dl = ["dep:filesize", "dep:rusty_ytdl"]
+yt_dl = []
+default = ["native_dl"]
+
 [dependencies]
 argon2 = "0.5.3"
+crossbeam-channel = "0.5.15"
 dotenvy = "0.15.7"
-filesize = "0.2.0"
+filesize = { version = "0.2.0", optional = true }
 itertools = "0.14.0"
 parking_lot = { version = "0.12.1"}
 petname = {version = "2.0.0-beta.4", default-features = false, features = ["default-rng", "default-words"]}
@@ -18,7 +24,7 @@ rocket = { version = "0.5.1", features = ["json", "secrets", "uuid"] }
 rocket_async_compression = "0.6.0"
 rocket_db_pools = { version = "0.2.0", default-features = false, features = ["sqlx_sqlite"] }
 rocket_okapi = { version = "0.9", default-features = false, features = ["swagger", "rapidoc", "secrets", "rocket_db_pools"] }
-rusty_ytdl = "0.7.0"
+rusty_ytdl = { version = "0.7.0", optional = true }
 schemars = { version = "0.8.16", features = ["uuid1"]}
 serde = { version = "1.0.197", features = ["derive"]}
 serde_json = "1.0.114"

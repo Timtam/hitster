@@ -1,10 +1,19 @@
-use filesize::PathExt;
-use rocket::{
-    Build, Rocket,
-    fairing::{self, Fairing, Info, Kind},
+use crate::{
+    responses::MessageResponse,
+    services::{HitService, ServiceHandle, ServiceStore},
 };
-use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
-use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
+use crossbeam_channel::unbounded;
+use rocket::{
+    State,
+    http::Status,
+    request::{FromRequest, Outcome, Request},
+    serde::json::Json,
+};
+use rocket_okapi::{
+    r#gen::OpenApiGenerator,
+    okapi::{schemars, schemars::JsonSchema},
+    request::{OpenApiFromRequest, RequestHeaderInput},
+};
 use serde::Serialize;
 use std::{
     cmp::PartialEq,
@@ -14,12 +23,7 @@ use std::{
     hash::{Hash, Hasher},
     path::{Path, PathBuf},
     process::Command,
-    sync::{
-        Arc, OnceLock,
-        atomic::{AtomicBool, Ordering},
-    },
-    thread,
-    time::Duration,
+    sync::OnceLock,
 };
 use uuid::Uuid;
 
@@ -65,136 +69,125 @@ impl Hash for Hit {
     }
 }
 
-// copied from ffmpeg-loudness-norm
-
-fn progress_thread() -> (Arc<AtomicBool>, thread::JoinHandle<()>) {
-    const PROGRESS_CHARS: [&str; 12] = ["⠂", "⠃", "⠁", "⠉", "⠈", "⠘", "⠐", "⠰", "⠠", "⠤", "⠄", "⠆"];
-    let finished = Arc::new(AtomicBool::new(false));
-    let stop_signal = Arc::clone(&finished);
-    let handle = thread::spawn(move || {
-        for pc in PROGRESS_CHARS.iter().cycle() {
-            if stop_signal.load(Ordering::Relaxed) {
-                break;
-            };
-            eprint!("Processing {}\r", pc);
-            thread::sleep(Duration::from_millis(250));
-        }
-    });
-    (finished, handle)
+struct DownloadHitData {
+    in_file: PathBuf,
+    hit: &'static Hit,
 }
 
-#[derive(Default)]
-pub struct HitsterDownloader {}
+pub fn download_hits(hit_service: ServiceHandle<HitService>) {
+    let (s, r) = unbounded::<DownloadHitData>();
+    let dl_hit_service = hit_service.clone();
+    let download_dir = Hit::download_dir();
 
-#[rocket::async_trait]
-impl Fairing for HitsterDownloader {
-    fn info(&self) -> Info {
-        Info {
-            kind: Kind::Ignite,
-            name: "Download hits",
-        }
-    }
+    let _ = create_dir_all(download_dir.as_str());
 
-    async fn on_ignite(&self, rocket: Rocket<Build>) -> fairing::Result {
-        let download_dir = Hit::download_dir();
-
-        let _ = create_dir_all(download_dir.as_str());
-
-        println!("Starting download of missing hits. This may take a while...");
+    rocket::tokio::spawn(async move {
+        rocket::info!("Starting background download of hits");
 
         for hit in get_all().iter() {
             if !hit.exists() {
-                let mut in_file =
-                    Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
-                let out_file = Path::new(&Hit::download_dir())
-                    .join(format!("{}_{}.mp3", hit.yt_id, hit.playback_offset));
-                let options = VideoOptions {
-                    quality: VideoQuality::HighestAudio,
-                    filter: VideoSearchOptions::Audio,
-                    ..Default::default()
-                };
-                if let Ok(video) = Video::new_with_options(hit.yt_id, options) {
-                    println!(
-                        "Download {}: {} to {}.opus",
-                        hit.artist, hit.title, hit.yt_id
-                    );
+                #[cfg(feature = "native_dl")]
+                {
+                    use filesize::PathExt;
+                    use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
 
-                    let in_dl = video
-                        .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
-                        .await;
+                    let in_file =
+                        Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
 
-                    if in_dl.is_err()
-                        || !in_file.is_file()
-                        || in_file.size_on_disk().unwrap_or(0) == 0
-                    {
-                        if in_dl.is_err() {
-                            println!("{}", in_dl.unwrap_err());
-                        }
-                        if env::var("USE_YT_DLP").is_ok() {
-                            println!("Using yt-dlp...");
+                    let options = VideoOptions {
+                        quality: VideoQuality::HighestAudio,
+                        filter: VideoSearchOptions::Audio,
+                        ..Default::default()
+                    };
+                    if let Ok(video) = Video::new_with_options(hit.yt_id, options) {
+                        let in_dl = video
+                            .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
+                            .await;
+
+                        if in_dl.is_err()
+                            || !in_file.is_file()
+                            || in_file.size_on_disk().unwrap_or(0) == 0
+                        {
+                            if in_dl.is_err() {
+                                rocket::warn!(
+                                    "Error downloading hit with rusty_ytdl: {artist}: {title}, error: {error}",
+                                    artist = hit.artist,
+                                    title = hit.title,
+                                    error = in_dl.unwrap_err()
+                                );
+                            }
                             if in_file.is_file() {
                                 remove_file(&in_file).unwrap();
                             }
-                            in_file.set_extension("m4a");
-                            let mut command = Command::new("yt-dlp");
-                            command
-                                .current_dir(env::current_dir().unwrap())
-                                .args(["-f", "bestaudio[ext=m4a]"])
-                                .args(["-o", in_file.to_str().unwrap()])
-                                .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
-
-                            let output = {
-                                let (finished, _) = progress_thread();
-                                let output_res = command.output();
-                                finished.store(true, Ordering::SeqCst);
-                                output_res.expect("Failed to execute ffmpeg process!")
-                            };
-
-                            if !output.status.success() {
-                                println!("{}", String::from_utf8_lossy(&output.stderr));
-                                println!("Download failed with yt-dlp, skipping...");
-                                continue;
-                            }
                         } else {
-                            println!("Download failed, skipping...");
+                            let _ = s.send(DownloadHitData { in_file, hit });
                             continue;
                         }
                     }
+                }
 
-                    println!(
-                        "Processing {} to mp3...",
-                        in_file.extension().unwrap().to_str().unwrap()
-                    );
+                #[cfg(feature = "yt_dl")]
+                {
+                    let in_file =
+                        Path::new(&Hit::download_dir()).join(format!("{}.m4a", hit.yt_id));
 
-                    let mut command = Command::new("ffmpeg-normalize");
+                    let mut command = Command::new("yt-dlp");
                     command
                         .current_dir(env::current_dir().unwrap())
-                        .arg(&in_file)
-                        .args(["-ar", "44100"])
-                        .args(["-b:a", "128k"])
-                        .args(["-c:a", "libmp3lame"])
-                        .args(["-e", &format!("-ss {}", hit.playback_offset)])
-                        .args(["--extension", "mp3"])
-                        .args(["-o", out_file.to_str().unwrap()])
-                        .arg("-sn")
-                        .args(["-t", "-18.0"])
-                        .arg("-vn");
+                        .args(["-f", "bestaudio[ext=m4a]"])
+                        .args(["-o", in_file.to_str().unwrap()])
+                        .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
 
-                    {
-                        let (finished, _) = progress_thread();
-                        let output_res = command.output();
-                        finished.store(true, Ordering::SeqCst);
-                        output_res.expect("Failed to execute ffmpeg process!");
+                    let output_res = command.output().expect("Failed to execute ffmpeg process!");
+
+                    if !output_res.status.success() {
+                        rocket::warn!(
+                            "Error downloading hit with yt-dlp: {artist}: {title}, error: {error}",
+                            artist = hit.artist,
+                            title = hit.title,
+                            error = String::from_utf8_lossy(&output_res.stderr)
+                        );
+                        continue;
                     }
 
-                    remove_file(in_file).unwrap();
+                    s.send(DownloadHitData { in_file, hit }).unwrap();
                 }
+            } else {
+                hit_service.lock().add(hit);
             }
         }
+    });
 
-        println!("Download finished.");
+    rocket::tokio::spawn(async move {
+        while let Ok(hit_data) = r.recv() {
+            let out_file = Path::new(&Hit::download_dir()).join(format!(
+                "{}_{}.mp3",
+                hit_data.hit.yt_id, hit_data.hit.playback_offset
+            ));
 
-        println!("Cleaning up unused hits...");
+            let mut command = Command::new("ffmpeg-normalize");
+            command
+                .current_dir(env::current_dir().unwrap())
+                .arg(&hit_data.in_file)
+                .args(["-ar", "44100"])
+                .args(["-b:a", "128k"])
+                .args(["-c:a", "libmp3lame"])
+                .args(["-e", &format!("-ss {}", hit_data.hit.playback_offset)])
+                .args(["--extension", "mp3"])
+                .args(["-o", out_file.to_str().unwrap()])
+                .arg("-sn")
+                .args(["-t", "-18.0"])
+                .arg("-vn");
+
+            let _ = command.output().expect("Failed to execute ffmpeg process!");
+
+            remove_file(hit_data.in_file).unwrap();
+            dl_hit_service.lock().add(hit_data.hit);
+        }
+
+        rocket::info!("Download finished.");
+
+        rocket::info!("Cleaning up unused hits...");
 
         let paths = read_dir(Hit::download_dir()).unwrap();
         let mut files: HashSet<String> = HashSet::new();
@@ -215,8 +208,41 @@ impl Fairing for HitsterDownloader {
             ));
         }
 
-        println!("Finished cleanup.");
+        rocket::info!("Finished cleanup.");
+        dl_hit_service.lock().set_finished_downloading();
+    });
+}
 
-        Ok(rocket)
+pub struct DownloadingGuard {}
+
+#[rocket::async_trait]
+impl<'r> FromRequest<'r> for DownloadingGuard {
+    type Error = Json<MessageResponse>;
+
+    async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
+        let serv = req.guard::<&State<ServiceStore>>().await.unwrap();
+        let hit_service = serv.hit_service();
+
+        if hit_service.lock().get_progress().2 {
+            Outcome::Success(Self {})
+        } else {
+            Outcome::Error((
+                Status::ServiceUnavailable,
+                Json(MessageResponse {
+                    message: "server is still downloading hits".into(),
+                    r#type: "error".into(),
+                }),
+            ))
+        }
+    }
+}
+
+impl OpenApiFromRequest<'_> for DownloadingGuard {
+    fn from_request_input(
+        _gen: &mut OpenApiGenerator,
+        _name: String,
+        _required: bool,
+    ) -> rocket_okapi::Result<RequestHeaderInput> {
+        Ok(RequestHeaderInput::None)
     }
 }
