@@ -82,6 +82,8 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
     let _ = create_dir_all(download_dir.as_str());
 
     rocket::tokio::spawn(async move {
+        rocket::info!("Starting background download of hits");
+
         for hit in get_all().iter() {
             if !hit.exists() {
                 #[cfg(feature = "native_dl")]
@@ -98,11 +100,6 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
                         ..Default::default()
                     };
                     if let Ok(video) = Video::new_with_options(hit.yt_id, options) {
-                        println!(
-                            "Download {}: {} to {}.opus",
-                            hit.artist, hit.title, hit.yt_id
-                        );
-
                         let in_dl = video
                             .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
                             .await;
@@ -112,7 +109,12 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
                             || in_file.size_on_disk().unwrap_or(0) == 0
                         {
                             if in_dl.is_err() {
-                                println!("{}", in_dl.unwrap_err());
+                                rocket::warn!(
+                                    "Error downloading hit with rusty_ytdl: {artist}: {title}, error: {error}",
+                                    artist = hit.artist,
+                                    title = hit.title,
+                                    error = in_dl.unwrap_err()
+                                );
                             }
                             if in_file.is_file() {
                                 remove_file(&in_file).unwrap();
@@ -129,7 +131,6 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
                     let in_file =
                         Path::new(&Hit::download_dir()).join(format!("{}.m4a", hit.yt_id));
 
-                    println!("Using yt-dlp...");
                     let mut command = Command::new("yt-dlp");
                     command
                         .current_dir(env::current_dir().unwrap())
@@ -140,8 +141,12 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
                     let output_res = command.output().expect("Failed to execute ffmpeg process!");
 
                     if !output_res.status.success() {
-                        println!("{}", String::from_utf8_lossy(&output_res.stderr));
-                        println!("Download failed with yt-dlp, skipping...");
+                        rocket::warn!(
+                            "Error downloading hit with yt-dlp: {artist}: {title}, error: {error}",
+                            artist = hit.artist,
+                            title = hit.title,
+                            error = String::from_utf8_lossy(&output_res.stderr)
+                        );
                         continue;
                     }
 
@@ -155,11 +160,6 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
 
     rocket::tokio::spawn(async move {
         while let Ok(hit_data) = r.recv() {
-            println!(
-                "Processing {} to mp3...",
-                hit_data.in_file.extension().unwrap().to_str().unwrap()
-            );
-
             let out_file = Path::new(&Hit::download_dir()).join(format!(
                 "{}_{}.mp3",
                 hit_data.hit.yt_id, hit_data.hit.playback_offset
@@ -185,9 +185,9 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
             dl_hit_service.lock().add(hit_data.hit);
         }
 
-        println!("Download finished.");
+        rocket::info!("Download finished.");
 
-        println!("Cleaning up unused hits...");
+        rocket::info!("Cleaning up unused hits...");
 
         let paths = read_dir(Hit::download_dir()).unwrap();
         let mut files: HashSet<String> = HashSet::new();
@@ -208,7 +208,7 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
             ));
         }
 
-        println!("Finished cleanup.");
+        rocket::info!("Finished cleanup.");
         dl_hit_service.lock().set_finished_downloading();
     });
 }
