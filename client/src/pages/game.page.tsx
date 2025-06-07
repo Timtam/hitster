@@ -352,12 +352,6 @@ export default function Game() {
             if (game.players.some((p) => p.id === user?.id))
                 bindKeyCombo("alt + shift + q", handleLeaveGame)
             else bindKeyCombo("alt + shift + j", handleJoinGame)
-            if (
-                game.state === GameState.Open &&
-                (game.players.find((p) => p.id === user?.id)?.creator ??
-                    false) === true
-            )
-                bindKeyCombo("alt + shift + e", handleShowSettings)
 
             if (canStartOrStopGame()) {
                 bindKeyCombo("alt + shift + s", handleStartOrStopGame)
@@ -365,6 +359,7 @@ export default function Game() {
             if (canSkip()) {
                 bindKeyCombo("alt + shift + i", handleSkipHit)
             }
+            bindKeyCombo("alt + shift + e", handleShowSettings)
         }
 
         return () => {
