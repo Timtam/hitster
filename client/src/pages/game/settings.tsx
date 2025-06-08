@@ -195,6 +195,7 @@ export default function GameSettings({
                                             />
                                         </Form.Group>
                                     </Form>
+                                    <hr />
                                 </Col>
                             </Row>
                             <Row>
@@ -205,8 +206,8 @@ export default function GameSettings({
                                     <p>{t("gameSettingsPacks")}</p>
                                 </Col>
                             </Row>
-                            <Row className="text-center">
-                                <Col className="mx-auto">
+                            <Row>
+                                <Col>
                                     <Form.Group className="mb-2">
                                         <Form.Label htmlFor="checkbox-select-all-packs">
                                             {t("selectAll")}
@@ -232,6 +233,7 @@ export default function GameSettings({
                                             {t("randomPacksLabel")}
                                         </Form.Label>
                                         <Form.Control
+                                            className="mb-2"
                                             type="number"
                                             min={1}
                                             max={
