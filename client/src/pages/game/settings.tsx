@@ -249,6 +249,7 @@ export default function GameSettings({
                                             }
                                             placeholder={t("randomPacksLabel")}
                                             value={randomPacks}
+                                            disabled={!editable}
                                             onChange={(e) =>
                                                 setRandomPacks(
                                                     e.currentTarget.value === ""
@@ -262,6 +263,7 @@ export default function GameSettings({
                                             }
                                         />
                                         <Button
+                                            disabled={!editable}
                                             onClick={() =>
                                                 setPacks(
                                                     pickRandom(
