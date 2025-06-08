@@ -13,16 +13,18 @@ import { useTranslation } from "react-i18next"
 import slugify from "slugify"
 import { useContext } from "../../context"
 import type { Game } from "../../entities"
-import { GameSettings as GameSettingsEntity } from "../../entities"
+import { GameSettings as GameSettingsEntity, GameState } from "../../entities"
 import GameService from "../../services/games.service"
 import HitService from "../../services/hits.service"
 
 export default function GameSettings({
     game,
+    editable,
     show,
     onHide,
 }: {
     game: Game
+    editable: boolean
     show: boolean
     onHide: () => void
 }) {
@@ -111,6 +113,7 @@ export default function GameSettings({
                                                 type="number"
                                                 min={1}
                                                 placeholder={t("goal")}
+                                                disabled={!editable}
                                                 value={goal}
                                                 onChange={(e) =>
                                                     setGoal(
@@ -137,6 +140,7 @@ export default function GameSettings({
                                                 min={0}
                                                 placeholder={t("startTokens")}
                                                 value={startTokens}
+                                                disabled={!editable}
                                                 onChange={(e) =>
                                                     setStartTokens(
                                                         e.currentTarget
@@ -162,6 +166,7 @@ export default function GameSettings({
                                                 min={1}
                                                 placeholder={t("hitDuration")}
                                                 value={hitDuration}
+                                                disabled={!editable}
                                                 onChange={(e) =>
                                                     setHitDuration(
                                                         e.currentTarget
@@ -187,6 +192,7 @@ export default function GameSettings({
                                                 type="checkbox"
                                                 placeholder={t("rememberHits")}
                                                 checked={rememberHits}
+                                                disabled={!editable}
                                                 onChange={() => {
                                                     setRememberHits(
                                                         !rememberHits,
@@ -217,6 +223,7 @@ export default function GameSettings({
                                             id="checkbox-select-all-packs"
                                             type="checkbox"
                                             placeholder={t("selectAll")}
+                                            disabled={!editable}
                                             onChange={(e) => {
                                                 if (e.currentTarget.checked)
                                                     setPacks(
@@ -242,6 +249,7 @@ export default function GameSettings({
                                             }
                                             placeholder={t("randomPacksLabel")}
                                             value={randomPacks}
+                                            disabled={!editable}
                                             onChange={(e) =>
                                                 setRandomPacks(
                                                     e.currentTarget.value === ""
@@ -255,6 +263,7 @@ export default function GameSettings({
                                             }
                                         />
                                         <Button
+                                            disabled={!editable}
                                             onClick={() =>
                                                 setPacks(
                                                     pickRandom(
@@ -286,6 +295,7 @@ export default function GameSettings({
                                                     value={p}
                                                     id={`pack-${slugify(p)}`}
                                                     key={`pack-${slugify(p)}`}
+                                                    disabled={!editable}
                                                 >
                                                     {`${p} (${availablePacks[p]} ${t("hit", { count: 2 })})`}
                                                 </ToggleButton>
@@ -296,6 +306,7 @@ export default function GameSettings({
                             <Row>
                                 <Col>
                                     <Button
+                                        disabled={!editable}
                                         onClick={async () => {
                                             const gs = new GameService()
                                             try {
@@ -325,7 +336,11 @@ export default function GameSettings({
                                             }
                                         }}
                                     >
-                                        {t("save")}
+                                        {game.state !== GameState.Open
+                                            ? t("gameAlreadyRunning")
+                                            : !editable
+                                              ? t("gameSettingsNotCreator")
+                                              : t("save")}
                                     </Button>
                                 </Col>
                             </Row>

@@ -58,6 +58,7 @@ featuresList: >
 finalScore: "And here are the final results:"
 game: Game
 gameActions: "Game actions:"
+gameAlreadyRunning: The game is already running
 gameEnded: The game ended!
 gameId: Game ID
 gameLobby: Game Lobby
@@ -65,7 +66,7 @@ gameNotStarted: The game hasn't started yet.
 gameSettings: Game settings
 gameSettingsHitDuration: How many seconds of a hit will every player hear when guessing?
 gameSettingsHitGoal: How many hits do the players need to guess correctly in order to win?
-gameSettingsNotOpen: The game needs to be stopped to change its settings
+gameSettingsNotCreator: Only the creator can edit the game settings
 gameSettingsPacks: "Check all the packs you want to use in this game:"
 gameSettingsRememberHits: >-
     Should hits be remembered across games to prevent duplicates for as long as
