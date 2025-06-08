@@ -199,6 +199,7 @@ privateGame: Private game
 privateGameShortcut: Alt+Shift+R
 publicGame: Public game
 publicGameShortcut: Alt+Shift+U
+randomPacksLabel: Select random packs
 register: Register
 registrationSuccessful: You've been registered and logged in successfully.
 rememberHits: Remember hits across games?
@@ -206,6 +207,7 @@ repeatPassword: Repeat password
 running: Running
 save: Save
 section: Abschnitt
+select: Select
 selectAll: Select all
 selectNextSlot: Select next slot
 selectNextSlotShortcut: Alt+Shift+Down arrow
