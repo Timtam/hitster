@@ -1,3 +1,4 @@
+import pickRandom from "pick-random"
 import { useEffect, useRef, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col"
@@ -39,6 +40,7 @@ export default function GameSettings({
         (HTMLInputElement & BsPrefixRefForwardingComponent<"input", any>) | null
     >(null)
     const { showError } = useContext()
+    const [randomPacks, setRandomPacks] = useState(5)
 
     useEffect(() => {
         if (!show) {
@@ -193,6 +195,7 @@ export default function GameSettings({
                                             />
                                         </Form.Group>
                                     </Form>
+                                    <hr />
                                 </Col>
                             </Row>
                             <Row>
@@ -203,8 +206,8 @@ export default function GameSettings({
                                     <p>{t("gameSettingsPacks")}</p>
                                 </Col>
                             </Row>
-                            <Row className="text-center">
-                                <Col className="mx-auto">
+                            <Row>
+                                <Col>
                                     <Form.Group className="mb-2">
                                         <Form.Label htmlFor="checkbox-select-all-packs">
                                             {t("selectAll")}
@@ -224,6 +227,49 @@ export default function GameSettings({
                                                 else setPacks([])
                                             }}
                                         />
+                                    </Form.Group>
+                                    <Form.Group className="mb-2">
+                                        <Form.Label>
+                                            {t("randomPacksLabel")}
+                                        </Form.Label>
+                                        <Form.Control
+                                            className="mb-2"
+                                            type="number"
+                                            min={1}
+                                            max={
+                                                Object.keys(availablePacks)
+                                                    .length
+                                            }
+                                            placeholder={t("randomPacksLabel")}
+                                            value={randomPacks}
+                                            onChange={(e) =>
+                                                setRandomPacks(
+                                                    e.currentTarget.value === ""
+                                                        ? 0
+                                                        : parseInt(
+                                                              e.currentTarget
+                                                                  .value,
+                                                              10,
+                                                          ),
+                                                )
+                                            }
+                                        />
+                                        <Button
+                                            onClick={() =>
+                                                setPacks(
+                                                    pickRandom(
+                                                        Object.keys(
+                                                            availablePacks,
+                                                        ),
+                                                        {
+                                                            count: randomPacks,
+                                                        },
+                                                    ),
+                                                )
+                                            }
+                                        >
+                                            {t("select")}
+                                        </Button>
                                     </Form.Group>
                                     <hr />
                                     <ToggleButtonGroup
