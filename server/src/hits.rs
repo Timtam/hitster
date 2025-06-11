@@ -143,6 +143,7 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
                     .current_dir(env::current_dir().unwrap())
                     .args(["-f", "bestaudio[ext=m4a]"])
                     .args(["-o", in_file.to_str().unwrap()])
+                    .args(["--extractor-args", "youtube:player-client=default,mweb"])
                     .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
 
                 let output_res = command.output().expect("Failed to execute ffmpeg process!");
