@@ -84,104 +84,111 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
     rocket::tokio::spawn(async move {
         rocket::info!("Starting background download of hits");
 
-        for hit in get_all().iter() {
-            if !hit.exists() {
-                #[cfg(feature = "native_dl")]
-                {
-                    use filesize::PathExt;
-                    use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
-
-                    let in_file =
-                        Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
-
-                    let options = VideoOptions {
-                        quality: VideoQuality::HighestAudio,
-                        filter: VideoSearchOptions::Audio,
-                        ..Default::default()
-                    };
-                    if let Ok(video) = Video::new_with_options(hit.yt_id, options) {
-                        let in_dl = video
-                            .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
-                            .await;
-
-                        if in_dl.is_err()
-                            || !in_file.is_file()
-                            || in_file.size_on_disk().unwrap_or(0) == 0
-                        {
-                            if in_dl.is_err() {
-                                rocket::warn!(
-                                    "Error downloading hit with rusty_ytdl: {artist}: {title}, error: {error}",
-                                    artist = hit.artist,
-                                    title = hit.title,
-                                    error = in_dl.unwrap_err()
-                                );
-                            }
-                            if in_file.is_file() {
-                                remove_file(&in_file).unwrap();
-                            }
-                        } else {
-                            let _ = s.send(DownloadHitData { in_file, hit });
-                            continue;
-                        }
-                    }
+        let hits = get_all()
+            .iter()
+            .filter(|h| {
+                if h.exists() {
+                    hit_service.lock().add(h);
                 }
+                !h.exists()
+            })
+            .collect::<Vec<_>>();
 
-                #[cfg(feature = "yt_dl")]
-                {
-                    let in_file =
-                        Path::new(&Hit::download_dir()).join(format!("{}.m4a", hit.yt_id));
+        for hit in hits.iter() {
+            #[cfg(feature = "native_dl")]
+            {
+                use filesize::PathExt;
+                use rusty_ytdl::{Video, VideoOptions, VideoQuality, VideoSearchOptions};
 
-                    let mut command = Command::new("yt-dlp");
-                    command
-                        .current_dir(env::current_dir().unwrap())
-                        .args(["-f", "bestaudio[ext=m4a]"])
-                        .args(["-o", in_file.to_str().unwrap()])
-                        .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
+                let in_file = Path::new(&Hit::download_dir()).join(format!("{}.opus", hit.yt_id));
 
-                    let output_res = command.output().expect("Failed to execute ffmpeg process!");
+                let options = VideoOptions {
+                    quality: VideoQuality::HighestAudio,
+                    filter: VideoSearchOptions::Audio,
+                    ..Default::default()
+                };
+                if let Ok(video) = Video::new_with_options(hit.yt_id, options) {
+                    let in_dl = video
+                        .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
+                        .await;
 
-                    if !output_res.status.success() {
-                        rocket::warn!(
-                            "Error downloading hit with yt-dlp: {artist}: {title}, error: {error}",
-                            artist = hit.artist,
-                            title = hit.title,
-                            error = String::from_utf8_lossy(&output_res.stderr)
-                        );
+                    if in_dl.is_err()
+                        || !in_file.is_file()
+                        || in_file.size_on_disk().unwrap_or(0) == 0
+                    {
+                        if in_dl.is_err() {
+                            rocket::warn!(
+                                "Error downloading hit with rusty_ytdl: {artist}: {title}, error: {error}",
+                                artist = hit.artist,
+                                title = hit.title,
+                                error = in_dl.unwrap_err()
+                            );
+                        }
+                        if in_file.is_file() {
+                            remove_file(&in_file).unwrap();
+                        }
+                    } else {
+                        let _ = s.send(DownloadHitData { in_file, hit });
                         continue;
                     }
-
-                    s.send(DownloadHitData { in_file, hit }).unwrap();
                 }
-            } else {
-                hit_service.lock().add(hit);
+            }
+
+            #[cfg(feature = "yt_dl")]
+            {
+                let in_file = Path::new(&Hit::download_dir()).join(format!("{}.m4a", hit.yt_id));
+
+                let mut command = Command::new("yt-dlp");
+                command
+                    .current_dir(env::current_dir().unwrap())
+                    .args(["-f", "bestaudio[ext=m4a]"])
+                    .args(["-o", in_file.to_str().unwrap()])
+                    .args(["--extractor-args", "youtube:player-client=default,mweb"])
+                    .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
+
+                let output_res = command.output().expect("Failed to execute ffmpeg process!");
+
+                if !output_res.status.success() {
+                    rocket::warn!(
+                        "Error downloading hit with yt-dlp: {artist}: {title}, error: {error}",
+                        artist = hit.artist,
+                        title = hit.title,
+                        error = String::from_utf8_lossy(&output_res.stderr)
+                    );
+                    continue;
+                }
+
+                s.send(DownloadHitData { in_file, hit }).unwrap();
             }
         }
     });
 
     rocket::tokio::spawn(async move {
         while let Ok(hit_data) = r.recv() {
-            let out_file = Path::new(&Hit::download_dir()).join(format!(
-                "{}_{}.mp3",
-                hit_data.hit.yt_id, hit_data.hit.playback_offset
-            ));
+            if !hit_data.hit.exists() {
+                let out_file = Path::new(&Hit::download_dir()).join(format!(
+                    "{}_{}.mp3",
+                    hit_data.hit.yt_id, hit_data.hit.playback_offset
+                ));
 
-            let mut command = Command::new("ffmpeg-normalize");
-            command
-                .current_dir(env::current_dir().unwrap())
-                .arg(&hit_data.in_file)
-                .args(["-ar", "44100"])
-                .args(["-b:a", "128k"])
-                .args(["-c:a", "libmp3lame"])
-                .args(["-e", &format!("-ss {}", hit_data.hit.playback_offset)])
-                .args(["--extension", "mp3"])
-                .args(["-o", out_file.to_str().unwrap()])
-                .arg("-sn")
-                .args(["-t", "-18.0"])
-                .arg("-vn");
+                let mut command = Command::new("ffmpeg-normalize");
+                command
+                    .current_dir(env::current_dir().unwrap())
+                    .arg(&hit_data.in_file)
+                    .args(["-ar", "44100"])
+                    .args(["-b:a", "128k"])
+                    .args(["-c:a", "libmp3lame"])
+                    .args(["-e", &format!("-ss {}", hit_data.hit.playback_offset)])
+                    .args(["--extension", "mp3"])
+                    .args(["-o", out_file.to_str().unwrap()])
+                    .arg("-sn")
+                    .args(["-t", "-18.0"])
+                    .arg("-vn");
 
-            let _ = command.output().expect("Failed to execute ffmpeg process!");
+                let _ = command.output().expect("Failed to execute ffmpeg process!");
 
-            remove_file(hit_data.in_file).unwrap();
+                remove_file(hit_data.in_file).unwrap();
+            }
             dl_hit_service.lock().add(hit_data.hit);
         }
 
