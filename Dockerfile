@@ -126,6 +126,8 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get purge -y --auto-remove python3-pip xz-utils curl && \
     apt-get clean && \
     rm /opt/ffmpeg.tar.xz && \
+    rm /tmp/s6-overlay-noarch.tar.xz && \
+    rm /tmp/s6-overlay.tar.xz && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir /.cache && \
     chmod 777 /.cache && \
