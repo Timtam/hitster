@@ -123,16 +123,12 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                     timers.current.sfxTimer = null
                 }
                 player.current?.pause()
-                if (
-                    src !== "" &&
-                    parseFloat(sfxVolume) > 0 &&
-                    player.current !== null
-                ) {
+                if (src !== "" && player.current !== null) {
                     EventManager.publish(Events.playSfx, { sfx: Sfx.stopHit })
                 }
                 player.current = null
             }
-        }, [play, sfxVolume, src, playing])
+        }, [play, src, playing])
 
         useEffect(() => {
             const handlePlayOrStopHit = {
