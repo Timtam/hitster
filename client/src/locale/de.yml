@@ -232,6 +232,12 @@ startGameNotEnoughPlayers: Ein Spiel benötigt mindestens zwei Mitspieler
 startGameShortcut: Alt+Umschalt+S
 startTokens: Start-Chips
 state: Status
+statusHeading: Hitster ist derzeit nicht verfügbar
+statusPreparingText: >-
+    Hitster bereitet gerade die Hits vor. Du wirst automatisch weitergeleitet,
+    sobald der Vorgang abgeschlossen ist.
+statusProgressLabel: "{{downloaded}} von {{all}} Hits abgeschlossen"
+statusTitle: Status
 stopGame: Spiel stoppen
 stopGameShortcut: Alt+Umschalt+S
 stopHit: Hit stoppen

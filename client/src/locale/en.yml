@@ -229,6 +229,12 @@ startGameNotEnoughPlayers: At least two players must be part of a game
 startGameShortcut: Alt+Shift+S
 startTokens: Start tokens
 state: State
+statusHeading: Hitster is currently unavailable
+statusPreparingText: >-
+    Hitster is currently preparing your hits. You'll be automatically redirected
+    as soon as we are ready to play.
+statusProgressLabel: "{{downloaded}} out of {{all}} hits ready"
+statusTitle: Status
 stopGame: Stop game
 stopGameShortcut: Alt+Shift+S
 stopHit: Stop hit

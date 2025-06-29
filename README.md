@@ -200,7 +200,7 @@ You'll need the following tools to be installed:
 * Rust: we recommend to install the most recent stable version, that'll most likely be the version we're developing with as well
 * FFMpeg: we recommend installing the yt-dlp compatible static builds from [its corresponding GitHub repository](https://github.com/yt-dlp/FFmpeg-Builds)
 * [FFMpeg-normalize](https://github.com/slhck/ffmpeg-normalize)
-* (optional) [yt-dlp](https://github.com/yt-dlp/yt-dlp). Make sure to <a href="#environment-variables">check the list of environment variables</a> to enable the usage of yt-dlp (disabled by default)
+* (optional) [yt-dlp](https://github.com/yt-dlp/yt-dlp). Make sure to <a href="#yt-dlp">check the section on yt-dlp</a> to enable the usage of yt-dlp (disabled by default)
 
 Ensure that everything is working by running the following test commands and ensuring proper output:
 
@@ -235,6 +235,20 @@ Please note that you'll need to specify a certain set of environment variables w
 
 When launching the server, Hitster will always download all missing hits. That means that especially when starting it for the first time, downloading all hits will take quite a while. You can monitor the progress by skimming through the process output. The server will not be running while the download is in progress. It is planned to further parallelize the process to have the server running while downloading in the background.
 
+### yt-dlp
+
+By default, the Hitster server will try to download songs from YouTube with the help of a rust-native library called rusty_ytdl. This requires less dependencies to be running alongside the Hitster server and thus is preferred when setting up Hitster locally. It however is also less reliable as it runs into YouTube blocking mechanisms more frequently. If you therefore want to use yt-dlp instead, you'll need to build the Hitster server with the yt_dl feature enabled. Navigate into the server directory and run:
+
+```sh
+cargo run --features yt_dl
+```
+
+This will enable yt-dlp support as a fallback for the rust-native way of downloading songs from YouTube. If you want to skip the native way of downloading alltogether, you can disable default features and just enable the yt_dl feature alone, as follows:
+
+```sh
+cargo run --no-default-features --features yt_dl
+```
+
 ### Environment Variables
 
 The project can be configured through environment variables. Environment variables can be populated in different ways, depending on how you are running it.
@@ -259,7 +273,6 @@ The following environment variables are available. Required variables are set to
 | DATABASE_URL | yes | location of the database file, must be in the format of sqlite://path_to_file.sqlite, /hitster.sqlite in Docker containers by default |
 | CLIENT_DIRECTORY | no | specify the location of the compiled client files, usually not needed in Docker, ./client in local mode |
 | DOWNLOAD_DIRECTORY | no | download location of the songs downloaded by the server, /hits in Docker containers by default, ./hits otherwise |
-| USE_YT_DLP | no | enable the use of yt-dlp as a fallback if the server-internal YouTube downloader fails, enabled in Docker containers by default, disabled otherwise |
 
 In addition to those custom environment variables, the server can be further tweaked by populating Rocket-specific environment variables. Some important variables would be ROCKET_ADDRESS to specify the address to bind to the server, as well as ROCKET_PORT to change the port the server is listening on. For a permanently deployed service, we recommend setting the ROCKET_SECRET_KEY environment variable to a randomly generated key, which will allow users to stay logged in even if the server restarts. Please see the [list of rocket environment variables](https://rocket.rs/guide/v0.5/configuration/) on the rocket website.
 
