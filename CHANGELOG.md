@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   [fixed currently playing hits to restart whenever the SFX volume is changed (#30)](https://github.com/Timtam/hitster/issues/30)
+-   [fixed html characters in hit data to cause frontend render issues (#31)](https://github.com/Timtam/hitster/issues/31)
 
 ### Changed
 
