@@ -11,6 +11,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   [added option to select random packs within the game settings for a totally chaotic and fun gaming experience (#28)](https://github.com/Timtam/hitster/issues/28)
 
+### Fixed
+
+-   [fixed currently playing hits to restart whenever the SFX volume is changed (#30)](https://github.com/Timtam/hitster/issues/30)
+
+### Changed
+
+-   updated Rust to 1.87
+-   updated yt-dlp to 2025.05.22
+-   tiny translation changes
+-   update dependencies
+
 ## [2025.5.3-1] - 2025-05-03
 
 ### Added
