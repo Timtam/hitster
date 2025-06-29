@@ -3,10 +3,11 @@ use crate::{
         ConfirmationPayload, CreateGamePayload, Game, GameEvent, GameMode, GameSettingsPayload,
         GameState, SlotPayload,
     },
+    hits::DownloadingGuard,
     responses::{
-        ClaimHitError, ConfirmSlotError, GamesResponse, GuessSlotError, HitError, JoinGameError,
-        LeaveGameError, MessageResponse, SkipHitError, StartGameError, StopGameError,
-        UpdateGameError,
+        AuthorizedServerBusyError, ClaimHitError, ConfirmSlotError, GamesResponse, GetGameError,
+        GuessSlotError, HitError, JoinGameError, LeaveGameError, MessageResponse, ServerBusyError,
+        SkipHitError, StartGameError, StopGameError, UpdateGameError,
     },
     services::ServiceStore,
     users::User,
@@ -15,7 +16,7 @@ use rocket::{
     Shutdown, State,
     fs::NamedFile,
     response::{
-        status::{Created, NotFound},
+        status::Created,
         stream::{Event, EventStream},
     },
     serde::json::Json,
@@ -31,7 +32,6 @@ use uuid::Uuid;
 /// Create a new game
 ///
 /// Create a new game. The currently logged in user will be the creator of the game. The creator will be the only one who can change game properties later.
-/// The API will return 401 if the user_id is invalid.
 
 #[openapi(tag = "Games")]
 #[post("/games", format = "json", data = "<data>")]
@@ -39,7 +39,8 @@ pub fn create_game(
     user: User,
     data: Option<Json<CreateGamePayload>>,
     serv: &State<ServiceStore>,
-) -> Created<Json<Game>> {
+    _g: DownloadingGuard,
+) -> Result<Created<Json<Game>>, AuthorizedServerBusyError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
     let mode = if let Some(data) = data.as_ref() {
@@ -57,7 +58,7 @@ pub fn create_game(
             .unwrap_or(game);
     }
 
-    Created::new(format!("/games/{}", game.id)).body(Json(game))
+    Ok(Created::new(format!("/games/{}", game.id)).body(Json(game)))
 }
 
 /// Retrieve all currently known games
@@ -67,10 +68,14 @@ pub fn create_game(
 
 #[openapi(tag = "Games")]
 #[get("/games")]
-pub fn get_all_games(user: Option<User>, serv: &State<ServiceStore>) -> Json<GamesResponse> {
-    Json(GamesResponse {
+pub fn get_all_games(
+    user: Option<User>,
+    serv: &State<ServiceStore>,
+    _g: DownloadingGuard,
+) -> Result<Json<GamesResponse>, ServerBusyError> {
+    Ok(Json(GamesResponse {
         games: serv.game_service().lock().get_all(user.as_ref()),
-    })
+    }))
 }
 
 #[openapi(tag = "Games")]
@@ -81,6 +86,7 @@ pub async fn join_game(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
+    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, JoinGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
@@ -115,6 +121,7 @@ pub async fn leave_game(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
+    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, LeaveGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
@@ -169,6 +176,7 @@ pub async fn start_game(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
+    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, StartGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
@@ -196,6 +204,7 @@ pub async fn stop_game(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
+    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, StopGameError> {
     serv.game_service()
         .lock()
@@ -220,8 +229,6 @@ pub async fn stop_game(
 ///
 /// Retrieve all known info about a specific game. game_id must be identical to a game's id, either returned by POST /games, or by GET /games.
 /// The info here is currently identical with what you get with GET /games, but that might change later.
-///
-/// This call will return a 404 error if the game_id provided doesn't exist.
 
 #[openapi(tag = "Games")]
 #[get("/games/<game_id>")]
@@ -229,16 +236,17 @@ pub fn get_game(
     game_id: &str,
     user: Option<User>,
     serv: &State<ServiceStore>,
-) -> Result<Json<Game>, NotFound<Json<MessageResponse>>> {
+    _g: DownloadingGuard,
+) -> Result<Json<Game>, GetGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
     match games.get(game_id, user.as_ref()) {
         Some(g) => Ok(Json(g)),
-        None => Err(NotFound(Json(MessageResponse {
+        None => Err(GetGameError {
             message: "game id not found".into(),
-            r#type: "error".into(),
-        }))),
+            http_status_code: 404,
+        }),
     }
 }
 
@@ -247,6 +255,7 @@ pub async fn events(
     game_id: String,
     queue: &State<Sender<GameEvent>>,
     mut end: Shutdown,
+    _g: DownloadingGuard,
 ) -> EventStream![] {
     let mut rx = queue.subscribe();
     EventStream! {
@@ -273,6 +282,7 @@ pub async fn hit(
     game_id: &str,
     hit_id: PathBuf,
     serv: &State<ServiceStore>,
+    _g: DownloadingGuard,
 ) -> Result<NamedFile, HitError> {
     let hit = serv.game_service().lock().get_hit(
         game_id,
@@ -304,6 +314,7 @@ pub fn guess_slot(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
+    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, GuessSlotError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     let state = serv
@@ -372,6 +383,7 @@ pub fn confirm_slot(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
+    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, ConfirmSlotError> {
     serv.game_service()
         .lock()
@@ -400,6 +412,7 @@ pub fn skip_hit(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
+    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, SkipHitError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     serv.game_service()
@@ -434,6 +447,7 @@ pub fn claim_hit(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
+    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, ClaimHitError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     let res = serv.game_service().lock().claim(game_id, &user, player_id);
@@ -482,6 +496,7 @@ pub fn update_game(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
+    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, UpdateGameError> {
     serv.game_service()
         .lock()

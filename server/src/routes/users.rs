@@ -1,6 +1,10 @@
 use crate::{
     HitsterConfig,
-    responses::{MessageResponse, UsersResponse},
+    hits::DownloadingGuard,
+    responses::{
+        AuthorizedServerBusyError, GetUserError, MessageResponse, RegisterUserError,
+        ServerBusyError, UserLoginError, UsersResponse,
+    },
     services::ServiceStore,
     users::{Token, User, UserCookie, UserLoginPayload},
 };
@@ -14,7 +18,6 @@ use rand_chacha::ChaCha8Rng;
 use rocket::{
     State,
     http::{Cookie, CookieJar},
-    response::status::NotFound,
     serde::json::Json,
 };
 use rocket_db_pools::{
@@ -308,38 +311,40 @@ async fn handle_existing_token(
 
 #[openapi(tag = "Users")]
 #[get("/users")]
-pub fn get_all(serv: &State<ServiceStore>) -> Json<UsersResponse> {
-    Json(UsersResponse {
+pub fn get_all(
+    serv: &State<ServiceStore>,
+    _g: DownloadingGuard,
+) -> Result<Json<UsersResponse>, ServerBusyError> {
+    Ok(Json(UsersResponse {
         users: serv.user_service().lock().get_all(),
-    })
+    }))
 }
 
 /// Get all info about a certain user
 ///
 /// Retrieve all known info about a specific user. user_id must be identical to a user's id, either returned by POST /users, or by GET /users.
 /// The info here is currently identical with what you get with GET /users, but that might change later.
-///
-/// This call will return a 404 error if the user_id provided doesn't exist.
 
 #[openapi(tag = "Users")]
 #[get("/users/<user_id>")]
 pub fn get(
     user_id: &str,
     serv: &State<ServiceStore>,
-) -> Result<Json<User>, NotFound<Json<MessageResponse>>> {
+    _g: DownloadingGuard,
+) -> Result<Json<User>, GetUserError> {
     if let Ok(u) = Uuid::parse_str(user_id) {
         match serv.user_service().lock().get_by_id(u) {
             Some(u) => Ok(Json(u)),
-            None => Err(NotFound(Json(MessageResponse {
+            None => Err(GetUserError {
                 message: "user id not found".into(),
-                r#type: "error".into(),
-            }))),
+                http_status_code: 404,
+            }),
         }
     } else {
-        Err(NotFound(Json(MessageResponse {
+        Err(GetUserError {
             message: "user id is not valid".into(),
-            r#type: "error".into(),
-        })))
+            http_status_code: 404,
+        })
     }
 }
 
@@ -355,7 +360,8 @@ pub async fn login(
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
-) -> Result<Json<User>, NotFound<Json<MessageResponse>>> {
+    _g: DownloadingGuard,
+) -> Result<Json<User>, UserLoginError> {
     let u = serv
         .user_service()
         .lock()
@@ -398,10 +404,10 @@ pub async fn login(
 
             return Ok(Json(u));
         } else {
-            return Err(NotFound(Json(MessageResponse {
+            return Err(UserLoginError {
                 message: "incorrect user credentials".into(),
-                r#type: "error".into(),
-            })));
+                http_status_code: 401,
+            });
         }
     }
 
@@ -450,17 +456,17 @@ pub async fn login(
 
             return Ok(Json(u));
         } else {
-            return Err(NotFound(Json(MessageResponse {
+            return Err(UserLoginError {
                 message: "incorrect user credentials".into(),
-                r#type: "error".into(),
-            })));
+                http_status_code: 401,
+            });
         }
     }
 
-    Err(NotFound(Json(MessageResponse {
+    Err(UserLoginError {
         message: "incorrect user credentials".into(),
-        r#type: "error".into(),
-    })))
+        http_status_code: 401,
+    })
 }
 
 /// Register a new user
@@ -475,7 +481,8 @@ pub async fn register(
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     svc: &State<ServiceStore>,
-) -> Result<Json<MessageResponse>, NotFound<Json<MessageResponse>>> {
+    _g: DownloadingGuard,
+) -> Result<Json<MessageResponse>, RegisterUserError> {
     let salt = SaltString::generate(&mut OsRng);
     let argon2 = Argon2::default();
     credentials.password = argon2
@@ -490,15 +497,15 @@ pub async fn register(
         .unwrap()
         .is_some()
     {
-        Err(NotFound(Json(MessageResponse {
+        Err(RegisterUserError {
             message: "username is already in use".into(),
-            r#type: "error".into(),
-        })))
+            http_status_code: 409,
+        })
     } else if !user.r#virtual {
-        Err(NotFound(Json(MessageResponse {
-            message: "this user is already registered".into(),
-            r#type: "error".into(),
-        })))
+        Err(RegisterUserError {
+            message: "A user is already authenticated and registered.".into(),
+            http_status_code: 405,
+        })
     } else if sqlx::query("INSERT INTO users (id, name, password, tokens) VALUES (?1, ?2, ?3, ?4)")
         .bind(user.id.to_string())
         .bind(credentials.username.as_str())
@@ -527,10 +534,10 @@ pub async fn register(
             r#type: "success".into(),
         }))
     } else {
-        Err(NotFound(Json(MessageResponse {
-            message: "error while creating a database entry".into(),
-            r#type: "error".into(),
-        })))
+        Err(RegisterUserError {
+            message: "error while creating a database entry.".into(),
+            http_status_code: 500,
+        })
     }
 }
 
@@ -544,7 +551,8 @@ pub async fn logout(
     user: User,
     serv: &State<ServiceStore>,
     cookies: &CookieJar<'_>,
-) -> Json<MessageResponse> {
+    _g: DownloadingGuard,
+) -> Result<Json<MessageResponse>, AuthorizedServerBusyError> {
     let game_srv = serv.game_service();
     let games = game_srv.lock();
 
@@ -559,10 +567,10 @@ pub async fn logout(
     cookies.remove("user");
     users.remove(user.id);
 
-    Json(MessageResponse {
+    Ok(Json(MessageResponse {
         message: "logged out".into(),
         r#type: "success".into(),
-    })
+    }))
 }
 
 #[openapi(tag = "Users")]
@@ -571,7 +579,8 @@ pub async fn authorize(
     db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
-) -> Json<MessageResponse> {
+    _g: DownloadingGuard,
+) -> Result<Json<MessageResponse>, ServerBusyError> {
     let token = cookies
         .get_private("id")
         .map(|cookie| cookie.value().to_string());
@@ -590,10 +599,10 @@ pub async fn authorize(
         )
         .await;
 
-        Json(MessageResponse {
+        Ok(Json(MessageResponse {
             message: "success".into(),
             r#type: "success".into(),
-        })
+        }))
     } else {
         let (u, t) = generate_virtual_user(serv);
 
@@ -606,9 +615,9 @@ pub async fn authorize(
 
         set_cookies(&u, &t, cookies);
 
-        Json(MessageResponse {
+        Ok(Json(MessageResponse {
             message: "success".into(),
             r#type: "success".into(),
-        })
+        }))
     }
 }
