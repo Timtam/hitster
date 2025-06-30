@@ -143,6 +143,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     <b />,
                                     <b />,
                                 ]}
+                                shouldUnescape={true}
+                                tOptions={{
+                                    interpolation: { escapeValue: true },
+                                }}
                             />
                         ) : (
                             <Trans
@@ -155,6 +159,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     player: e.player?.name ?? t("noone"),
                                 }}
                                 components={[<b />, <b />, <b />, <b />, <b />]}
+                                shouldUnescape={true}
+                                tOptions={{
+                                    interpolation: { escapeValue: true },
+                                }}
                             />
                         ),
                 } satisfies NotificationData)
@@ -217,6 +225,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         <b />,
                                         <b />,
                                     ]}
+                                    shouldUnescape={true}
+                                    tOptions={{
+                                        interpolation: { escapeValue: true },
+                                    }}
                                 />
                             ) : (
                                 <Trans
@@ -235,6 +247,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         <b />,
                                         <b />,
                                     ]}
+                                    shouldUnescape={true}
+                                    tOptions={{
+                                        interpolation: { escapeValue: true },
+                                    }}
                                 />
                             )
                         ) : e.hit.belongs_to !== "" ? (
@@ -248,6 +264,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     belongs_to: e.hit.belongs_to,
                                 }}
                                 components={[<b />, <b />, <b />, <b />, <b />]}
+                                shouldUnescape={true}
+                                tOptions={{
+                                    interpolation: { escapeValue: true },
+                                }}
                             />
                         ) : (
                             <Trans
@@ -259,6 +279,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     pack: e.hit.pack,
                                 }}
                                 components={[<b />, <b />, <b />, <b />]}
+                                shouldUnescape={true}
+                                tOptions={{
+                                    interpolation: { escapeValue: true },
+                                }}
                             />
                         ),
                 } satisfies NotificationData)
@@ -290,6 +314,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         <b />,
                                         <b />,
                                     ]}
+                                    shouldUnescape={true}
+                                    tOptions={{
+                                        interpolation: { escapeValue: true },
+                                    }}
                                 />
                             ) : (
                                 <Trans
@@ -308,6 +336,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         <b />,
                                         <b />,
                                     ]}
+                                    shouldUnescape={true}
+                                    tOptions={{
+                                        interpolation: { escapeValue: true },
+                                    }}
                                 />
                             )
                         ) : e.hit.belongs_to !== "" ? (
@@ -321,6 +353,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     belongs_to: e.hit.belongs_to,
                                 }}
                                 components={[<b />, <b />, <b />, <b />, <b />]}
+                                shouldUnescape={true}
+                                tOptions={{
+                                    interpolation: { escapeValue: true },
+                                }}
                             />
                         ) : (
                             <Trans
@@ -332,6 +368,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     pack: e.hit.pack,
                                 }}
                                 components={[<b />, <b />, <b />, <b />]}
+                                shouldUnescape={true}
+                                tOptions={{
+                                    interpolation: { escapeValue: true },
+                                }}
                             />
                         ),
                 } satisfies NotificationData)

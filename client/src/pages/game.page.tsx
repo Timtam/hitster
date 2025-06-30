@@ -607,6 +607,8 @@ export default function Game() {
                             ),
                         }}
                         components={[<b />, <b />, <b />, <b />, <b />]}
+                        shouldUnescape={true}
+                        tOptions={{ interpolation: { escapeValue: true } }}
                     />
                 ) : (
                     <Trans
@@ -622,6 +624,8 @@ export default function Game() {
                             ),
                         }}
                         components={[<b />, <b />, <b />, <b />, <b />, <b />]}
+                        shouldUnescape={true}
+                        tOptions={{ interpolation: { escapeValue: true } }}
                     />
                 )}
             </p>
