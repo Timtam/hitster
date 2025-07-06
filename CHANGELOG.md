@@ -20,9 +20,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 -   [changed the hits download process to run in the background while already providing a web frontend, allowing the user to monitor the progress. This also introduces features to decide on the hits download method (Docker containers will use yt-dlp by default now) (#27)](https://github.com/Timtam/hitster/issues/27)
 -   updated Rust to 1.88
--   updated yt-dlp to 2025.06.09
+-   updated yt-dlp to 2025.06.30
 -   tiny translation changes
 -   update dependencies
+-   update hits, including two new packs (Movie Soundtracks and Poland)
 
 ## [2025.5.3-1] - 2025-05-03
 
