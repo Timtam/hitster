@@ -39,8 +39,3 @@ uuid = { version = "1.8.0", features = ["v4"] }
 
 [dev-dependencies]
 futures = "0.3.30"
-
-[profile.release]
-lto = true
-opt-level = "z"
-strip = true
