@@ -35,7 +35,7 @@ uuid = { workspace = true }
 
 [build-dependencies]
 csv = "1.3.0"
-regex-lite = "0.1.6"
+regex-lite = { workspace = true }
 uuid = { workspace = true }
 
 [dev-dependencies]

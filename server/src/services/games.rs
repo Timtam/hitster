@@ -70,11 +70,10 @@ impl GameService {
                 .get_all()
                 .into_iter()
                 .fold(HashSet::new(), |mut p, h| {
-                    p.insert(h.pack);
+                    p.insert(h.pack.clone());
                     p
                 })
                 .into_iter()
-                .map(|p| p.to_string())
                 .collect::<Vec<_>>(),
             mode,
             remember_hits: true,
@@ -965,11 +964,10 @@ impl GameService {
                         .get_all()
                         .into_iter()
                         .fold(HashSet::new(), |mut p, h| {
-                            p.insert(h.pack);
+                            p.insert(h.pack.clone());
                             p
                         })
                         .into_iter()
-                        .map(|p| p.to_string())
                         .collect::<Vec<_>>()
                 } else {
                     packs.clone()
@@ -1044,7 +1042,7 @@ impl GameService {
 fn filter_hits_by_packs(hits: &Vec<&'static Hit>, packs: &[String]) -> Vec<&'static Hit> {
     let packs = packs.iter().map(|p| p.as_str()).collect::<Vec<_>>();
     hits.iter()
-        .filter(|h| packs.is_empty() || packs.contains(&h.pack))
+        .filter(|h| packs.is_empty() || packs.contains(&h.pack.as_str()))
         .copied()
         .collect::<Vec<_>>()
 }

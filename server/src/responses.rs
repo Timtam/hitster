@@ -840,7 +840,7 @@ pub struct UsersResponse {
 
 #[derive(Serialize, JsonSchema)]
 pub struct PacksResponse {
-    pub packs: HashMap<&'static str, usize>,
+    pub packs: HashMap<String, usize>,
 }
 
 #[derive(Serialize, JsonSchema)]

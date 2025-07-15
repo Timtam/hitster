@@ -64,7 +64,7 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
                     filter: VideoSearchOptions::Audio,
                     ..Default::default()
                 };
-                if let Ok(video) = Video::new_with_options(hit.yt_id, options) {
+                if let Ok(video) = Video::new_with_options(hit.yt_id.as_str(), options) {
                     let in_dl = video
                         .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
                         .await;

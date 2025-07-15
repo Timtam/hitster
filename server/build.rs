@@ -22,6 +22,7 @@ fn main() {
         .delimiter(b';')
         .trim(csv::Trim::All)
         .from_reader(csv_data.as_bytes());
+    let mut hit_count: usize = 0;
 
     for result in csv_reader.records() {
         let record = result.unwrap();
@@ -44,16 +45,16 @@ fn main() {
             let id = *ids.entry(hasher.finish()).or_insert_with(Uuid::new_v4);
 
             file_content += format!(
-                "Hit {{
-            artist: \"{}\",
-            title: \"{}\",
+                "hits.push(Hit {{
+            artist: String::from(\"{}\"),
+            title: String::from(\"{}\"),
             year: {},
             playback_offset: {},
-            pack: \"{}\",
-            belongs_to: \"{}\",
+            pack: String::from(\"{}\"),
+            belongs_to: String::from(\"{}\"),
             id: Uuid::parse_str(\"{}\").unwrap(),
-            yt_id: \"{}\",
-        }},",
+            yt_id: String::from(\"{}\"),
+        }});",
                 record.get(0).unwrap(),
                 record.get(2).unwrap(),
                 record.get(1).unwrap(),
@@ -65,6 +66,7 @@ fn main() {
             )
             .as_str();
         }
+        hit_count += 1;
     }
 
     fs::write(
@@ -73,10 +75,11 @@ fn main() {
             "pub fn get_all() -> &'static Vec<Hit> {{
             static HITS: OnceLock<Vec<Hit>> = OnceLock::new();
             HITS.get_or_init(|| {{
-            vec![{}]
+            let mut hits: Vec<Hit> = Vec::with_capacity({hit_count});
+            {file_content}
+            hits
          }})}}
-        ",
-            file_content
+        "
         ),
     )
     .unwrap();

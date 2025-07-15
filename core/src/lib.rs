@@ -1,6 +1,6 @@
 mod core {
     use schemars::JsonSchema;
-    use serde::Serialize;
+    use serde::{Deserialize, Serialize};
     use std::{
         cmp::PartialEq,
         env,
@@ -9,18 +9,18 @@ mod core {
     };
     use uuid::Uuid;
 
-    #[derive(Clone, Eq, Debug, Serialize, JsonSchema)]
+    #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
     pub struct Hit {
-        pub artist: &'static str,
-        pub title: &'static str,
-        pub belongs_to: &'static str,
+        pub artist: String,
+        pub title: String,
+        pub belongs_to: String,
         pub year: u32,
-        pub pack: &'static str,
+        pub packs: Vec<String>,
         #[serde(skip)]
         pub playback_offset: u16,
         pub id: Uuid,
         #[serde(skip)]
-        pub yt_id: &'static str,
+        pub yt_id: String,
     }
 
     impl Hit {
@@ -29,8 +29,11 @@ mod core {
         }
 
         pub fn file(&self) -> PathBuf {
-            Path::new(&Hit::download_dir())
-                .join(format!("{}_{}.mp3", self.yt_id, self.playback_offset))
+            Path::new(&Hit::download_dir()).join(format!(
+                "{}_{}.mp3",
+                self.yt_id.as_str(),
+                self.playback_offset
+            ))
         }
 
         pub fn exists(&self) -> bool {
@@ -49,6 +52,42 @@ mod core {
             self.yt_id.hash(state);
         }
     }
+
+    #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
+    pub struct Pack {
+        pub id: Uuid,
+        pub name: String,
+    }
+
+    impl PartialEq for Pack {
+        fn eq(&self, p: &Self) -> bool {
+            self.id == p.id
+        }
+    }
+
+    impl Hash for Pack {
+        fn hash<H: Hasher>(&self, state: &mut H) {
+            self.id.hash(state);
+        }
+    }
+
+    #[derive(Clone, Debug, Serialize, Deserialize)]
+    pub struct HitsterData {
+        pub version: u8,
+        pub hits: Vec<Hit>,
+        pub packs: Vec<Pack>,
+    }
+
+    impl HitsterData {
+        pub fn new() -> Self {
+            HitsterData {
+                version: 2,
+                // v1 was csv
+                hits: vec![],
+                packs: vec![],
+            }
+        }
+    }
 }
 
-pub use core::Hit;
+pub use core::{Hit, HitsterData, Pack};

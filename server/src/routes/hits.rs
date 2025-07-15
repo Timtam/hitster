@@ -17,9 +17,9 @@ pub fn get_all_packs(
 
     Ok(Json(PacksResponse {
         packs: hits.iter().fold(
-            HashMap::<&'static str, usize>::new(),
-            |mut p: HashMap<&'static str, usize>, h| {
-                p.insert(h.pack, *p.get::<&'static str>(&h.pack).unwrap_or(&0) + 1);
+            HashMap::<String, usize>::new(),
+            |mut p: HashMap<String, usize>, h| {
+                p.insert(h.pack.clone(), *p.get::<String>(&h.pack).unwrap_or(&0) + 1);
                 p
             },
         ),

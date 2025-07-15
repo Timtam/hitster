@@ -4,6 +4,7 @@ resolver = "3"
 default-members = ["server"]
 
 [workspace.dependencies]
+regex-lite = "0.1.6"
 schemars = { version = "0.8.16", features = ["uuid1"]}
 serde = { version = "1.0.197", features = ["derive"]}
 uuid = { version = "1.8.0", features = ["serde", "v4"], default-features = false }
