@@ -57,21 +57,25 @@ WORKDIR /hitster
 COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
 RUN USER=root cargo new --bin server && \
-    USER=root cargo new --bin cli
+    USER=root cargo new --bin cli && \
+    USER=root cargo new --lib core --name hitster_core
 
 # copy over your manifests
 COPY ./cli/Cargo.toml ./cli/Cargo.toml
+COPY ./core/Cargo.toml ./core/Cargo.toml
 COPY ./server/Cargo.toml ./server/Cargo.toml
 
 # this build step will cache your dependencies
 RUN cargo build --release --no-default-features --features yt_dl && \
-    rm server/src/*.rs
+    rm server/src/*.rs && \
+    rm core/src/*.rs
 
 # copy your source tree
 COPY ./server/migrations ./server/migrations
 COPY ./server/src ./server/src
 COPY ./server/build.rs ./server/build.rs
 COPY ./server/etc ./server/etc
+COPY ./core/src ./core/src
 
 # build for release
 RUN rm ./target/release/deps/hitster* && \

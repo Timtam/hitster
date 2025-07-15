@@ -1,6 +1,5 @@
 use crate::{
     games::{Game, GameMode, GameSettingsPayload, GameState, Player, PlayerState, Slot},
-    hits::Hit,
     responses::{
         ClaimHitError, ConfirmSlotError, GuessSlotError, HitError, JoinGameError, LeaveGameError,
         SkipHitError, StartGameError, StopGameError, UpdateGameError,
@@ -8,6 +7,7 @@ use crate::{
     services::{HitService, ServiceHandle},
     users::User,
 };
+use hitster_core::Hit;
 use itertools::sorted;
 use rand::{
     distr::{Alphanumeric, SampleString},
