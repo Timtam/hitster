@@ -22,7 +22,7 @@ pub struct GameSettingsPayload {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub remember_hits: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub packs: Option<Vec<String>>,
+    pub packs: Option<Vec<Uuid>>,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -84,7 +84,7 @@ pub struct Game {
     pub start_tokens: u8,
     pub goal: u8,
     pub hit: Option<&'static Hit>,
-    pub packs: Vec<String>,
+    pub packs: Vec<Uuid>,
     pub mode: GameMode,
     pub remember_hits: bool,
     #[serde(skip)]

@@ -47,7 +47,7 @@ pub fn migrate(file: PathBuf) -> bool {
             let title = record.get(2).unwrap().to_string();
             let year = record.get(1).unwrap().to_string().parse::<u32>().unwrap();
             let playback_offset = record.get(6).unwrap().to_string().parse::<u16>().unwrap();
-            let belongs_to = record.get(4).unwrap().to_string();
+            let mut belongs_to = record.get(4).unwrap().to_string();
 
             if !hits.contains_key(&my_yt_id) {
                 hits.insert(
@@ -57,7 +57,7 @@ pub fn migrate(file: PathBuf) -> bool {
                         title,
                         year,
                         playback_offset,
-                        packs: vec![packs.get(&pack).unwrap().id.to_string()],
+                        packs: vec![packs.get(&pack).unwrap().id],
                         belongs_to,
                         id: Uuid::new_v4(),
                         yt_id: my_yt_id,
@@ -68,6 +68,8 @@ pub fn migrate(file: PathBuf) -> bool {
 
                 if hit.belongs_to == "" && belongs_to != "" {
                     hit.belongs_to = belongs_to.clone();
+                } else if hit.belongs_to != "" && belongs_to == "" {
+                    belongs_to = hit.belongs_to.clone();
                 }
 
                 if title.to_lowercase() != hit.title.to_lowercase()
@@ -158,14 +160,15 @@ pub fn migrate(file: PathBuf) -> bool {
                         .unwrap();
                 }
 
-                hit.packs.push(packs.get(&pack).unwrap().id.to_string());
+                hit.packs.push(packs.get(&pack).unwrap().id);
             }
         }
     }
 
-    let mut data = HitsterData::new();
-    data.hits = hits.into_values().collect::<Vec<_>>();
-    data.packs = packs.into_values().collect::<Vec<_>>();
+    let data = HitsterData::new(
+        hits.into_values().collect::<Vec<_>>(),
+        packs.into_values().collect::<Vec<_>>(),
+    );
 
     let _ = fs::write(
         PathBuf::from("hits.yml"),

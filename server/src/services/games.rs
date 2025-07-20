@@ -67,10 +67,10 @@ impl GameService {
             packs: self
                 .hit_service
                 .lock()
-                .get_all()
+                .get_available_hits()
                 .into_iter()
                 .fold(HashSet::new(), |mut p, h| {
-                    p.insert(h.pack.clone());
+h.packs.iter().for_each(|pp| { p.insert(*pp); });
                     p
                 })
                 .into_iter()
@@ -304,7 +304,7 @@ impl GameService {
                 };
 
                 let mut hits_remaining: VecDeque<&Hit> =
-                    filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
+                    filter_hits_by_packs(&self.hit_service.lock().get_available_hits(), &game.packs)
                         .into_iter()
                         .filter(|h| !game.remember_hits || !remembered_hits.contains(h))
                         .fold(HashSet::<&Hit>::new(), |mut hs, h| {
@@ -728,7 +728,7 @@ impl GameService {
             if game.hits_remaining.is_empty() {
                 let mut rng = rng();
                 game.hits_remaining =
-                    filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
+                    filter_hits_by_packs(&self.hit_service.lock().get_available_hits(), &game.packs)
                         .into_iter()
                         .filter(|h| !game.remembered_hits.contains(h))
                         .fold(HashSet::<&Hit>::new(), |mut hs, h| {
@@ -813,7 +813,7 @@ impl GameService {
             if game.hits_remaining.is_empty() {
                 let mut rng = rng();
                 game.hits_remaining =
-                    filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
+                    filter_hits_by_packs(&self.hit_service.lock().get_available_hits(), &game.packs)
                         .into_iter()
                         .filter(|h| !game.remembered_hits.contains(h))
                         .fold(HashSet::<&Hit>::new(), |mut hs, h| {
@@ -890,7 +890,7 @@ impl GameService {
                 let current_hit = game.hits_remaining.pop_front().unwrap();
                 let mut rng = rng();
                 game.hits_remaining =
-                    filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
+                    filter_hits_by_packs(&self.hit_service.lock().get_available_hits(), &game.packs)
                         .into_iter()
                         .filter(|h| !game.remembered_hits.contains(h))
                         .fold(HashSet::<&Hit>::new(), |mut hs, h| {
@@ -961,10 +961,10 @@ impl GameService {
                 if packs.is_empty() {
                     self.hit_service
                         .lock()
-                        .get_all()
+                        .get_available_hits()
                         .into_iter()
                         .fold(HashSet::new(), |mut p, h| {
-                            p.insert(h.pack.clone());
+                            p.extend(h.packs.iter());
                             p
                         })
                         .into_iter()
@@ -984,7 +984,7 @@ impl GameService {
             };
 
             let hits_remaining: VecDeque<&Hit> =
-                filter_hits_by_packs(&self.hit_service.lock().get_all(), &packs)
+                filter_hits_by_packs(&self.hit_service.lock().get_available_hits(), &packs)
                     .into_iter()
                     .filter(|h| {
                         !settings.remember_hits.unwrap_or(game.remember_hits)
@@ -1039,10 +1039,10 @@ impl GameService {
     }
 }
 
-fn filter_hits_by_packs(hits: &Vec<&'static Hit>, packs: &[String]) -> Vec<&'static Hit> {
-    let packs = packs.iter().map(|p| p.as_str()).collect::<Vec<_>>();
+fn filter_hits_by_packs(hits: &Vec<&'static Hit>, packs: &[Uuid]) -> Vec<&'static Hit> {
+    let packs = packs.iter().collect::<HashSet<_>>();
     hits.iter()
-        .filter(|h| packs.is_empty() || packs.contains(&h.pack.as_str()))
+        .filter(|h| packs.is_empty() || packs.intersection(&h.packs.iter().collect::<HashSet<_>>()).count() > 0)
         .copied()
         .collect::<Vec<_>>()
 }

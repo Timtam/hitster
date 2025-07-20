@@ -3,7 +3,7 @@ use crate::{
     services::{HitService, ServiceHandle, ServiceStore},
 };
 use crossbeam_channel::unbounded;
-use hitster_core::Hit;
+use hitster_core::{Hit, HitsterData};
 use rocket::{
     State,
     http::Status,
@@ -22,9 +22,13 @@ use std::{
     process::Command,
     sync::OnceLock,
 };
-use uuid::Uuid;
 
-include!(concat!(env!("OUT_DIR"), "/hits.rs"));
+pub fn get_hitster_data() -> &'static HitsterData {
+    static DATA: OnceLock<HitsterData> = OnceLock::new();
+    DATA.get_or_init(|| {
+        serde_yml::from_str::<HitsterData>(include_str!("../../etc/hits.yml")).unwrap()
+    })
+}
 
 struct DownloadHitData {
     in_file: PathBuf,
@@ -41,8 +45,9 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
     rocket::tokio::spawn(async move {
         rocket::info!("Starting background download of hits");
 
-        let hits = get_all()
-            .iter()
+        let hits = get_hitster_data()
+            .get_hits()
+            .into_iter()
             .filter(|h| {
                 if h.exists() {
                     hit_service.lock().add(h);
@@ -160,7 +165,7 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
             files.insert(p.file_name().into_string().unwrap());
         }
 
-        for hit in get_all().iter() {
+        for hit in get_hitster_data().get_hits().iter() {
             files.remove(&format!("{}_{}.mp3", hit.yt_id, hit.playback_offset));
         }
 

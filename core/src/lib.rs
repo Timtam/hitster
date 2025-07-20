@@ -3,6 +3,8 @@ mod core {
     use serde::{Deserialize, Serialize};
     use std::{
         cmp::PartialEq,
+        collections::HashMap,
+        convert::From,
         env,
         hash::{Hash, Hasher},
         path::{Path, PathBuf},
@@ -15,7 +17,7 @@ mod core {
         pub title: String,
         pub belongs_to: String,
         pub year: u32,
-        pub packs: Vec<String>,
+        pub packs: Vec<Uuid>,
         #[serde(skip)]
         pub playback_offset: u16,
         pub id: Uuid,
@@ -72,22 +74,82 @@ mod core {
     }
 
     #[derive(Clone, Debug, Serialize, Deserialize)]
+    #[serde(from = "HitsterFileFormat")]
+    #[serde(into = "HitsterFileFormat")]
     pub struct HitsterData {
-        pub version: u8,
-        pub hits: Vec<Hit>,
-        pub packs: Vec<Pack>,
+        hits: HashMap<Uuid, Hit>,
+        packs: HashMap<Uuid, Pack>,
     }
 
     impl HitsterData {
-        pub fn new() -> Self {
+        pub fn new(hits: Vec<Hit>, packs: Vec<Pack>) -> Self {
             HitsterData {
-                version: 2,
-                // v1 was csv
-                hits: vec![],
-                packs: vec![],
+                hits: hits
+                    .into_iter()
+                    .map(|h| (h.id, h))
+                    .collect::<HashMap<Uuid, Hit>>(),
+                packs: packs
+                    .into_iter()
+                    .map(|p| (p.id, p))
+                    .collect::<HashMap<Uuid, Pack>>(),
+            }
+        }
+
+        pub fn get_hits(&self) -> Vec<&Hit> {
+            self.hits.values().collect::<Vec<_>>()
+        }
+
+        pub fn get_packs(&self) -> Vec<&Pack> {
+            self.packs.values().collect::<Vec<_>>()
+        }
+
+        pub fn get_hits_for_pack(&self, pack: Uuid) -> Vec<&Hit> {
+            self.hits
+                .values()
+                .filter(|h| h.packs.contains(&pack))
+                .collect::<Vec<_>>()
+        }
+
+        pub fn get_hit(&self, hit_id: Uuid) -> Option<&Hit> {
+            self.hits.get(&hit_id)
+        }
+
+        pub fn get_pack(&self, pack_id: Uuid) -> Option<&Pack> {
+            self.packs.get(&pack_id)
+        }
+    }
+
+    #[derive(Serialize, Deserialize)]
+    pub struct HitsterFileFormat {
+        hits: Vec<Hit>,
+        packs: Vec<Pack>,
+    }
+
+    impl From<HitsterData> for HitsterFileFormat {
+        fn from(data: HitsterData) -> Self {
+            HitsterFileFormat {
+                hits: data.hits.into_values().collect::<Vec<_>>(),
+                packs: data.packs.into_values().collect::<Vec<_>>(),
+            }
+        }
+    }
+
+    impl From<HitsterFileFormat> for HitsterData {
+        fn from(file: HitsterFileFormat) -> Self {
+            HitsterData {
+                hits: file
+                    .hits
+                    .into_iter()
+                    .map(|h| (h.id, h))
+                    .collect::<HashMap<Uuid, Hit>>(),
+                packs: file
+                    .packs
+                    .into_iter()
+                    .map(|p| (p.id, p))
+                    .collect::<HashMap<Uuid, Pack>>(),
             }
         }
     }
 }
 
-pub use core::{Hit, HitsterData, Pack};
+pub use core::{Hit, HitsterData, HitsterFileFormat, Pack};
