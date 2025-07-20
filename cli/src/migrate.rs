@@ -49,6 +49,10 @@ pub fn migrate(file: PathBuf) -> bool {
             let playback_offset = record.get(6).unwrap().to_string().parse::<u16>().unwrap();
             let mut belongs_to = record.get(4).unwrap().to_string();
 
+            if artist == "" || title == "" || year == 0 {
+                continue;
+            }
+
             if !hits.contains_key(&my_yt_id) {
                 hits.insert(
                     my_yt_id.clone(),

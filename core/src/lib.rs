@@ -18,10 +18,8 @@ mod core {
         pub belongs_to: String,
         pub year: u32,
         pub packs: Vec<Uuid>,
-        #[serde(skip)]
         pub playback_offset: u16,
         pub id: Uuid,
-        #[serde(skip)]
         pub yt_id: String,
     }
 
@@ -127,10 +125,20 @@ mod core {
 
     impl From<HitsterData> for HitsterFileFormat {
         fn from(data: HitsterData) -> Self {
-            HitsterFileFormat {
-                hits: data.hits.into_values().collect::<Vec<_>>(),
-                packs: data.packs.into_values().collect::<Vec<_>>(),
-            }
+            let mut hits = data.hits.into_values().collect::<Vec<_>>();
+
+            hits.sort_by(|a, b| {
+                natord::compare(
+                    &format!("{} {}", &a.artist, &a.title),
+                    &format!("{} {}", &b.artist, &b.title),
+                )
+            });
+
+            let mut packs = data.packs.into_values().collect::<Vec<_>>();
+
+            packs.sort_by(|a, b| natord::compare(&a.name, &b.name));
+
+            HitsterFileFormat { hits, packs }
         }
     }
 
