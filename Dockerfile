@@ -71,10 +71,9 @@ RUN cargo build --release --no-default-features --features yt_dl && \
     rm core/src/*.rs
 
 # copy your source tree
+COPY ./etc ./etc
 COPY ./server/migrations ./server/migrations
 COPY ./server/src ./server/src
-COPY ./server/build.rs ./server/build.rs
-COPY ./server/etc ./server/etc
 COPY ./core/src ./core/src
 
 # build for release

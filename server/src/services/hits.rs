@@ -36,10 +36,6 @@ impl HitService {
         self.finished_downloading = true
     }
 
-    pub fn get_hit(&self, hit_id: Uuid) -> Option<&Hit> {
-        self.hitster_data.get_hit(hit_id)
-    }
-
     pub fn get_pack(&self, pack_id: Uuid) -> Option<&Pack> {
         self.hitster_data.get_pack(pack_id)
     }

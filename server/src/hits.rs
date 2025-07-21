@@ -12,16 +12,43 @@ use rocket::{
 };
 use rocket_okapi::{
     r#gen::OpenApiGenerator,
+    okapi::{schemars, schemars::JsonSchema},
     request::{OpenApiFromRequest, RequestHeaderInput},
 };
+use serde::Serialize;
 use std::{
     collections::HashSet,
+    convert::From,
     env,
     fs::{create_dir_all, read_dir, remove_file},
     path::{Path, PathBuf},
     process::Command,
     sync::OnceLock,
 };
+use uuid::Uuid;
+
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema)]
+pub struct HitPayload {
+    pub artist: String,
+    pub title: String,
+    pub belongs_to: String,
+    pub year: u32,
+    pub packs: Vec<Uuid>,
+    pub id: Uuid,
+}
+
+impl From<&Hit> for HitPayload {
+    fn from(hit: &Hit) -> Self {
+        Self {
+            artist: hit.artist.clone(),
+            title: hit.title.clone(),
+            belongs_to: hit.belongs_to.clone(),
+            year: hit.year,
+            packs: hit.packs.clone(),
+            id: hit.id,
+        }
+    }
+}
 
 pub fn get_hitster_data() -> &'static HitsterData {
     static DATA: OnceLock<HitsterData> = OnceLock::new();

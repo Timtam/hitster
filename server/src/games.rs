@@ -1,4 +1,4 @@
-use crate::users::User;
+use crate::{hits::HitPayload, users::User};
 use hitster_core::Hit;
 use rocket::serde::json::Json;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
@@ -90,6 +90,39 @@ pub struct Game {
     #[serde(skip)]
     pub remembered_hits: Vec<&'static Hit>,
     pub last_scored: Option<Player>,
+}
+
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema)]
+pub struct GamePayload {
+    pub id: String,
+    pub players: Vec<Player>,
+    pub state: GameState,
+    pub hit_duration: u8,
+    pub start_tokens: u8,
+    pub goal: u8,
+    pub hit: Option<HitPayload>,
+    pub packs: Vec<Uuid>,
+    pub mode: GameMode,
+    pub remember_hits: bool,
+    pub last_scored: Option<Player>,
+}
+
+impl From<&Game> for GamePayload {
+    fn from(game: &Game) -> Self {
+        Self {
+            id: game.id.clone(),
+            players: game.players.clone(),
+            state: game.state,
+            hit_duration: game.hit_duration,
+            start_tokens: game.start_tokens,
+            goal: game.goal,
+            hit: game.hit.map(|h| h.into()),
+            packs: game.packs.clone(),
+            mode: game.mode,
+            remember_hits: game.remember_hits,
+            last_scored: game.last_scored.clone(),
+        }
+    }
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]

@@ -1,7 +1,7 @@
 use crate::{
     games::{
-        ConfirmationPayload, CreateGamePayload, Game, GameEvent, GameMode, GameSettingsPayload,
-        GameState, SlotPayload,
+        ConfirmationPayload, CreateGamePayload, GameEvent, GameMode, GamePayload,
+        GameSettingsPayload, GameState, SlotPayload,
     },
     hits::DownloadingGuard,
     responses::{
@@ -40,7 +40,7 @@ pub fn create_game(
     data: Option<Json<CreateGamePayload>>,
     serv: &State<ServiceStore>,
     _g: DownloadingGuard,
-) -> Result<Created<Json<Game>>, AuthorizedServerBusyError> {
+) -> Result<Created<Json<GamePayload>>, AuthorizedServerBusyError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
     let mode = if let Some(data) = data.as_ref() {
@@ -58,7 +58,7 @@ pub fn create_game(
             .unwrap_or(game);
     }
 
-    Ok(Created::new(format!("/games/{}", game.id)).body(Json(game)))
+    Ok(Created::new(format!("/games/{}", game.id)).body(Json((&game).into())))
 }
 
 /// Retrieve all currently known games
@@ -74,7 +74,7 @@ pub fn get_all_games(
     _g: DownloadingGuard,
 ) -> Result<Json<GamesResponse>, ServerBusyError> {
     Ok(Json(GamesResponse {
-        games: serv.game_service().lock().get_all(user.as_ref()),
+        games: serv.game_service().lock().get_all(user.as_ref()).into_iter().map(|g| (&g).into()).collect::<Vec<_>>(),
     }))
 }
 
@@ -237,12 +237,12 @@ pub fn get_game(
     user: Option<User>,
     serv: &State<ServiceStore>,
     _g: DownloadingGuard,
-) -> Result<Json<Game>, GetGameError> {
+) -> Result<Json<GamePayload>, GetGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
     match games.get(game_id, user.as_ref()) {
-        Some(g) => Ok(Json(g)),
+        Some(g) => Ok(Json((&g).into())),
         None => Err(GetGameError {
             message: "game id not found".into(),
             http_status_code: 404,

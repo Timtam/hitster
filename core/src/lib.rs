@@ -1,4 +1,4 @@
-mod core {
+mod hitster_core {
     use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
     use std::{
@@ -160,4 +160,4 @@ mod core {
     }
 }
 
-pub use core::{Hit, HitsterData, HitsterFileFormat, Pack};
+pub use hitster_core::{Hit, HitsterData, HitsterFileFormat, Pack};
