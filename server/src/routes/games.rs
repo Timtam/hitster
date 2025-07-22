@@ -74,7 +74,13 @@ pub fn get_all_games(
     _g: DownloadingGuard,
 ) -> Result<Json<GamesResponse>, ServerBusyError> {
     Ok(Json(GamesResponse {
-        games: serv.game_service().lock().get_all(user.as_ref()).into_iter().map(|g| (&g).into()).collect::<Vec<_>>(),
+        games: serv
+            .game_service()
+            .lock()
+            .get_all(user.as_ref())
+            .into_iter()
+            .map(|g| (&g).into())
+            .collect::<Vec<_>>(),
     }))
 }
 
@@ -103,7 +109,7 @@ pub async fn join_game(
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "join".into(),
-                players: Some(vec![p]),
+                players: Some(vec![(&p).into()]),
                 ..Default::default()
             });
             Json(MessageResponse {
@@ -141,7 +147,7 @@ pub async fn leave_game(
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "leave".into(),
-                players: Some(vec![p]),
+                players: Some(vec![(&p).into()]),
                 ..Default::default()
             });
 
@@ -155,7 +161,9 @@ pub async fn leave_game(
                     game_id: game_id.into(),
                     event: "change_state".into(),
                     state: Some(new_state),
-                    players: games.get(game_id, Some(&user)).map(|g| g.players),
+                    players: games
+                        .get(game_id, Some(&user))
+                        .map(|g| g.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
                     ..Default::default()
                 });
             }
@@ -186,7 +194,7 @@ pub async fn start_game(
             game_id: game_id.into(),
             event: "change_state".into(),
             state: Some(g.state),
-            players: Some(g.players),
+            players: Some(g.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
             ..Default::default()
         });
 
@@ -214,7 +222,7 @@ pub async fn stop_game(
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(GameState::Open),
-                players: Some(g.players),
+                players: Some(g.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
                 ..Default::default()
             });
 
@@ -336,8 +344,7 @@ pub fn guess_slot(
                 .players
                 .iter()
                 .find(|p| p.id == player_id.unwrap_or(user.id))
-                .cloned()
-                .map(|p| vec![p]),
+                .map(|p| vec![p.into()]),
             ..Default::default()
         });
 
@@ -354,16 +361,16 @@ pub fn guess_slot(
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(game.state),
-                players: Some(game.players.clone()),
+                players: Some(game.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
                 hit: hit.and_then(|h| {
                     if game.state == GameState::Intercepting {
                         None
                     } else {
-                        Some(h)
+                        Some(h.into())
                     }
                 }),
-                last_scored,
-                winner,
+                last_scored: last_scored.map(|p| (&p).into()),
+                winner: winner.as_ref().map(|p| p.into()),
                 ..Default::default()
             });
         }
@@ -393,7 +400,7 @@ pub fn confirm_slot(
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(game.state),
-                players: Some(game.players),
+                players: Some(game.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
                 ..Default::default()
             });
 
@@ -426,9 +433,8 @@ pub fn skip_hit(
                     .players
                     .iter()
                     .find(|p| p.id == player_id.unwrap_or(user.id))
-                    .cloned()
-                    .map(|p| vec![p]),
-                hit: Some(hit),
+                    .map(|p| vec![p.into()]),
+                hit: Some(hit.into()),
                 ..Default::default()
             });
 
@@ -460,9 +466,8 @@ pub fn claim_hit(
                 .players
                 .iter()
                 .find(|p| p.id == player_id.unwrap_or(user.id))
-                .cloned()
-                .map(|p| vec![p]),
-            hit: Some(hit),
+                .map(|p| vec![p.into()]),
+            hit: Some(hit.into()),
             ..Default::default()
         });
 
@@ -475,8 +480,8 @@ pub fn claim_hit(
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(game.state),
-                players: Some(game.players.clone()),
-                winner,
+                players: Some(game.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
+                winner: winner.as_ref().map(|p| p.into()),
                 ..Default::default()
             });
         }

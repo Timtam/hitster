@@ -78,6 +78,7 @@ COPY ./core/src ./core/src
 
 # build for release
 RUN rm ./target/release/deps/hitster* && \
+    rm ./target/release/deps/libhitster* && \
     cargo build --release --no-default-features --features yt_dl
 
 # our final bases, platform-dependent

@@ -1491,6 +1491,7 @@ dependencies = [
 name = "hitster_core"
 version = "0.1.0"
 dependencies = [
+ "multi_key_map",
  "natord",
  "schemars",
  "serde",
@@ -2269,6 +2270,12 @@ dependencies = [
  "tokio-util",
  "version_check",
 ]
+
+[[package]]
+name = "multi_key_map"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "27d331138e17cf054f34ffe3495fe5551122807e72dbbcbebec9981b015ccd2f"
 
 [[package]]
 name = "native-tls"

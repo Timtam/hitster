@@ -1,4 +1,5 @@
 mod hitster_core {
+    use multi_key_map::MultiKeyMap;
     use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
     use std::{
@@ -11,7 +12,7 @@ mod hitster_core {
     };
     use uuid::Uuid;
 
-    #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
+    #[derive(Clone, Eq, Debug, Serialize, Deserialize)]
     pub struct Hit {
         pub artist: String,
         pub title: String,
@@ -71,11 +72,17 @@ mod hitster_core {
         }
     }
 
+    #[derive(Clone, Eq, PartialEq, Hash, Debug)]
+    pub enum HitId {
+        Id(Uuid),
+        YtId(String),
+    }
+
     #[derive(Clone, Debug, Serialize, Deserialize)]
     #[serde(from = "HitsterFileFormat")]
     #[serde(into = "HitsterFileFormat")]
     pub struct HitsterData {
-        hits: HashMap<Uuid, Hit>,
+        hits: MultiKeyMap<HitId, Hit>,
         packs: HashMap<Uuid, Pack>,
     }
 
@@ -84,8 +91,8 @@ mod hitster_core {
             HitsterData {
                 hits: hits
                     .into_iter()
-                    .map(|h| (h.id, h))
-                    .collect::<HashMap<Uuid, Hit>>(),
+                    .map(|h| (vec![HitId::Id(h.id), HitId::YtId(h.yt_id.clone())], h))
+                    .collect::<MultiKeyMap<HitId, Hit>>(),
                 packs: packs
                     .into_iter()
                     .map(|p| (p.id, p))
@@ -108,8 +115,8 @@ mod hitster_core {
                 .collect::<Vec<_>>()
         }
 
-        pub fn get_hit(&self, hit_id: Uuid) -> Option<&Hit> {
-            self.hits.get(&hit_id)
+        pub fn get_hit(&self, hit_id: &HitId) -> Option<&Hit> {
+            self.hits.get(hit_id)
         }
 
         pub fn get_pack(&self, pack_id: Uuid) -> Option<&Pack> {
@@ -148,8 +155,8 @@ mod hitster_core {
                 hits: file
                     .hits
                     .into_iter()
-                    .map(|h| (h.id, h))
-                    .collect::<HashMap<Uuid, Hit>>(),
+                    .map(|h| (vec![HitId::Id(h.id), HitId::YtId(h.yt_id.clone())], h))
+                    .collect::<MultiKeyMap<HitId, Hit>>(),
                 packs: file
                     .packs
                     .into_iter()
