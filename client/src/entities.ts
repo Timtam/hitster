@@ -13,7 +13,7 @@ export const Hit = z.object({
     artist: z.string(),
     title: z.string(),
     year: z.number(),
-    pack: z.string(),
+    packs: z.array(z.string()),
     belongs_to: z.string(),
     id: z.string(),
 })

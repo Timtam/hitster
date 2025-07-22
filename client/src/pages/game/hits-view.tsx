@@ -40,11 +40,6 @@ export default function HitsView({
                             <th>{t("title")}</th>
                             <th>{t("year")}</th>
                             <th>{t("belongsTo")}</th>
-                            <th>
-                                {t("pack", {
-                                    count: 1,
-                                })}
-                            </th>
                             <th>{t("playHit")}</th>
                         </tr>
                     </thead>
@@ -57,7 +52,6 @@ export default function HitsView({
                                     <td>{h.title}</td>
                                     <td>{h.year}</td>
                                     <td>{h.belongs_to}</td>
-                                    <td>{h.pack}</td>
                                     <td>
                                         <HitPlayer
                                             src={`/api/games/${gameId}/hit/${h.id}?key=${Math.random()}`}
