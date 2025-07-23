@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+-   [fixed state inconsistencies when kicking a player from a local game (#26)](https://github.com/Timtam/issues/26)
+
 ## [2025.7.23-2] - 2025-07-23
 
 Immediate re-release of 2025.7.23-1 due to a typo in hits.
