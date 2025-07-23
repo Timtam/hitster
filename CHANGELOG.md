@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+Immediate re-release of 2025.7.23-1 due to a typo in hits.
+
+## [2025.7.23-1] - 2025-07-23
+
 ### Added
 
 -   [added option to select random packs within the game settings for a totally chaotic and fun gaming experience (#28)](https://github.com/Timtam/hitster/issues/28)
@@ -72,7 +76,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [Add local player modal no longer requires you to press the "Add" button, you can also just press return within the input box now (#15)](https://github.com/Timtam/hitster/issues/15)
 -   [New versioning (mixture of release date and semver) + changelog #17)](https://github.com/Timtam/hitster/issues/17)
 
-[Unreleased]: https://github.com/Timtam/hitster/compare/2025.5.3-1...HEAD
+[Unreleased]: https://github.com/Timtam/hitster/compare/2025.7.23-1...HEAD
+
+[2025.7.23-1]: https://github.com/Timtam/hitster/compare/2025.5.3-1...2025.7.23-1
 
 [2025.5.3-1]: https://github.com/Timtam/hitster/compare/2024.12.13-1...2025.5.3-1
 
