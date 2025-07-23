@@ -167,4 +167,4 @@ mod hitster_core {
     }
 }
 
-pub use hitster_core::{Hit, HitsterData, HitsterFileFormat, Pack};
+pub use hitster_core::{Hit, HitId, HitsterData, HitsterFileFormat, Pack};

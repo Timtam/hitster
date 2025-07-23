@@ -1,4 +1,4 @@
-use hitster_core::{Hit, HitsterData, Pack};
+use hitster_core::{Hit, HitId, HitsterData, Pack};
 use regex_lite::Regex;
 use std::{collections::HashMap, fs, path::PathBuf};
 use terminal_menu::{button, label, list, menu, mut_menu, run};
@@ -15,6 +15,10 @@ pub fn migrate(file: PathBuf) -> bool {
         .delimiter(b';')
         .trim(csv::Trim::All)
         .from_reader(csv_data.as_bytes());
+
+    let hit_ref = fs::read_to_string(PathBuf::from("etc/hits.yml"))
+        .map(|s| serde_yml::from_str::<HitsterData>(&s).unwrap())
+        .unwrap_or(HitsterData::new(vec![], vec![]));
 
     for result in csv_reader.records() {
         let record = result.unwrap();
@@ -37,7 +41,12 @@ pub fn migrate(file: PathBuf) -> bool {
                 packs.insert(
                     pack.clone(),
                     Pack {
-                        id: Uuid::new_v4(),
+                        id: hit_ref
+                            .get_packs()
+                            .into_iter()
+                            .find(|p| p.name == pack)
+                            .map(|p| p.id)
+                            .unwrap_or_else(Uuid::new_v4),
                         name: pack.clone(),
                     },
                 );
@@ -49,7 +58,7 @@ pub fn migrate(file: PathBuf) -> bool {
             let playback_offset = record.get(6).unwrap().to_string().parse::<u16>().unwrap();
             let mut belongs_to = record.get(4).unwrap().to_string();
 
-            if artist == "" || title == "" || year == 0 {
+            if artist.is_empty() || title.is_empty() || year == 0 {
                 continue;
             }
 
@@ -63,16 +72,19 @@ pub fn migrate(file: PathBuf) -> bool {
                         playback_offset,
                         packs: vec![packs.get(&pack).unwrap().id],
                         belongs_to,
-                        id: Uuid::new_v4(),
+                        id: hit_ref
+                            .get_hit(&HitId::YtId(my_yt_id.clone()))
+                            .map(|h| h.id)
+                            .unwrap_or_else(Uuid::new_v4),
                         yt_id: my_yt_id,
                     },
                 );
             } else if let Some(hit) = hits.get_mut(&my_yt_id) {
                 let mut diff = false;
 
-                if hit.belongs_to == "" && belongs_to != "" {
+                if hit.belongs_to.is_empty() && !belongs_to.is_empty() {
                     hit.belongs_to = belongs_to.clone();
-                } else if hit.belongs_to != "" && belongs_to == "" {
+                } else if !hit.belongs_to.is_empty() && belongs_to.is_empty() {
                     belongs_to = hit.belongs_to.clone();
                 }
 

@@ -103,6 +103,15 @@ hits:
   playback_offset: 5
   id: '39946c51-74b8-4275-8413-a10a9514bdb9'
   yt_id: XGAQzfhC4g4
+- artist: '2Pac, Roger, Dr. Dre'
+  title: California Love
+  belongs_to: ''
+  year: 1995
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 38
+  id: '9efb8c0c-372e-41e1-aea4-109901a8abb1'
+  yt_id: J7_bMdYfSws
 - artist: '2 Unlimited'
   title: No Limit
   belongs_to: ''
@@ -488,6 +497,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   - df0964f7-0354-466d-85dc-997c388625a6
@@ -907,9 +917,9 @@ hits:
   year: 1959
   packs:
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
-  playback_offset: 3
-  id: ee591613-3dc8-4faf-a376-322c3a7a30a9
-  yt_id: VyFDnOHIX0E
+  playback_offset: 1
+  id: '7daa8419-9429-4f90-af64-3956b770b26f'
+  yt_id: IwgZAKHcnNE
 - artist: Adriano Pappalardo
   title: Ricominciamo
   belongs_to: ''
@@ -1099,6 +1109,15 @@ hits:
   playback_offset: 20
   id: '0d16d6f8-dcc5-4f16-a76c-3e1311804d93'
   yt_id: '3HDBLHZLZtw'
+- artist: Al Green
+  title: Let's Stay Together
+  belongs_to: ''
+  year: 1971
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 10
+  id: f670e965-9746-4535-8f34-60548f703503
+  yt_id: XXx6RDzR6eM
 - artist: Al James
   title: PSG
   belongs_to: ''
@@ -1367,6 +1386,15 @@ hits:
   playback_offset: 9
   id: cc3d727f-60a9-42f1-ba44-5b686ab4294c
   yt_id: f2zoq2uI0Fc
+- artist: Alberte Winding
+  title: Lyse Nætter
+  belongs_to: ''
+  year: 1991
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 10
+  id: '0cca4b96-fd00-4aa8-8053-ef05e180c5a2'
+  yt_id: B4NXA_69GVo
 - artist: Alcazar
   title: Crying At the Discoteque
   belongs_to: ''
@@ -1734,6 +1762,7 @@ hits:
   belongs_to: ''
   year: 1989
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   playback_offset: 38
   id: bbc84746-1a78-4ae4-824f-5d9981920544
@@ -1748,6 +1777,15 @@ hits:
   playback_offset: 21
   id: '17317e34-0535-4d4d-b910-5d0516484ee6'
   yt_id: CXFsWAkLoXQ
+- artist: Alice Deejay
+  title: Better Off Alone
+  belongs_to: ''
+  year: 1998
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 50
+  id: '1fbd7cf2-a244-4695-83b3-2082547f9028'
+  yt_id: Lgs9QUtWc3M
 - artist: Alice In Chains
   title: Man in the Box
   belongs_to: ''
@@ -1831,9 +1869,9 @@ hits:
   year: 2021
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
-  playback_offset: 0
-  id: c9e7ca74-d3b0-478a-aa32-fdeaae3e4393
-  yt_id: '4ts53J9MPbo'
+  playback_offset: 1
+  id: '12e510d0-ba75-4c35-8fb8-a142d8ef04fa'
+  yt_id: h73IZgoL9PI
 - artist: Alizée
   title: Moi... Lolita
   belongs_to: ''
@@ -1855,6 +1893,15 @@ hits:
   playback_offset: 0
   id: b101f903-f2b7-4103-b0ff-a9bf01d2bf81
   yt_id: j1fqRlbFQiM
+- artist: All Saints
+  title: Pure Shores
+  belongs_to: ''
+  year: 2000
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 19
+  id: '8c413552-c562-4bb6-9b23-04e4a2199fd4'
+  yt_id: iCTLO77CBAY
 - artist: All Time Low, blackbear
   title: Monsters
   belongs_to: ''
@@ -1913,6 +1960,15 @@ hits:
   playback_offset: 8
   id: d6cba8d9-4a47-4262-b451-ae823b18fda9
   yt_id: nFZP8zQ5kzk
+- artist: Alphabeat
+  title: Fascination
+  belongs_to: ''
+  year: 2006
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 5
+  id: a7957a91-f66e-4441-bb15-561919077a67
+  yt_id: '-8UxX5STKL4'
 - artist: Alphaville
   title: Big in Japan
   belongs_to: ''
@@ -2045,6 +2101,15 @@ hits:
   playback_offset: 17
   id: ba7c4362-6c77-44b5-8517-ca5356cfef4f
   yt_id: '-8tXxkZF-ns'
+- artist: American Authors
+  title: Best Day Of My Life
+  belongs_to: ''
+  year: 2013
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 12
+  id: eab99d8b-9cef-4c25-91a1-4180991fb7a2
+  yt_id: Y66j_BUCBMY
 - artist: Amigos
   title: Du bist wie ein Feuer im Vulkan
   belongs_to: ''
@@ -2113,6 +2178,7 @@ hits:
   year: 2007
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -2213,6 +2279,7 @@ hits:
   belongs_to: ''
   year: 2000
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
@@ -2363,8 +2430,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 18
-  id: ddc503cb-d8f4-43c5-8361-3ad4d20a4b4f
-  yt_id: pQ8lvMaSLXQ
+  id: '829a7446-53bb-48f8-9e84-25167872bc79'
+  yt_id: YsaFO8wF2VQ
 - artist: Andrea Jürgens
   title: Wir tanzen Lambada
   belongs_to: ''
@@ -2372,8 +2439,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 0
-  id: '79b75300-4986-442b-8faa-5611be57f30b'
-  yt_id: y0GbjgpEAbc
+  id: ae9ae8e3-3d48-4d31-9a0e-4d087a68a5ed
+  yt_id: iTPgGplJEOs
 - artist: Andreas Bourani
   title: Auf uns
   belongs_to: ''
@@ -2624,8 +2691,8 @@ hits:
   packs:
   - '0d564edc-9b73-4fb0-a350-57eca4bf6878'
   playback_offset: 11
-  id: e9798a22-1929-4c5f-9416-f78d455aa3bf
-  yt_id: '3Mx9mtn3_H4'
+  id: '80cf43de-d7f6-4730-b942-bf8b27f5388f'
+  yt_id: fxvb2nSGgDw
 - artist: Andy Borg
   title: Adios Amor
   belongs_to: ''
@@ -2859,8 +2926,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 14
-  id: '5a6332b3-1c8d-4d58-9808-56d43a496b61'
-  yt_id: cnfqTwO5G7Y
+  id: '051edc45-f6d6-45d3-8cbc-b47155dce365'
+  yt_id: wV0XfukAe4k
 - artist: Anna-Maria Zimmermann, Olaf Henning
   title: Freundschaftsring
   belongs_to: ''
@@ -2985,9 +3052,9 @@ hits:
   year: 2004
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 2
-  id: '24f08d68-8732-4b60-b864-07da7ac03cf4'
-  yt_id: z3gWmMJ5cO4
+  playback_offset: 0
+  id: '699de777-b2b2-459f-9bf2-d7587c850438'
+  yt_id: hV5BfVyUKy4
 - artist: Annett Louisann
   title: Drück die 1
   belongs_to: ''
@@ -3205,6 +3272,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -3362,6 +3430,7 @@ hits:
   belongs_to: ''
   year: 2018
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
   playback_offset: 0
   id: e91166a9-616b-41dd-9dde-5c7b72c1592b
@@ -3748,6 +3817,7 @@ hits:
   belongs_to: ''
   year: 2018
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   playback_offset: 0
   id: f7ae31e7-27b1-40c9-9e13-f73a99b31de1
@@ -3796,6 +3866,7 @@ hits:
   belongs_to: ''
   year: 2013
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -4176,6 +4247,7 @@ hits:
   year: 2020
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - df0964f7-0354-466d-85dc-997c388625a6
   - ec58c124-0e1b-4c6a-bdf9-d82d6d79ef37
@@ -4220,6 +4292,15 @@ hits:
   playback_offset: 0
   id: '59822b16-5a1b-4c22-88be-9685f17edb2c'
   yt_id: qV0LHCHf-pE
+- artist: Baby Bash, Frankie J
+  title: Suga Suga
+  belongs_to: ''
+  year: 2003
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 23
+  id: '5fceacf8-edf2-4870-9f7e-2631624765f0'
+  yt_id: '6rgStv12dwA'
 - artist: Baby Jail
   title: Tubel Trophy
   belongs_to: ''
@@ -4304,6 +4385,15 @@ hits:
   playback_offset: 16
   id: '4011a268-32bf-442c-bf70-bf40c2620178'
   yt_id: VJsMVSFzRSc
+- artist: Back To Back
+  title: Jonathan
+  belongs_to: ''
+  year: 1989
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 23
+  id: '574cdc33-0182-49ae-a03b-84bd14e4c473'
+  yt_id: ZQ_Z74FVEJg
 - artist: Backstreet Boys
   title: Everybody (Backstreet's Back)
   belongs_to: ''
@@ -4469,8 +4559,8 @@ hits:
   packs:
   - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
   playback_offset: 6
-  id: d1f23007-6b71-47df-a5f3-bf58b7b31500
-  yt_id: '0q_l-DAKAbI'
+  id: '4337cd48-be72-48c6-a1be-2525648a580b'
+  yt_id: OoBE-5RvF0g
 - artist: Bananarama
   title: Venus
   belongs_to: ''
@@ -4562,15 +4652,6 @@ hits:
   playback_offset: 0
   id: '4d9d0eec-6021-497d-b213-142455365d86'
   yt_id: QAZoQQy3pW4
-- artist: Barbara Streisand
-  title: The Way We Were
-  belongs_to: The Way We Were
-  year: 1973
-  packs:
-  - c6b15800-b69a-4dca-9359-c1fbd2d282d1
-  playback_offset: 61
-  id: '4827046d-b256-4cc7-b430-56531ab8480a'
-  yt_id: ifWOSnoCS0M
 - artist: Barbra Streisand, Céline Dion
   title: Tell Him
   belongs_to: ''
@@ -4590,10 +4671,20 @@ hits:
   id: e41ce21c-ea72-4901-8097-cca142e5c27e
   yt_id: qbs3aAxha70
 - artist: Barbra Streisand
-  title: Woman In Love
+  title: The Way We Were
+  belongs_to: The Way We Were
+  year: 1973
+  packs:
+  - c6b15800-b69a-4dca-9359-c1fbd2d282d1
+  playback_offset: 61
+  id: '4827046d-b256-4cc7-b430-56531ab8480a'
+  yt_id: ifWOSnoCS0M
+- artist: Barbra Streisand
+  title: Woman in Love
   belongs_to: ''
   year: 1980
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 21
@@ -4651,8 +4742,8 @@ hits:
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
   playback_offset: 0
-  id: '53528801-3532-45d6-afbd-6a54f2b0bba3'
-  yt_id: Kltrh5O2wuk
+  id: '280eebe5-9eaa-40f7-a3a7-6b77cb12ab07'
+  yt_id: UbmNarMYUVE
 - artist: Barry Gray
   title: UFO Main Theme
   belongs_to: UFO
@@ -4660,8 +4751,8 @@ hits:
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
   playback_offset: 0
-  id: cfbf0379-3f03-41c9-8a57-803a161f17df
-  yt_id: ygyVhfONBwI
+  id: d9ac29ae-f91c-4a92-8c2e-daa6ecb546fe
+  yt_id: ywlLkr5R4d4
 - artist: Barry Manilow
   title: Copacabana (At the Copa)
   belongs_to: ''
@@ -4677,6 +4768,7 @@ hits:
   belongs_to: ''
   year: 1974
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 19
   id: c7b7de95-af73-4534-a6ea-7969bdd99232
@@ -4988,6 +5080,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
   playback_offset: 12
@@ -5054,6 +5147,7 @@ hits:
   year: 1987
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   - '7c557823-64fc-4f3a-a651-d972d664824c'
@@ -5212,6 +5306,15 @@ hits:
   playback_offset: 6
   id: fd7cd917-b34f-40d4-a159-ef9ab0041b2a
   yt_id: Fwwj5nhYMfc
+- artist: Benny Goodman
+  title: Sing, Sing, Sing
+  belongs_to: ''
+  year: 1937
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: '9c4d8458-8695-4c66-9fb1-bf22c6fc4fb2'
+  yt_id: u_E0UVNtJ9Y
 - artist: Benson Boone
   title: Beautiful Things
   belongs_to: ''
@@ -5221,6 +5324,15 @@ hits:
   playback_offset: 5
   id: d0957409-4ebb-4bba-8876-8975f00710dc
   yt_id: Dv4XpqKK2rA
+- artist: Bent Fabricius-Bjerre
+  title: Matador
+  belongs_to: ''
+  year: 1978
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 23
+  id: '3b60dc87-1580-4b61-89f3-4bbe17b29f62'
+  yt_id: '41rpXrTujn0'
 - artist: Berd Stelter
   title: Mahatma
   belongs_to: ''
@@ -5417,8 +5529,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 24
-  id: '6ebfbdc4-3de3-40d2-a2e0-9551a18f647f'
-  yt_id: wekDNXDWGjM
+  id: '3a5c4d03-044e-4b87-950d-a64f0f300beb'
+  yt_id: bnVUHWCynig
 - artist: Beyoncé
   title: Listen
   belongs_to: Dreamgirls
@@ -5438,8 +5550,8 @@ hits:
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 0
-  id: '7354fef8-a9b1-40f0-8641-f8331827a12b'
-  yt_id: J-eM2wN0ATE
+  id: fcafeafd-f2b9-4803-8efd-851292d10659
+  yt_id: '4m1EFMoRFvY'
 - artist: Beyoncé
   title: Sweet Dreams
   belongs_to: ''
@@ -5504,6 +5616,15 @@ hits:
   playback_offset: 21
   id: ccedd51a-8cd9-4ef6-88fa-2caa2b63a6ed
   yt_id: mhj0Q8wUlqs
+- artist: Big Fat Snake
+  title: Bonsoir Madame
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '77141f83-2c0c-41d7-8fb8-eab6a9e5ca0d'
+  yt_id: WYzLJ62f7bc
 - artist: Big Mama Thornton
   title: Hound Dog
   belongs_to: ''
@@ -5654,6 +5775,7 @@ hits:
   belongs_to: ''
   year: 1971
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   playback_offset: 0
   id: '99542fc2-967d-4b62-96cf-df47fbb42a22'
@@ -5973,9 +6095,9 @@ hits:
   year: 2017
   packs:
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
-  playback_offset: 6
-  id: f41a7f13-d0cd-44d2-ab97-b660396b5059
-  yt_id: iE_CIFbAOkY
+  playback_offset: 14
+  id: '7a9a4fbc-82da-41c7-90d3-a28f72a020ad'
+  yt_id: f5zPojJ1ygs
 - artist: Black & White
   title: Daar Bij De Waterkant
   belongs_to: ''
@@ -6257,6 +6379,15 @@ hits:
   id: d8bffa64-e5db-405e-a81d-7b5f25f01e1d
   yt_id: ypWXEnK_0T8
 - artist: Bloodhound Gang
+  title: Fire Water Burn
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 26
+  id: fc5aa337-05e4-417e-9f4a-9ab84fb100c1
+  yt_id: Adgx9wt63NY
+- artist: Bloodhound Gang
   title: The Bad Touch
   belongs_to: ''
   year: 1999
@@ -6449,6 +6580,15 @@ hits:
   id: '10ad1cda-5622-4155-b988-e26fb7c561ce'
   yt_id: V2Lld0smHhY
 - artist: Bob Dylan
+  title: Knockin' On Heaven's Door
+  belongs_to: ''
+  year: 1973
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 29
+  id: ff216c87-3bd4-424f-b5a8-4ce73c1d5482
+  yt_id: rm9coqlk8fY
+- artist: Bob Dylan
   title: Like a Rolling Stone
   belongs_to: ''
   year: 1965
@@ -6585,8 +6725,8 @@ hits:
   packs:
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 0
-  id: '8e740517-0a25-4da7-9764-8dfa2b9a94c3'
-  yt_id: YVlfY80vb-4
+  id: de5394be-1c64-4d4f-bd17-b40e319d5435
+  yt_id: ubvYQxTXO3U
 - artist: Bobby Helms
   title: Jingle Bell Rock
   belongs_to: ''
@@ -6601,6 +6741,7 @@ hits:
   belongs_to: ''
   year: 1988
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -6723,6 +6864,7 @@ hits:
   year: 1986
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
@@ -7321,8 +7463,8 @@ hits:
   packs:
   - d9abc924-bff0-4a37-83ff-10477d32fb2e
   playback_offset: 14
-  id: '0fa6d94f-e344-4605-a8ef-57cd24ee95b7'
-  yt_id: '0N4ngtxEjrw'
+  id: '5d6924a1-cb97-4ce0-abd5-b387c39b7cf9'
+  yt_id: MQqDrgkf8-I
 - artist: Bruce Broughton
   title: J.A.G. Theme
   belongs_to: JAG - Im Auftrag der Ehre
@@ -7655,6 +7797,7 @@ hits:
   belongs_to: ''
   year: 1984
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
@@ -7672,6 +7815,15 @@ hits:
   playback_offset: 22
   id: '82eb7341-3a42-45df-821d-b93e4c210737'
   yt_id: XFy2wN2Wdt0
+- artist: Brødrene Olsen
+  title: Smuk som et stjerneskud
+  belongs_to: ''
+  year: 2000
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 20
+  id: '695d9472-42ee-4bd0-a19f-9efecdb2da72'
+  yt_id: pVbzlwBPIHw
 - artist: Bucks Fizz
   title: Making Your Mind Up
   belongs_to: ''
@@ -7772,6 +7924,15 @@ hits:
   playback_offset: 40
   id: '00a20f44-2c2a-440c-8d7d-487a144a33ff'
   yt_id: OpYR7ilLbfo
+- artist: Burhan G, Medina
+  title: Mest Ondt
+  belongs_to: ''
+  year: 2010
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 11
+  id: '7972fe56-1cd2-4bc7-90f0-8f48636046a8'
+  yt_id: A1pXfcR2k9k
 - artist: Burning
   title: Mueve Tus Caderas
   belongs_to: ''
@@ -7859,6 +8020,7 @@ hits:
   belongs_to: ''
   year: 1990
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
@@ -7892,6 +8054,24 @@ hits:
   playback_offset: 10
   id: b8750186-b033-4a44-a55b-6a9985700796
   yt_id: ltmO9XQVdSg
+- artist: C.V. Jørgensen
+  title: Entertaineren
+  belongs_to: ''
+  year: 1977
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 12
+  id: fad2df88-3d5c-42d1-a762-561160a37dcc
+  yt_id: '0LLH2pvoXfI'
+- artist: C21
+  title: She Cries
+  belongs_to: ''
+  year: 2003
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '0df3037a-75f3-44e3-ae41-45d59eb0c9c6'
+  yt_id: FbFhtaBJkhM
 - artist: CHIC
   title: Good Times
   belongs_to: ''
@@ -8291,6 +8471,7 @@ hits:
   year: 2011
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 17
   id: caf290c6-f0af-4c85-9f74-3508df4d27b1
   yt_id: jR-OsKMD80c
@@ -8301,8 +8482,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 12
-  id: '3e4c7c49-2db6-4d11-ba4c-ce2a11619278'
-  yt_id: '-6GmYMe5Sjk'
+  id: '12a1abef-6665-4d03-9771-95641646edc0'
+  yt_id: DgWa9VHmp1Y
 - artist: Captain Hollywood (Project)
   title: Flying high
   belongs_to: ''
@@ -8659,6 +8840,15 @@ hits:
   playback_offset: 0
   id: '48c31904-0d22-41ae-a976-5d4b86eb5a0c'
   yt_id: '-IFD4ozm1DA'
+- artist: Carpark North
+  title: Transparent and Glasslike
+  belongs_to: ''
+  year: 2003
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 34
+  id: '16960112-94cd-45c9-94fc-dee883ea0ab7'
+  yt_id: RCHz-U5UuNQ
 - artist: Carpenters
   title: Please Mr. Postman
   belongs_to: ''
@@ -8840,10 +9030,11 @@ hits:
   belongs_to: ''
   year: 2010
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
-  playback_offset: 7
-  id: '4780abb3-6e6d-4f79-8440-e0e91904d110'
-  yt_id: omL2GxmgqFc
+  playback_offset: 14
+  id: dedf85e1-5139-4123-9fce-891332fadd64
+  yt_id: bKxodgpyGec
 - artist: Celia Cruz
   title: La Vida Es Un Carnaval
   belongs_to: ''
@@ -9008,6 +9199,15 @@ hits:
   playback_offset: 10
   id: '78f2040b-3280-45ca-898b-6af0199d29c7'
   yt_id: '0QUOR_KPf34'
+- artist: Charles Wright & The Watts 103rd Street Rhythm Band
+  title: Express Yourself
+  belongs_to: ''
+  year: 1970
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: f7b4656f-f762-486a-8455-7afe1e0affc9
+  yt_id: F-MQQPlUPEE
 - artist: Charlie Erickson, Joel Hodgson
   title: Love Theme from Mystery Science Theater 3000
   belongs_to: Mystery Science Theater 3000
@@ -9315,6 +9515,15 @@ hits:
   playback_offset: 34
   id: a8801aac-631a-402b-a47e-dd0e0a2e1628
   yt_id: oadhHk2xs6c
+- artist: Chris Montez
+  title: Let's Dance
+  belongs_to: ''
+  year: 1962
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 9
+  id: '6cc05dbf-0f30-4065-8675-bed8baa8a77b'
+  yt_id: w-pmrSZV2QY
 - artist: Chris Norman, Suzi Quatro
   title: Stumblin' In
   belongs_to: ''
@@ -9517,8 +9726,8 @@ hits:
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 25
-  id: ad469bdd-9de0-4dc2-b3ca-edda8ea38acb
-  yt_id: '0C2tFNi_9Ug'
+  id: '7095f790-b322-4ab6-afe1-16cebdfe2f1e'
+  yt_id: SvhvGnMwBvU
 - artist: Christina Aguilera
   title: Genie In a Bottle
   belongs_to: ''
@@ -9656,6 +9865,15 @@ hits:
   playback_offset: 11
   id: '7c8b395e-8fa6-4c9f-9c91-e73e86aef294'
   yt_id: yRGiYUEFFww
+- artist: Christopher, CHUNG HA
+  title: When I Get Old
+  belongs_to: ''
+  year: 2022
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 1
+  id: cac308b0-2532-4227-8148-59c8209577de
+  yt_id: Ua3aNDJE_Cg
 - artist: Christopher Cross
   title: Best That You Can Do
   belongs_to: Arthur
@@ -9715,6 +9933,7 @@ hits:
   belongs_to: ''
   year: 1961
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 0
@@ -9766,8 +9985,8 @@ hits:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   playback_offset: 4
-  id: d4798136-f3d6-478f-ae9b-b32ebb5a275c
-  yt_id: npkoS9Q3QYk
+  id: '63937804-f4a2-4c0a-aee1-15c752f150eb'
+  yt_id: RMkIK0qZnjw
 - artist: Chuck Berry
   title: You Never Can Tell
   belongs_to: ''
@@ -10028,6 +10247,15 @@ hits:
   playback_offset: 17
   id: f4b1980a-f948-4307-a824-23f9f99b2f28
   yt_id: ODvWILfy22A
+- artist: Claus Hempler
+  title: Op
+  belongs_to: ''
+  year: 2019
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 23
+  id: '10a949e5-a33b-48eb-9ebb-b295ddf9326f'
+  yt_id: GXU95FGjo-w
 - artist: Clay and Friends
   title: Bouge ton thang
   belongs_to: ''
@@ -10192,6 +10420,15 @@ hits:
   playback_offset: 16
   id: '8c0944a2-584d-4327-aaf1-6c83ba32d547'
   yt_id: Q7NjUxGMv7Y
+- artist: Colbie Caillat
+  title: Bubbly
+  belongs_to: ''
+  year: 2007
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 12
+  id: '4b9098ed-ea11-4803-a749-36be4d07fcb9'
+  yt_id: WNSjxH7v_WQ
 - artist: Coldplay, BTS
   title: My Universe
   belongs_to: ''
@@ -10452,6 +10689,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -10541,6 +10779,15 @@ hits:
   playback_offset: 44
   id: '3bd38d81-1e46-4383-b3e5-c03a44dd4688'
   yt_id: Jq755GRl4E0
+- artist: Cornershop
+  title: Brimful of Asha
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 17
+  id: '5e88a556-12c6-4033-abd3-2a9c1e940aa6'
+  yt_id: '6XExmlpJabg'
 - artist: Corona
   title: The Rhythm of the Night
   belongs_to: ''
@@ -10662,6 +10909,15 @@ hits:
   playback_offset: 13
   id: a3fcf9eb-2bd1-40f8-baf2-dfe6db58a315
   yt_id: Uyj4HH5u1uQ
+- artist: Crazy Town
+  title: Butterfly
+  belongs_to: ''
+  year: 2000
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 9
+  id: '88722da9-f7f2-4056-ace2-c029e12282d8'
+  yt_id: R88FZTjAqjM
 - artist: Cream
   title: Sunshine Of Your Love
   belongs_to: ''
@@ -10882,8 +11138,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 30
-  id: '47452607-fa96-48c0-b68b-ff49e8c43c9c'
-  yt_id: Ziz1vbvvCCc
+  id: a5f8a6b0-eb86-4ac1-94d9-d9d2119aac0c
+  yt_id: oE8pwHUDCiQ
 - artist: Culture Beat
   title: Crying in the Rain
   belongs_to: ''
@@ -10947,6 +11203,15 @@ hits:
   playback_offset: 16
   id: e0ef900d-0b20-463a-afde-7b1580a79346
   yt_id: aJakSXHZROo
+- artist: Cut 'N' Move
+  title: Give It Up
+  belongs_to: ''
+  year: 1993
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 32
+  id: '38e9ea85-5bff-439a-9968-ccea1fffd58a'
+  yt_id: S-3zGDLeSfE
 - artist: Cutting Crew
   title: (I Just) Died In Your Arms
   belongs_to: ''
@@ -11007,6 +11272,15 @@ hits:
   playback_offset: 0
   id: '5a8c8858-5a8f-4409-b53d-c037ceb34497'
   yt_id: WmWCGNVnNN4
+- artist: Cypress Hill
+  title: Insane in the Brain
+  belongs_to: ''
+  year: 1993
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 22
+  id: '6830085f-e4fc-4396-bf1b-49ded5e41dc3'
+  yt_id: XOcyKObnwg4
 - artist: Czerwone Gitary
   title: Ciągle pada
   belongs_to: ''
@@ -11040,6 +11314,7 @@ hits:
   belongs_to: ''
   year: 1996
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 4
   id: '7b83e877-70b0-4e4a-b5da-4195c97b6067'
@@ -11126,6 +11401,15 @@ hits:
   playback_offset: 15
   id: '37fc1cd9-32ae-4c1b-b36f-7d1110396011'
   yt_id: hblH8DMMRGs
+- artist: D-A-D
+  title: Nineteenhundredandyesterday
+  belongs_to: ''
+  year: 2000
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 33
+  id: '9b27a69e-8aae-4b3c-b959-8f38ebe0b6d0'
+  yt_id: flg6PMlYm6Y
 - artist: D.A.M.A
   title: Era Eu
   belongs_to: ''
@@ -11315,8 +11599,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 0
-  id: c9a207da-a0ae-413f-9591-3afe74269592
-  yt_id: _gtu1430Gk4
+  id: cd7e7f83-b736-4c12-9eb4-48a3632f504d
+  yt_id: Mif4OE2Ru8A
 - artist: DJ Snake, J Balvin, Tyga
   title: Loco Contigo
   belongs_to: ''
@@ -11556,6 +11840,15 @@ hits:
   playback_offset: 20
   id: '4028104a-61cd-43c2-961f-e663f2b7b003'
   yt_id: A2VpR8HahKc
+- artist: Daimi
+  title: Jeg sætter min hat som jeg vil
+  belongs_to: ''
+  year: 1967
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 20
+  id: '5d33ec5a-f6f1-451c-b1a3-055a045a1b3a'
+  yt_id: '8OFe7zPPC0U'
 - artist: Dale Hawkins
   title: Susie Q
   belongs_to: ''
@@ -11670,9 +11963,9 @@ hits:
   year: 1992
   packs:
   - '1d98f5c4-3d62-480f-99fc-855626ffeebb'
-  playback_offset: 14
-  id: cdcd6b30-4aff-4cc0-9cca-157f5431a8b6
-  yt_id: WRiZXiUqVv4
+  playback_offset: 35
+  id: '8abd842c-80f9-4566-91c0-9fe44cfe2e18'
+  yt_id: '6Ujf-Alstjs'
 - artist: Dan Foliart, Howard Pearl
   title: Opening Theme
   belongs_to: Roseanne
@@ -11936,6 +12229,15 @@ hits:
   playback_offset: 15
   id: '87f225f3-d9a6-4fde-a218-c1ad43d14d2b'
   yt_id: aDCcLQto5BM
+- artist: Danseorkestret
+  title: Kom Tilbage Nu
+  belongs_to: ''
+  year: 1985
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 25
+  id: '2f42e484-ac9e-4e1e-a574-386375f293d2'
+  yt_id: OgLufWkO0h4
 - artist: Dante Thomas
   title: Miss California
   belongs_to: ''
@@ -12000,6 +12302,16 @@ hits:
   playback_offset: 8
   id: '59c81153-6e00-4bb8-8e42-c09a972f8c6e'
   yt_id: rCdHk1eTe34
+- artist: Dario Campeotto
+  title: Angelique
+  belongs_to: ''
+  year: 1961
+  packs:
+  - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 20
+  id: d4581d2b-c2e7-4cfb-9327-95cafb05bf05
+  yt_id: EUMfDN5Bc1M
 - artist: Dario G
   title: Carnaval de Paris
   belongs_to: ''
@@ -12062,6 +12374,15 @@ hits:
   playback_offset: 41
   id: e4caa7f0-bc39-46f1-93ca-6d966f23d879
   yt_id: oqy2N1jM2tU
+- artist: Daryl Hall & John Oates
+  title: Out of Touch
+  belongs_to: ''
+  year: 1984
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 39
+  id: c0aecd3c-2e04-4d91-b41b-35aae09a71fc
+  yt_id: DCkJ5lGPqFs
 - artist: Daryl Hall & John Oates
   title: Rich Girl
   belongs_to: ''
@@ -12295,6 +12616,7 @@ hits:
   belongs_to: ''
   year: 2009
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -12481,6 +12803,7 @@ hits:
   year: 1985
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 42
   id: '02e1e8a6-0202-44c0-a3a6-914438c37946'
   yt_id: N0k0FAlLlK0
@@ -12584,6 +12907,15 @@ hits:
   playback_offset: 6
   id: a0fc4f27-ca00-4164-a871-759660cc424a
   yt_id: Ob243HT2R1k
+- artist: Dean Lewis
+  title: Be Alright
+  belongs_to: ''
+  year: 2018
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 3
+  id: '2adfe1b0-9d16-417c-80ea-67fd24a95967'
+  yt_id: c8L-ZoKNENU
 - artist: Dean Martin
   title: Let It Snow! Let It Snow! Let It Snow!
   belongs_to: ''
@@ -12655,6 +12987,7 @@ hits:
   belongs_to: ''
   year: 1995
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 8
   id: '4bf9906c-5775-48ff-8ce7-5090b7c21122'
@@ -12666,8 +12999,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 48
-  id: fd43e684-33c7-42f2-a618-e0aba38adc6c
-  yt_id: PfAWReBmxEs
+  id: '91251186-78bb-411e-a32a-29f63f91c8c8'
+  yt_id: '4wAPTsjhrjM'
 - artist: Deep Purple
   title: Highway Star
   belongs_to: ''
@@ -12744,6 +13077,15 @@ hits:
   playback_offset: 0
   id: '7a7f848c-0ddf-4da0-8717-22d1c6adb25e'
   yt_id: iDatKz-s5A8
+- artist: Del Shannon
+  title: Runaway
+  belongs_to: ''
+  year: 1961
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 6
+  id: '39eede13-ee7c-48a3-9db6-6ad94067d8fb'
+  yt_id: '0S13mP_pfEc'
 - artist: Delafé y las flores azules
   title: La primavera
   belongs_to: ''
@@ -12834,6 +13176,15 @@ hits:
   playback_offset: 0
   id: '00512cf3-d088-4383-bb94-6da50286a1b0'
   yt_id: jzwG72oLHrc
+- artist: Den Gale Pose
+  title: Spændt Op Til Lir
+  belongs_to: ''
+  year: 1998
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 20
+  id: '042ba6e4-06a7-49ca-a0f5-ed668cb984d5'
+  yt_id: WA0PE11Js5c
 - artist: Denis King
   title: Galloping Home
   belongs_to: The Adventures of Black Beauty
@@ -12906,6 +13257,7 @@ hits:
   belongs_to: ''
   year: 1981
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -13026,6 +13378,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
@@ -13041,6 +13394,15 @@ hits:
   playback_offset: 0
   id: '561fbafc-863a-4aeb-a002-f34564aa8bef'
   yt_id: iwChwkfmDRU
+- artist: Det Brune Punktum
+  title: Jeg vil i seng med de fleste
+  belongs_to: ''
+  year: 1999
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 19
+  id: '8cbae11d-6595-4f84-8cad-75705397be0d'
+  yt_id: LPZy2Agyfo8
 - artist: Detlev Kühne
   title: The Animals Of Farthing Wood - Main Theme
   belongs_to: The Animals of Farthing Wood
@@ -13065,6 +13427,7 @@ hits:
   year: 1982
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 26
   id: '7408fb27-8593-4b36-9bca-c2945f2f261f'
@@ -13093,6 +13456,7 @@ hits:
   year: 1980
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -13147,6 +13511,7 @@ hits:
   belongs_to: ''
   year: 1997
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 15
   id: '9d6cd4d0-1659-42bc-92b6-fe2da519d41a'
@@ -13257,9 +13622,9 @@ hits:
   year: 1992
   packs:
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
-  playback_offset: 25
-  id: '7f7b9e9b-c408-474c-99db-0feef5fd579f'
-  yt_id: xf39er1I5DY
+  playback_offset: 23
+  id: '3b2e1639-6995-4c4f-ab83-3308a824a4ce'
+  yt_id: VUosAGDM8Sg
 - artist: Die Firma
   title: Die Eine
   belongs_to: ''
@@ -13593,6 +13958,15 @@ hits:
   playback_offset: 8
   id: '34bf4ff0-c70e-49da-9ec7-0ca7492cf4b7'
   yt_id: F1O9Ut8Uy9o
+- artist: Dinah Washington
+  title: What a Difference a Day Makes
+  belongs_to: ''
+  year: 1959
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: f26ae48a-0047-4763-98fb-9183c607d38a
+  yt_id: OmBxVfQTuvI
 - artist: Dio
   title: Holy Diver
   belongs_to: ''
@@ -13637,14 +14011,32 @@ hits:
   id: fdba75a6-26af-4c22-a784-4941ffc6eefd
   yt_id: SbYa7NBYyRc
 - artist: Dionne Warwick
+  title: Heartbreaker
+  belongs_to: ''
+  year: 1982
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 21
+  id: cf723f9e-dd96-4bb8-8981-a6e99b77770e
+  yt_id: dFcpo6sXahQ
+- artist: Dionne Warwick
   title: I Say a Little Prayer
   belongs_to: ''
   year: 1967
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   playback_offset: 18
-  id: a7dc252f-3e92-4d29-805c-16ef79547620
-  yt_id: tLCRUWCETK4
+  id: '87b60d6e-2075-4e8f-b06b-03752fcabdb6'
+  yt_id: '04-SxMlByP4'
+- artist: Dirch Passer, Ove Sprogø
+  title: Der kommer altid en sporvogn og en pige til
+  belongs_to: ''
+  year: 1953
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: be47d1fb-45fa-4bc0-91ef-a0df8324d155
+  yt_id: OkXq1jS1oHc
 - artist: Dire Straits
   title: Walk Of Life
   belongs_to: ''
@@ -13701,6 +14093,15 @@ hits:
   playback_offset: 28
   id: ccf9b0cb-fd4e-41aa-94e3-262c27944610
   yt_id: gFCu_YK6yPE
+- artist: Dizzy Mizz Lizzy
+  title: Silverflame
+  belongs_to: ''
+  year: 1994
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 21
+  id: '75fc98c1-5fe3-4739-ad00-d52d5fca3b84'
+  yt_id: '8QrVdn8GAhk'
 - artist: Django Reinhardt
   title: Nagasaki
   belongs_to: ''
@@ -13728,6 +14129,15 @@ hits:
   playback_offset: 25
   id: '1030bee8-1081-4dc7-bb5f-90a5fe4aafae'
   yt_id: QtBizSoXB60
+- artist: Dodo & the Dodos
+  title: Sømand af Verden
+  belongs_to: ''
+  year: 1989
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 22
+  id: '04aac178-1d33-40b2-a9a1-877db10184d1'
+  yt_id: vuu24-BP6-I
 - artist: Dodo, Dabu Fantastic
   title: Brütigam
   belongs_to: ''
@@ -13792,9 +14202,9 @@ hits:
   year: 1995
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 28
-  id: '8f55926d-f2fa-4684-baf4-d48d9c473201'
-  yt_id: '-s4zGFilaVQ'
+  playback_offset: 34
+  id: '28c1c90d-b94b-4442-a150-6975e9580c79'
+  yt_id: Pa499B8YuPw
 - artist: Dolly Parton
   title: '9 to 5'
   belongs_to: ''
@@ -14393,6 +14803,15 @@ hits:
   playback_offset: 0
   id: '1a6a645a-b276-483f-bfd0-4c3522425c9f'
   yt_id: sQAjI2WHb78
+- artist: Drengene Fra Angora
+  title: De skal have baghjul nede i touren
+  belongs_to: ''
+  year: 2004
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 12
+  id: e2ed0e00-671d-4734-8cde-5805bdee8ed8
+  yt_id: h6JBYlxpHKI
 - artist: Drew Neumann
   title: Æon Flux Title
   belongs_to: Æon Flux
@@ -14402,6 +14821,15 @@ hits:
   playback_offset: 0
   id: f5e4834a-5d95-49ec-95ea-168726137e63
   yt_id: Y9Sph-4Jlgg
+- artist: Drew Sycamore
+  title: I Wanna Be Dancing
+  belongs_to: ''
+  year: 2020
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: f3ac2bfe-4d09-425e-8609-2970647e01f7
+  yt_id: q-IXsT097HU
 - artist: Dries Roelvink
   title: Ik Kom Eraan (Route du Soleil)
   belongs_to: ''
@@ -14409,8 +14837,8 @@ hits:
   packs:
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 15
-  id: '0f364ad9-51b1-4546-848a-724cf716cd6a'
-  yt_id: GdflKHda-0I
+  id: '640a0d59-78f9-42c5-b24d-595383d73f3a'
+  yt_id: '10oGy55RJTc'
 - artist: Dropkick Murphys
   title: Rose Tattoo
   belongs_to: ''
@@ -14518,11 +14946,12 @@ hits:
   id: '2d12045a-8610-404b-98a2-fb5cbd650abf'
   yt_id: NG19W6m-c8w
 - artist: Duck Sauce
-  title: Barbara Streisand
+  title: Barbra Streisand
   belongs_to: ''
   year: 2010
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -14813,8 +15242,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 35
-  id: bd29c93f-1082-4d53-a38b-ce02bbd0c8d1
-  yt_id: utbeH4ivHis
+  id: '8805c16e-50c4-493a-833b-0726da1ad42f'
+  yt_id: byxBGWdoaXo
 - artist: E-Rotic
   title: Sex on the Phone
   belongs_to: ''
@@ -14858,8 +15287,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 0
-  id: ac359069-786d-4374-8f37-90524a8eccf9
-  yt_id: wxH4e70-NMA
+  id: '8a77bff1-ccac-4b28-b155-1085f6082378'
+  yt_id: '-GmGgiCzNzY'
 - artist: EAV (Erste Allgemeine Verunsicherung)
   title: Küss' die Hand schöne Frau
   belongs_to: ''
@@ -15120,6 +15549,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -15198,8 +15628,8 @@ hits:
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
   playback_offset: 0
-  id: '1992e528-88e5-4cca-82d3-c4c9c20b83a6'
-  yt_id: lB4aKX-_9Kw
+  id: '4c41fee5-2179-4601-8621-56289621cb40'
+  yt_id: vYVZniJgzqY
 - artist: Eddie Perfect, Alex Brightman, Beetlejuice Original Broadway Ensemble
   title: The Whole 'Being Dead' Thing
   belongs_to: Beetlejuice
@@ -15346,8 +15776,8 @@ hits:
   packs:
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 0
-  id: '5e9de16a-4049-4681-84ba-fa510e239643'
-  yt_id: '7V0TGTq2GrA'
+  id: e797b85b-2cb8-40a5-9371-cd2c297f517e
+  yt_id: ufBbDASC_Mg
 - artist: Edward Maya, Vika Jigulina
   title: Stereo Love
   belongs_to: ''
@@ -15706,6 +16136,15 @@ hits:
   playback_offset: 0
   id: b70bf360-6538-4da3-add6-f30776ae7db6
   yt_id: Qv9vQXGahbc
+- artist: Ella Henderson
+  title: Ghost
+  belongs_to: ''
+  year: 2014
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '0251a5c5-8a27-4c9d-b38c-ff050434bba5'
+  yt_id: M4vL_o2mDv0
 - artist: Ellie Goulding
   title: Lights
   belongs_to: ''
@@ -15751,6 +16190,7 @@ hits:
   belongs_to: ''
   year: 2021
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 14
   id: fc47ebde-1334-4667-9bb4-05ba12335dbb
@@ -16123,6 +16563,7 @@ hits:
   year: 2013
   packs:
   - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 6
   id: '38ce294c-8050-4b9e-bc9c-b010c5293a11'
   yt_id: wXZmQesCWGU
@@ -16172,6 +16613,15 @@ hits:
   playback_offset: 0
   id: a1fc2ae5-c3bd-4a6a-b3df-1d5c5ec08b9c
   yt_id: apxGNByWCa0
+- artist: Enrico Caruso
+  title: O Sole Mio
+  belongs_to: ''
+  year: 1916
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: '51a2376c-5e1f-4a4d-b1af-0e91d7be2780'
+  yt_id: u1QJwHWvgP8
 - artist: Enrico Caruso
   title: 'Rigoletto: La Donna E'' Mobile'
   belongs_to: ''
@@ -16394,6 +16844,7 @@ hits:
   belongs_to: ''
   year: 1974
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - df0964f7-0354-466d-85dc-997c388625a6
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
@@ -16571,14 +17022,23 @@ hits:
   id: '1182ddfa-fee8-46a0-a255-2c4dc46bd31a'
   yt_id: wECwsE4yNSQ
 - artist: Etta James
+  title: At Last
+  belongs_to: ''
+  year: 1960
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 18
+  id: db13d97e-72ae-4b5d-8d46-8ad4fb3bd56a
+  yt_id: cZag0E32is0
+- artist: Etta James
   title: I Just Want To Make Love To You
   belongs_to: ''
   year: 1960
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   playback_offset: 10
-  id: '2960b738-4ea9-4408-84f4-12578ebaed68'
-  yt_id: HItIcDfGjew
+  id: '85e3cdea-918d-4144-9999-7927b00d9ca9'
+  yt_id: '-XU1OzDYU74'
 - artist: Etta James
   title: Something's Got A Hold On Me
   belongs_to: ''
@@ -16603,6 +17063,7 @@ hits:
   year: 1986
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
@@ -16912,8 +17373,8 @@ hits:
   packs:
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   playback_offset: 27
-  id: '29c58866-246d-4583-9dd0-4ee9aa60a609'
-  yt_id: qrM0z3v3LUY
+  id: '85ddad84-8964-454b-9229-0f24020267a8'
+  yt_id: jt10zm13low
 - artist: Fabrizio De André
   title: Don Raffaè
   belongs_to: ''
@@ -17029,6 +17490,7 @@ hits:
   belongs_to: ''
   year: 2014
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   playback_offset: 0
   id: e39b2613-71f8-4502-a183-19e32ca162d6
@@ -17159,6 +17621,15 @@ hits:
   playback_offset: 10
   id: ada8f101-e4b1-489d-b7ed-049b5ccecf32
   yt_id: iPo7y_8AocI
+- artist: Fatboy Slim
+  title: The Rockafeller Skank
+  belongs_to: ''
+  year: 1998
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 35
+  id: '63731df3-a153-4533-94c7-ac4068c3aead'
+  yt_id: '5onsyfIzPUY'
 - artist: Fats Domino
   title: Ain't That A Shame
   belongs_to: ''
@@ -17412,6 +17883,15 @@ hits:
   playback_offset: 17
   id: '57c79f0b-0c10-4247-bc2e-6988f389d46b'
   yt_id: cxvaa028KQo
+- artist: Fifth Harmony, Kid Ink
+  title: Worth It
+  belongs_to: ''
+  year: 2015
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: '95ce2fc2-1aa4-45c1-be32-f8908922ae70'
+  yt_id: Cw1qnwbIEFY
 - artist: Fifty Fifty
   title: SOS
   belongs_to: ''
@@ -17493,6 +17973,7 @@ hits:
   belongs_to: ''
   year: 1998
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 13
   id: '45663719-1c72-435d-8fa3-7e90175bd3af'
@@ -17608,6 +18089,15 @@ hits:
   id: '7dda2263-d03b-4dea-aebd-e71a629bbd7e'
   yt_id: CxPc1Q3-0zc
 - artist: Flo Rida
+  title: Good Feeling
+  belongs_to: ''
+  year: 2011
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 22
+  id: '8f9ad87d-9135-4460-803f-3f4665fd0a25'
+  yt_id: hV2z4oBNFKs
+- artist: Flo Rida
   title: Whistle
   belongs_to: ''
   year: 2012
@@ -17678,9 +18168,9 @@ hits:
   year: 2001
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 28
-  id: c7cb8ef9-cb00-440d-afc8-1f9166200d76
-  yt_id: T3lA_BNN4QI
+  playback_offset: 43
+  id: ec2152e6-17b1-4ee7-9417-5298fd2ecc87
+  yt_id: loOg5mIGHLY
 - artist: Flying Steps
   title: In Da Arena / We gonna rock it
   belongs_to: ''
@@ -17742,6 +18232,7 @@ hits:
   belongs_to: ''
   year: 1984
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '7c557823-64fc-4f3a-a651-d972d664824c'
   playback_offset: 14
   id: '7d696985-3a9c-421b-81fc-cef778b2a1ed'
@@ -17791,6 +18282,15 @@ hits:
   playback_offset: 10
   id: '9cf79364-d04f-4935-a807-91aa997f2ac7'
   yt_id: '5aKfx2ys_0A'
+- artist: Foster The People
+  title: Pumped Up Kicks
+  belongs_to: ''
+  year: 2010
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 33
+  id: '6ff7f0ed-17ab-4c44-96cb-ef02c7f9890f'
+  yt_id: '0DOv0-2yyfE'
 - artist: FouKi, Jay Scøtt
   title: Copilote
   belongs_to: ''
@@ -17818,6 +18318,15 @@ hits:
   playback_offset: 7
   id: ccbd1da0-a6e5-4ca3-9578-d35bffd0f37c
   yt_id: _Xcq6bbY71Y
+- artist: Four Jacks
+  title: Mandalay
+  belongs_to: ''
+  year: 1961
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 20
+  id: '61db6f11-d547-49d2-8ffb-73016ba2b948'
+  yt_id: s4TYxwhOpIE
 - artist: Four Tops
   title: I Can't Help Myself (Sugar Pie, Honey Bunch)
   belongs_to: ''
@@ -18008,8 +18517,8 @@ hits:
   packs:
   - '7c557823-64fc-4f3a-a651-d972d664824c'
   playback_offset: 22
-  id: '5bb37e6f-b606-49a0-914c-6b2f6d0f6041'
-  yt_id: PhNYfUXwo1g
+  id: '38d7c90a-b4d7-4598-8ec7-beb5033b45fd'
+  yt_id: M3mdHmhI3cs
 - artist: Francine Jordi, Florian Ast
   title: Träne
   belongs_to: ''
@@ -18236,6 +18745,15 @@ hits:
   playback_offset: 30
   id: '61f3fd02-0d20-4489-bba5-159138a89d40'
   yt_id: xE65h9cUrls
+- artist: Frank Sinatra, Count Basie
+  title: Fly Me To The Moon (In Other Words)
+  belongs_to: ''
+  year: 1964
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 7
+  id: '6e4b1299-f27d-453f-ac1b-d641f93da594'
+  yt_id: ZEcqHA7dbwM
 - artist: Frank Sinatra, Nancy Sinatra
   title: Something Stupid
   belongs_to: ''
@@ -18366,8 +18884,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 8
-  id: '39e809d3-7edb-48c6-8f8d-04be5ee28290'
-  yt_id: PSHmmHqI04M
+  id: ebb194d4-e526-4969-9678-3d2238f41bf8
+  yt_id: UKURHd17Gac
 - artist: Frank Sinatra
   title: The Way You Look Tonight
   belongs_to: ''
@@ -18422,6 +18940,15 @@ hits:
   playback_offset: 10
   id: '362b53b7-bf0c-4045-b495-f92d7875532a'
   yt_id: fhc13WNMNpg
+- artist: Frankie Valli & The Four Seasons
+  title: Sherry
+  belongs_to: ''
+  year: 1962
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 7
+  id: '46f42b54-8ddd-4364-ac91-6c74cfcf96f8'
+  yt_id: jMcWldfg28s
 - artist: Frankie Valli
   title: Can't Take My Eyes off You
   belongs_to: ''
@@ -18479,8 +19006,8 @@ hits:
   - '1d98f5c4-3d62-480f-99fc-855626ffeebb'
   - b971d194-30fd-4483-92f2-61f947b8155a
   playback_offset: 0
-  id: '21cd4a6f-373d-4abd-a6bd-a312ff968b84'
-  yt_id: DkYuM_r8cKQ
+  id: f39b8a1b-4f78-4c4f-8ed6-1c2abc70cbbb
+  yt_id: '5cSFjJ4CJKc'
 - artist: Freak Power
   title: Turn On, Tune In, Cop Out
   belongs_to: ''
@@ -18951,8 +19478,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 0
-  id: '78c36cc3-90ec-43cb-b908-454f737459cb'
-  yt_id: '-66Oe1JIVaE'
+  id: '5fd2a2c6-b7b3-4e6d-b1fe-f18c68a63766'
+  yt_id: j8q1okHIonY
 - artist: GAYLE
   title: abcdefu
   belongs_to: ''
@@ -19215,6 +19742,15 @@ hits:
   playback_offset: 0
   id: '245a4026-f80a-4811-b46d-464ac533d845'
   yt_id: JhVRzh4_j50
+- artist: Gasolin'
+  title: Kvinde Min
+  belongs_to: ''
+  year: 1975
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: de8ebdc2-1a45-4433-a1fc-2a15174f6018
+  yt_id: IrxAce1tVJI
 - artist: Gast Waltzing
   title: Titelmusik
   belongs_to: Küstenwache
@@ -19401,6 +19937,15 @@ hits:
   id: b8d24c06-86ef-4b5d-9e3e-765dae12ef08
   yt_id: pH_4KKLGrXE
 - artist: Genesis
+  title: Invisible Touch
+  belongs_to: ''
+  year: 1986
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: a275b4b1-bb7c-4e12-b72a-9b115f0779d9
+  yt_id: fIHVzJMjVDs
+- artist: Genesis
   title: No Son Of Mine
   belongs_to: ''
   year: 1991
@@ -19552,9 +20097,9 @@ hits:
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
-  playback_offset: 39
-  id: '59795209-2b95-43d9-b01f-63277e55d5b7'
-  yt_id: ReOkRFWQy5w
+  playback_offset: 4
+  id: '2eb20a90-5dbf-4c2a-9100-14a5b2f7723a'
+  yt_id: TKWD4d1rnJ4
 - artist: George Michael
   title: Freedom! '90
   belongs_to: ''
@@ -19926,8 +20471,8 @@ hits:
   packs:
   - a5f30874-4f75-45d8-a9f2-436baa99d006
   playback_offset: 7
-  id: '2c0785a4-7851-4e0b-aa3a-a78a1bc35a82'
-  yt_id: e3XNC5J8iII
+  id: a3136651-c014-4100-a594-e27b5152be75
+  yt_id: '3P-mP0ILPY4'
 - artist: Gigi D'agostino
   title: The Riddle
   belongs_to: ''
@@ -20029,6 +20574,15 @@ hits:
   playback_offset: 22
   id: '07a10ad4-ac47-49d9-b0d9-159636c317e2'
   yt_id: '27S0DHkTp-g'
+- artist: Gina G, Motiv8
+  title: Ooh Aah...Just a Little Bit
+  belongs_to: ''
+  year: 1996
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 22
+  id: '44241ea5-c31f-46a9-b6c3-17773f37092b'
+  yt_id: MRGN8IkeGUg
 - artist: Ginette Reno
   title: Des croissants de soleil
   belongs_to: ''
@@ -20090,8 +20644,8 @@ hits:
   packs:
   - a5f30874-4f75-45d8-a9f2-436baa99d006
   playback_offset: 3
-  id: cd71ddc4-8162-4d9f-a5d0-f8d3adb118e6
-  yt_id: '1j4Qt3i-7qY'
+  id: '9c9d258a-1f3b-4881-87a4-a6ab3e55a324'
+  yt_id: qAQfRG_wgiA
 - artist: Giorgio Gaber
   title: Torpedo Blu
   belongs_to: ''
@@ -20228,6 +20782,24 @@ hits:
   playback_offset: 0
   id: '841a5670-62f2-4f8f-a5d0-157158e76b12'
   yt_id: zOcyefACvws
+- artist: Gitte Hænning
+  title: Jeg snakker med mig selv
+  belongs_to: ''
+  year: 1962
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: '9a675d52-7de2-4c0a-b126-a6e563079c6f'
+  yt_id: lFBLGgTIB-8
+- artist: Gitte Hænning
+  title: Ta' med ud å fisk
+  belongs_to: ''
+  year: 1963
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 5
+  id: '1c7676fd-6d5f-4312-825a-c2050c2c2200'
+  yt_id: '6KcKcxFnnSc'
 - artist: Gitti und Erica
   title: Heidi
   belongs_to: ''
@@ -20408,6 +20980,15 @@ hits:
   playback_offset: 11
   id: e845295f-5c21-4429-a7be-f5edd8bfde08
   yt_id: MsAAbvwsvK4
+- artist: Gnags
+  title: Mr. Swing King
+  belongs_to: ''
+  year: 1989
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 13
+  id: '0e422b8c-b705-4915-b50b-5194a5f7fcc4'
+  yt_id: '9znX_c52U4A'
 - artist: Gnarls Barkley
   title: Crazy
   belongs_to: ''
@@ -20691,8 +21272,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 0
-  id: '9c07af1c-eb25-4436-9fb4-209482d44050'
-  yt_id: t3omz_39Hf8
+  id: f179120d-29db-4479-878c-02e108bf2da3
+  yt_id: PnWXSHhv7PI
 - artist: Groove Coverage
   title: Riot on the Dancefloor
   belongs_to: ''
@@ -20882,6 +21463,25 @@ hits:
   playback_offset: 60
   id: '86f56e31-ed88-4e7f-99c7-5e92b330f896'
   yt_id: BZ9UZc_cBBU
+- artist: Gustav Winckler, Birthe Wilke
+  title: Skibet Skal Sejle I Nat
+  belongs_to: ''
+  year: 1957
+  packs:
+  - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 5
+  id: '6d450733-cc93-4213-a53a-62102689361c'
+  yt_id: jXWEb1HSYhw
+- artist: Gustav Winckler
+  title: Gem Et Lille Smil Til Det Bli'r Gråvejr
+  belongs_to: ''
+  year: 1975
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 7
+  id: '4cccb87c-8a78-41c2-b2f8-4c928736c971'
+  yt_id: '2Vpi_YXFAFU'
 - artist: Gustavo Santaolalla
   title: The Last Of Us
   belongs_to: The Last Of Us
@@ -20963,6 +21563,7 @@ hits:
   year: 2005
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - df0964f7-0354-466d-85dc-997c388625a6
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -20982,6 +21583,15 @@ hits:
   playback_offset: 14
   id: d910bf24-9210-42ce-ac48-33b6abf48cc9
   yt_id: OigFnuXL1NI
+- artist: Gym Class Heroes, Adam Levine
+  title: Stereo Hearts
+  belongs_to: ''
+  year: 2011
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '450cf239-05aa-434b-b354-6fe6d632fb4e'
+  yt_id: KyDov-QJFGE
 - artist: Gérard Blanc
   title: Du soleil dans la nuit
   belongs_to: ''
@@ -20999,8 +21609,8 @@ hits:
   - '1d98f5c4-3d62-480f-99fc-855626ffeebb'
   - b971d194-30fd-4483-92f2-61f947b8155a
   playback_offset: 8
-  id: cf3825b7-3b4b-4718-a19e-767eb625a5b0
-  yt_id: F0nMq1R6v9g
+  id: '2c3d1587-bb0c-4d97-a717-39da45d94061'
+  yt_id: Wzkz9IABhPk
 - artist: Gölä, Trauffer
   title: Büetzer Buebe
   belongs_to: ''
@@ -21053,8 +21663,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 0
-  id: '9bb02199-8b64-4fa0-a29f-61dfcc6f6352'
-  yt_id: D3VQrTfKDEk
+  id: dbb09d98-7dc1-4dd5-9a7f-9181f01107ad
+  yt_id: UC4n1QCU4oA
 - artist: HUGEL, Amber Van Day
   title: WTF
   belongs_to: ''
@@ -21116,6 +21726,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -21183,8 +21794,17 @@ hits:
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
   playback_offset: 4
-  id: a1d75908-3109-4dce-9e03-9a39e9debfd8
-  yt_id: '2PqfDyPAcBw'
+  id: '71a3c4ac-8eaf-439a-915f-5a377ea666a1'
+  yt_id: dLKTYAt31ic
+- artist: Hanne Boel
+  title: Don't Know Much About Love
+  belongs_to: ''
+  year: 1992
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 18
+  id: '71f7bcb8-4946-4051-b154-f802c4255b26'
+  yt_id: KZawmMH4Ttk
 - artist: Hanne Haller
   title: Mein lieber Mann
   belongs_to: ''
@@ -21354,6 +21974,7 @@ hits:
   year: 1956
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '0a4a898a-37ad-4391-92ce-8273158d741c'
@@ -21380,6 +22001,15 @@ hits:
   playback_offset: 12
   id: '3f254c0e-2367-42b8-807e-cb24676fd503'
   yt_id: puJt66y0TBw
+- artist: Harry Nilsson
+  title: Everybody's Talkin'
+  belongs_to: ''
+  year: 1968
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: '097fc954-3bd1-4620-bae6-2d72346f91f0'
+  yt_id: '5zHVFXorF38'
 - artist: Harry Styles
   title: Adore You
   belongs_to: ''
@@ -21400,6 +22030,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - df0964f7-0354-466d-85dc-997c388625a6
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -21426,6 +22057,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
   playback_offset: 0
@@ -21864,9 +22496,9 @@ hits:
   year: 2001
   packs:
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
-  playback_offset: 1
-  id: '5c681ed0-99b1-4889-99e5-618efb955970'
-  yt_id: krLcc21v9cU
+  playback_offset: 3
+  id: '80970d75-d84d-456b-b612-51e7e2f3e799'
+  yt_id: vOE3A3WM98k
 - artist: Heroes Del Silencio
   title: Entre dos tierras
   belongs_to: ''
@@ -22080,8 +22712,8 @@ hits:
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
   playback_offset: 0
-  id: c86ea2a4-a624-4db0-8f7a-0833b71283c3
-  yt_id: VNW39Le2WJw
+  id: '637c081f-5f56-4a90-aede-12d870bc70e5'
+  yt_id: s_OFRBI6YZI
 - artist: Howard Goodall
   title: Red Dwarf
   belongs_to: Red Dwarf
@@ -22136,6 +22768,15 @@ hits:
   playback_offset: 20
   id: f9e467a0-96be-43a5-b2e1-c65b34282d49
   yt_id: D9o_XTzYoa8
+- artist: Hozier
+  title: Take Me To Church
+  belongs_to: ''
+  year: 2013
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: bbaf523b-bc41-46b7-ba9c-7fe8e7d1e022
+  yt_id: MYSVMgRr6pw
 - artist: Hubert Kah
   title: Rosemarie
   belongs_to: ''
@@ -22194,6 +22835,15 @@ hits:
   playback_offset: 52
   id: '95adde75-3cb4-4583-a5ab-f479860c1acd'
   yt_id: NyVYXRD1Ans
+- artist: Hugo Helmig
+  title: Please Don't Lie
+  belongs_to: ''
+  year: 2017
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '2353c93c-a7a9-4a99-8ead-bb5553dbdc02'
+  yt_id: JbMhbMAWQt8
 - artist: Hugo Lapointe
   title: Célibataire
   belongs_to: ''
@@ -22282,8 +22932,8 @@ hits:
   packs:
   - d9abc924-bff0-4a37-83ff-10477d32fb2e
   playback_offset: 0
-  id: b9b32712-36ad-4fd0-afd3-59572efbb6ac
-  yt_id: i4koWV1akZA
+  id: '1d86439a-c7d7-4b1a-9557-ee0605d45877'
+  yt_id: Vk5-c_v4gMU
 - artist: INNA
   title: Amazing
   belongs_to: ''
@@ -22434,6 +23084,24 @@ hits:
   playback_offset: 0
   id: '7d47f7a0-0f0d-441d-9326-09baece58abf'
   yt_id: zFDRg549vRU
+- artist: Ib Mossin\, Lille Per
+  title: Bornholm, Bornholm, Bornholm
+  belongs_to: ''
+  year: 1959
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 18
+  id: '4246d99d-ae9d-4606-b4e1-595463731dc3'
+  yt_id: fplqfp2SQek
+- artist: Ibens
+  title: Jeg savner min blå cykel
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 14
+  id: '93f75f8c-4dcf-4c7b-aa85-dc8655011f3d'
+  yt_id: '4i1QrAZ8WEY'
 - artist: Ibo
   title: Ein Himmelbett im Internet
   belongs_to: ''
@@ -22674,9 +23342,9 @@ hits:
   year: 2008
   packs:
   - '0a4a898a-37ad-4391-92ce-8273158d741c'
-  playback_offset: 9
-  id: d01774dd-3869-4165-a258-0980fe2908dd
-  yt_id: n6MVcBM4P74
+  playback_offset: 11
+  id: '4a576f91-082f-4e78-a6f1-7aed82f4f938'
+  yt_id: PQrpXE5FqwA
 - artist: Ilse Werner
   title: Wir Machen Musik
   belongs_to: ''
@@ -22802,8 +23470,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 25
-  id: '2208a45b-570e-4c6d-9d87-ff41803820ef'
-  yt_id: SD7uz4uDy1U
+  id: c317cec6-d938-41c2-9165-5857bba9129e
+  yt_id: jszqqtS-M-4
 - artist: In Extremo
   title: Weckt die Toten
   belongs_to: ''
@@ -22914,8 +23582,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 0
-  id: fa50560e-a8b4-479b-bab2-1bd704f0ef2f
-  yt_id: lkPZMQuGq3I
+  id: '5b0b9b36-9b54-4416-8793-1ccfd5437718'
+  yt_id: sxvsCQztzCk
 - artist: Inner Circle
   title: Bad Boys
   belongs_to: Bad Boys
@@ -22931,6 +23599,7 @@ hits:
   year: 1992
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -22946,6 +23615,15 @@ hits:
   playback_offset: 20
   id: c2d076e1-c36d-4690-920e-82c2b25d6557
   yt_id: ZZpC30e4ehg
+- artist: Innocent Blood
+  title: Den første gang
+  belongs_to: ''
+  year: 1999
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 19
+  id: e0860d01-8ceb-4b67-b17d-a4d5b13b44db
+  yt_id: vyTNAM4tFy8
 - artist: Intermission, Lori
   title: Six Days
   belongs_to: ''
@@ -22961,9 +23639,9 @@ hits:
   year: 1993
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 0
-  id: '1e8ae43e-673d-4fd7-8a10-054d36ae374b'
-  yt_id: pdIz6-2I4Z8
+  playback_offset: 14
+  id: f65577af-2506-4877-aebb-45f9c4f140e9
+  yt_id: a6vnYMSuiOg
 - artist: Irama
   title: Nera
   belongs_to: ''
@@ -23311,6 +23989,15 @@ hits:
   playback_offset: 13
   id: c5e43dfa-ae16-4bfe-9151-406458ff97f8
   yt_id: _d3t9cKPWrY
+- artist: Ja Rule, Ashanti
+  title: Always On Time
+  belongs_to: ''
+  year: 2001
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 20
+  id: '54881361-c9ac-4966-a1d5-30f4824b4287'
+  yt_id: nkwWiYDeMvE
 - artist: Jack Allocco, David Kurtz
   title: High Upon This Love
   belongs_to: Reich und Schön
@@ -23329,6 +24016,15 @@ hits:
   playback_offset: 0
   id: '00138df4-5185-465d-9207-f330a8036bbd'
   yt_id: fRemFv7DgLs
+- artist: Jack Harlow
+  title: First Class
+  belongs_to: ''
+  year: 2022
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 41
+  id: '3d25c36b-6931-42ab-95e3-82c97fd441e3'
+  yt_id: i5U513rgtWs
 - artist: Jack Harlow
   title: WHATS POPPIN
   belongs_to: ''
@@ -23483,8 +24179,8 @@ hits:
   packs:
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   playback_offset: 18
-  id: f17d2f3d-f961-4f2e-a6f0-fc2f1264c95f
-  yt_id: m7DjsP8Xr2k
+  id: '71210588-bc1a-493c-8132-d5c8aebc4175'
+  yt_id: Bu0LKfB3CR8
 - artist: James Blunt
   title: Goodbye my Lover
   belongs_to: ''
@@ -23568,6 +24264,15 @@ hits:
   playback_offset: 5
   id: '2a0d18a1-6d62-4504-a121-be816bf2cee1'
   yt_id: CgeleP7nWN0
+- artist: James
+  title: Laid
+  belongs_to: ''
+  year: 1993
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: eaa0faa2-777f-4f2f-80c3-7c2c7646f1a3
+  yt_id: '5yXqRiXMru0'
 - artist: James Last
   title: Titelmelodie
   belongs_to: Der Landarzt
@@ -23757,6 +24462,15 @@ hits:
   playback_offset: 0
   id: a1173d2b-0dca-46ca-9634-c24eec9ef63a
   yt_id: sfjon-ZTqzU
+- artist: Janis Joplin
+  title: Mercedes Benz
+  belongs_to: ''
+  year: 1971
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 10
+  id: d8c5c6e6-6284-4fc5-a801-923ef6d35572
+  yt_id: '6dM2uzunIXs'
 - artist: Janno Gibbs
   title: Fallin'
   belongs_to: ''
@@ -23868,6 +24582,7 @@ hits:
   belongs_to: ''
   year: 2008
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -23891,8 +24606,8 @@ hits:
   packs:
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 13
-  id: '83160c32-2345-475b-9886-4049d0de8117'
-  yt_id: '-8siFsW-KN8'
+  id: fc04886b-0f1a-49d6-874d-c82b4707b84e
+  yt_id: lfRb_njs8ig
 - artist: Javier Solís
   title: Se Te Olvida (La Mentira)
   belongs_to: ''
@@ -24204,6 +24919,15 @@ hits:
   playback_offset: 24
   id: '6fb4a616-f092-4caa-8b60-c0fd935d010c'
   yt_id: AwBS0kUgrh0
+- artist: Jennifer Rush
+  title: The Power of Love
+  belongs_to: ''
+  year: 1984
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: d3c56961-dae8-48cf-8244-28714a63c3d9
+  yt_id: eiFre0FK-s0
 - artist: Jennings Couch
   title: Where Did U Come From?
   belongs_to: ''
@@ -24283,8 +25007,8 @@ hits:
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
   playback_offset: 0
-  id: '245015b1-6850-4f1d-abbd-ccb1a1fd0b6f'
-  yt_id: vAitL8FvBuU
+  id: acdc64fc-2f4c-4ef7-ad67-30a0e469eec2
+  yt_id: WhzjQ5_uzls
 - artist: Jerry Goldsmith , Alexander Courage
   title: 'Star Trek: The Next Generation Theme'
   belongs_to: Star Trek:The Next Generation
@@ -24327,6 +25051,7 @@ hits:
   year: 1957
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 0
   id: e6f184b1-fd3e-43dc-ab0b-270570c06d62
   yt_id: V_FAqr6rP4w
@@ -24339,6 +25064,15 @@ hits:
   playback_offset: 15
   id: bfa5c99f-9351-42c7-8e37-ea6391882f1c
   yt_id: o6Y2bOiro_c
+- artist: Jess Glynne
+  title: Hold My Hand
+  belongs_to: ''
+  year: 2015
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 3
+  id: '0b8c09ef-0234-4a89-8b15-47d1c7362ea8'
+  yt_id: VPoQeGei_Z0
 - artist: Jess Glynne
   title: I'll Be There
   belongs_to: ''
@@ -24517,9 +25251,9 @@ hits:
   year: 1972
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
-  playback_offset: 0
-  id: '7ddbd268-5143-48c0-83f4-a7e18b9b09f1'
-  yt_id: pMQPNMPW4ws
+  playback_offset: 1
+  id: bb2e7ae4-5a66-4b27-963f-5fda08e6232c
+  yt_id: lDM-lQAyyks
 - artist: Jim Lang
   title: Hey Arnold!
   belongs_to: Hey Arnold!
@@ -24683,6 +25417,15 @@ hits:
   playback_offset: 30
   id: '2ee5acb2-a55a-4e58-8807-e4bcbc0c1277'
   yt_id: Cx5ENAFTLZg
+- artist: Joan Osborne
+  title: One Of Us
+  belongs_to: ''
+  year: 1995
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 58
+  id: '5ddf536f-bf07-43bf-a545-0d81455bfde3'
+  yt_id: aDdOnl0bHO4
 - artist: Joana Zimmer
   title: I Believe
   belongs_to: ''
@@ -25063,6 +25806,7 @@ hits:
   year: 1971
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - df0964f7-0354-466d-85dc-997c388625a6
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
@@ -25085,6 +25829,7 @@ hits:
   year: 1986
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 24
   id: cda27859-9bb2-48d1-88d5-611d7fbde28a
   yt_id: DcCHScn4gpw
@@ -25207,6 +25952,15 @@ hits:
   playback_offset: 5
   id: '77f6d3f8-5261-4aeb-a01d-088a6b98ce99'
   yt_id: lAsvjVx-Mg4
+- artist: John Mogensen
+  title: Så Længe Jeg Lever
+  belongs_to: ''
+  year: 1973
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: ac90cb99-b636-45db-8520-644cbeb66ed8
+  yt_id: Bctlvz-qpKE
 - artist: John Parker
   title: Theme from Chips
   belongs_to: Chips
@@ -25279,6 +26033,15 @@ hits:
   playback_offset: 13
   id: b6969060-9abb-47a3-97a7-7ad864f7bdc4
   yt_id: Y1ChbwFlyuE
+- artist: John Waite
+  title: Missing You
+  belongs_to: ''
+  year: 1984
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 19
+  id: df27e760-e6a3-4f72-a771-ce450a35a0b5
+  yt_id: k9e157Ner90
 - artist: John Williams
   title: Indiana Jones
   belongs_to: Raiders of the Lost Ark
@@ -25440,9 +26203,9 @@ hits:
   packs:
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
-  playback_offset: 15
-  id: '40e487c5-74d0-425e-8f24-fca8da26ea0c'
-  yt_id: LDNKOblg3gs
+  playback_offset: 7
+  id: '6e56fa2f-1eee-48e3-b8dd-56d512ea814f'
+  yt_id: b0cAWgTPiwM
 - artist: Johnny Pearson
   title: Theme from All Creatures Great and Small
   belongs_to: Der Doktor und das liebe Vieh (All Creatures Great and Small)
@@ -25576,6 +26339,15 @@ hits:
   playback_offset: 10
   id: fa9645a8-6a82-4e48-81c7-a8796286963f
   yt_id: '2595abcvh2M'
+- artist: Jooks
+  title: Hun Vil Ha' En Rapper
+  belongs_to: ''
+  year: 2009
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: '43478ca9-4b3a-415e-9e1d-ccd2ab5beb91'
+  yt_id: '-y_y2Bn2ndU'
 - artist: Joost Klein
   title: Europapa
   belongs_to: ''
@@ -25662,8 +26434,8 @@ hits:
   packs:
   - e4b2130f-be86-4124-92d7-04240ea04063
   playback_offset: 40
-  id: '5b199079-e8a3-4380-9d34-36960b45c3ee'
-  yt_id: IVKf00VGjGM
+  id: f6b31866-cacc-46a2-a34a-e2de72f284a2
+  yt_id: N9weeGiL5IM
 - artist: José Alfredo Jimenez
   title: Media Vuelta
   belongs_to: ''
@@ -25939,6 +26711,7 @@ hits:
   belongs_to: ''
   year: 2005
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -26237,6 +27010,7 @@ hits:
   belongs_to: ''
   year: 2002
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 10
   id: ab3c8904-9dbd-47b6-922b-94b50ad406d4
@@ -26446,15 +27220,15 @@ hits:
   playback_offset: 0
   id: f2ee5ab9-f7cf-4406-9b70-8c26ba93d8ef
   yt_id: zmLqYi9fe3U
-- artist: Jürgen Peters
+- artist: Jürgen Peter
   title: Mary Jane
   belongs_to: ''
   year: 2009
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 30
-  id: a3c49cd8-ab18-4bd0-8dae-0110b0f56ddd
-  yt_id: wQ6kpSOCa2s
+  id: '8bbd1c7f-148f-4ad0-aeca-f0c6ac1d70c0'
+  yt_id: FaEogkMsb_E
 - artist: Jürgen von der Lippe
   title: Guten Morgen, liebe Sorgen
   belongs_to: ''
@@ -26671,6 +27445,7 @@ hits:
   year: 1979
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 33
@@ -26994,6 +27769,15 @@ hits:
   playback_offset: 15
   id: '2311b336-c28a-448f-93a7-ed4090f508ad'
   yt_id: WEmdUN0cAhw
+- artist: Kashmir
+  title: Rocket Brothers
+  belongs_to: ''
+  year: 2003
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 32
+  id: '73bebfd3-aa6e-47f4-94ec-a4be830459ac'
+  yt_id: rkQsoyKoiWg
 - artist: Kasia Klich
   title: Lepszy Model
   belongs_to: ''
@@ -27045,6 +27829,7 @@ hits:
   year: 1985
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 25
   id: '9849b1e8-24a3-4ea6-8687-c6762dabe5f6'
   yt_id: HYwNM1t9ltI
@@ -27368,6 +28153,7 @@ hits:
   year: 2002
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 19
   id: '7a4e0956-8d86-425f-9802-6f32987a142c'
   yt_id: eiBinM-f-Pk
@@ -27380,6 +28166,15 @@ hits:
   playback_offset: 0
   id: e537fc35-50bf-492c-9451-9a33c229e5c3
   yt_id: HuviezuvYUI
+- artist: Keld Heick
+  title: Vi skal gå hånd i hånd
+  belongs_to: ''
+  year: 1968
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 5
+  id: b422987f-7ec5-4755-b306-4cb0c631c64b
+  yt_id: '4y6n2Xv3GhQ'
 - artist: Kelis
   title: Milkshake
   belongs_to: ''
@@ -27525,6 +28320,7 @@ hits:
   year: 1978
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 4
   id: bc54338e-2429-4e98-9c05-01ea0fda9e38
   yt_id: '7hx4gdlfamo'
@@ -27662,6 +28458,15 @@ hits:
   playback_offset: 13
   id: da967471-6322-49e2-963f-a7e7b0fa8ea4
   yt_id: AlZEdyo6uwY
+- artist: Kim Larsen
+  title: Papirsklip
+  belongs_to: ''
+  year: 1983
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 22
+  id: '0a0f9fca-e98a-4c44-96ce-6360191bb152'
+  yt_id: OlXY0AJBtio
 - artist: Kim Wilde
   title: Cambodia
   belongs_to: ''
@@ -27685,10 +28490,10 @@ hits:
   belongs_to: ''
   year: 1981
   packs:
-  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 10
-  id: ac5b70ef-385c-4b8e-b05d-e60097946578
-  yt_id: YXE9oBzST68
+  id: '866d7fe8-e471-46d5-9c60-472e9c124327'
+  yt_id: '80TfG7C9azA'
 - artist: Kim Wilde
   title: Loved
   belongs_to: ''
@@ -27937,6 +28742,15 @@ hits:
   playback_offset: 8
   id: '1c7145e7-64bf-470c-9616-41a1e380e2e1'
   yt_id: AI9KMPvtiWw
+- artist: Klingande
+  title: Jubel
+  belongs_to: ''
+  year: 2013
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 6
+  id: b4020588-ad51-4adb-a10c-2c8cfb9a9155
+  yt_id: '0JDjtM10j7w'
 - artist: Klostertaler
   title: Ciao d'amore
   belongs_to: ''
@@ -27962,8 +28776,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 13
-  id: '0626a4b7-2647-4656-abba-86657415722f'
-  yt_id: Z8zx7gIBduc
+  id: '10bde345-c88b-4081-98d2-957c25201e1b'
+  yt_id: DQY3jqImivY
 - artist: Klubbingman
   title: Wonderland
   belongs_to: ''
@@ -28205,6 +29019,7 @@ hits:
   belongs_to: ''
   year: 1992
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 8
@@ -28558,6 +29373,7 @@ hits:
   year: 2011
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - '70dfbe7a-c797-4335-b859-ea62ff9bedff'
@@ -28572,18 +29388,10 @@ hits:
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
+  - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 12
   id: '519f05f9-10ff-459d-80d1-7b5894e20d4a'
   yt_id: mau7IuKhn1k
-- artist: LMFAO
-  title: Sexy And I Know It
-  belongs_to: ''
-  year: 2011
-  packs:
-  - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
-  playback_offset: 14
-  id: '69027eba-c9f3-4f8a-b6d1-b59999326a9c'
-  yt_id: wyx6JDQCslE
 - artist: LMFAO
   title: Shots
   belongs_to: ''
@@ -28738,8 +29546,8 @@ hits:
   - df0964f7-0354-466d-85dc-997c388625a6
   - '70dfbe7a-c797-4335-b859-ea62ff9bedff'
   playback_offset: 11
-  id: '22f302de-86a9-4911-bf43-9e6d34a0241e'
-  yt_id: enup62u1LEk
+  id: '7c03dc3e-404a-4f14-9fd0-d5cef41a19b4'
+  yt_id: nYnLVWXmRm8
 - artist: La Pegatina
   title: Lloverá y yo veré
   belongs_to: ''
@@ -28794,6 +29602,15 @@ hits:
   playback_offset: 16
   id: '36e0115c-442b-4cee-a400-d4b7be2aed27'
   yt_id: '-941k4_ixFM'
+- artist: Laban
+  title: Hvor ska' vi sove i nat
+  belongs_to: ''
+  year: 1982
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: '426148ff-879c-4e80-954d-7f1c7e70c51e'
+  yt_id: oSri0OhAulM
 - artist: Ladaniva
   title: Jako
   belongs_to: ''
@@ -28827,6 +29644,15 @@ hits:
   playback_offset: 14
   id: '86d393be-30dc-478c-ba14-d53fba81f079'
   yt_id: BpIf43m2ZQI
+- artist: Lady Gaga, Bruno Mars
+  title: Die With A Smile
+  belongs_to: ''
+  year: 2024
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: '4062dfbf-2985-41e4-860d-e5f8d7f50ec4'
+  yt_id: zgaCZOQCpp8
 - artist: Lady Gaga, Colby O'Donis
   title: Just Dance
   belongs_to: ''
@@ -29071,6 +29897,24 @@ hits:
   playback_offset: 0
   id: cfacdcf4-e4c0-4e17-a778-2738ea7c71a8
   yt_id: NhACeyv9p6Y
+- artist: Lars H.U.G.
+  title: Elsker dig for evigt
+  belongs_to: ''
+  year: 1986
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 30
+  id: c7289f79-f38f-49bd-899e-3f8305de986a
+  yt_id: F5pR93oj8Ew
+- artist: Lars Lilholt Band
+  title: Kald det kærlighed
+  belongs_to: ''
+  year: 1993
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 12
+  id: '2504240f-52bb-4526-a8ef-48453b83ae37'
+  yt_id: '3DLUVPZqV58'
 - artist: Lartiste, Caroliina
   title: Mafiosa
   belongs_to: ''
@@ -29304,6 +30148,15 @@ hits:
   playback_offset: 0
   id: '3641163f-44c3-4b49-bc71-01285a0db6e1'
   yt_id: DB9wSsyLAlo
+- artist: Laus Høybye, Krummerne
+  title: Krumme's Sang
+  belongs_to: ''
+  year: 1991
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '7dcfee44-d594-48e9-ab2b-2a6470507cda'
+  yt_id: hUnKrknBYcc
 - artist: Lazza
   title: CENERE
   belongs_to: ''
@@ -29379,6 +30232,15 @@ hits:
   playback_offset: 13
   id: '8ca6fef6-dbc3-42f9-8bf3-a6f6b4f4975d'
   yt_id: hBJibJwU0SI
+- artist: Lecia & Lucienne
+  title: Rør ved mig
+  belongs_to: ''
+  year: 1973
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: e3ed37bf-f51b-422c-81ba-efea72e6d800
+  yt_id: SFvZaJ6py1g
 - artist: Led Zeppelin
   title: D'yer Mak'er
   belongs_to: ''
@@ -29403,6 +30265,7 @@ hits:
   belongs_to: ''
   year: 1971
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
   playback_offset: 52
@@ -29827,8 +30690,8 @@ hits:
   packs:
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 31
-  id: d0c83f7e-6af7-4a13-9d98-cb667cbf6ae7
-  yt_id: LEexI2npHBQ
+  id: e38f6bde-4b85-41e2-b3ed-a3bf663479d5
+  yt_id: '9x1RcVrGjGM'
 - artist: Lewis Capaldi
   title: Someone You Loved
   belongs_to: ''
@@ -29891,8 +30754,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 0
-  id: '94f9f2f1-cfea-43f7-90e9-9d58d3c5d3d8'
-  yt_id: '9QZ0VlgJ4uw'
+  id: cc0ac8df-4d8f-4039-9365-57351a26a361
+  yt_id: kKD97TNSSpg
 - artist: Libby Holman
   title: You and the Night and the Music
   belongs_to: ''
@@ -30154,6 +31017,7 @@ hits:
   year: 1968
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 5
   id: '57f3db78-a061-4588-9cea-5fb83857d369'
   yt_id: gQMxuXkqGrA
@@ -30428,6 +31292,7 @@ hits:
   year: 1955
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   playback_offset: 0
   id: '2b201553-f3b8-4339-b68d-ce974fb46cbc'
@@ -30459,6 +31324,15 @@ hits:
   playback_offset: 5
   id: '862326df-bd24-4ab6-8498-6a5acdafac4f'
   yt_id: TpGZIcxe2i4
+- artist: Liva Weel
+  title: Glemmer du
+  belongs_to: ''
+  year: 1932
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 14
+  id: '0972bc39-92bf-48dd-ac62-dd5e71862c64'
+  yt_id: Ec4yryuFB5s
 - artist: Liza Minnelli
   title: Cabaret
   belongs_to: Cabaret
@@ -30533,8 +31407,8 @@ hits:
   packs:
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 26
-  id: cb080d5e-774c-4365-a7b6-859eec0e3f2a
-  yt_id: EKLoT611HZ0
+  id: '16805cda-d976-4898-a1b8-52a47f19b358'
+  yt_id: fzI6vO8_G0U
 - artist: Lobo
   title: I'd Love You to Want Me
   belongs_to: ''
@@ -30570,8 +31444,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 42
-  id: '4cb5efcc-ac5d-4628-b7d7-2082c0a8a90f'
-  yt_id: ol6IAm2lEiU
+  id: '6d7372e7-dae0-4ac8-87e8-9c0702bc50ea'
+  yt_id: sv0HoBkmEUw
 - artist: Loft
   title: Love is Magic
   belongs_to: ''
@@ -30963,6 +31837,7 @@ hits:
   year: 1993
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -31152,8 +32027,8 @@ hits:
   packs:
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 24
-  id: a6dfc0b2-ab23-4684-8a63-c3a433850a7d
-  yt_id: r97Tibkxe6s
+  id: '2f7483ce-a479-4ef0-b1e1-3d8e7b927c64'
+  yt_id: VndF6_hzzeU
 - artist: Los Sirex
   title: La Escoba
   belongs_to: ''
@@ -31303,6 +32178,7 @@ hits:
   year: 1967
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 4
   id: a8684297-3ce5-4a83-b501-622595058551
   yt_id: rBrd_3VMC3c
@@ -31343,6 +32219,15 @@ hits:
   playback_offset: 0
   id: '51e801e2-6fa5-4442-aeff-20b4c343b14b'
   yt_id: '4H_G8BwCNHc'
+- artist: Love Shop
+  title: En Nat Bliver Det Sommer
+  belongs_to: ''
+  year: 1990
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 19
+  id: '6fba8582-c5f4-4c73-ac84-bea7c0bda378'
+  yt_id: '-oKGg_lRyDM'
 - artist: Love Spit Love
   title: How Soon Is Now
   belongs_to: Charmed - Zauberhafte Hexen
@@ -31657,8 +32542,8 @@ hits:
   packs:
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   playback_offset: 2
-  id: '59212758-915e-4fcb-8da8-952fef2c8264'
-  yt_id: AGcgJU3_Chc
+  id: '6c707a2e-6540-4977-b3e1-68d8e1ffcabb'
+  yt_id: pg1PMWraf1E
 - artist: Lukas Graham
   title: '7 Years'
   belongs_to: ''
@@ -31677,6 +32562,15 @@ hits:
   playback_offset: 15
   id: '60989c57-5501-45a2-af22-fddc8f8212eb'
   yt_id: kqFLQG484pg
+- artist: Lukas Graham
+  title: Mama Said
+  belongs_to: ''
+  year: 2014
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 24
+  id: '86ed5d70-a0f1-49fe-afa9-cb086a5eedb2'
+  yt_id: K9M4SASBmTY
 - artist: Luke Bryan
   title: Country Girl (Shake It For Me)
   belongs_to: ''
@@ -31905,6 +32799,7 @@ hits:
   year: 2013
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - ec58c124-0e1b-4c6a-bdf9-d82d6d79ef37
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -31964,6 +32859,7 @@ hits:
   year: 2008
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 54
   id: '0d55a495-17ee-485c-901d-fc56d8d5f262'
   yt_id: rdKfuwy6LUM
@@ -32202,11 +33098,19 @@ hits:
   belongs_to: ''
   year: 1980
   packs:
-  - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
-  playback_offset: 4
-  id: cf14335f-168c-4e2e-8611-93a06a4f05e5
-  yt_id: PfiJrmSEwbY
+  playback_offset: 20
+  id: '3b144c85-fe0d-46ee-9750-a1f111e1acfe'
+  yt_id: Dc3AovUZgvoio=1
+- artist: Madness
+  title: Baggy Trousers
+  belongs_to: ''
+  year: 1980
+  packs:
+  - '72af3598-3a66-4a72-964b-bef28821f5fb'
+  playback_offset: 20
+  id: ff39aa22-4074-4c83-9726-9178249223d0
+  yt_id: Dc3AovUZgvo
 - artist: Madness
   title: House of Fun
   belongs_to: ''
@@ -32313,9 +33217,9 @@ hits:
   packs:
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '70dfbe7a-c797-4335-b859-ea62ff9bedff'
-  playback_offset: 10
-  id: '028962ab-5cf0-46b1-a33f-afc29522c7bf'
-  yt_id: vLwpQpqDz0A
+  playback_offset: 4
+  id: '00093124-6578-4a8f-8e5d-87610397346c'
+  yt_id: JaB-JUaeVpA
 - artist: Madonna
   title: Like a Virgin
   belongs_to: ''
@@ -32367,6 +33271,15 @@ hits:
   playback_offset: 38
   id: f8c9d22a-6f56-4fd3-9fe4-7930bfbad0f4
   yt_id: L8vnVoCbAMc
+- artist: Maggie Lindemann
+  title: Pretty Girl
+  belongs_to: ''
+  year: 2016
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 9
+  id: d07d7c22-ddc0-43b7-8f31-0ea541b940e8
+  yt_id: ptIXwyxf7XQ
 - artist: Magic Affair
   title: Energy of Light
   belongs_to: ''
@@ -32481,6 +33394,7 @@ hits:
   year: 2015
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -32545,6 +33459,15 @@ hits:
   playback_offset: 16
   id: c2a7f031-5cba-4365-9a28-ca66e5fc8f26
   yt_id: q1FRw1sGlD4
+- artist: Malte Ebert
+  title: Kun Med Dig
+  belongs_to: ''
+  year: 2022
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 4
+  id: f8c2c770-e7ea-48f1-87b1-cb2b06e608cd
+  yt_id: fSHIDhONQeg
 - artist: Maluma
   title: Felices los 4
   belongs_to: ''
@@ -32976,6 +33899,15 @@ hits:
   playback_offset: 43
   id: '0e4d76eb-8117-42db-b194-e8f47a1b39cd'
   yt_id: A1GnILhQR7g
+- artist: Marguerite Viby
+  title: Tingelingeling For Mig
+  belongs_to: ''
+  year: 1944
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 53
+  id: b84179cd-e88f-424e-bfab-c322ff3d5ce6
+  yt_id: '45BWg0kTB6Y'
 - artist: Maria & Margot Hellwig
   title: Servus, Grüezi und Hallo
   belongs_to: ''
@@ -33093,6 +34025,15 @@ hits:
   playback_offset: 30
   id: c3ff1942-3125-45d7-8c9e-ab37369c7725
   yt_id: W92r_I8JMKA
+- artist: Marie Key
+  title: Landet
+  belongs_to: ''
+  year: 2012
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '49da9db6-a8a5-4264-970e-95887b79cf4e'
+  yt_id: L5StvZYMEZI
 - artist: Marie Reim
   title: Bist du dafür bereit?
   belongs_to: ''
@@ -33136,9 +34077,9 @@ hits:
   year: 2024
   packs:
   - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
-  playback_offset: 0
-  id: '34d8ba6b-ab1b-49ea-99ee-25a864f0b1b0'
-  yt_id: Rmv7eKo68_I
+  playback_offset: 23
+  id: e00d92ef-8958-4dfa-b6e8-e389e748fb04
+  yt_id: mTSTnLWGUPs
 - artist: Mario Jordan
   title: Welch ein Tag
   belongs_to: ''
@@ -33405,8 +34346,8 @@ hits:
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
   playback_offset: 0
-  id: af07eae4-a8e0-4175-8df2-4164cba80ffd
-  yt_id: '3zMCe5oTois'
+  id: '2568f30e-fecb-49e7-9ffb-1d661b687ade'
+  yt_id: '4ApMjfJlCh0'
 - artist: Mark Snow
   title: 'Materia Primoris: The X-Files Theme'
   belongs_to: Akte X - Die unheimlichen Fälle des FBI
@@ -33459,8 +34400,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 17
-  id: '6d31cb27-3ae6-43ce-97ea-99d0103b7593'
-  yt_id: VDCrh5GRTNY
+  id: '1e358e1f-d092-4df4-a5f3-d40c55131801'
+  yt_id: ZxOQEoTHgFE
 - artist: Markus
   title: Ich will Spaß
   belongs_to: ''
@@ -33540,6 +34481,7 @@ hits:
   belongs_to: ''
   year: 2002
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - df0964f7-0354-466d-85dc-997c388625a6
@@ -33611,6 +34553,15 @@ hits:
   id: '2e50a269-3339-4335-a41a-880a150e2c6d'
   yt_id: CrYYg_atdtk
 - artist: Martha Reeves & The Vandellas
+  title: (Love Is Like A) Heat Wave
+  belongs_to: ''
+  year: 1963
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 28
+  id: '60d6c161-6d57-4dac-b96b-af7903768c02'
+  yt_id: '5k0GDQrK2jo'
+- artist: Martha Reeves & The Vandellas
   title: Dancing In The Street
   belongs_to: ''
   year: 1965
@@ -33619,8 +34570,8 @@ hits:
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 5
-  id: a8c1ff00-95c1-449b-b43a-38b18c98611a
-  yt_id: '68Uv959QuCg'
+  id: '7d46e5e7-c699-4859-820f-9612b49e6c19'
+  yt_id: '9KhbM2mqhCQ'
 - artist: Marti Fischer, HandOf Blood
   title: Influencer Darts-WM
   belongs_to: ''
@@ -33639,6 +34590,15 @@ hits:
   playback_offset: 8
   id: '7dc202d9-02d7-41ee-9580-1e5ae271d043'
   yt_id: ci4s90xK4ak
+- artist: Martika
+  title: Toy Soldiers
+  belongs_to: ''
+  year: 1988
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 18
+  id: '71391557-7811-46ac-b054-72a67a80bc8d'
+  yt_id: LvdLovAaYzM
 - artist: Martin Böttcher,
   title: Titelmelodie
   belongs_to: Forsthaus Falkenau
@@ -33687,6 +34647,15 @@ hits:
   playback_offset: 40
   id: b8d86a8e-10f3-4dde-b2e2-584affa91b8c
   yt_id: '2kpAzC2Mja8'
+- artist: Martin Jensen
+  title: Solo Dance
+  belongs_to: ''
+  year: 2016
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: e80c11bf-f20b-4015-a98e-4d5c9749529d
+  yt_id: '4vaTi78W-14'
 - artist: Martin Solveig, Dragonette
   title: Hello
   belongs_to: ''
@@ -33757,6 +34726,7 @@ hits:
   belongs_to: ''
   year: 1967
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 5
@@ -33812,6 +34782,15 @@ hits:
   playback_offset: 20
   id: '252c498f-d826-4119-8732-2ac085d5bd00'
   yt_id: '1wh_UYUA0oA'
+- artist: Mary Mary
+  title: Shackles (Praise You)
+  belongs_to: ''
+  year: 2000
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 11
+  id: '0f0d21cc-216d-4527-bdae-73e9b59dcecd'
+  yt_id: Jr8TC-qfCmo
 - artist: Mary Wells
   title: My Guy
   belongs_to: ''
@@ -34051,6 +35030,15 @@ hits:
   playback_offset: 7
   id: affb204e-fa99-4bc2-ba3d-057b4b7d9fd6
   yt_id: QjWxUfTTMu4
+- artist: Matchbox Twenty
+  title: '3AM'
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 19
+  id: '0960b6b5-efbb-444c-8b4a-8c1fa2169fc3'
+  yt_id: C-Naa1HXeDQ
 - artist: Matchbox Twenty
   title: Push
   belongs_to: ''
@@ -34341,6 +35329,15 @@ hits:
   playback_offset: 22
   id: '090289a4-c14d-4439-ba4c-515d21c49c40'
   yt_id: '5489KqjzNSA'
+- artist: Mc Einar
+  title: Arh Dér !
+  belongs_to: ''
+  year: 1989
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 14
+  id: c5ba3d82-70b2-4ace-a7a6-491f5578e95f
+  yt_id: jVlNetljnoI
 - artist: McFly
   title: Star Girl
   belongs_to: ''
@@ -34351,6 +35348,15 @@ hits:
   playback_offset: 0
   id: a11dd4e8-ab3f-49f8-bced-77349c7ab077
   yt_id: TjMEYUTZFRU
+- artist: Me & My
+  title: Dub-I-Dub
+  belongs_to: ''
+  year: 1995
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 22
+  id: '78405dae-65f8-42dd-acdf-96f608992171'
+  yt_id: XTjJ2_P5P4U
 - artist: Meat Loaf, Lorraine Crosby
   title: I'd Do Anything For Love (But I Won't Do That)
   belongs_to: ''
@@ -34422,6 +35428,15 @@ hits:
   playback_offset: 12
   id: '2b74d530-bf17-4568-8f28-e43c4247239a'
   yt_id: '7IguUFc7af4'
+- artist: Medina
+  title: Kun For Mig
+  belongs_to: ''
+  year: 2008
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 5
+  id: '0a27c7d3-da26-4849-abcc-3f3673ec6774'
+  yt_id: PuprY5yigAw
 - artist: Megadeth
   title: Symphony Of Destruction
   belongs_to: ''
@@ -35322,8 +36337,8 @@ hits:
   packs:
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 26
-  id: b49b099d-0d27-447b-be85-d67805ee1624
-  yt_id: '7KgDdsH_sjI'
+  id: '145a63ea-1c17-4fd6-81e7-97ea9bd9c046'
+  yt_id: y6SBdSDJMOQ
 - artist: Mickie Krause
   title: Biste braun, kriegste Fraun
   belongs_to: ''
@@ -35357,9 +36372,9 @@ hits:
   year: 1999
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
-  playback_offset: 30
-  id: ef8b2ba8-cbec-4213-af8b-116e583bef9f
-  yt_id: ZIdhH3TxnD4
+  playback_offset: 15
+  id: '5cb3aec9-688a-4389-9934-ee21e1961302'
+  yt_id: '9hiCBR1eqEw'
 - artist: Micky Erbe, Maribeth Solomon
   title: Main Theme
   belongs_to: 'Gene Roddenberrys Earth: Final Conflict; Mission Erde - Sie sind unter uns'
@@ -35394,6 +36409,7 @@ hits:
   year: 1987
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 25
   id: ef9b6b70-a6d3-4fa1-8221-353ca792e5cc
@@ -35423,8 +36439,8 @@ hits:
   packs:
   - '70dfbe7a-c797-4335-b859-ea62ff9bedff'
   playback_offset: 22
-  id: '9710bebb-eb4f-4b69-9898-de813c7dd5f6'
-  yt_id: F-6CF3u84yc
+  id: dc70df0a-f77c-4ba4-8216-1d1db201e9ef
+  yt_id: vQwqLoZ28KU
 - artist: Miguel Bosé
   title: Don Diablo
   belongs_to: ''
@@ -35580,15 +36596,14 @@ hits:
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
   playback_offset: 0
-  id: '2e24ed41-ccaf-498c-a702-3441d5044b9d'
-  yt_id: g46f6Dda7ME
+  id: '5373c7c5-294b-4cae-a10c-e0b201914169'
+  yt_id: QlkQIMdE_j0
 - artist: Mike Post, Pete Carpenter
   title: The A-Team
   belongs_to: The A-Team
   year: 1983
   packs:
   - c6b15800-b69a-4dca-9359-c1fbd2d282d1
-  - fb8e6460-fb19-4852-b0bb-2240d35aff34
   playback_offset: 0
   id: f11e9afb-cd23-4343-afe6-661f85e13c28
   yt_id: R88ycJ8dQEg
@@ -35747,6 +36762,7 @@ hits:
   belongs_to: ''
   year: 2009
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
@@ -35835,6 +36851,15 @@ hits:
   id: '269bdde0-ce04-49e0-9f84-a2f7591d1139'
   yt_id: _-L9gXDjQIY
 - artist: Missy Elliott
+  title: Get Ur Freak On
+  belongs_to: ''
+  year: 2001
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 25
+  id: '581afaee-035f-4740-8641-8dba2778d712'
+  yt_id: bJe-Gz5Meno
+- artist: Missy Elliott
   title: Work It
   belongs_to: ''
   year: 2002
@@ -35879,6 +36904,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   - '0a4a898a-37ad-4391-92ce-8273158d741c'
   - ec58c124-0e1b-4c6a-bdf9-d82d6d79ef37
@@ -36237,8 +37263,8 @@ hits:
   packs:
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 19
-  id: a01f508f-7b67-44d1-8799-4c8fbd50a733
-  yt_id: '08JjYD_UZoE'
+  id: '5eb8c5f2-6eca-4aba-916f-0c2fc4c34925'
+  yt_id: dH8WvayAo1M
 - artist: Mouth & MacNeal
   title: How Do You Do?
   belongs_to: ''
@@ -36254,6 +37280,7 @@ hits:
   belongs_to: ''
   year: 1991
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '7c557823-64fc-4f3a-a651-d972d664824c'
   playback_offset: 6
   id: '5575cbba-cf3c-497e-b358-7572f0e2358d'
@@ -36273,6 +37300,7 @@ hits:
   year: 1996
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 0
@@ -36511,8 +37539,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 15
-  id: fdeb8795-cae8-4c38-ab44-a4b150d98a8e
-  yt_id: PvI0nM9fOMA
+  id: '72d82cb6-021f-46d5-a488-23de31fce406'
+  yt_id: Op61Eg83abw
 - artist: Mustii
   title: Before the Party's Over
   belongs_to: ''
@@ -36778,8 +37806,8 @@ hits:
   packs:
   - d9abc924-bff0-4a37-83ff-10477d32fb2e
   playback_offset: 9
-  id: '0ccd3f2a-f47e-4dc5-98c7-36c678bad698'
-  yt_id: TLjjKFej_zU
+  id: '85f3520c-eaee-43df-b6b7-4c91a1013ae0'
+  yt_id: '2OvyA2__Eas'
 - artist: NERO
   title: Promises
   belongs_to: ''
@@ -36814,8 +37842,8 @@ hits:
   packs:
   - d9abc924-bff0-4a37-83ff-10477d32fb2e
   playback_offset: 0
-  id: '3d1050ee-aba1-4e72-b03a-70de97cfce60'
-  yt_id: MuVxXYXoPZM
+  id: fe1880f6-330c-4103-b370-d9900017eaa2
+  yt_id: uxx5GhVNDGg
 - artist: NMIXX
   title: O.O
   belongs_to: ''
@@ -36915,6 +37943,15 @@ hits:
   playback_offset: 0
   id: '75055fb0-2066-4c65-ad12-ec5bd7347a03'
   yt_id: GPwV7_LWF58
+- artist: Nancy Sinatra
+  title: Bang Bang (My Baby Shot Me Down)
+  belongs_to: ''
+  year: 1966
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 12
+  id: a72dca1d-c0d9-4c0d-829a-1a32cd7e78b9
+  yt_id: qgDrpWWxuto
 - artist: Nancy Sinatra
   title: These Boots Are Made for Walkin'
   belongs_to: ''
@@ -37107,6 +38144,15 @@ hits:
   playback_offset: 0
   id: '217364e0-ef65-4787-ac01-b10a4acdca88'
   yt_id: HWlQwJjynHg
+- artist: Natasja
+  title: Gi' mig Danmark tilbage
+  belongs_to: ''
+  year: 2007
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 4
+  id: e062e13c-4a00-416f-82d0-055587c81377
+  yt_id: NONnUBKcNZI
 - artist: Nathalie Simard
   title: L'amour a pris son temps
   belongs_to: ''
@@ -37216,6 +38262,15 @@ hits:
   playback_offset: 14
   id: d3b56bea-a58f-42e3-9882-8709e1888e3b
   yt_id: z_aC5xPQ2f4
+- artist: Ne-Yo
+  title: So Sick
+  belongs_to: ''
+  year: 2005
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 19
+  id: f3e28ec3-a838-432c-bcfe-30df6de2a40a
+  yt_id: bVSSIO97Xvc
 - artist: Nea
   title: Some Say
   belongs_to: ''
@@ -37350,11 +38405,21 @@ hits:
   playback_offset: 0
   id: '17de669e-2313-4948-ab02-d25a40915740'
   yt_id: bTWfCYF8N7g
+- artist: Neil Sedaka
+  title: Breaking Up Is Hard to Do
+  belongs_to: ''
+  year: 1962
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 13
+  id: '8507176b-e59a-4be1-904a-7b404b1fcd00'
+  yt_id: qzliaVBQKDs
 - artist: Neil Young
-  title: Heart Of Gold
+  title: Heart of Gold
   belongs_to: ''
   year: 1971
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 34
   id: '0f366103-ae6e-4b51-82fa-c08f36498ab6'
@@ -37446,9 +38511,9 @@ hits:
   year: 2004
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 7
-  id: b982f65b-8f9c-4772-b525-037706b0c16c
-  yt_id: a4rWzbi7zS0
+  playback_offset: 15
+  id: '420c4e5b-eb25-4ddb-ad9c-a0c1d3ebd361'
+  yt_id: O5Aw-6nrf3w
 - artist: Nelly Furtado
   title: I'm Like A Bird
   belongs_to: ''
@@ -37631,6 +38696,15 @@ hits:
   playback_offset: 8
   id: e91ad064-7858-4c3d-9e40-01348f2908e4
   yt_id: ulNS48wPZ4Q
+- artist: Nephew
+  title: Igen & Igen &
+  belongs_to: ''
+  year: 2013
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 39
+  id: '088a4f64-f147-4a19-804a-5e550d940587'
+  yt_id: SMaVOcLHygE
 - artist: Nerf Herder
   title: Buffy the Vampire Slayer
   belongs_to: Buffy the Vampire Slayer
@@ -37738,6 +38812,15 @@ hits:
   playback_offset: 30
   id: '02369538-c040-4148-9e0c-ea0c6c77cf62'
   yt_id: oPUbrI3SZhU
+- artist: New World
+  title: Living Next Door to Alice
+  belongs_to: ''
+  year: 1972
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: '7a437a38-f452-4e31-a395-0f49a1487a10'
+  yt_id: os3mzI8LKBQ
 - artist: Niagara
   title: J'ai vu
   belongs_to: ''
@@ -37779,6 +38862,7 @@ hits:
   belongs_to: ''
   year: 1994
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 18
   id: '727c36d0-f679-4fe2-b87e-5dbd3cacb9c6'
@@ -37800,8 +38884,8 @@ hits:
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   playback_offset: 10
-  id: e7dc44d7-2766-4609-b343-8505d6046ba2
-  yt_id: V_ert4DiDBg
+  id: eb3770dc-f8b9-45a7-8358-0b0249c5b76f
+  yt_id: xpq5kSxw0ns
 - artist: Nick Straker
   title: Walk In The Park
   belongs_to: ''
@@ -37835,6 +38919,7 @@ hits:
   belongs_to: ''
   year: 2005
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   playback_offset: 0
   id: '3f13e84c-c69a-494e-a61d-cc8e96797802'
@@ -38012,6 +39097,15 @@ hits:
   playback_offset: 19
   id: '454148b9-1902-43a7-8a03-0cb8fbc26f4e'
   yt_id: HFZrC5Wo7K0
+- artist: Niels Hausgaard
+  title: Først en halv time på den ene side så en halv time på den anden
+  belongs_to: ''
+  year: 1974
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: aeae065a-f024-4422-83f0-456c5ccdd030
+  yt_id: ZZlAOOJO_yc
 - artist: Nielson
   title: Sexy Als Ik Dans
   belongs_to: ''
@@ -38066,6 +39160,15 @@ hits:
   playback_offset: 0
   id: '688bf313-c029-4982-a642-14de9e084d5d'
   yt_id: '2ZV9Snsk3vU'
+- artist: Nik & Jay
+  title: Hot!
+  belongs_to: ''
+  year: 2002
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 15
+  id: '2be8005f-2917-4d31-955c-1d888661e077'
+  yt_id: YPV8LqSRSDg
 - artist: Nik Kershaw
   title: The Riddle
   belongs_to: ''
@@ -38671,6 +39774,7 @@ hits:
   year: 2003
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -38687,9 +39791,9 @@ hits:
   year: 1986
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 0
-  id: d09f134a-8d7d-4272-a719-226af45ea11b
-  yt_id: WA5y8Xa7Y9s
+  playback_offset: 1
+  id: '57f2ef94-d462-4f6a-811a-9020a0ac6a8a'
+  yt_id: LK6wglhklKg
 - artist: OMI, Felix Jaehn
   title: Cheerleader
   belongs_to: ''
@@ -38809,8 +39913,8 @@ hits:
   packs:
   - '1d98f5c4-3d62-480f-99fc-855626ffeebb'
   playback_offset: 14
-  id: '1a5e65ff-1803-49fc-842f-012e33a6468f'
-  yt_id: iIBWXck2nAc
+  id: '202f79ad-036a-4018-af3f-c9e80dbdfbba'
+  yt_id: HEw8VjV1-tU
 - artist: Offenbach
   title: Seulement Qu'une Aventure
   belongs_to: ''
@@ -38827,8 +39931,8 @@ hits:
   packs:
   - daa8b8be-c0f9-4e02-96e1-e8a628c7e396
   playback_offset: 9
-  id: bce8b7f9-d53c-4c8c-9815-b844c705e66a
-  yt_id: HE_4rmh850U
+  id: d6e6a9f9-7196-4eab-8317-57c4eeab2d27
+  yt_id: O1bhZgkC4Gw
 - artist: Official Hige Dandism
   title: Mixed Nuts
   belongs_to: Spy x Family
@@ -38854,8 +39958,8 @@ hits:
   packs:
   - ec58c124-0e1b-4c6a-bdf9-d82d6d79ef37
   playback_offset: 23
-  id: c9a50bfc-8afd-4129-996c-e1f2179e1809
-  yt_id: VYx_K7pZQtw
+  id: fb68ffed-1c08-4ee2-b887-0e4677694409
+  yt_id: fKisCeNLoNs
 - artist: Ogie Alcasid
   title: Nandito Ako
   belongs_to: ''
@@ -38934,9 +40038,9 @@ hits:
   year: 2012
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
-  playback_offset: 16
-  id: '66b7f813-a851-453e-b30f-38d06e6bb6a3'
-  yt_id: '7xNSfvxJxHA'
+  playback_offset: 32
+  id: ce517d55-06d9-47bf-bf8c-ba61fc4aa01e
+  yt_id: FL41pB_iUMQ
 - artist: Oli. P
   title: So bist Du
   belongs_to: ''
@@ -39070,6 +40174,7 @@ hits:
   belongs_to: ''
   year: 2015
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 25
   id: '59697c2e-0d93-4526-a5d3-ae8fe58339fc'
@@ -39126,20 +40231,20 @@ hits:
   belongs_to: ''
   year: 2011
   packs:
-  - bc55953c-b71d-47cf-a405-67ec6be10b34
-  - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
-  playback_offset: 6
-  id: a2818d25-398e-4c1e-a1f8-26d7af78aaa6
-  yt_id: mfavkCY52MI
+  - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
+  playback_offset: 10
+  id: '26ebbb2a-20cb-46e3-9733-7b20821b7597'
+  yt_id: nXNdaMnEQDs
 - artist: One Direction
   title: What Makes You Beautiful
   belongs_to: ''
   year: 2011
   packs:
-  - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
-  playback_offset: 10
-  id: '26ebbb2a-20cb-46e3-9733-7b20821b7597'
-  yt_id: nXNdaMnEQDs
+  - bc55953c-b71d-47cf-a405-67ec6be10b34
+  - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
+  playback_offset: 6
+  id: a2818d25-398e-4c1e-a1f8-26d7af78aaa6
+  yt_id: mfavkCY52MI
 - artist: OneRepublic
   title: Counting Stars
   belongs_to: ''
@@ -39317,6 +40422,7 @@ hits:
   belongs_to: ''
   year: 1968
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   playback_offset: 10
   id: '2bb29bfb-699a-45b3-a2a3-8743672b3b24'
@@ -39341,6 +40447,15 @@ hits:
   playback_offset: 20
   id: cbbf3349-35f9-4a76-8576-2b1668265cfa
   yt_id: NR2qjvsqNSk
+- artist: Otto Brandenburg
+  title: Når en sailor går i land
+  belongs_to: ''
+  year: 1960
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '89fa93ea-77f0-49f4-9fe7-f1679ea128d0'
+  yt_id: nXMduyzm9-Y
 - artist: Otto Waalkes
   title: Grund zum Feiern
   belongs_to: ''
@@ -39383,6 +40498,7 @@ hits:
   belongs_to: ''
   year: 2002
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 25
   id: '3ba1a020-809f-4b8f-8585-1ee1228945df'
@@ -39541,6 +40657,7 @@ hits:
   year: 2012
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   - '70dfbe7a-c797-4335-b859-ea62ff9bedff'
@@ -39600,8 +40717,8 @@ hits:
   packs:
   - '70dfbe7a-c797-4335-b859-ea62ff9bedff'
   playback_offset: 8
-  id: ab692507-046e-4a6b-9877-3a8f3ea24ed9
-  yt_id: bIxwVUNGfUY
+  id: '1adadd2e-f5ec-42b8-b895-0d7e59cf6689'
+  yt_id: Z9As8OJ165w
 - artist: Pandora
   title: Cómo Te Va Mi Amor
   belongs_to: ''
@@ -39626,6 +40743,7 @@ hits:
   year: 2018
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -39749,6 +40867,15 @@ hits:
   playback_offset: 9
   id: e3026be0-b0b7-4b20-a2b0-06f293fe8f90
   yt_id: Q_fmW9RPCqM
+- artist: Paramount Jubilee Singers
+  title: When All The Saints Come Marching In
+  belongs_to: ''
+  year: 1923
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 9
+  id: '02ab80d4-ce48-44ce-9395-bb63a93cdc6c'
+  yt_id: hpuFgqlDP4c
 - artist: Parchis
   title: La Canción de Parchís
   belongs_to: ''
@@ -39799,6 +40926,7 @@ hits:
   belongs_to: ''
   year: 2012
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   playback_offset: 26
   id: '35fab488-ae4a-49cd-bf3a-99d833323988'
@@ -39891,9 +41019,9 @@ hits:
   year: 2002
   packs:
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
-  playback_offset: 14
-  id: '37e88f46-5bca-40d3-a1da-37c40541459e'
-  yt_id: ZdiStQAO9mk
+  playback_offset: 36
+  id: '1c7d438c-acb4-4843-bc3d-9003d5015225'
+  yt_id: vlKHxjyFCjQ
 - artist: Patrick Bruel
   title: Casser la voix
   belongs_to: ''
@@ -39961,6 +41089,7 @@ hits:
   belongs_to: ''
   year: 1987
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 14
   id: '7f4c967d-91e0-48ec-aa3b-e1c7c0d3ac68'
@@ -40154,6 +41283,7 @@ hits:
   year: 2023
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 4
   id: '1c3a9a07-b643-4fba-a055-a3b938c0f026'
   yt_id: MoCaWpRAkVA
@@ -40182,6 +41312,15 @@ hits:
   playback_offset: 14
   id: '378c6cf7-8d17-4fa2-bf10-b891be950090'
   yt_id: nO9aWYMMAtI
+- artist: Paul Young
+  title: Every Time You Go Away
+  belongs_to: ''
+  year: 1985
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 26
+  id: '7d385499-4467-4bc0-9ca5-cf8304c79339'
+  yt_id: s_-QRNVbNM8
 - artist: Paula Abdul
   title: Cold Hearted
   belongs_to: ''
@@ -40357,6 +41496,7 @@ hits:
   year: 1958
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 14
   id: '30522b96-655e-4cff-a12d-a3ea50902530'
   yt_id: REryc1TpeY8
@@ -40516,6 +41656,7 @@ hits:
   belongs_to: ''
   year: 1993
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 32
   id: e3f459c4-4003-4713-9e73-e2cc2908842a
@@ -40605,6 +41746,24 @@ hits:
   playback_offset: 4
   id: be1ce77c-7a6a-444d-bc92-487d07e12dbf
   yt_id: rkfbg3ILrmw
+- artist: Peter Belli
+  title: Ulven Peter
+  belongs_to: ''
+  year: 1968
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 27
+  id: '5694f960-b1b9-47c2-a513-2cbfe8171c61'
+  yt_id: B0gLHb9qaso
+- artist: Peter Cetera
+  title: Glory of Love
+  belongs_to: ''
+  year: 1986
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 12
+  id: f1fec79a-c252-4888-9ce5-f1628814915b
+  yt_id: '1eQWdpWjXlk'
 - artist: Peter Cornelius
   title: Du Entschuldige - I Kenn' Di
   belongs_to: ''
@@ -40665,9 +41824,9 @@ hits:
   year: 1960
   packs:
   - '0a4a898a-37ad-4391-92ce-8273158d741c'
-  playback_offset: 0
-  id: a9233701-4111-4734-824d-e3cd9da76643
-  yt_id: HW9dqtp_xsY
+  playback_offset: 4
+  id: '77adfcb2-935b-4ab1-99a7-c80bff73bfb4'
+  yt_id: iiYuz4KiFBg
 - artist: Peter Kraus
   title: Sugar Baby
   belongs_to: ''
@@ -41196,6 +42355,7 @@ hits:
   year: 1979
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - df0964f7-0354-466d-85dc-997c388625a6
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
@@ -41219,8 +42379,8 @@ hits:
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   playback_offset: 71
-  id: c9cb2163-42dd-4279-a4f4-dc93d17af3bc
-  yt_id: qDPRWQd2TE4
+  id: d847ccbb-4743-4a7f-b1ca-9ee47b9c976c
+  yt_id: j2s8yGMEbSs
 - artist: Pink Floyd
   title: Wish You Were Here
   belongs_to: ''
@@ -41453,8 +42613,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 0
-  id: '727a2f5d-1453-4bf4-a4c0-6230d10e5793'
-  yt_id: BN5me-2CZWw
+  id: eb714091-577f-4087-a46d-beef65f0dfbc
+  yt_id: UdmYt4mqeuo
 - artist: PornoGraffitti
   title: THE DAY
   belongs_to: My Hero Academia
@@ -41478,6 +42638,15 @@ hits:
   playback_offset: 0
   id: f80fa832-f160-46ff-89b6-36b817023f37
   yt_id: e-2aoz_Um10
+- artist: Post Malone, 21 Savage
+  title: rockstar
+  belongs_to: ''
+  year: 2017
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 13
+  id: '95b4c7d2-6eef-4174-bf05-d7ca52cbe98e'
+  yt_id: '4GFAZBKZVJY'
 - artist: Post Malone, Doja Cat
   title: I Like You (A Happier Song)
   belongs_to: ''
@@ -41521,6 +42690,15 @@ hits:
   playback_offset: 38
   id: b9f4bdf0-84ef-4948-bfdb-f7c4642c696b
   yt_id: SLsTskih7_I
+- artist: Poul Krebs
+  title: Sådan Nogen Som Os
+  belongs_to: ''
+  year: 2014
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '05a6f2e0-a257-4482-be23-f3534ac68280'
+  yt_id: mNIdDxpK9bU
 - artist: Povia
   title: I bambini fanno 'ooh…'
   belongs_to: ''
@@ -41566,6 +42744,15 @@ hits:
   playback_offset: 39
   id: '0b718db2-d843-448c-872c-8a58a154ea47'
   yt_id: PhiSgXz_l20
+- artist: Powfu, beabadoobee
+  title: death bed (coffee for your head)
+  belongs_to: ''
+  year: 2020
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '28c12d8f-65ae-495c-a37c-bc0660c0933d'
+  yt_id: '4N-WFXpBjpc'
 - artist: Pras, Ol' Dirty Bastard, Mýa
   title: Ghetto Supastar (That is What You Are)
   belongs_to: ''
@@ -41584,6 +42771,15 @@ hits:
   playback_offset: 15
   id: f31fe785-67f8-443b-86e2-3d7d38b8dd21
   yt_id: IcXfwSXJOLE
+- artist: Pretenders
+  title: I'll Stand by You
+  belongs_to: ''
+  year: 1994
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 16
+  id: '94e59dc8-42d9-4d12-a6e1-7d56117db0c2'
+  yt_id: ABGPMw_ir08
 - artist: Prezioso, Marvin, Andrea Prezioso
   title: Voglio vederti danzare
   belongs_to: ''
@@ -41749,6 +42945,15 @@ hits:
   playback_offset: 0
   id: '07f16108-4d56-4374-aa85-b497e3a0d14c'
   yt_id: tjBCjfB3Hq8
+- artist: Pulp
+  title: Common People
+  belongs_to: ''
+  year: 1995
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 6
+  id: '321b37cf-524c-4b65-a94e-d31a8bb64650'
+  yt_id: TZOdKdxP8Wk
 - artist: Pupo
   title: Gelato Al Cioccolato
   belongs_to: ''
@@ -41817,6 +43022,7 @@ hits:
   belongs_to: ''
   year: 2023
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 18
   id: '82c85fdc-6c42-458e-a132-90ea92351f1c'
@@ -41948,6 +43154,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - '7c557823-64fc-4f3a-a651-d972d664824c'
@@ -41990,9 +43197,9 @@ hits:
   year: 1984
   packs:
   - '887a5a60-afd4-47b4-86e6-758176f403f0'
-  playback_offset: 28
-  id: b316ffa7-2299-4c3a-88f0-4a3a209b78e9
-  yt_id: Zu7r5Xsg6dc
+  playback_offset: 7
+  id: '35063eac-b255-4aed-bb74-431919409a14'
+  yt_id: '6V5mtUff6ik'
 - artist: Queen
   title: We Are The Champions
   belongs_to: ''
@@ -42211,6 +43418,7 @@ hits:
   year: 1992
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   playback_offset: 18
@@ -42380,9 +43588,9 @@ hits:
   year: 1988
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
-  playback_offset: 0
-  id: '3c2fd97e-04ad-4702-bcd3-c9714854a8ba'
-  yt_id: '3ROwnYnWNwg'
+  playback_offset: 8
+  id: c53056f5-b5db-4aad-817c-8c472451f9b2
+  yt_id: '182vv2rhGSc'
 - artist: Rainhard Fendrich
   title: Weus'd a Herz hast wia a Bergwerk
   belongs_to: ''
@@ -42516,8 +43724,8 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   playback_offset: 31
-  id: c04fc7bb-913e-48c0-8b89-db4ffbe4d7a2
-  yt_id: xTanra2_sAk
+  id: '1b338458-4f4c-4d7c-8bf1-230b1da152f6'
+  yt_id: NQDPx_k66w4
 - artist: Ramones
   title: I Wanna Be Sedated
   belongs_to: ''
@@ -42599,6 +43807,15 @@ hits:
   playback_offset: 15
   id: '9252ae62-3623-461c-82d7-df0e9b1f7ebd'
   yt_id: TEwWrpebnkM
+- artist: Raquel Rastenni
+  title: Heksedansen
+  belongs_to: ''
+  year: 1960
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 7
+  id: e2690587-c10c-4860-8920-e2b2462541e7
+  yt_id: VO2_JtC9Q4Y
 - artist: Rascal Flatts
   title: I Like The Sound Of That
   belongs_to: ''
@@ -42608,6 +43825,15 @@ hits:
   playback_offset: 19
   id: '460f40d9-ab3a-4a4a-8301-292d7203ff51'
   yt_id: M5AEcOtNeNg
+- artist: Rasmus Seebach
+  title: Natteravn
+  belongs_to: ''
+  year: 2010
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: c9a823b2-9904-4990-bc57-99b5541c98d7
+  yt_id: QFtnV6pMqvA
 - artist: Ratt
   title: Round and Round
   belongs_to: ''
@@ -42686,6 +43912,15 @@ hits:
   playback_offset: 0
   id: eecf498d-b475-4682-8d95-b1c384a84b2e
   yt_id: dZaQ7O7ddzY
+- artist: Ray Dee Ohh
+  title: Mandags-Stævnemøde
+  belongs_to: ''
+  year: 1989
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 34
+  id: '0912d835-c324-43a0-8ef4-bf2f95df6b12'
+  yt_id: MsmjVcFYwx8
 - artist: Ray Parker, Tom Szczesniak
   title: The Adventures of Tintin
   belongs_to: The Adventures of Tintin / Tim und Struppi
@@ -42750,8 +43985,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 41
-  id: '202c6f5d-9d4f-445b-a19e-be4500919854'
-  yt_id: '8s5D4BcCghs'
+  id: '71c38b33-a522-49f4-8f88-df21f6851346'
+  yt_id: AHewpa3ZqOM
 - artist: Reamonn
   title: Supergirl
   belongs_to: ''
@@ -42768,8 +44003,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 13
-  id: f44ff0bc-cebe-48ff-9644-9dbb30c97190
-  yt_id: vrpufaP9u-I
+  id: '595c273f-903d-4ca9-9a0d-e5e77d05d2e8'
+  yt_id: '4_pJ7VePgXk'
 - artist: Red Hot Chili Peppers
   title: Give It Away
   belongs_to: ''
@@ -42823,8 +44058,8 @@ hits:
   packs:
   - d9abc924-bff0-4a37-83ff-10477d32fb2e
   playback_offset: 4
-  id: fed56b56-3dfb-4d37-9b3f-c8b0ab674b90
-  yt_id: '5bxsLSlZ9Bg'
+  id: '2faf0d9f-f949-41bf-a38e-1a0f410f99f0'
+  yt_id: FyG21rXCxlY
 - artist: Red Velvet
   title: Feel My Rythm
   belongs_to: ''
@@ -43568,9 +44803,9 @@ hits:
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
-  playback_offset: 0
-  id: '0f3fc643-6801-47b4-8c90-13e4d7954b69'
-  yt_id: sQNDXjdsQHo
+  playback_offset: 2
+  id: '93729a6c-1937-4ed1-91b2-a405061e8078'
+  yt_id: u49L-Nu0gGo
 - artist: Right Said Fred
   title: Your my mate
   belongs_to: ''
@@ -43788,9 +45023,9 @@ hits:
   year: 1997
   packs:
   - ec58c124-0e1b-4c6a-bdf9-d82d6d79ef37
-  playback_offset: 5
-  id: c885d7be-3729-4827-a5ac-9f18ea9e3bb9
-  yt_id: D72g9PtqaWs
+  playback_offset: 4
+  id: b0c68adf-728a-4561-b2e5-fa438ec1cd12
+  yt_id: cv54q0tGmaA
 - artist: Rkomi, Elodie
   title: LA CODA DEL DIAVOLO
   belongs_to: ''
@@ -44068,6 +45303,15 @@ hits:
   playback_offset: 1
   id: '008cd851-eb07-4a42-a623-c717a00e18d3'
   yt_id: yyDUC1LUXSU
+- artist: Robyn
+  title: Hang with Me
+  belongs_to: ''
+  year: 2010
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 11
+  id: '490806c6-9d72-4938-ab92-31e8eb94fa48'
+  yt_id: XPsyOKaOKgw
 - artist: Rocco
   title: Generation of Love
   belongs_to: ''
@@ -44166,9 +45410,9 @@ hits:
   year: 1981
   packs:
   - '70dfbe7a-c797-4335-b859-ea62ff9bedff'
-  playback_offset: 23
-  id: bed3cee4-7201-4ad2-8da8-cacc44e9f3eb
-  yt_id: '6FQKOr08evM'
+  playback_offset: 25
+  id: c79c547d-b444-4785-9923-f5d61949ce30
+  yt_id: '6XB_7CvEQ38'
 - artist: Rod Stewart
   title: Da Ya Think I'm Sexy?
   belongs_to: ''
@@ -44627,6 +45871,15 @@ hits:
   id: '78cefcf2-707f-46ae-88d4-0c8afe74944d'
   yt_id: IRxhFvWQhXQ
 - artist: Roxette
+  title: Dressed For Success
+  belongs_to: ''
+  year: 1988
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 17
+  id: b8c615d8-e769-4f4e-81a4-2ac072804882
+  yt_id: DHalr6FmDuw
+- artist: Roxette
   title: How Do You Do!
   belongs_to: ''
   year: 1992
@@ -44853,6 +46106,15 @@ hits:
   playback_offset: 17
   id: eceb3f44-15ce-4ca5-9061-e6da21ff3226
   yt_id: BNirQXe8HOA
+- artist: Rugsted & Kreutzfeldt
+  title: Jeg ved det godt
+  belongs_to: ''
+  year: 1979
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '2c290ca3-c95d-4610-a86e-998e6eddcf2d'
+  yt_id: uVyLBAMyLJM
 - artist: Rui Veloso
   title: Porto sentido
   belongs_to: ''
@@ -44871,15 +46133,6 @@ hits:
   playback_offset: 5
   id: '8ff38d65-8700-4398-b956-745fa6d5c714'
   yt_id: RAisbA5ggZc
-- artist: Run-DMC
-  title: Walk This Way
-  belongs_to: ''
-  year: 1986
-  packs:
-  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 16
-  id: '09c6bcca-6820-44c9-b2c1-01366e78869a'
-  yt_id: xUScFNXAq0w
 - artist: Run–D.M.C., Jason Nevins
   title: It's Like That
   belongs_to: ''
@@ -44898,6 +46151,15 @@ hits:
   playback_offset: 0
   id: c45e88bc-2df7-4034-bafd-0c5bac470082
   yt_id: PzHtekPRArk
+- artist: Run–DMC
+  title: Walk This Way
+  belongs_to: ''
+  year: 1986
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 16
+  id: '09c6bcca-6820-44c9-b2c1-01366e78869a'
+  yt_id: xUScFNXAq0w
 - artist: Rupert Holmes
   title: Escape (The Piña Colada Song)
   belongs_to: ''
@@ -45206,6 +46468,7 @@ hits:
   belongs_to: ''
   year: 1992
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '7c557823-64fc-4f3a-a651-d972d664824c'
   playback_offset: 64
@@ -45285,6 +46548,15 @@ hits:
   playback_offset: 12
   id: '07154524-1745-4fdd-8ce5-76d5c7d72590'
   yt_id: w-LKsRiYLH8
+- artist: SZA
+  title: Kill Bill
+  belongs_to: ''
+  year: 2022
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 13
+  id: '41e012ee-8e12-4c77-8056-7f878920b90a'
+  yt_id: SQnc1QibapQ
 - artist: Sabaton
   title: To Hell and Back
   belongs_to: ''
@@ -45304,6 +46576,15 @@ hits:
   playback_offset: 41
   id: '7538b14f-48f4-41ab-87b8-887aeb7fbd21'
   yt_id: _OIPDU8kCNo
+- artist: Sabrina Carpenter
+  title: Taste
+  belongs_to: ''
+  year: 2024
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '623d5769-cf6c-4f82-a31e-393b095605e9'
+  yt_id: z9Q9OzL_wI8
 - artist: Sabrina Setlur
   title: Du liebst mich nicht
   belongs_to: ''
@@ -45518,6 +46799,7 @@ hits:
   belongs_to: ''
   year: 2019
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 4
@@ -45541,6 +46823,15 @@ hits:
   playback_offset: 0
   id: acc94fd6-cd09-4f87-b19a-6a17c098077e
   yt_id: '27vGo-TVp3Q'
+- artist: Sam Smith
+  title: Stay With Me
+  belongs_to: ''
+  year: 2014
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 10
+  id: e5076546-05f4-49f7-9db3-331ae289e6ff
+  yt_id: bXDSR4GggUU
 - artist: Sam The Sham & The Pharaohs
   title: Wooly Bully
   belongs_to: ''
@@ -45632,8 +46923,8 @@ hits:
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 23
-  id: f10b09bf-3d02-4867-a198-7a0300d1a4d0
-  yt_id: xrJd059ibws
+  id: '1e34914b-3415-4dc2-9506-2759f0c1a87f'
+  yt_id: IzQSiqAqS-M
 - artist: Sandra
   title: Maria Magdalena
   belongs_to: ''
@@ -45661,6 +46952,15 @@ hits:
   playback_offset: 0
   id: '39e64b33-f05a-4eac-8266-d125748167a5'
   yt_id: oYwYtPvKQvA
+- artist: Sanne Salomonsen
+  title: Kærligheden Kalder
+  belongs_to: ''
+  year: 1989
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 32
+  id: '62d4b0c1-a6fe-4cbf-a3d6-a107b6e4f127'
+  yt_id: MvXhhRg2CW8
 - artist: Santa Esmeralda
   title: Don't Let Me Be Misunderstood
   belongs_to: ''
@@ -45685,6 +46985,7 @@ hits:
   belongs_to: ''
   year: 1999
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 16
@@ -45771,15 +47072,6 @@ hits:
   playback_offset: 0
   id: aaaaf89d-5d9b-4864-a07e-ddd3b7c3115f
   yt_id: FmOlsP4KnUQ
-- artist: Sarah Brightman, Andrea Bocelli
-  title: Time To Say Goodbye
-  belongs_to: ''
-  year: 1997
-  packs:
-  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 19
-  id: '38d7c90a-b4d7-4598-8ec7-beb5033b45fd'
-  yt_id: M3mdHmhI3cs
 - artist: Sarah Connor, Naturally 7
   title: Music Is The Key
   belongs_to: ''
@@ -45898,6 +47190,33 @@ hits:
   playback_offset: 22
   id: b4ea5bb3-bf68-43ff-b7a9-8eab1a5bf810
   yt_id: '4QwZi9-7i5s'
+- artist: Savage Garden
+  title: To the Moon & Back
+  belongs_to: ''
+  year: 1996
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 39
+  id: '3ffdce99-8c47-4430-a666-f6b13f04bce1'
+  yt_id: HCm6gRHINqA
+- artist: Saybia
+  title: The Second You Sleep
+  belongs_to: ''
+  year: 2002
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 0
+  id: '15fc51fd-d96e-4419-b45b-dbb82468d7a0'
+  yt_id: i9oyEHUqAhg
+- artist: Scarlet Pleasure
+  title: What A Life
+  belongs_to: ''
+  year: 2019
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 17
+  id: '11a7c671-0b0e-4a38-ae22-289e2bc64722'
+  yt_id: FjVVqpZw-wg
 - artist: Scatman John
   title: Scatman's World
   belongs_to: ''
@@ -46125,6 +47444,7 @@ hits:
   belongs_to: ''
   year: 1994
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   playback_offset: 13
   id: '67f6fed9-2969-487c-95a4-4aea4bad8fc7'
@@ -46185,6 +47505,15 @@ hits:
   playback_offset: 0
   id: '4c121b3a-1af7-49a2-aa8e-68dea8dbc3d1'
   yt_id: F97PXabHfQU
+- artist: Sebastian
+  title: Nana
+  belongs_to: ''
+  year: 1987
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 6
+  id: '7e263839-9303-43b2-a1cb-9847aa0d7f6b'
+  yt_id: yTJ4Uh8g8Nk
 - artist: Sebastian Yatra, Manuel Turizo, Beéle
   title: VAGABUNDO
   belongs_to: ''
@@ -46392,9 +47721,9 @@ hits:
   year: 1966
   packs:
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
-  playback_offset: 24
-  id: '21cbe702-3eae-4f5e-9e06-6db9c672f54b'
-  yt_id: '4Zu0iDvCjgk'
+  playback_offset: 11
+  id: f1f99da5-4a57-466b-b8c9-c284cfda8cca
+  yt_id: '30IePC8c99g'
 - artist: Sergio Vargas
   title: La Ventanita
   belongs_to: ''
@@ -46411,8 +47740,8 @@ hits:
   packs:
   - d9abc924-bff0-4a37-83ff-10477d32fb2e
   playback_offset: 0
-  id: '7e300198-a027-460e-b9c0-8425cb80f8d7'
-  yt_id: '2NX-KeezXDg'
+  id: '3108a6ab-46f7-4049-94d4-12ceec784109'
+  yt_id: Z_MW8lPTgM8
 - artist: Sex Pistols
   title: Anarchy In The UK
   belongs_to: ''
@@ -46432,6 +47761,15 @@ hits:
   playback_offset: 17
   id: '4969b39c-cb7e-4aa2-8a81-042e95ac3af8'
   yt_id: Y7-vP7TnluY
+- artist: Shaboozey
+  title: A Bar Song (Tipsy)
+  belongs_to: ''
+  year: 2024
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 12
+  id: '92e520e5-a5f3-455a-a833-c49328a6d9f7'
+  yt_id: t7bQwwqW-Hc
 - artist: Shade
   title: Bene ma non benissimo
   belongs_to: ''
@@ -46448,6 +47786,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -46905,6 +48244,15 @@ hits:
   playback_offset: 3
   id: b3e3587b-f67a-4b14-80f4-678501279ede
   yt_id: U5R9dA9EeB8
+- artist: Shirley, Jonas Winge Leisner
+  title: Don't Look For Love
+  belongs_to: ''
+  year: 1999
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 14
+  id: c8190535-7bbc-4ff5-9581-01ddb8a496bb
+  yt_id: '5zCwSKcVC5k'
 - artist: Shirley Walker
   title: Intro
   belongs_to: Space 2063
@@ -46923,6 +48271,15 @@ hits:
   playback_offset: 0
   id: cebc537b-37d0-42cd-ad61-90d60b3ad38e
   yt_id: SjS2TqzuzoY
+- artist: Shit & Chalou
+  title: Smuk Og Dejlig
+  belongs_to: ''
+  year: 1976
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 31
+  id: faf623e7-9710-460b-938d-831c7cfd011a
+  yt_id: rVTxMDRYgWo
 - artist: Shocking Blue
   title: Venus
   belongs_to: ''
@@ -46952,6 +48309,15 @@ hits:
   playback_offset: 21
   id: '44b82913-9a5b-4a0b-a958-9d1845150a7d'
   yt_id: MveDLwDIZiI
+- artist: Shu-Bi-Dua
+  title: Midsommersangen
+  belongs_to: ''
+  year: 1980
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: f742a69d-f065-4537-abe6-a45a61797450
+  yt_id: q4i-5Df0oVc
 - artist: Shuki Levy, Haim Saban, Erika Lane
   title: He-Man and the Masters of the Universe
   belongs_to: He-Man - Masters of the Universe
@@ -47234,6 +48600,7 @@ hits:
   year: 1968
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 32
   id: '7d057664-9a28-49ad-a050-4aadf5d980cb'
@@ -47313,6 +48680,7 @@ hits:
   belongs_to: ''
   year: 1985
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 18
   id: '0f9d77a5-4e6f-435c-ab91-8bea329784f5'
@@ -47546,6 +48914,15 @@ hits:
   playback_offset: 10
   id: '502a376a-a807-4df3-8c7f-52a62296411a'
   yt_id: ZeSxszzR8Bs
+- artist: Skousen Og Ingemann
+  title: Herfra Hvor Vi Står
+  belongs_to: ''
+  year: 1971
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 9
+  id: '9ab76167-9b70-4156-8405-c134236357ed'
+  yt_id: '5LbD0ai9QaE'
 - artist: Skrillex, Sirah
   title: Bangarang
   belongs_to: ''
@@ -47734,6 +49111,7 @@ hits:
   belongs_to: ''
   year: 2004
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 16
@@ -47841,8 +49219,8 @@ hits:
   packs:
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 6
-  id: '959711e5-6f38-44f8-a250-41e20d19298d'
-  yt_id: '0bcYxH65kSg'
+  id: '88cf376f-930c-4efd-b42f-ea0e241e9469'
+  yt_id: '9Bum5LhLEMI'
 - artist: Sonny & Cher
   title: I Got You Babe
   belongs_to: ''
@@ -47901,6 +49279,15 @@ hits:
   playback_offset: 14
   id: '3351f272-47c0-444e-8c02-693a7c59546d'
   yt_id: vzMmKvBVqf4
+- artist: Sort Sol
+  title: Let Your Fingers Do The Walking
+  belongs_to: ''
+  year: 1993
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 49
+  id: '21da3cbd-81a6-4779-ad4e-e3f6e3fb631f'
+  yt_id: cU5wAczQRB8
 - artist: Soul Asylum
   title: Runaway Train
   belongs_to: ''
@@ -47918,19 +49305,19 @@ hits:
   belongs_to: ''
   year: 2004
   packs:
-  - a8dcd937-8118-48af-94e1-f55a1e7557a2
-  playback_offset: 20
-  id: '63606dc8-5071-4ee4-af62-055509ef1f6e'
-  yt_id: kTylYpwQ74w
+  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  playback_offset: 37
+  id: '84180740-2ac9-4d0a-a83f-566533770a97'
+  yt_id: JDw0cbkH5VY
 - artist: Soul Control
   title: Chocolate (Choco Choco)
   belongs_to: ''
   year: 2004
   packs:
-  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 37
-  id: '84180740-2ac9-4d0a-a83f-566533770a97'
-  yt_id: JDw0cbkH5VY
+  - a8dcd937-8118-48af-94e1-f55a1e7557a2
+  playback_offset: 20
+  id: '63606dc8-5071-4ee4-af62-055509ef1f6e'
+  yt_id: kTylYpwQ74w
 - artist: Soul II Soul, Caron Wheeler
   title: Back To Life (However Do You Want Me)
   belongs_to: ''
@@ -47994,6 +49381,15 @@ hits:
   playback_offset: 13
   id: '59889ec5-630c-489c-a9ba-fa4d5f86ebca'
   yt_id: vxHZIxkPQ50
+- artist: Spandau Ballet
+  title: 'True'
+  belongs_to: ''
+  year: 1983
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 37
+  id: '5f7ee795-edb6-4f5a-a7c7-729622518d3a'
+  yt_id: AR8D2yqgQ1U
 - artist: Spargo
   title: You And Me
   belongs_to: ''
@@ -48012,6 +49408,15 @@ hits:
   playback_offset: 0
   id: '90f55e70-0fe5-43e4-b353-69c2dbaec654'
   yt_id: Z-xuS8vhU6s
+- artist: Specktors
+  title: Kommet For At Danse
+  belongs_to: ''
+  year: 2017
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 11
+  id: '973ca671-853f-4969-ab60-fa85844ba41e'
+  yt_id: '1NfCy_YIVsg'
 - artist: Spice Girls
   title: Spice Up Your Life
   belongs_to: ''
@@ -48051,8 +49456,8 @@ hits:
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
   playback_offset: 4
-  id: '3415500d-a773-4847-bed7-1eccb557ce80'
-  yt_id: HNehiNC_tq0
+  id: a4ebdc37-5591-42e1-a6c1-b93997211a1d
+  yt_id: fw-QRyQcFH8
 - artist: Spider Murphy Gang
   title: Schickeria
   belongs_to: ''
@@ -48247,9 +49652,9 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
-  playback_offset: 11
-  id: ec63db6c-a652-4501-95a2-47f987dd2643
-  yt_id: wu1UXCdyNo0
+  playback_offset: 13
+  id: '5dae81b5-33be-4832-92e0-fd7ea7933cde'
+  yt_id: '7JtCA0esyOU'
 - artist: Stars On 45
   title: Stars On 45
   belongs_to: ''
@@ -48397,8 +49802,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 0
-  id: '99085a2a-66b3-464f-b42b-87f372dd221c'
-  yt_id: yNwgTW_AJ_s
+  id: '6f6c9a36-2c6c-465b-bdc6-7d9cead52083'
+  yt_id: Q_RCL8EA9oQ
 - artist: Stefan Raab
   title: Wadde Hadde Dudde Da?
   belongs_to: ''
@@ -48599,6 +50004,15 @@ hits:
   playback_offset: 10
   id: '3efc954f-9f57-45d8-bb33-ef31b30b82c2'
   yt_id: p8FTmkTIL88
+- artist: Steppeulvene
+  title: Itsi-bitsi
+  belongs_to: ''
+  year: 1967
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 6
+  id: '159cdc94-2c30-4b3c-bc20-a72d6776b32e'
+  yt_id: ig19F2qoDbU
 - artist: Steps
   title: Tragedy
   belongs_to: ''
@@ -48819,6 +50233,15 @@ hits:
   playback_offset: 0
   id: e6287b34-be0d-4784-ac78-96c785614e7f
   yt_id: '-F1V49vHg0Q'
+- artist: Stig Møller
+  title: Sikke'n Dejlig Dag
+  belongs_to: ''
+  year: 1994
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 29
+  id: '8889f46c-4708-4ee4-9f14-48c791f8540b'
+  yt_id: N97DFcRXhCg
 - artist: Sting
   title: Englishman In New York
   belongs_to: ''
@@ -49093,6 +50516,7 @@ hits:
   year: 2005
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 15
   id: '57f3b75c-8e9b-4828-a3c2-bc85c3b9881b'
   yt_id: ShaqG4iQlMA
@@ -49204,6 +50628,15 @@ hits:
   playback_offset: 32
   id: e42b7d88-8b02-4be9-bba0-adc5c43f72ee
   yt_id: aDoL8e1pLJg
+- artist: Superheroes
+  title: So Far
+  belongs_to: ''
+  year: 2001
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 3
+  id: f8c683ee-83c9-4e02-bf25-b61686a2b59c
+  yt_id: NpH5Ilr9FdA
 - artist: Supertramp
   title: Breakfast In America
   belongs_to: ''
@@ -49280,6 +50713,7 @@ hits:
   year: 1982
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -49507,6 +50941,15 @@ hits:
   playback_offset: 24
   id: da274b53-221c-4d12-a176-1f46b0917d91
   yt_id: hD3lEWoN8cM
+- artist: Søren Kragh-Jacobsen, Leif Lindskov
+  title: Kender Du Det?
+  belongs_to: ''
+  year: 1975
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 7
+  id: '4881110b-a0de-4f90-93ca-28547cff100c'
+  yt_id: FIfqxdyNvuw
 - artist: Sława Przybylska
   title: Pamietasz Była Jesień
   belongs_to: ''
@@ -49807,6 +51250,15 @@ hits:
   playback_offset: 23
   id: cc4727a1-248a-4db1-b393-932d08f92549
   yt_id: JKrUlAHvAgY
+- artist: TV-2
+  title: De Første Kærester På Månen
+  belongs_to: ''
+  year: 2005
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 24
+  id: '81320663-a4d8-41a6-8ff3-ec49fb576e0b'
+  yt_id: UxP58lcgvvc
 - artist: TVXQ
   title: MIROTIC
   belongs_to: ''
@@ -50106,6 +51558,7 @@ hits:
   belongs_to: ''
   year: 2022
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - df0964f7-0354-466d-85dc-997c388625a6
   playback_offset: 0
@@ -50155,6 +51608,15 @@ hits:
   id: dead5b50-bbc2-40cd-ac84-0bbeeeca9d71
   yt_id: '66TQBtlRKc4'
 - artist: Tears For Fears
+  title: Everybody Wants To Rule The World
+  belongs_to: ''
+  year: 1985
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 28
+  id: '2ef133ef-d493-4de6-b292-e28f93bbad9e'
+  yt_id: znDgBy2mHbc
+- artist: Tears For Fears
   title: Shout
   belongs_to: ''
   year: 1984
@@ -50186,6 +51648,7 @@ hits:
   year: 1989
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 15
@@ -50207,8 +51670,8 @@ hits:
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
   playback_offset: 0
-  id: a7d91ea2-4786-44a4-8606-238b23de8e03
-  yt_id: RgMJ1xXezL4
+  id: '1113ab08-1dbb-442b-b6ed-49f4f6b2230b'
+  yt_id: is7LK9RFMWE
 - artist: Teddy Reno
   title: Piccolissima serenata
   belongs_to: ''
@@ -50299,6 +51762,15 @@ hits:
   playback_offset: 5
   id: '71d89e44-d88e-481a-830e-aef90ab65640'
   yt_id: '-tPcc1ftj8E'
+- artist: Tessa
+  title: Ding Dong
+  belongs_to: ''
+  year: 2023
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 9
+  id: bf7b2d4d-e792-46d2-9aa0-e9b0cfd25b1b
+  yt_id: KSUoMPej01Q
 - artist: Tex Lecor
   title: Le frigidaire
   belongs_to: ''
@@ -50427,8 +51899,8 @@ hits:
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
   playback_offset: 7
-  id: '0b8459ff-0099-4c4c-a704-0da1d853fc28'
-  yt_id: '4wUlBhnxOX4'
+  id: c41e99ab-29a7-451f-a675-b6f27b7ad285
+  yt_id: Sj0pzxGyvUQ
 - artist: The Arrows
   title: I Love Rock N Roll
   belongs_to: ''
@@ -50454,11 +51926,12 @@ hits:
   playback_offset: 3
   id: fc2c5087-a739-4194-9a9e-23ba1e5cede1
   yt_id: '7puAydZ5Fbo'
-- artist: The Bangles
+- artist: The Bangles, Susanna Hoffs
   title: Eternal Flame
   belongs_to: ''
   year: 1988
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - ec58c124-0e1b-4c6a-bdf9-d82d6d79ef37
   playback_offset: 7
@@ -50574,6 +52047,15 @@ hits:
   playback_offset: 12
   id: '2776458b-ef13-4248-8bd9-172e22d60f27'
   yt_id: '45cYwDMibGo'
+- artist: The Beatles
+  title: Don't Let Me Down
+  belongs_to: ''
+  year: 1969
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 4
+  id: '53a5e22d-9e9b-49b0-a39d-d670c047cfd8'
+  yt_id: EyHKuyGsu4U
 - artist: The Beatles
   title: Get Back
   belongs_to: ''
@@ -50782,6 +52264,7 @@ hits:
   belongs_to: ''
   year: 1979
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   playback_offset: 16
   id: '1f04a0af-dbfc-4a66-b0ef-d83a01da8d53'
@@ -50798,6 +52281,15 @@ hits:
   playback_offset: 12
   id: f8a952f1-0245-43d5-a1a7-451505fc5edb
   yt_id: fUSeJtqHIKE
+- artist: The Calling
+  title: Wherever You Will Go
+  belongs_to: ''
+  year: 2001
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: a8aa0462-7e8d-43e5-b0c7-81c854bf3a97
+  yt_id: j0v4rZz9F2I
 - artist: The Cardigans
   title: Lovefool
   belongs_to: ''
@@ -50846,6 +52338,15 @@ hits:
   playback_offset: 7
   id: a5f2c009-147a-4f48-a3c2-367b845bea2d
   yt_id: r8yr4Kcg1JU
+- artist: The Chainsmokers, Coldplay
+  title: Something Just Like This
+  belongs_to: ''
+  year: 2017
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 7
+  id: '04aab773-ab98-45ab-83e2-84e9d8fe8a79'
+  yt_id: FM7MFYoylVs
 - artist: The Chainsmokers, Halsey
   title: Closer
   belongs_to: ''
@@ -50956,6 +52457,7 @@ hits:
   belongs_to: ''
   year: 1998
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 13
   id: cf29d7f0-8cc4-417c-91b0-8b28d50c195c
@@ -51079,6 +52581,7 @@ hits:
   year: 2003
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 15
   id: '4472610a-c203-4df8-b09c-0d86aa752bd3'
   yt_id: RZtcz4WVBGg
@@ -51137,6 +52640,15 @@ hits:
   playback_offset: 3
   id: '2d569e66-bf0c-473f-8500-22cb899a77a5'
   yt_id: QFoBreVWa7M
+- artist: The Dubliners
+  title: Whiskey in the Jar
+  belongs_to: ''
+  year: 1968
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 7
+  id: a8707234-e5b5-421f-aeb6-7877ea62e748
+  yt_id: L__TrWhq4Uk
 - artist: The Everly Brothers
   title: All I Have To Do Is Dream
   belongs_to: ''
@@ -51578,6 +53090,7 @@ hits:
   year: 2012
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 13
   id: '2e4374d9-ff5d-46b6-a616-63598e4026b1'
   yt_id: lL9nytKWg8U
@@ -51627,6 +53140,15 @@ hits:
   playback_offset: 7
   id: '8307add9-b1e6-4642-99fc-2ef09810c13f'
   yt_id: GGDNwEAZLpA
+- artist: The Minds Of 99
+  title: Under Din Sne
+  belongs_to: ''
+  year: 2021
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 12
+  id: '8765fb3c-4d87-4d96-a341-2e8513725b29'
+  yt_id: '9a3LILb-yQE'
 - artist: The Monkees
   title: Daydream Believer
   belongs_to: ''
@@ -51804,6 +53326,7 @@ hits:
   year: 1955
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   playback_offset: 5
   id: '4aa758fd-312e-42be-b101-a9fa29e31f69'
@@ -51926,6 +53449,7 @@ hits:
   belongs_to: ''
   year: 2005
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
@@ -52025,6 +53549,7 @@ hits:
   year: 1965
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 0
   id: fae38bcf-f70b-4f50-8757-83426647ac08
@@ -52035,6 +53560,7 @@ hits:
   year: 1965
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
@@ -52151,6 +53677,15 @@ hits:
   playback_offset: 42
   id: '5aaab6ea-edc7-4ae9-a15a-a03296cc02c6'
   yt_id: HxsNy4NoZUs
+- artist: The Rumour Said Fire
+  title: The Balcony
+  belongs_to: ''
+  year: 2009
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 27
+  id: f5df31e4-0714-4e4a-bcbd-3182abc0dc52
+  yt_id: oyqHFfKwlLg
 - artist: The Runaways
   title: Cherry Bomb
   belongs_to: ''
@@ -52169,6 +53704,15 @@ hits:
   playback_offset: 46
   id: '7fecde7b-6f9a-427b-896a-3daa8e41c208'
   yt_id: T2Z8FYQLQfA
+- artist: The Savage Rose
+  title: Dear Little Mother
+  belongs_to: ''
+  year: 1971
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 88
+  id: '883f7884-8395-4c97-9ac1-edd53bd7fbda'
+  yt_id: ihghoy8XMXQ
 - artist: The Score
   title: Legend
   belongs_to: ''
@@ -52254,6 +53798,15 @@ hits:
   playback_offset: 28
   id: '776c8fa7-834d-4890-b558-f53084475917'
   yt_id: I5cTP8BHhvs
+- artist: The Staple Singers
+  title: I'll Take You There
+  belongs_to: ''
+  year: 1972
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 6
+  id: f4e3f388-a096-4f0d-8fb8-34d0a4d86a72
+  yt_id: IhHBr7nMMio
 - artist: The Streets
   title: Fit but You Know It
   belongs_to: ''
@@ -52283,6 +53836,15 @@ hits:
   id: '74a1d062-416e-4b79-a74e-4871a3e401a3'
   yt_id: IhZHLIOSd0k
 - artist: The Supremes
+  title: Baby Love
+  belongs_to: ''
+  year: 1964
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 8
+  id: '7169216b-aa51-4d7f-a2ad-5923602351eb'
+  yt_id: D6QF4sB40gU
+- artist: The Supremes
   title: Stop! In The Name Of Love
   belongs_to: ''
   year: 1965
@@ -52299,9 +53861,9 @@ hits:
   year: 1964
   packs:
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
-  playback_offset: 3
-  id: '87f2c1a8-3cce-4c73-baba-4a9b212f4ce3'
-  yt_id: dfl3EYFjHJU
+  playback_offset: 0
+  id: e859abaa-dc96-4123-b91b-32f85ca3c85d
+  yt_id: qTBmgAOO0Nw
 - artist: The Supremes
   title: You Can't Hurry Love
   belongs_to: ''
@@ -52331,6 +53893,15 @@ hits:
   playback_offset: 8
   id: '987c35df-daac-41f1-b68f-eb4e639a2611'
   yt_id: '2DP8Ozz8usQ'
+- artist: The Swe-Danes
+  title: Scandinavian Shuffle
+  belongs_to: ''
+  year: 1960
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 4
+  id: '78a1c69c-33f2-47ac-825b-428d2dd771c7'
+  yt_id: bz_Qr0rqt50
 - artist: The Temptations
   title: My Girl
   belongs_to: ''
@@ -52352,6 +53923,24 @@ hits:
   playback_offset: 114
   id: '1d25781f-8348-4af2-bf2f-07eaf76d44d2'
   yt_id: QLMOaiHUzHo
+- artist: The Ting Tings
+  title: That's Not My Name
+  belongs_to: ''
+  year: 2007
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 14
+  id: '46e01bd5-1ce4-4e38-a2cb-912518a7cffd'
+  yt_id: RA6IevqiW88
+- artist: The Tokens
+  title: The Lion Sleeps Tonight (Wimoweh)
+  belongs_to: ''
+  year: 1961
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 29
+  id: '9d2c0c00-a7d2-418c-a80f-c8837b745223'
+  yt_id: OQlByoPdG6c
 - artist: The Toonosaurs
   title: Mila Superstar
   belongs_to: Mila Superstar
@@ -52394,6 +53983,7 @@ hits:
   belongs_to: ''
   year: 1966
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   playback_offset: 7
   id: '940d365a-f0fd-47e1-a37d-f0509e821008'
@@ -52705,8 +54295,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 16
-  id: '66dddcbe-6e86-4e5f-914f-aca01d2a1ff3'
-  yt_id: ogXjEQkHzUw
+  id: '6a27b15b-a6d0-4b6e-af25-abc6cbce7291'
+  yt_id: _wfxdEyx83U
 - artist: Thomas Anders
   title: Sternenregen
   belongs_to: ''
@@ -52734,6 +54324,24 @@ hits:
   playback_offset: 6
   id: be1d19f5-c2d3-4af2-8bcb-a5e666b74770
   yt_id: t8OssunETG8
+- artist: Thomas Helmig
+  title: Det Er Mig Der Står Herude Og Banker På
+  belongs_to: ''
+  year: 1988
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 23
+  id: '41eeae69-d11b-4a02-9ec3-ed76d0c0d7ce'
+  yt_id: sZNd3jn66_M
+- artist: Thomas Holm
+  title: Nitten
+  belongs_to: ''
+  year: 2009
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 3
+  id: '118650e8-5812-4e6f-af07-466d356a8712'
+  yt_id: _vSEWySEaJ4
 - artist: Thomas Natschinski
   title: Intro
   belongs_to: Spuk unterm Riesenrad
@@ -52776,9 +54384,9 @@ hits:
   year: 1994
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 13
-  id: d75f94e2-f066-427f-8280-02a116b673fa
-  yt_id: aK0b7jfW5EA
+  playback_offset: 15
+  id: '1029a99d-9e8a-4edc-a099-4c15293d8026'
+  yt_id: K4f0j3E_iaQ
 - artist: Three Days Grace
   title: Break
   belongs_to: ''
@@ -52923,8 +54531,8 @@ hits:
   packs:
   - df0964f7-0354-466d-85dc-997c388625a6
   playback_offset: 25
-  id: '2a7b46b7-c523-40a9-8ec3-1cd1b7f3713c'
-  yt_id: OsmT1blpieQ
+  id: daf4b59b-fff0-49b1-8e75-4342b16af552
+  yt_id: WMxPuQt4wEg
 - artist: Timbiriche
   title: Tú Y Yo Somos Uno Mismo
   belongs_to: ''
@@ -52948,11 +54556,21 @@ hits:
   belongs_to: ''
   year: 1976
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   playback_offset: 10
   id: '5feeb6cb-7c94-4460-8024-16931a0d486d'
   yt_id: R7ZACK0vGDA
+- artist: Tina Dickow
+  title: Open Wide
+  belongs_to: ''
+  year: 2007
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 5
+  id: a5d80da9-7506-4c2c-aff7-37eedfdec6b4
+  yt_id: Dxvswei0I2k
 - artist: Tina Frank, Pat Lawson
   title: Yu-Gi-Oh! 5D's-Thema
   belongs_to: Yu-Gi-Oh! 5D's
@@ -53300,8 +54918,8 @@ hits:
   packs:
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
   playback_offset: 34
-  id: efd74e91-bb32-4ee3-a218-6265152191d0
-  yt_id: SIhb-kNvL6M
+  id: '42f4459f-698f-4c73-aa52-d66ac0a36430'
+  yt_id: '8v8-RSyuUeE'
 - artist: Tom Scott
   title: Gotcha
   belongs_to: Starsky & Hutch
@@ -53474,8 +55092,8 @@ hits:
   packs:
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   playback_offset: 14
-  id: '7c7415c7-3455-420c-a369-e20c143e2fc6'
-  yt_id: '9XhZmMJBr2w'
+  id: '2195c2a8-3efa-44be-94c6-7647096e3175'
+  yt_id: jpxZnjPMy_o
 - artist: Tony Holiday
   title: Tanze Samba mit mir
   belongs_to: ''
@@ -53501,8 +55119,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 3
-  id: d68f064f-8847-4a8e-a077-62e73c34215c
-  yt_id: lbuzlplYGj8
+  id: '0fc7a3ab-e01f-4fdc-8f7f-05640d8a7cdb'
+  yt_id: X9lLVHNa12Y
 - artist: Tony Marshall
   title: Komm gib mir deine Hand
   belongs_to: ''
@@ -53510,8 +55128,8 @@ hits:
   packs:
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 13
-  id: '9e892df4-e0e5-4fa9-83e5-e5ab3b9169fd'
-  yt_id: If40-PyRyxA
+  id: '1c9fda07-b0e7-4270-acaa-2ea8100af50b'
+  yt_id: dgAPdpqzIbw
 - artist: Tony Marshall
   title: Schöne Maid
   belongs_to: ''
@@ -53604,9 +55222,9 @@ hits:
   year: 1998
   packs:
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
-  playback_offset: 0
-  id: '7c5c2807-70b5-4986-94b0-7da2e4681493'
-  yt_id: R-hv78JhFPw
+  playback_offset: 9
+  id: '1639f6c1-d985-4d06-a24d-485d3679c054'
+  yt_id: IlDjEd8gAkI
 - artist: Tracy Chapman
   title: Fast Car
   belongs_to: ''
@@ -53664,6 +55282,15 @@ hits:
   playback_offset: 0
   id: b0b4a8c0-b382-4cca-ab68-b6185c0c9622
   yt_id: KrWI-9GTHKM
+- artist: Train
+  title: Drops of Jupiter (Tell Me)
+  belongs_to: ''
+  year: 2001
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 10
+  id: aa042483-25d9-4e57-afb0-748a4bf4c681
+  yt_id: cb3_e52oTHk
 - artist: Train
   title: Hey, Soul Sister
   belongs_to: ''
@@ -53813,6 +55440,15 @@ hits:
   playback_offset: 26
   id: '375a5e66-249d-49d8-962b-94a497e3373e'
   yt_id: iLkH6OwKUec
+- artist: Trine & Moonlighters, Trine Dyrholm
+  title: Danse i Måneskin
+  belongs_to: ''
+  year: 1987
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 16
+  id: d6f6c680-8b8e-4e01-87f8-45cf41d7780a
+  yt_id: rGqTlkLq9qA
 - artist: Trio
   title: Da Da Da
   belongs_to: ''
@@ -53882,9 +55518,9 @@ hits:
   year: 1995
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
-  playback_offset: 5
-  id: e5b76231-62c8-4981-bec4-1454f030d36f
-  yt_id: FTEaBHl7Org
+  playback_offset: 8
+  id: '3621a5fe-f71b-43a1-9012-c62028010990'
+  yt_id: pqNF-8dPnrE
 - artist: Truckstop
   title: Erwin der dicke Schneemann
   belongs_to: ''
@@ -54015,10 +55651,11 @@ hits:
   year: 1984
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   playback_offset: 6
-  id: a73c61c1-2780-4df1-915e-f4607bb9bd6e
-  yt_id: cTC1TEVo3Aw
+  id: '390bfa8a-cfb8-4d16-b9c9-5a4ae8e405a2'
+  yt_id: PqQdbevaB-Q
 - artist: Two Man Sound
   title: Samba Megamix
   belongs_to: ''
@@ -54037,6 +55674,15 @@ hits:
   playback_offset: 12
   id: '1c2622d9-d940-46b6-9e8f-6e3f3dacf31e'
   yt_id: _tHbSMQeCdk
+- artist: Tøsedrengene
+  title: Indianer
+  belongs_to: ''
+  year: 1984
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 27
+  id: '1039ebc9-6f89-4821-aca7-6b022002f253'
+  yt_id: oybcacCkqy8
 - artist: U.S.A. For Africa
   title: We Are The World
   belongs_to: ''
@@ -54081,6 +55727,7 @@ hits:
   year: 1987
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - df0964f7-0354-466d-85dc-997c388625a6
@@ -54156,6 +55803,7 @@ hits:
   belongs_to: ''
   year: 1983
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
@@ -54196,6 +55844,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   - df0964f7-0354-466d-85dc-997c388625a6
@@ -54344,6 +55993,15 @@ hits:
   playback_offset: 45
   id: '26d6abbc-e5d8-4339-8a5a-c02d6af95290'
   yt_id: '1oKKwuIZzr8'
+- artist: Ulla Pia
+  title: Flower power tøj
+  belongs_to: ''
+  year: 1969
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 7
+  id: f127c89b-b349-4e13-8884-9d92cf101ca2
+  yt_id: pigV7r0dUy0
 - artist: Ultimo
   title: Pianeti
   belongs_to: ''
@@ -54525,6 +56183,15 @@ hits:
   playback_offset: 0
   id: '140c4f2b-cd15-42a8-a7eb-aff4654a3373'
   yt_id: yZZKKbQbr2E
+- artist: VM Holdet, Herrelandsholdet, Landsholdet
+  title: Re-sepp-ten
+  belongs_to: ''
+  year: 1986
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 36
+  id: '145ffa95-4ba9-4642-918d-07ac74e05086'
+  yt_id: YQuJQtcw1kA
 - artist: VST & Company
   title: Awitin Mo, Isasayaw ko
   belongs_to: ''
@@ -54651,6 +56318,15 @@ hits:
   playback_offset: 33
   id: fc5b0be6-f01e-4ec9-95f8-b4b3beccd9b2
   yt_id: qeUfDTn5huM
+- artist: Van Morrison
+  title: Brown Eyed Girl
+  belongs_to: ''
+  year: 1967
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 14
+  id: '15deef38-5f4f-487f-b9bf-666061872d11'
+  yt_id: UfmkgQRmmeE
 - artist: Vance Joy
   title: Riptide
   belongs_to: ''
@@ -54666,6 +56342,7 @@ hits:
   year: 1999
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 0
   id: '188af449-5f2f-49b4-a0a3-29c3fcb2335d'
   yt_id: Rco1QQShM1Y
@@ -55580,6 +57257,7 @@ hits:
   year: 1994
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 20
   id: c487a3da-3587-4cf8-b22d-1cdcd324cbc8
   yt_id: '8DNQRtmIMxk'
@@ -55601,11 +57279,21 @@ hits:
   playback_offset: 20
   id: '384223d6-a254-40ff-8fe3-bdc15e6eaef3'
   yt_id: QFeR33I0HPs
+- artist: White Town
+  title: Your Woman
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 11
+  id: ecf41d9f-b14d-43d8-8aa5-82dbeb13579b
+  yt_id: '3NoIusrv9OA'
 - artist: Whitesnake
   title: Here I Go Again
   belongs_to: ''
   year: 1982
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   playback_offset: 0
   id: '3a5f5478-6fbd-4cdd-805b-5ba8e69c4824'
@@ -55811,6 +57499,15 @@ hits:
   playback_offset: 19
   id: '69affb69-fae3-420d-a79e-55717a0d2e2a'
   yt_id: SQWWC7X33Qk
+- artist: Wilson Pickett
+  title: In the Midnight Hour
+  belongs_to: ''
+  year: 1965
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 11
+  id: '3083f8bb-78ae-4df9-b055-f4966731a7ec'
+  yt_id: FGVGFfj7POA
 - artist: Wim Sonneveld
   title: Het Dorp
   belongs_to: ''
@@ -55854,8 +57551,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 0
-  id: '76c38910-50a2-4c40-b7a7-070037d3d1e4'
-  yt_id: cMBcBSzH3gs
+  id: '71c3c7aa-4485-4b65-ab07-2b2fa8eaa633'
+  yt_id: eAZa2Zz58hE
 - artist: Wind Rose
   title: Diggy Diggy Hole
   belongs_to: ''
@@ -55981,6 +57678,7 @@ hits:
   belongs_to: ''
   year: 2015
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '70dfbe7a-c797-4335-b859-ea62ff9bedff'
   playback_offset: 10
@@ -56001,9 +57699,9 @@ hits:
   year: 1985
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
-  playback_offset: 15
-  id: '3d76ee7a-ff2e-451e-944e-59be0c0c545d'
-  yt_id: Iftl_V1NKpI
+  playback_offset: 11
+  id: '64f5138f-08ad-4d91-b133-05789966b94d'
+  yt_id: j_ZvdIpTMgY
 - artist: Wolfgang Petry
   title: Bronze, Silber und Gold
   belongs_to: ''
@@ -56047,8 +57745,8 @@ hits:
   packs:
   - fbd95ece-80b3-4de1-b706-af079f47f00c
   playback_offset: 20
-  id: a033953e-e894-44b2-b562-321e40967da5
-  yt_id: '5R7fKOteVZw'
+  id: f3c2015d-70b8-4e09-a157-c08e8c7ffe76
+  yt_id: '0vH0u2OyB68'
 - artist: Wolfmother
   title: Joker And The Thief
   belongs_to: ''
@@ -56148,6 +57846,15 @@ hits:
   playback_offset: 28
   id: '0b35d195-31fa-42e3-a4f1-1a30d6177e0c'
   yt_id: xy4qkciGLYY
+- artist: X Ambassadors
+  title: Renegades
+  belongs_to: ''
+  year: 2015
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 21
+  id: '12b76db4-7eb5-4997-9eb2-046e09968b34'
+  yt_id: '8j741TUIET0'
 - artist: XXL, Peter Steiner
   title: It's Cool Man
   belongs_to: ''
@@ -56186,15 +57893,6 @@ hits:
   yt_id: ZbHYq3xGVMY
 - artist: YOASOBI
   title: Idol
-  belongs_to: Oshi no Ko
-  year: 2023
-  packs:
-  - daa8b8be-c0f9-4e02-96e1-e8a628c7e396
-  playback_offset: 0
-  id: '54ffb4d0-9842-45db-b376-3013b97d13e5'
-  yt_id: '5NarVgDFNX0'
-- artist: YOASOBI
-  title: Idol
   belongs_to: Oshi no ko
   year: 2023
   packs:
@@ -56202,6 +57900,15 @@ hits:
   playback_offset: 0
   id: '51168908-c1f6-49ba-98cd-cde3751d8538'
   yt_id: JxvvUblf25A
+- artist: YOASOBI
+  title: Idol
+  belongs_to: Oshi no Ko
+  year: 2023
+  packs:
+  - daa8b8be-c0f9-4e02-96e1-e8a628c7e396
+  playback_offset: 0
+  id: '54ffb4d0-9842-45db-b376-3013b97d13e5'
+  yt_id: '5NarVgDFNX0'
 - artist: YOASOBI
   title: Kaibutsu
   belongs_to: Beastars
@@ -56378,6 +58085,7 @@ hits:
   belongs_to: ''
   year: 2010
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - '7c557823-64fc-4f3a-a651-d972d664824c'
   playback_offset: 30
   id: '54d20af3-efa9-4f1c-a133-538da8c15e89'
@@ -56725,6 +58433,15 @@ hits:
   playback_offset: 16
   id: '8dd0482f-fba1-4bbb-a4ad-99ee8a3472fa'
   yt_id: '4y4D-evzDTo'
+- artist: Zedd, Maren Morris, Grey
+  title: The Middle
+  belongs_to: ''
+  year: 2018
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 9
+  id: '9fb01862-47c0-4bf0-9260-af4d736617fd'
+  yt_id: M3mJkSqZbX4
 - artist: Zen
   title: Hair
   belongs_to: ''
@@ -56938,6 +58655,7 @@ hits:
   year: 1999
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 17
   id: '48fac441-98f5-4813-b710-52eceba805e5'
   yt_id: ok5BJlAd5-4
@@ -56977,6 +58695,15 @@ hits:
   playback_offset: 15
   id: f17014a8-9ab9-41f3-8d15-fc8273787e93
   yt_id: tP_WRk-xV7I
+- artist: eee gee
+  title: Favourite Lover
+  belongs_to: ''
+  year: 2021
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 5
+  id: a3c5050c-cef7-4fad-a036-b07fa570b70c
+  yt_id: WUudlX2k6Lk
 - artist: fun., Janelle Monáe
   title: We Are Young
   belongs_to: ''
@@ -56998,11 +58725,12 @@ hits:
   playback_offset: 0
   id: '893478c6-2ced-4752-bf7a-2df60ea12da4'
   yt_id: pd9ijpnkD-Y
-- artist: iNi Kamoze
-  title: Here Comes The Hotstepper
+- artist: iNi Kamoze, Salaam Remi
+  title: Here Comes the Hotstepper
   belongs_to: ''
   year: 1994
   packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 23
@@ -57023,18 +58751,18 @@ hits:
   year: 1993
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 35
-  id: '8c0c8369-966c-4a42-bb8e-68a4832b82ae'
-  yt_id: tiwxOhOcjwM
+  playback_offset: 25
+  id: '84806b22-9a5f-4757-b626-c3cbcd728ade'
+  yt_id: '1jqPusYXJ7s'
 - artist: k2
   title: Die Nachtigall singt
   belongs_to: ''
   year: 1994
   packs:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 65
-  id: '9d40f137-f79d-4d64-b944-87792d06eb75'
-  yt_id: eYKiWjGRH24
+  playback_offset: 60
+  id: '042f934b-841a-4e04-93eb-66b812bdff7d'
+  yt_id: _oRWb3ZnVxw
 - artist: mgk
   title: bloody valentine
   belongs_to: ''
@@ -57238,8 +58966,8 @@ hits:
   packs:
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   playback_offset: 5
-  id: '5fe50d72-86d0-469f-b48d-c8369a4ab7c6'
-  yt_id: qmgYOdu64-U
+  id: '9188faf5-60ea-4a75-be7a-900f2f0c1f7c'
+  yt_id: Irwea_BVBhI
 - artist: Álvaro Soler
   title: Sofia
   belongs_to: ''
@@ -57285,6 +59013,7 @@ hits:
   year: 1960
   packs:
   - '1d98f5c4-3d62-480f-99fc-855626ffeebb'
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   playback_offset: 11
   id: '11b44f55-1c44-49b5-bb33-64b9ca93320f'
   yt_id: Q3Kvu6Kgp88
@@ -57324,6 +59053,15 @@ hits:
   playback_offset: 20
   id: '29ed98f4-47d5-475e-b605-21504187f107'
   yt_id: cDNeDc6U1zU
+- artist: Østkyst Hustlers
+  title: Han Får For Lidt
+  belongs_to: ''
+  year: 1996
+  packs:
+  - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  playback_offset: 11
+  id: '464cb8f8-3fd1-4359-819c-d7b0db1bc447'
+  yt_id: fcXtL8oR4R4
 - artist: Łzy
   title: Agnieszka
   belongs_to: ''
@@ -57371,6 +59109,8 @@ packs:
   name: Hitster - Canada - 100% Franco
 - id: '451151bc-cfc2-44d5-a039-a2557be9a02f'
   name: Hitster - Canada - Guilty Pleasures
+- id: '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  name: Hitster - Denmark
 - id: b971d194-30fd-4483-92f2-61f947b8155a
   name: Hitster - France
 - id: bc55953c-b71d-47cf-a405-67ec6be10b34
