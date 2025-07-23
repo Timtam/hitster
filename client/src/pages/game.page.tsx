@@ -352,12 +352,6 @@ export default function Game() {
             if (game.players.some((p) => p.id === user?.id))
                 bindKeyCombo("alt + shift + q", handleLeaveGame)
             else bindKeyCombo("alt + shift + j", handleJoinGame)
-            if (
-                game.state === GameState.Open &&
-                (game.players.find((p) => p.id === user?.id)?.creator ??
-                    false) === true
-            )
-                bindKeyCombo("alt + shift + e", handleShowSettings)
 
             if (canStartOrStopGame()) {
                 bindKeyCombo("alt + shift + s", handleStartOrStopGame)
@@ -365,6 +359,7 @@ export default function Game() {
             if (canSkip()) {
                 bindKeyCombo("alt + shift + i", handleSkipHit)
             }
+            bindKeyCombo("alt + shift + e", handleShowSettings)
         }
 
         return () => {
@@ -452,44 +447,33 @@ export default function Game() {
                                 : t("startGame")
                             : t("startGameNotEnoughPlayers")}
                     </Button>
-                    <Button
-                        className="me-2"
-                        disabled={
-                            game.state !== GameState.Open ||
-                            (game.players.find((p) => p.id === user?.id)
-                                ?.creator ?? false) === false
-                        }
-                        aria-expanded={false}
-                        aria-keyshortcuts={
-                            game.state === GameState.Open &&
-                            (game.players.find((p) => p.id === user?.id)
-                                ?.creator ?? false) === true
-                                ? t("gameSettingsShortcut")
-                                : ""
-                        }
-                        aria-label={
-                            detect()?.name === "firefox" &&
-                            game.state === GameState.Open &&
-                            (game.players.find((p) => p.id === user?.id)
-                                ?.creator ?? false) === true
-                                ? `${t("gameSettingsShortcut")} ${t("gameSettings")}`
-                                : ""
-                        }
-                        onClick={() => setShowSettings(true)}
-                    >
-                        {game.state !== GameState.Open
-                            ? t("gameSettingsNotOpen")
-                            : t("gameSettings")}
-                    </Button>
-                    <GameSettings
-                        show={showSettings}
-                        game={game}
-                        onHide={() => setShowSettings(false)}
-                    />
                 </>
             ) : (
                 ""
             )}
+            <Button
+                className="me-2"
+                aria-expanded={false}
+                aria-keyshortcuts={t("gameSettingsShortcut")}
+                aria-label={
+                    detect()?.name === "firefox"
+                        ? `${t("gameSettingsShortcut")} ${t("gameSettings")}`
+                        : ""
+                }
+                onClick={() => setShowSettings(true)}
+            >
+                {t("gameSettings")}
+            </Button>
+            <GameSettings
+                show={showSettings}
+                game={game}
+                editable={
+                    game.state === GameState.Open &&
+                    (game.players.find((p) => p.id === user?.id)?.creator ??
+                        false) === true
+                }
+                onHide={() => setShowSettings(false)}
+            />
             <h3 className="h5">{t("player", { count: 2 })}</h3>
             <Table responsive>
                 <thead>

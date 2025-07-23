@@ -58,6 +58,7 @@ featuresList: >
 finalScore: "Hier sind die finalen Ergebnisse:"
 game: Spiel
 gameActions: "Spielaktionen:"
+gameAlreadyRunning: Das Spiel läuft bereits
 gameEnded: Das Spiel ist vorbei!
 gameId: Spiel ID
 gameLobby: Spielelobby
@@ -65,7 +66,7 @@ gameNotStarted: Das Spiel hat noch nicht begonnen.
 gameSettings: Spieleinstellungen
 gameSettingsHitDuration: Wie viele Sekunden eines Hits werden zu jeder Spielrunde abgespielt?
 gameSettingsHitGoal: Wie viele Hits muss ein Spieler erraten, um das Spiel zu gewinnen?
-gameSettingsNotOpen: Das Spiel muss gestoppt sein, um die Spieleinstellungen zu ändern
+gameSettingsNotCreator: Nur der Ersteller des Spiels kann es bearbeiten
 gameSettingsPacks: "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:"
 gameSettingsRememberHits: >-
     Sollen Hits zwischen den Spielen gespeichert werden, damit so selten wie

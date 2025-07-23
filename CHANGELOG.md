@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   [game settings can now be accessed by all players, although in read-only mode if you are not the creator of the game (#29)](https://github.com/Timtam/issues/29)
+
 ### Fixed
 
 -   [fixed state inconsistencies when kicking a player from a local game (#26)](https://github.com/Timtam/issues/26)
