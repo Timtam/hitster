@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   [game settings can now be accessed by all players, although in read-only mode if you are not the creator of the game (#29)](https://github.com/Timtam/issues/29)
+
+### Fixed
+
+-   [fixed state inconsistencies when kicking a player from a local game (#26)](https://github.com/Timtam/issues/26)
+
+## [2025.7.23-2] - 2025-07-23
+
 Immediate re-release of 2025.7.23-1 due to a typo in hits.
 
 ## [2025.7.23-1] - 2025-07-23
@@ -76,7 +86,9 @@ Immediate re-release of 2025.7.23-1 due to a typo in hits.
 -   [Add local player modal no longer requires you to press the "Add" button, you can also just press return within the input box now (#15)](https://github.com/Timtam/hitster/issues/15)
 -   [New versioning (mixture of release date and semver) + changelog #17)](https://github.com/Timtam/hitster/issues/17)
 
-[Unreleased]: https://github.com/Timtam/hitster/compare/2025.7.23-1...HEAD
+[Unreleased]: https://github.com/Timtam/hitster/compare/2025.7.23-2...HEAD
+
+[2025.7.23-2]: https://github.com/Timtam/hitster/compare/2025.7.23-1...2025.7.23-2
 
 [2025.7.23-1]: https://github.com/Timtam/hitster/compare/2025.5.3-1...2025.7.23-1
 
