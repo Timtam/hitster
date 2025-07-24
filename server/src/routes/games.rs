@@ -132,11 +132,6 @@ pub async fn leave_game(
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
-    let state = games
-        .get(game_id, Some(&user))
-        .map(|g| g.state)
-        .unwrap_or(GameState::Open);
-
     games
         .leave(
             game_id,
@@ -156,17 +151,15 @@ pub async fn leave_game(
                 .map(|g| g.state)
                 .unwrap_or(GameState::Open);
 
-            if new_state != state {
-                let _ = queue.send(GameEvent {
-                    game_id: game_id.into(),
-                    event: "change_state".into(),
-                    state: Some(new_state),
-                    players: games
-                        .get(game_id, Some(&user))
-                        .map(|g| g.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
-                    ..Default::default()
-                });
-            }
+            let _ = queue.send(GameEvent {
+                game_id: game_id.into(),
+                event: "change_state".into(),
+                state: Some(new_state),
+                players: games
+                    .get(game_id, Some(&user))
+                    .map(|g| g.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
+                ..Default::default()
+            });
 
             Json(MessageResponse {
                 message: "left the game successfully".into(),
