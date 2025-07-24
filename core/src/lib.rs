@@ -10,6 +10,7 @@ mod hitster_core {
         hash::{Hash, Hasher},
         path::{Path, PathBuf},
     };
+    use time::OffsetDateTime;
     use uuid::Uuid;
 
     #[derive(Clone, Eq, Debug, Serialize, Deserialize)]
@@ -22,6 +23,9 @@ mod hitster_core {
         pub playback_offset: u16,
         pub id: Uuid,
         pub yt_id: String,
+        #[serde(with = "time::serde::rfc3339")]
+        #[serde(default = "OffsetDateTime::now_utc")]
+        pub last_modified: OffsetDateTime,
     }
 
     impl Hit {

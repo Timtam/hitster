@@ -12,4 +12,5 @@ regex-lite = "0.1.6"
 serde = { workspace = true }
 serde_yml = { workspace = true }
 terminal-menu = "3.0.0"
+time = { workspace = true }
 uuid = { workspace = true }

@@ -8,4 +8,5 @@ multi_key_map = "0.3.0"
 natord = "1.0.9"
 schemars = { workspace = true }
 serde = { workspace = true }
+time = { workspace = true }
 uuid = { workspace = true }

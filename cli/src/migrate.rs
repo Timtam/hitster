@@ -2,6 +2,7 @@ use hitster_core::{Hit, HitId, HitsterData, Pack};
 use regex_lite::Regex;
 use std::{collections::HashMap, fs, path::PathBuf};
 use terminal_menu::{button, label, list, menu, mut_menu, run};
+use time::OffsetDateTime;
 use uuid::Uuid;
 
 pub fn migrate(file: PathBuf) -> bool {
@@ -16,7 +17,7 @@ pub fn migrate(file: PathBuf) -> bool {
         .trim(csv::Trim::All)
         .from_reader(csv_data.as_bytes());
 
-    let hit_ref = fs::read_to_string(PathBuf::from("etc/hits.yml"))
+    let hits_ref = fs::read_to_string(PathBuf::from("etc/hits.yml"))
         .map(|s| serde_yml::from_str::<HitsterData>(&s).unwrap())
         .unwrap_or(HitsterData::new(vec![], vec![]));
 
@@ -41,7 +42,7 @@ pub fn migrate(file: PathBuf) -> bool {
                 packs.insert(
                     pack.clone(),
                     Pack {
-                        id: hit_ref
+                        id: hits_ref
                             .get_packs()
                             .into_iter()
                             .find(|p| p.name == pack)
@@ -51,6 +52,8 @@ pub fn migrate(file: PathBuf) -> bool {
                     },
                 );
             }
+
+            let hit_ref = hits_ref.get_hit(&HitId::YtId(my_yt_id.clone()));
 
             let artist = record.get(0).unwrap().to_string();
             let title = record.get(2).unwrap().to_string();
@@ -72,11 +75,9 @@ pub fn migrate(file: PathBuf) -> bool {
                         playback_offset,
                         packs: vec![packs.get(&pack).unwrap().id],
                         belongs_to,
-                        id: hit_ref
-                            .get_hit(&HitId::YtId(my_yt_id.clone()))
-                            .map(|h| h.id)
-                            .unwrap_or_else(Uuid::new_v4),
+                        id: hit_ref.as_ref().map(|h| h.id).unwrap_or_else(Uuid::new_v4),
                         yt_id: my_yt_id,
+                        last_modified: OffsetDateTime::now_utc(),
                     },
                 );
             } else if let Some(hit) = hits.get_mut(&my_yt_id) {
@@ -174,6 +175,16 @@ pub fn migrate(file: PathBuf) -> bool {
                         .selection_value("Playback offset:")
                         .parse::<u16>()
                         .unwrap();
+                }
+
+                if let Some(h) = hit_ref.as_ref()
+                    && (h.title != hit.title
+                        || h.artist != hit.artist
+                        || h.belongs_to != hit.belongs_to
+                        || h.playback_offset != hit.playback_offset
+                        || h.year != hit.year)
+                {
+                    hit.last_modified = OffsetDateTime::now_utc();
                 }
 
                 hit.packs.push(packs.get(&pack).unwrap().id);

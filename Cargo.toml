@@ -7,6 +7,7 @@ default-members = ["server"]
 schemars = { version = "0.8.16", features = ["uuid1"]}
 serde = { version = "1.0.197", features = ["derive"]}
 serde_yml = "0.0.12"
+time = { version = "0.3.34", features = ["serde", "serde-well-known"]}
 uuid = { version = "1.8.0", features = ["serde", "v4"], default-features = false }
 
 [profile.release]
