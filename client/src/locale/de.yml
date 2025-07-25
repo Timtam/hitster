@@ -83,13 +83,12 @@ hitHeading: Was zum Hit?
 hitNoGameRunning: Derzeit läuft kein Spiel, also gibt es auch keinen Hit für dich!
 hitRevealed: >-
     <0>{{player}}</0> hat Recht! Das ist <1>{{title}}</1> von <2>{{artist}}</2>
-    aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem <4>{{pack}}</4> Pack.
-    Du kannst dir den Hit jetzt in voller Länge anhören.
+    aus dem Jahr <3>{{year}}</3>. Du kannst dir den Hit jetzt in voller Länge
+    anhören.
 hitRevealedBelonging: >-
     <0>{{player}}</0> hat Recht! Das ist <1>{{title}}</1> von <2>{{artist}}</2>
-    aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus <4>{{belongs_to}}</4>
-    und stammt aus dem <5>{{pack}}</5> Pack. Du kannst dir den Hit jetzt in
-    voller Länge anhören.
+    aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus <4>{{belongs_to}}</4>.
+    Du kannst dir den Hit jetzt in voller Länge anhören.
 hitUnknown: Der Hit ist derzeit unbekannt, du musst wohl warten, bis er aufgedeckt wird.
 hit_one: Hit
 hit_other: Hits
@@ -164,12 +163,11 @@ notLoggedIn: Nicht angemeldet
 open: geöffnet
 otherClaimedHit: >-
     <0>{{player}}</0> hat sich einen Hit genommen. Das war <1>{{title}}</1> von
-    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem
-    <4>{{pack}}</4> Pack.
+    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>.
 otherClaimedHitBelonging: >-
     <0>{{player}}</0> hat sich einen Hit genommen. Das war <1>{{title}}</1> von
     <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus
-    <4>{{belongs_to}}</4> und stammt aus dem <5>{{pack}}</5> Pack.
+    <4>{{belongs_to}}</4>.
 otherGuessHeading: Du rätst jetzt für <0>{{player}}</0>
 otherInterceptHeading: Du kannst jetzt für <0>{{player}}</0> eine andere Vermutung äußern
 otherJoinedGame: "{{player}} ist dem Spiel beigetreten"
@@ -179,12 +177,11 @@ otherReceivedToken: >-
     genannt wurde
 otherSkippedHit: >-
     <0>{{player}}</0> hat diesen Hit übersprungen. Das war <1>{{title}}</1> von
-    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem
-    <4>{{pack}}</4> Pack.
+    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>.
 otherSkippedHitBelonging: >-
     <0>{{player}}</0> hat diesen Hit übersprungen. Das war <1>{{title}}</1> von
     <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus
-    <4>{{belongs_to}}</4> und stammt aus dem <5>{{pack}}</5> Pack.
+    <4>{{belongs_to}}</4>.
 otherWins: "{{player}} hat dieses Spiel gewonnen!"
 ownedBy: >-
     Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel,
@@ -263,12 +260,11 @@ year: Jahr
 yesShortcut: Alt+Umschalt+Y
 youClaimedHit: >-
     Du hast dir einen Hit genommen. Das war <0>{{title}}</0> von
-    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit stammt aus dem
-    <3>{{pack}}</3> Pack.
+    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>.
 youClaimedHitBelonging: >-
     Du hast dir einen Hit genommen. Das war <0>{{title}}</0> von
     <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit ist bekannt aus
-    <3>{{belongs_to}}</3> und stammt aus dem <4>{{pack}}</4> Pack.
+    <3>{{belongs_to}}</3>.
 youGuessHeading: Na endlich, jetzt bist du mit Raten dran!
 youInterceptHeading: >-
     Du kannst einschreiten und eine andere Vermutung äußern, denk jedoch daran,
@@ -278,10 +274,9 @@ youLeftGame: Du hast das Spiel verlassen
 youReceivedToken: Du hast einen Token erhalten, da du Künstler und Titel dieses Hits wusstest
 youSkippedHit: >-
     Du hast diesen Hit übersprungen. Das war <0>{{title}}</0> von
-    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit stammt aus dem
-    <3>{{pack}}</3> Pack.
+    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>.
 youSkippedHitBelonging: >-
     Du hast diesen Hit übersprungen! Das war <0>{{title}}</0> von
     <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit ist bekannt aus
-    <3>{{belongs_to}}</3> und stammt aus dem <4>{{pack}}</4> Pack.
+    <3>{{belongs_to}}</3>.
 youWin: Gratulation, du hast das Spiel gewonnen!

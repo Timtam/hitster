@@ -13,4 +13,4 @@ target/
 *.pdb
 *.env
 client/node_modules
-server/hits
+hits

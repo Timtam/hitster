@@ -1,0 +1,12 @@
+[package]
+name = "hitster_core"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+multi_key_map = "0.3.0"
+natord = "1.0.9"
+schemars = { workspace = true }
+serde = { workspace = true }
+time = { workspace = true }
+uuid = { workspace = true }

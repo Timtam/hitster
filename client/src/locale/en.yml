@@ -83,13 +83,11 @@ hitHeading: What's the hit?
 hitNoGameRunning: No game running, no hit for you!
 hitRevealed: >-
     <0>{{player}}</0> is right! This is <1>{{title}}</1> by <2>{{artist}}</2>
-    from <3>{{year}}</3>. This song belongs to the <4>{{pack}}</4> pack. You can
-    now play it at full length.
+    from <3>{{year}}</3>. You can now play it at full length.
 hitRevealedBelonging: >-
     <0>{{player}}</0> is right! This is <1>{{title}}</1> by <2>{{artist}}</2>
-    from <3>{{year}}</3>. You might know this song from <4>{{belongs_to}}</4>
-    and it belongs to the <4>{{pack}}</4> pack. You can now play it at full
-    length.
+    from <3>{{year}}</3>. You might know this song from <4>{{belongs_to}}</4>.
+    You can now play it at full length.
 hitUnknown: The hit is currently unknown, you'll have to wait for it to be revealed.
 hit_one: Hit
 hit_other: Hits
@@ -161,12 +159,11 @@ notLoggedIn: Not logged in
 open: Open
 otherClaimedHit: >-
     <0>{{player}}</0> claimed a hit. This was <1>{{title}}</1> by
-    <2>{{artist}}</2> from <3>{{year}}</3>. This song belongs to the
-    <4>{{pack}}</4> pack.
+    <2>{{artist}}</2> from <3>{{year}}</3>.
 otherClaimedHitBelonging: >-
     <0>{{player}}</0> claimed a hit. This was <1>{{title}}</1> by
     <2>{{artist}}</2> from <3>{{year}}</3>. You might know this song from
-    <4>{{belongs_to}}</4> and it belongs to the <4>{{pack}}</4> pack.
+    <4>{{belongs_to}}</4>.
 otherGuessHeading: You're now guessing for <0>{{player}}</0>
 otherInterceptHeading: You can now make another guess for <0>{{player}}</0>
 otherJoinedGame: "{{player}} joined the game"
@@ -176,12 +173,11 @@ otherReceivedToken: >-
     correctly
 otherSkippedHit: >-
     <0>{{player}}</0> skipped this hit! This was <1>{{title}}</1> by
-    <2>{{artist}}</2> from <3>{{year}}</3>. This song belongs to the
-    <4>{{pack}}</4> pack.
+    <2>{{artist}}</2> from <3>{{year}}</3>.
 otherSkippedHitBelonging: >-
     <0>{{player}}</0> skipped this hit! This was <1>{{title}}</1> by
     <2>{{artist}}</2> from <3>{{year}}</3>. You might know this song from
-    <4>{{belongs_to}}</4> and it belongs to the <4>{{pack}}</4> pack.
+    <4>{{belongs_to}}</4>.
 otherWins: "{{player}} is the winner of this game!"
 ownedBy: >-
     This unofficial version is based on the original Hitster card game which is
@@ -260,11 +256,10 @@ year: Year
 yesShortcut: Alt+Shift+Y
 youClaimedHit: >-
     You claimed a hit. This was <0>{{title}}</0> by <1>{{artist}}</1> from
-    <2>{{year}}</2>. This song belongs to the <3>{{pack}}</3> pack.
+    <2>{{year}}</2>.
 youClaimedHitBelonging: >-
     You claimed a hit. This was <0>{{title}}</0> by <1>{{artist}}</1> from
-    <2>{{year}}</2>. You might know this song from <3>{{belongs_to}}</3> and it
-    belongs to the <3>{{pack}}</3> pack.
+    <2>{{year}}</2>. You might know this song from <3>{{belongs_to}}</3>.
 youGuessHeading: Finally, its your turn to guess!
 youInterceptHeading: >-
     You can now step in and make another guess, but be aware, it'll cost you one
@@ -274,9 +269,8 @@ youLeftGame: You left the game
 youReceivedToken: You received a token for guessing artist and title of this hit correctly
 youSkippedHit: >-
     You skipped this hit. This was <0>{{title}}</0> by <1>{{artist}}</1> from
-    <2>{{year}}</2>. This song belongs to the <3>{{pack}}</3> pack.
+    <2>{{year}}</2>.
 youSkippedHitBelonging: >-
     You skipped this hit. This was <0>{{title}}</0> by <1>{{artist}}</1> from
-    <2>{{year}}</2>. You might know this song from <3>{{belongs_to}}</3> and it
-    belongs to the <3>{{pack}}</3> pack.
+    <2>{{year}}</2>. You might know this song from <3>{{belongs_to}}</3>.
 youWin: Congratulations, you are the winner!

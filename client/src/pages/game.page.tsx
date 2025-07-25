@@ -585,12 +585,11 @@ export default function Game() {
                             title: game.hit.title,
                             artist: game.hit.artist,
                             year: game.hit.year,
-                            pack: game.hit.pack,
                             player: titleCase(
                                 game.last_scored?.name ?? t("noone"),
                             ),
                         }}
-                        components={[<b />, <b />, <b />, <b />, <b />]}
+                        components={[<b />, <b />, <b />, <b />]}
                         shouldUnescape={true}
                         tOptions={{ interpolation: { escapeValue: true } }}
                     />
@@ -601,13 +600,12 @@ export default function Game() {
                             title: game.hit.title,
                             artist: game.hit.artist,
                             year: game.hit.year,
-                            pack: game.hit.pack,
                             belongs_to: game.hit.belongs_to,
                             player: titleCase(
                                 game.last_scored?.name ?? t("noone"),
                             ),
                         }}
-                        components={[<b />, <b />, <b />, <b />, <b />, <b />]}
+                        components={[<b />, <b />, <b />, <b />, <b />]}
                         shouldUnescape={true}
                         tOptions={{ interpolation: { escapeValue: true } }}
                     />

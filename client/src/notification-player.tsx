@@ -131,18 +131,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     title: e.hit.title,
                                     artist: e.hit.artist,
                                     year: e.hit.year,
-                                    pack: e.hit.pack,
                                     belongs_to: e.hit.belongs_to,
                                     player: e.player?.name ?? t("noone"),
                                 }}
-                                components={[
-                                    <b />,
-                                    <b />,
-                                    <b />,
-                                    <b />,
-                                    <b />,
-                                    <b />,
-                                ]}
+                                components={[<b />, <b />, <b />, <b />, <b />]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -155,10 +147,9 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     title: e.hit.title,
                                     artist: e.hit.artist,
                                     year: e.hit.year,
-                                    pack: e.hit.pack,
                                     player: e.player?.name ?? t("noone"),
                                 }}
-                                components={[<b />, <b />, <b />, <b />, <b />]}
+                                components={[<b />, <b />, <b />, <b />]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -213,12 +204,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         title: e.hit.title,
                                         artist: e.hit.artist,
                                         year: e.hit.year,
-                                        pack: e.hit.pack,
                                         belongs_to: e.hit.belongs_to,
                                         player: e.player?.name ?? t("noone"),
                                     }}
                                     components={[
-                                        <b />,
                                         <b />,
                                         <b />,
                                         <b />,
@@ -237,16 +226,9 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         title: e.hit.title,
                                         artist: e.hit.artist,
                                         year: e.hit.year,
-                                        pack: e.hit.pack,
                                         player: e.player?.name ?? t("noone"),
                                     }}
-                                    components={[
-                                        <b />,
-                                        <b />,
-                                        <b />,
-                                        <b />,
-                                        <b />,
-                                    ]}
+                                    components={[<b />, <b />, <b />, <b />]}
                                     shouldUnescape={true}
                                     tOptions={{
                                         interpolation: { escapeValue: true },
@@ -260,10 +242,9 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     title: e.hit.title,
                                     artist: e.hit.artist,
                                     year: e.hit.year,
-                                    pack: e.hit.pack,
                                     belongs_to: e.hit.belongs_to,
                                 }}
-                                components={[<b />, <b />, <b />, <b />, <b />]}
+                                components={[<b />, <b />, <b />, <b />]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -276,9 +257,8 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     title: e.hit.title,
                                     artist: e.hit.artist,
                                     year: e.hit.year,
-                                    pack: e.hit.pack,
                                 }}
-                                components={[<b />, <b />, <b />, <b />]}
+                                components={[<b />, <b />, <b />]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -302,12 +282,10 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         title: e.hit.title,
                                         artist: e.hit.artist,
                                         year: e.hit.year,
-                                        pack: e.hit.pack,
                                         belongs_to: e.hit.belongs_to,
                                         player: e.player?.name ?? t("noone"),
                                     }}
                                     components={[
-                                        <b />,
                                         <b />,
                                         <b />,
                                         <b />,
@@ -326,16 +304,9 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         title: e.hit.title,
                                         artist: e.hit.artist,
                                         year: e.hit.year,
-                                        pack: e.hit.pack,
                                         player: e.player?.name ?? t("noone"),
                                     }}
-                                    components={[
-                                        <b />,
-                                        <b />,
-                                        <b />,
-                                        <b />,
-                                        <b />,
-                                    ]}
+                                    components={[<b />, <b />, <b />, <b />]}
                                     shouldUnescape={true}
                                     tOptions={{
                                         interpolation: { escapeValue: true },
@@ -349,10 +320,9 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     title: e.hit.title,
                                     artist: e.hit.artist,
                                     year: e.hit.year,
-                                    pack: e.hit.pack,
                                     belongs_to: e.hit.belongs_to,
                                 }}
-                                components={[<b />, <b />, <b />, <b />, <b />]}
+                                components={[<b />, <b />, <b />, <b />]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -365,9 +335,8 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     title: e.hit.title,
                                     artist: e.hit.artist,
                                     year: e.hit.year,
-                                    pack: e.hit.pack,
                                 }}
-                                components={[<b />, <b />, <b />, <b />]}
+                                components={[<b />, <b />, <b />]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },

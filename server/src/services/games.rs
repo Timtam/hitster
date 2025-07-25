@@ -1,6 +1,5 @@
 use crate::{
     games::{Game, GameMode, GameSettingsPayload, GameState, Player, PlayerState, Slot},
-    hits::Hit,
     responses::{
         ClaimHitError, ConfirmSlotError, GuessSlotError, HitError, JoinGameError, LeaveGameError,
         SkipHitError, StartGameError, StopGameError, UpdateGameError,
@@ -8,6 +7,7 @@ use crate::{
     services::{HitService, ServiceHandle},
     users::User,
 };
+use hitster_core::Hit;
 use itertools::sorted;
 use rand::{
     distr::{Alphanumeric, SampleString},
@@ -67,14 +67,15 @@ impl GameService {
             packs: self
                 .hit_service
                 .lock()
-                .get_all()
+                .get_available_hits()
                 .into_iter()
                 .fold(HashSet::new(), |mut p, h| {
-                    p.insert(h.pack);
+                    h.packs.iter().for_each(|pp| {
+                        p.insert(*pp);
+                    });
                     p
                 })
                 .into_iter()
-                .map(|p| p.to_string())
                 .collect::<Vec<_>>(),
             mode,
             remember_hits: true,
@@ -304,22 +305,24 @@ impl GameService {
                     0
                 };
 
-                let mut hits_remaining: VecDeque<&Hit> =
-                    filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
-                        .into_iter()
-                        .filter(|h| !game.remember_hits || !remembered_hits.contains(h))
-                        .fold(HashSet::<&Hit>::new(), |mut hs, h| {
-                            if let Some(ch) = hs.get(&h) {
-                                if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
-                                    hs.replace(h);
-                                }
-                            } else {
-                                hs.insert(h);
-                            }
-                            hs
-                        })
-                        .into_iter()
-                        .collect::<_>();
+                let mut hits_remaining: VecDeque<&Hit> = filter_hits_by_packs(
+                    &self.hit_service.lock().get_available_hits(),
+                    &game.packs,
+                )
+                .into_iter()
+                .filter(|h| !game.remember_hits || !remembered_hits.contains(h))
+                .fold(HashSet::<&Hit>::new(), |mut hs, h| {
+                    if let Some(ch) = hs.get(&h) {
+                        if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
+                            hs.replace(h);
+                        }
+                    } else {
+                        hs.insert(h);
+                    }
+                    hs
+                })
+                .into_iter()
+                .collect::<_>();
 
                 if hits_remaining.len() + remembered_hits_count
                     < (game.players.len() * game.goal as usize * 2)
@@ -728,22 +731,24 @@ impl GameService {
 
             if game.hits_remaining.is_empty() {
                 let mut rng = rng();
-                game.hits_remaining =
-                    filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
-                        .into_iter()
-                        .filter(|h| !game.remembered_hits.contains(h))
-                        .fold(HashSet::<&Hit>::new(), |mut hs, h| {
-                            if let Some(ch) = hs.get(&h) {
-                                if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
-                                    hs.replace(h);
-                                }
-                            } else {
-                                hs.insert(h);
-                            }
-                            hs
-                        })
-                        .into_iter()
-                        .collect::<VecDeque<_>>();
+                game.hits_remaining = filter_hits_by_packs(
+                    &self.hit_service.lock().get_available_hits(),
+                    &game.packs,
+                )
+                .into_iter()
+                .filter(|h| !game.remembered_hits.contains(h))
+                .fold(HashSet::<&Hit>::new(), |mut hs, h| {
+                    if let Some(ch) = hs.get(&h) {
+                        if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
+                            hs.replace(h);
+                        }
+                    } else {
+                        hs.insert(h);
+                    }
+                    hs
+                })
+                .into_iter()
+                .collect::<VecDeque<_>>();
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
             }
 
@@ -813,22 +818,24 @@ impl GameService {
 
             if game.hits_remaining.is_empty() {
                 let mut rng = rng();
-                game.hits_remaining =
-                    filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
-                        .into_iter()
-                        .filter(|h| !game.remembered_hits.contains(h))
-                        .fold(HashSet::<&Hit>::new(), |mut hs, h| {
-                            if let Some(ch) = hs.get(&h) {
-                                if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
-                                    hs.replace(h);
-                                }
-                            } else {
-                                hs.insert(h);
-                            }
-                            hs
-                        })
-                        .into_iter()
-                        .collect::<VecDeque<_>>();
+                game.hits_remaining = filter_hits_by_packs(
+                    &self.hit_service.lock().get_available_hits(),
+                    &game.packs,
+                )
+                .into_iter()
+                .filter(|h| !game.remembered_hits.contains(h))
+                .fold(HashSet::<&Hit>::new(), |mut hs, h| {
+                    if let Some(ch) = hs.get(&h) {
+                        if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
+                            hs.replace(h);
+                        }
+                    } else {
+                        hs.insert(h);
+                    }
+                    hs
+                })
+                .into_iter()
+                .collect::<VecDeque<_>>();
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
             }
 
@@ -890,22 +897,24 @@ impl GameService {
             if game.hits_remaining.len() == 1 {
                 let current_hit = game.hits_remaining.pop_front().unwrap();
                 let mut rng = rng();
-                game.hits_remaining =
-                    filter_hits_by_packs(&self.hit_service.lock().get_all(), &game.packs)
-                        .into_iter()
-                        .filter(|h| !game.remembered_hits.contains(h))
-                        .fold(HashSet::<&Hit>::new(), |mut hs, h| {
-                            if let Some(ch) = hs.get(&h) {
-                                if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
-                                    hs.replace(h);
-                                }
-                            } else {
-                                hs.insert(h);
-                            }
-                            hs
-                        })
-                        .into_iter()
-                        .collect::<VecDeque<_>>();
+                game.hits_remaining = filter_hits_by_packs(
+                    &self.hit_service.lock().get_available_hits(),
+                    &game.packs,
+                )
+                .into_iter()
+                .filter(|h| !game.remembered_hits.contains(h))
+                .fold(HashSet::<&Hit>::new(), |mut hs, h| {
+                    if let Some(ch) = hs.get(&h) {
+                        if ch.belongs_to.is_empty() && !h.belongs_to.is_empty() {
+                            hs.replace(h);
+                        }
+                    } else {
+                        hs.insert(h);
+                    }
+                    hs
+                })
+                .into_iter()
+                .collect::<VecDeque<_>>();
                 game.hits_remaining.make_contiguous().shuffle(&mut rng);
                 game.hits_remaining.push_front(current_hit);
             }
@@ -962,14 +971,13 @@ impl GameService {
                 if packs.is_empty() {
                     self.hit_service
                         .lock()
-                        .get_all()
+                        .get_available_hits()
                         .into_iter()
                         .fold(HashSet::new(), |mut p, h| {
-                            p.insert(h.pack);
+                            p.extend(h.packs.iter());
                             p
                         })
                         .into_iter()
-                        .map(|p| p.to_string())
                         .collect::<Vec<_>>()
                 } else {
                     packs.clone()
@@ -986,7 +994,7 @@ impl GameService {
             };
 
             let hits_remaining: VecDeque<&Hit> =
-                filter_hits_by_packs(&self.hit_service.lock().get_all(), &packs)
+                filter_hits_by_packs(&self.hit_service.lock().get_available_hits(), &packs)
                     .into_iter()
                     .filter(|h| {
                         !settings.remember_hits.unwrap_or(game.remember_hits)
@@ -1041,10 +1049,16 @@ impl GameService {
     }
 }
 
-fn filter_hits_by_packs(hits: &Vec<&'static Hit>, packs: &[String]) -> Vec<&'static Hit> {
-    let packs = packs.iter().map(|p| p.as_str()).collect::<Vec<_>>();
+fn filter_hits_by_packs(hits: &Vec<&'static Hit>, packs: &[Uuid]) -> Vec<&'static Hit> {
+    let packs = packs.iter().collect::<HashSet<_>>();
     hits.iter()
-        .filter(|h| packs.is_empty() || packs.contains(&h.pack))
+        .filter(|h| {
+            packs.is_empty()
+                || packs
+                    .intersection(&h.packs.iter().collect::<HashSet<_>>())
+                    .count()
+                    > 0
+        })
         .copied()
         .collect::<Vec<_>>()
 }

@@ -3,6 +3,7 @@ use crate::{
     services::{HitService, ServiceHandle, ServiceStore},
 };
 use crossbeam_channel::unbounded;
+use hitster_core::{Hit, HitsterData};
 use rocket::{
     State,
     http::Status,
@@ -16,57 +17,44 @@ use rocket_okapi::{
 };
 use serde::Serialize;
 use std::{
-    cmp::PartialEq,
     collections::HashSet,
+    convert::From,
     env,
     fs::{create_dir_all, read_dir, remove_file},
-    hash::{Hash, Hasher},
     path::{Path, PathBuf},
     process::Command,
     sync::OnceLock,
 };
 use uuid::Uuid;
 
-include!(concat!(env!("OUT_DIR"), "/hits.rs"));
-
-#[derive(Clone, Eq, Debug, Serialize, JsonSchema)]
-pub struct Hit {
-    pub artist: &'static str,
-    pub title: &'static str,
-    pub belongs_to: &'static str,
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema)]
+pub struct HitPayload {
+    pub artist: String,
+    pub title: String,
+    pub belongs_to: String,
     pub year: u32,
-    pub pack: &'static str,
-    #[serde(skip)]
-    pub playback_offset: u16,
+    pub packs: Vec<Uuid>,
     pub id: Uuid,
-    #[serde(skip)]
-    pub yt_id: &'static str,
 }
 
-impl Hit {
-    pub fn download_dir() -> String {
-        env::var("DOWNLOAD_DIRECTORY").unwrap_or("./hits".to_string())
-    }
-
-    pub fn file(&self) -> PathBuf {
-        Path::new(&Hit::download_dir()).join(format!("{}_{}.mp3", self.yt_id, self.playback_offset))
-    }
-
-    pub fn exists(&self) -> bool {
-        self.file().is_file()
+impl From<&Hit> for HitPayload {
+    fn from(hit: &Hit) -> Self {
+        Self {
+            artist: hit.artist.clone(),
+            title: hit.title.clone(),
+            belongs_to: hit.belongs_to.clone(),
+            year: hit.year,
+            packs: hit.packs.clone(),
+            id: hit.id,
+        }
     }
 }
 
-impl PartialEq for Hit {
-    fn eq(&self, h: &Self) -> bool {
-        self.yt_id == h.yt_id
-    }
-}
-
-impl Hash for Hit {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.yt_id.hash(state);
-    }
+pub fn get_hitster_data() -> &'static HitsterData {
+    static DATA: OnceLock<HitsterData> = OnceLock::new();
+    DATA.get_or_init(|| {
+        serde_yml::from_str::<HitsterData>(include_str!("../../etc/hits.yml")).unwrap()
+    })
 }
 
 struct DownloadHitData {
@@ -84,8 +72,9 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
     rocket::tokio::spawn(async move {
         rocket::info!("Starting background download of hits");
 
-        let hits = get_all()
-            .iter()
+        let hits = get_hitster_data()
+            .get_hits()
+            .into_iter()
             .filter(|h| {
                 if h.exists() {
                     hit_service.lock().add(h);
@@ -107,7 +96,7 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
                     filter: VideoSearchOptions::Audio,
                     ..Default::default()
                 };
-                if let Ok(video) = Video::new_with_options(hit.yt_id, options) {
+                if let Ok(video) = Video::new_with_options(hit.yt_id.as_str(), options) {
                     let in_dl = video
                         .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
                         .await;
@@ -203,7 +192,7 @@ pub fn download_hits(hit_service: ServiceHandle<HitService>) {
             files.insert(p.file_name().into_string().unwrap());
         }
 
-        for hit in get_all().iter() {
+        for hit in get_hitster_data().get_hits().iter() {
             files.remove(&format!("{}_{}.mp3", hit.yt_id, hit.playback_offset));
         }
 

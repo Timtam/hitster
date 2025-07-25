@@ -50,26 +50,35 @@ FROM rust:${RUST_VERSION}-slim-bookworm AS server_build_image
 
 # create a new empty shell project
 RUN apt-get update && apt-get -y install libssl-dev pkg-config && \
-    USER=root cargo new --bin hitster
+    USER=root mkdir hitster
 
 WORKDIR /hitster
 
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
+RUN USER=root cargo new --bin server && \
+    USER=root cargo new --bin cli && \
+    USER=root cargo new --lib core --name hitster_core
+
 # copy over your manifests
-COPY ./server/Cargo.lock ./Cargo.lock
-COPY ./server/Cargo.toml ./Cargo.toml
+COPY ./cli/Cargo.toml ./cli/Cargo.toml
+COPY ./core/Cargo.toml ./core/Cargo.toml
+COPY ./server/Cargo.toml ./server/Cargo.toml
 
 # this build step will cache your dependencies
 RUN cargo build --release --no-default-features --features yt_dl && \
-    rm src/*.rs
+    rm server/src/*.rs && \
+    rm core/src/*.rs
 
 # copy your source tree
-COPY ./server/migrations ./migrations
-COPY ./server/src ./src
-COPY ./server/build.rs ./build.rs
-COPY ./server/etc ./etc
+COPY ./etc ./etc
+COPY ./server/migrations ./server/migrations
+COPY ./server/src ./server/src
+COPY ./core/src ./core/src
 
 # build for release
 RUN rm ./target/release/deps/hitster* && \
+    rm ./target/release/deps/libhitster* && \
     cargo build --release --no-default-features --features yt_dl
 
 # our final bases, platform-dependent

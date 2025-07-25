@@ -1,7 +1,7 @@
 use crate::{
     games::{
-        ConfirmationPayload, CreateGamePayload, Game, GameEvent, GameMode, GameSettingsPayload,
-        GameState, SlotPayload,
+        ConfirmationPayload, CreateGamePayload, GameEvent, GameMode, GamePayload,
+        GameSettingsPayload, GameState, SlotPayload,
     },
     hits::DownloadingGuard,
     responses::{
@@ -40,7 +40,7 @@ pub fn create_game(
     data: Option<Json<CreateGamePayload>>,
     serv: &State<ServiceStore>,
     _g: DownloadingGuard,
-) -> Result<Created<Json<Game>>, AuthorizedServerBusyError> {
+) -> Result<Created<Json<GamePayload>>, AuthorizedServerBusyError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
     let mode = if let Some(data) = data.as_ref() {
@@ -58,7 +58,7 @@ pub fn create_game(
             .unwrap_or(game);
     }
 
-    Ok(Created::new(format!("/games/{}", game.id)).body(Json(game)))
+    Ok(Created::new(format!("/games/{}", game.id)).body(Json((&game).into())))
 }
 
 /// Retrieve all currently known games
@@ -74,7 +74,13 @@ pub fn get_all_games(
     _g: DownloadingGuard,
 ) -> Result<Json<GamesResponse>, ServerBusyError> {
     Ok(Json(GamesResponse {
-        games: serv.game_service().lock().get_all(user.as_ref()),
+        games: serv
+            .game_service()
+            .lock()
+            .get_all(user.as_ref())
+            .into_iter()
+            .map(|g| (&g).into())
+            .collect::<Vec<_>>(),
     }))
 }
 
@@ -103,7 +109,7 @@ pub async fn join_game(
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "join".into(),
-                players: Some(vec![p]),
+                players: Some(vec![(&p).into()]),
                 ..Default::default()
             });
             Json(MessageResponse {
@@ -136,7 +142,7 @@ pub async fn leave_game(
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "leave".into(),
-                players: Some(vec![p]),
+                players: Some(vec![(&p).into()]),
                 ..Default::default()
             });
 
@@ -149,7 +155,9 @@ pub async fn leave_game(
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(new_state),
-                players: games.get(game_id, Some(&user)).map(|g| g.players),
+                players: games
+                    .get(game_id, Some(&user))
+                    .map(|g| g.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
                 ..Default::default()
             });
 
@@ -179,7 +187,7 @@ pub async fn start_game(
             game_id: game_id.into(),
             event: "change_state".into(),
             state: Some(g.state),
-            players: Some(g.players),
+            players: Some(g.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
             ..Default::default()
         });
 
@@ -207,7 +215,7 @@ pub async fn stop_game(
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(GameState::Open),
-                players: Some(g.players),
+                players: Some(g.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
                 ..Default::default()
             });
 
@@ -230,12 +238,12 @@ pub fn get_game(
     user: Option<User>,
     serv: &State<ServiceStore>,
     _g: DownloadingGuard,
-) -> Result<Json<Game>, GetGameError> {
+) -> Result<Json<GamePayload>, GetGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
     match games.get(game_id, user.as_ref()) {
-        Some(g) => Ok(Json(g)),
+        Some(g) => Ok(Json((&g).into())),
         None => Err(GetGameError {
             message: "game id not found".into(),
             http_status_code: 404,
@@ -329,8 +337,7 @@ pub fn guess_slot(
                 .players
                 .iter()
                 .find(|p| p.id == player_id.unwrap_or(user.id))
-                .cloned()
-                .map(|p| vec![p]),
+                .map(|p| vec![p.into()]),
             ..Default::default()
         });
 
@@ -347,16 +354,16 @@ pub fn guess_slot(
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(game.state),
-                players: Some(game.players.clone()),
+                players: Some(game.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
                 hit: hit.and_then(|h| {
                     if game.state == GameState::Intercepting {
                         None
                     } else {
-                        Some(h)
+                        Some(h.into())
                     }
                 }),
-                last_scored,
-                winner,
+                last_scored: last_scored.map(|p| (&p).into()),
+                winner: winner.as_ref().map(|p| p.into()),
                 ..Default::default()
             });
         }
@@ -386,7 +393,7 @@ pub fn confirm_slot(
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(game.state),
-                players: Some(game.players),
+                players: Some(game.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
                 ..Default::default()
             });
 
@@ -419,9 +426,8 @@ pub fn skip_hit(
                     .players
                     .iter()
                     .find(|p| p.id == player_id.unwrap_or(user.id))
-                    .cloned()
-                    .map(|p| vec![p]),
-                hit: Some(hit),
+                    .map(|p| vec![p.into()]),
+                hit: Some(hit.into()),
                 ..Default::default()
             });
 
@@ -453,9 +459,8 @@ pub fn claim_hit(
                 .players
                 .iter()
                 .find(|p| p.id == player_id.unwrap_or(user.id))
-                .cloned()
-                .map(|p| vec![p]),
-            hit: Some(hit),
+                .map(|p| vec![p.into()]),
+            hit: Some(hit.into()),
             ..Default::default()
         });
 
@@ -468,8 +473,8 @@ pub fn claim_hit(
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(game.state),
-                players: Some(game.players.clone()),
-                winner,
+                players: Some(game.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
+                winner: winner.as_ref().map(|p| p.into()),
                 ..Default::default()
             });
         }

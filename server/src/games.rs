@@ -1,4 +1,5 @@
-use crate::{hits::Hit, users::User};
+use crate::{hits::HitPayload, users::User};
+use hitster_core::Hit;
 use rocket::serde::json::Json;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};
@@ -21,7 +22,7 @@ pub struct GameSettingsPayload {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub remember_hits: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub packs: Option<Vec<String>>,
+    pub packs: Option<Vec<Uuid>>,
 }
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -72,26 +73,57 @@ pub enum GameMode {
     Local,
 }
 
-#[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema)]
+#[derive(Clone, Eq, PartialEq, Debug)]
 pub struct Game {
     pub id: String,
     pub players: Vec<Player>,
     pub state: GameState,
-    #[serde(skip)]
     pub hits_remaining: VecDeque<&'static Hit>,
     pub hit_duration: u8,
     pub start_tokens: u8,
     pub goal: u8,
     pub hit: Option<&'static Hit>,
-    pub packs: Vec<String>,
+    pub packs: Vec<Uuid>,
     pub mode: GameMode,
     pub remember_hits: bool,
-    #[serde(skip)]
     pub remembered_hits: Vec<&'static Hit>,
     pub last_scored: Option<Player>,
 }
 
-#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema)]
+pub struct GamePayload {
+    pub id: String,
+    pub players: Vec<PlayerPayload>,
+    pub state: GameState,
+    pub hit_duration: u8,
+    pub start_tokens: u8,
+    pub goal: u8,
+    pub hit: Option<HitPayload>,
+    pub packs: Vec<Uuid>,
+    pub mode: GameMode,
+    pub remember_hits: bool,
+    pub last_scored: Option<PlayerPayload>,
+}
+
+impl From<&Game> for GamePayload {
+    fn from(game: &Game) -> Self {
+        Self {
+            id: game.id.clone(),
+            players: game.players.iter().map(|p| p.into()).collect::<Vec<_>>(),
+            state: game.state,
+            hit_duration: game.hit_duration,
+            start_tokens: game.start_tokens,
+            goal: game.goal,
+            hit: game.hit.map(|h| h.into()),
+            packs: game.packs.clone(),
+            mode: game.mode,
+            remember_hits: game.remember_hits,
+            last_scored: game.last_scored.as_ref().map(|p| p.into()),
+        }
+    }
+}
+
+#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Copy)]
 #[serde(rename_all_fields = "snake_case")]
 pub enum PlayerState {
     Waiting,
@@ -100,7 +132,7 @@ pub enum PlayerState {
     Confirming,
 }
 
-#[derive(Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+#[derive(Serialize, Clone, Eq, PartialEq, Debug)]
 pub struct Player {
     pub id: Uuid,
     pub name: String,
@@ -112,6 +144,37 @@ pub struct Player {
     pub turn_player: bool,
     pub guess: Option<Slot>,
     pub r#virtual: bool,
+}
+
+#[derive(Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+pub struct PlayerPayload {
+    pub id: Uuid,
+    pub name: String,
+    pub state: PlayerState,
+    pub creator: bool,
+    pub hits: Vec<HitPayload>,
+    pub tokens: u8,
+    pub slots: Vec<Slot>,
+    pub turn_player: bool,
+    pub guess: Option<Slot>,
+    pub r#virtual: bool,
+}
+
+impl From<&Player> for PlayerPayload {
+    fn from(p: &Player) -> Self {
+        Self {
+            id: p.id,
+            name: p.name.clone(),
+            state: p.state,
+            creator: p.creator,
+            hits: p.hits.iter().map(|h| (*h).into()).collect::<Vec<_>>(),
+            tokens: p.tokens,
+            slots: p.slots.clone(),
+            turn_player: p.turn_player,
+            guess: p.guess.clone(),
+            r#virtual: p.r#virtual,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -156,17 +219,17 @@ pub struct GameEvent {
     #[serde(skip)]
     pub event: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub players: Option<Vec<Player>>,
+    pub players: Option<Vec<PlayerPayload>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub state: Option<GameState>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub hit: Option<&'static Hit>,
+    pub hit: Option<HitPayload>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub settings: Option<GameSettingsPayload>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub winner: Option<Player>,
+    pub winner: Option<PlayerPayload>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub last_scored: Option<Player>,
+    pub last_scored: Option<PlayerPayload>,
 }
 
 impl Default for GameEvent {
