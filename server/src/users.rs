@@ -6,10 +6,7 @@ use rocket::{
     request::{self, FromRequest, Outcome, Request},
     serde::json::Json,
 };
-use rocket_db_pools::{
-    Connection,
-    sqlx::{self, Row},
-};
+use rocket_db_pools::{Connection, sqlx};
 use rocket_okapi::{
     r#gen::OpenApiGenerator,
     okapi::{schemars, schemars::JsonSchema},
@@ -110,21 +107,21 @@ impl<'r> FromRequest<'r> for User {
                 ));
             }
 
-            return sqlx::query("SELECT * FROM users where name = ?")
-                .bind(user.name.as_str())
+            let name = user.name.as_str();
+            return sqlx::query!("SELECT * FROM users where name = $1", name)
                 .fetch_optional(&mut **db)
                 .await
                 .unwrap()
                 .and_then(|user| {
                     let u = User {
-                        id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
-                        name: user.get::<String, &str>("name"),
-                        password: user.get::<String, &str>("password"),
+                        id: Uuid::parse_str(&user.id).unwrap(),
+                        name: user.name,
+                        password: user.password,
                         r#virtual: false,
-                        tokens: serde_json::from_str::<Vec<Token>>(
-                            &user.get::<String, &str>("tokens"),
-                        )
-                        .unwrap(),
+                        tokens: user
+                            .tokens
+                            .map(|t| serde_json::from_str::<Vec<Token>>(&t).unwrap())
+                            .unwrap_or_default(),
                     };
 
                     if let Some(t) = u
