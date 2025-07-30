@@ -6254,16 +6254,6 @@ hits:
   last_modified: '2025-07-24T09:31:10.7409558Z'
 - artist: Bill Conti
   title: Main Theme
-  belongs_to: Der Denver-Clan (Dynasty)
-  year: 1981
-  packs:
-  - fb8e6460-fb19-4852-b0bb-2240d35aff34
-  playback_offset: 0
-  id: eb5a462c-131e-4ee9-b5e6-dd6833d88714
-  yt_id: DzTlyRmXPQk
-  last_modified: '2025-07-24T09:31:11.4697888Z'
-- artist: Bill Conti
-  title: Main Theme
   belongs_to: Cagney & Lacey
   year: 1981
   packs:
@@ -6272,6 +6262,16 @@ hits:
   id: d0151a92-9cd1-4f9c-9ace-11e80eff443d
   yt_id: kDKmzdoL174
   last_modified: '2025-07-24T09:31:11.4699671Z'
+- artist: Bill Conti
+  title: Main Theme
+  belongs_to: Der Denver-Clan (Dynasty)
+  year: 1981
+  packs:
+  - fb8e6460-fb19-4852-b0bb-2240d35aff34
+  playback_offset: 0
+  id: eb5a462c-131e-4ee9-b5e6-dd6833d88714
+  yt_id: DzTlyRmXPQk
+  last_modified: '2025-07-24T09:31:11.4697888Z'
 - artist: Bill Conti
   title: Main Title
   belongs_to: Fackeln im Sturm (North and South, Heaven and Hell)
@@ -14918,20 +14918,20 @@ hits:
   year: 1999
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
-  playback_offset: 15
-  id: '8206fbbf-662d-4f9b-97a9-384bf32caf06'
-  yt_id: _dZaPzDy6Vc
-  last_modified: '2025-07-24T09:31:11.4796235Z'
+  playback_offset: 10
+  id: '2a8e01a4-c199-4880-9247-a29dfab27acb'
+  yt_id: '3VZ2WO9AkFQ'
+  last_modified: '2025-07-24T09:31:11.479452Z'
 - artist: Dido
   title: Here with me
   belongs_to: Roswell
   year: 1999
   packs:
   - fb8e6460-fb19-4852-b0bb-2240d35aff34
-  playback_offset: 10
-  id: '2a8e01a4-c199-4880-9247-a29dfab27acb'
-  yt_id: '3VZ2WO9AkFQ'
-  last_modified: '2025-07-24T09:31:11.479452Z'
+  playback_offset: 15
+  id: '8206fbbf-662d-4f9b-97a9-384bf32caf06'
+  yt_id: _dZaPzDy6Vc
+  last_modified: '2025-07-24T09:31:11.4796235Z'
 - artist: Dido
   title: Life for rent
   belongs_to: ''
@@ -27554,7 +27554,7 @@ hits:
   year: 2011
   packs:
   - '2ac7745d-ff1a-4012-a9fc-d612645512b4'
-  playback_offset: 25
+  playback_offset: 0
   id: ab8ae22f-329e-47ac-ba11-8c6722209767
   yt_id: UsnRQJxanVM
   last_modified: '2025-07-24T09:31:09.866769Z'
@@ -27629,16 +27629,6 @@ hits:
   yt_id: am9Eka0DlVU
   last_modified: '2025-07-24T09:31:11.4934213Z'
 - artist: Jerry Goldsmith
-  title: Star Trek
-  belongs_to: Star Trek
-  year: 1979
-  packs:
-  - c6b15800-b69a-4dca-9359-c1fbd2d282d1
-  playback_offset: 0
-  id: acd45acb-f95c-41b6-a1c4-58d268f60971
-  yt_id: zI9YYe-jgHI
-  last_modified: '2025-07-24T09:31:10.7508553Z'
-- artist: Jerry Goldsmith
   title: Star Trek - Voyager - Main Title Theme
   belongs_to: Star Trek - Voyager
   year: 1995
@@ -27648,6 +27638,16 @@ hits:
   id: '56355384-c876-4b5b-ba3c-bb665baa6d42'
   yt_id: KtVXAugaSm0
   last_modified: '2025-07-24T09:31:11.4936087Z'
+- artist: Jerry Goldsmith
+  title: Star Trek
+  belongs_to: Star Trek
+  year: 1979
+  packs:
+  - c6b15800-b69a-4dca-9359-c1fbd2d282d1
+  playback_offset: 0
+  id: acd45acb-f95c-41b6-a1c4-58d268f60971
+  yt_id: zI9YYe-jgHI
+  last_modified: '2025-07-24T09:31:10.7508553Z'
 - artist: Jerry Lee Lewis
   title: Great Balls of Fire
   belongs_to: ''
@@ -28166,7 +28166,7 @@ hits:
   playback_offset: 48
   id: b3251bf8-b4b8-49ec-b164-85058926e79b
   yt_id: eXV4WyQMHFM
-  last_modified: '2025-07-24T09:31:11.2907663Z'
+  last_modified: '2025-07-30T13:49:22.4876328Z'
 - artist: Joe Cocker
   title: You Can Leave Your Hat On
   belongs_to: ''
@@ -28210,16 +28210,6 @@ hits:
   last_modified: '2025-07-24T09:31:10.0097385Z'
 - artist: Joe Goldsmith
   title: Main Title
-  belongs_to: Stargate Atlantis
-  year: 2005
-  packs:
-  - fb8e6460-fb19-4852-b0bb-2240d35aff34
-  playback_offset: 0
-  id: '85dd5bae-d1d8-4b49-aed8-d3702e89a349'
-  yt_id: Bg2-XwLMzGA
-  last_modified: '2025-07-24T09:31:11.4959461Z'
-- artist: Joe Goldsmith
-  title: Main Title
   belongs_to: Stargate SG1
   year: 1997
   packs:
@@ -28228,6 +28218,16 @@ hits:
   id: '06af10b9-5425-48fb-bf65-1a5fd06ae7b9'
   yt_id: yWCP8lcbcJg
   last_modified: '2025-07-24T09:31:11.4961259Z'
+- artist: Joe Goldsmith
+  title: Main Title
+  belongs_to: Stargate Atlantis
+  year: 2005
+  packs:
+  - fb8e6460-fb19-4852-b0bb-2240d35aff34
+  playback_offset: 0
+  id: '85dd5bae-d1d8-4b49-aed8-d3702e89a349'
+  yt_id: Bg2-XwLMzGA
+  last_modified: '2025-07-24T09:31:11.4959461Z'
 - artist: Joe Goldsmith
   title: Opening Credits
   belongs_to: Stargate Universe
@@ -28714,7 +28714,7 @@ hits:
   playback_offset: 8
   id: e2088c2d-ddcf-45a9-8911-c163e6af1c56
   yt_id: A_J2bcNx3Gw
-  last_modified: '2025-07-24T09:31:10.2571428Z'
+  last_modified: '2025-07-30T13:49:21.429934Z'
 - artist: John Travolta, Olivia Newton-John
   title: You're The One That I Want
   belongs_to: Grease
@@ -29128,16 +29128,6 @@ hits:
   last_modified: '2025-07-24T09:31:11.1808388Z'
 - artist: Joseph LoDuca
   title: Main Theme
-  belongs_to: Xena - Die Kriegerprinzessin
-  year: 1995
-  packs:
-  - fb8e6460-fb19-4852-b0bb-2240d35aff34
-  playback_offset: 0
-  id: '10485bff-f34e-434f-8c9a-369029204c14'
-  yt_id: Lbn5k9qpJ00
-  last_modified: '2025-07-24T09:31:11.4997608Z'
-- artist: Joseph LoDuca
-  title: Main Theme
   belongs_to: Hercules
   year: 1995
   packs:
@@ -29146,6 +29136,16 @@ hits:
   id: '4a56ca08-7087-4851-9cd1-1618968602ce'
   yt_id: eWQBruXPSBs
   last_modified: '2025-07-24T09:31:11.4995802Z'
+- artist: Joseph LoDuca
+  title: Main Theme
+  belongs_to: Xena - Die Kriegerprinzessin
+  year: 1995
+  packs:
+  - fb8e6460-fb19-4852-b0bb-2240d35aff34
+  playback_offset: 0
+  id: '10485bff-f34e-434f-8c9a-369029204c14'
+  yt_id: Lbn5k9qpJ00
+  last_modified: '2025-07-24T09:31:11.4997608Z'
 - artist: Joseíto Fernández
   title: Guajira Guantanamera
   belongs_to: ''
@@ -31254,7 +31254,7 @@ hits:
   playback_offset: 24
   id: '19eed71d-fdca-451c-9a24-8c6c378af1d8'
   yt_id: bjQ9vTsMQ4I
-  last_modified: '2025-07-24T09:31:10.5913749Z'
+  last_modified: '2025-07-30T13:49:21.7721703Z'
 - artist: Kenny Rogers
   title: The Gambler
   belongs_to: ''
@@ -36539,21 +36539,21 @@ hits:
   belongs_to: ''
   year: 1980
   packs:
-  - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
-  playback_offset: 20
-  id: '3b144c85-fe0d-46ee-9750-a1f111e1acfe'
-  yt_id: Dc3AovUZgvoio=1
-  last_modified: '2025-07-24T09:31:11.3537395Z'
-- artist: Madness
-  title: Baggy Trousers
-  belongs_to: ''
-  year: 1980
-  packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   playback_offset: 20
   id: ff39aa22-4074-4c83-9726-9178249223d0
   yt_id: Dc3AovUZgvo
   last_modified: '2025-07-24T09:31:09.9004923Z'
+- artist: Madness
+  title: Baggy Trousers
+  belongs_to: ''
+  year: 1980
+  packs:
+  - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
+  playback_offset: 20
+  id: '3b144c85-fe0d-46ee-9750-a1f111e1acfe'
+  yt_id: Dc3AovUZgvoio=1
+  last_modified: '2025-07-24T09:31:11.3537395Z'
 - artist: Madness
   title: House of Fun
   belongs_to: ''
@@ -44425,22 +44425,22 @@ hits:
   belongs_to: ''
   year: 2011
   packs:
-  - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
-  playback_offset: 10
-  id: '26ebbb2a-20cb-46e3-9733-7b20821b7597'
-  yt_id: nXNdaMnEQDs
-  last_modified: '2025-07-24T09:31:11.2527249Z'
-- artist: One Direction
-  title: What Makes You Beautiful
-  belongs_to: ''
-  year: 2011
-  packs:
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   playback_offset: 6
   id: a2818d25-398e-4c1e-a1f8-26d7af78aaa6
   yt_id: mfavkCY52MI
   last_modified: '2025-07-24T09:31:10.2710486Z'
+- artist: One Direction
+  title: What Makes You Beautiful
+  belongs_to: ''
+  year: 2011
+  packs:
+  - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
+  playback_offset: 10
+  id: '26ebbb2a-20cb-46e3-9733-7b20821b7597'
+  yt_id: nXNdaMnEQDs
+  last_modified: '2025-07-24T09:31:11.2527249Z'
 - artist: OneRepublic
   title: Counting Stars
   belongs_to: ''
@@ -48465,7 +48465,7 @@ hits:
   playback_offset: 5
   id: '32b25669-8d59-4f5f-bee8-c01ae4cad4e2'
   yt_id: SrnWp5O0DEs
-  last_modified: '2025-07-24T09:31:11.4213809Z'
+  last_modified: '2025-07-30T13:49:22.6237117Z'
 - artist: Ray Charles
   title: I've Got a Woman
   belongs_to: ''
@@ -54440,21 +54440,21 @@ hits:
   belongs_to: ''
   year: 2004
   packs:
-  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
-  playback_offset: 37
-  id: '84180740-2ac9-4d0a-a83f-566533770a97'
-  yt_id: JDw0cbkH5VY
-  last_modified: '2025-07-24T09:31:09.8304506Z'
-- artist: Soul Control
-  title: Chocolate (Choco Choco)
-  belongs_to: ''
-  year: 2004
-  packs:
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   playback_offset: 20
   id: '63606dc8-5071-4ee4-af62-055509ef1f6e'
   yt_id: kTylYpwQ74w
   last_modified: '2025-07-24T09:31:10.6118771Z'
+- artist: Soul Control
+  title: Chocolate (Choco Choco)
+  belongs_to: ''
+  year: 2004
+  packs:
+  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  playback_offset: 37
+  id: '84180740-2ac9-4d0a-a83f-566533770a97'
+  yt_id: JDw0cbkH5VY
+  last_modified: '2025-07-24T09:31:09.8304506Z'
 - artist: Soul II Soul, Caron Wheeler
   title: Back To Life (However Do You Want Me)
   belongs_to: ''
@@ -59092,7 +59092,7 @@ hits:
   playback_offset: 10
   id: afece2ab-50b1-4e55-86e5-8fa8797b87f4
   yt_id: y_k681IUS0M
-  last_modified: '2025-07-24T09:31:11.2642243Z'
+  last_modified: '2025-07-30T13:49:22.4612288Z'
 - artist: The Rembrandts
   title: Just The Way It is, Baby
   belongs_to: ''
@@ -63287,7 +63287,7 @@ hits:
   playback_offset: 0
   id: '9e1d2673-d830-4802-96c1-1ead6ab89a6d'
   yt_id: '-aZXKvm32JI'
-  last_modified: '2025-07-24T09:31:10.736101Z'
+  last_modified: '2025-07-30T13:49:21.920867Z'
 - artist: Whitney Houston
   title: Love Will Save the Day
   belongs_to: ''
@@ -65218,83 +65218,124 @@ hits:
 packs:
 - id: '0d564edc-9b73-4fb0-a350-57eca4bf6878'
   name: Anime - GER
+  last_modified: '2025-07-30T13:49:20.8016753Z'
 - id: daa8b8be-c0f9-4e02-96e1-e8a628c7e396
   name: Anime - JAP
+  last_modified: '2025-07-30T13:49:20.8016813Z'
 - id: b701a4dc-4c50-43ad-b900-34bc509ecdbb
   name: Cartoons (ENG)
+  last_modified: '2025-07-30T13:49:20.8016831Z'
 - id: d25263d8-acb8-4b60-b255-6a069862dc47
   name: Cartoons (GER)
+  last_modified: '2025-07-30T13:49:20.8016848Z'
 - id: '887a5a60-afd4-47b4-86e6-758176f403f0'
   name: Christmas party
+  last_modified: '2025-07-30T13:49:20.8016864Z'
 - id: b6900bbf-b3b0-4184-a836-f8ea4535d27b
   name: Classics
+  last_modified: '2025-07-30T13:49:20.8016889Z'
 - id: '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   name: Custom Basic
+  last_modified: '2025-07-30T13:49:20.8016909Z'
 - id: eed7cff8-d66a-45e1-9251-a83d448cefd6
   name: Disney (ENG)
+  last_modified: '2025-07-30T13:49:20.8016925Z'
 - id: '91bd7215-bc90-49a5-9f5a-a9737851be2d'
   name: Eurovision
+  last_modified: '2025-07-30T13:49:20.8016942Z'
 - id: '2ac7745d-ff1a-4012-a9fc-d612645512b4'
   name: Gaming soundtracks
+  last_modified: '2025-07-30T13:49:20.801696Z'
 - id: '72af3598-3a66-4a72-964b-bef28821f5fb'
   name: Hitster - Australia/New Zealand
+  last_modified: '2025-07-30T13:49:20.8016977Z'
 - id: '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   name: Hitster - Canada
+  last_modified: '2025-07-30T13:49:20.8016992Z'
 - id: '1d98f5c4-3d62-480f-99fc-855626ffeebb'
   name: Hitster - Canada - 100% Franco
+  last_modified: '2025-07-30T13:49:20.8017009Z'
 - id: '451151bc-cfc2-44d5-a039-a2557be9a02f'
   name: Hitster - Canada - Guilty Pleasures
+  last_modified: '2025-07-30T13:49:20.8017027Z'
 - id: '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   name: Hitster - Denmark
+  last_modified: '2025-07-30T13:49:20.8017042Z'
 - id: b971d194-30fd-4483-92f2-61f947b8155a
   name: Hitster - France
+  last_modified: '2025-07-30T13:49:20.8017058Z'
 - id: bc55953c-b71d-47cf-a405-67ec6be10b34
   name: Hitster - France - Summerparty
+  last_modified: '2025-07-30T13:49:20.8017075Z'
 - id: '77188b9b-bce1-4e80-9b43-07565a205700'
   name: Hitster - Germany
+  last_modified: '2025-07-30T13:49:20.8017094Z'
 - id: f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   name: Hitster - Germany - Bayern 1
+  last_modified: '2025-07-30T13:49:20.8017111Z'
 - id: '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   name: Hitster - Germany - Guilty Pleasures
+  last_modified: '2025-07-30T13:49:20.8017127Z'
 - id: '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   name: Hitster - Germany - Rock
+  last_modified: '2025-07-30T13:49:20.8017144Z'
 - id: fbd95ece-80b3-4de1-b706-af079f47f00c
   name: Hitster - Germany - Schlagerparty
+  last_modified: '2025-07-30T13:49:20.8017163Z'
 - id: a8dcd937-8118-48af-94e1-f55a1e7557a2
   name: Hitster - Germany - Summerparty
+  last_modified: '2025-07-30T13:49:20.8017179Z'
 - id: '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   name: Hitster - Italy
+  last_modified: '2025-07-30T13:49:20.8017196Z'
 - id: df0964f7-0354-466d-85dc-997c388625a6
   name: Hitster - Mexico
+  last_modified: '2025-07-30T13:49:20.8017212Z'
 - id: c6b15800-b69a-4dca-9359-c1fbd2d282d1
   name: Hitster - Movies & TV Soundtracks
+  last_modified: '2025-07-30T13:49:20.8017228Z'
 - id: '0a4a898a-37ad-4391-92ce-8273158d741c'
   name: Hitster - Netherlands
+  last_modified: '2025-07-30T13:49:20.8017244Z'
 - id: '783294ec-ea60-4bcd-bc57-42091af615b4'
   name: Hitster - Netherlands - Summerparty
+  last_modified: '2025-07-30T13:49:20.8017261Z'
 - id: bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   name: Hitster - Nordics - Guilty Pleasures
+  last_modified: '2025-07-30T13:49:20.8017277Z'
 - id: ec58c124-0e1b-4c6a-bdf9-d82d6d79ef37
   name: Hitster - Philippines
+  last_modified: '2025-07-30T13:49:20.8017294Z'
 - id: '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   name: Hitster - Poland
+  last_modified: '2025-07-30T13:49:20.801731Z'
 - id: e4b2130f-be86-4124-92d7-04240ea04063
   name: Hitster - Portugal
+  last_modified: '2025-07-30T13:49:20.8017326Z'
 - id: a5f30874-4f75-45d8-a9f2-436baa99d006
   name: Hitster - Radio Italia
+  last_modified: '2025-07-30T13:49:20.8017342Z'
 - id: '70dfbe7a-c797-4335-b859-ea62ff9bedff'
   name: Hitster - Spain
+  last_modified: '2025-07-30T13:49:20.8017373Z'
 - id: '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   name: Hitster - Spain - Summerparty
+  last_modified: '2025-07-30T13:49:20.801739Z'
 - id: '7c557823-64fc-4f3a-a651-d972d664824c'
   name: Hitster - Switzerland
+  last_modified: '2025-07-30T13:49:20.8017406Z'
 - id: '7fb8f902-90a1-4765-b101-8ac49bd819a0'
   name: Hitster - UK
+  last_modified: '2025-07-30T13:49:20.8017423Z'
 - id: '14f42312-4ddd-414a-ab94-3ba5378fa498'
   name: Hitster - USA
+  last_modified: '2025-07-30T13:49:20.8017438Z'
 - id: d9abc924-bff0-4a37-83ff-10477d32fb2e
   name: K-Pop
+  last_modified: '2025-07-30T13:49:20.8017455Z'
 - id: fb8e6460-fb19-4852-b0bb-2240d35aff34
   name: Movie & TV series soundtracks
+  last_modified: '2025-07-30T13:49:20.8017471Z'
 - id: '88653ede-86ae-41ad-b729-308155c9d8a2'
   name: Stage & movie musicals (eng.)
+  last_modified: '2025-07-30T13:49:20.8017487Z'
