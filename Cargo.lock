@@ -1494,7 +1494,6 @@ version = "0.1.0"
 dependencies = [
  "multi_key_map",
  "natord",
- "schemars",
  "serde",
  "time",
  "uuid",

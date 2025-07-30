@@ -1,6 +1,5 @@
 mod hitster_core {
     use multi_key_map::MultiKeyMap;
-    use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
     use std::{
         cmp::PartialEq,
@@ -58,10 +57,13 @@ mod hitster_core {
         }
     }
 
-    #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
+    #[derive(Clone, Eq, Debug, Serialize, Deserialize)]
     pub struct Pack {
         pub id: Uuid,
         pub name: String,
+        #[serde(with = "time::serde::rfc3339")]
+        #[serde(default = "OffsetDateTime::now_utc")]
+        pub last_modified: OffsetDateTime,
     }
 
     impl PartialEq for Pack {
@@ -140,8 +142,8 @@ mod hitster_core {
 
             hits.sort_by(|a, b| {
                 natord::compare(
-                    &format!("{} {}", &a.artist, &a.title),
-                    &format!("{} {}", &b.artist, &b.title),
+                    &format!("{} {} {} {}", &a.artist, &a.title, a.year, &a.belongs_to),
+                    &format!("{} {} {} {}", &b.artist, &b.title, b.year, &b.belongs_to),
                 )
             });
 

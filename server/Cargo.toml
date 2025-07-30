@@ -26,7 +26,7 @@ rocket_async_compression = "0.6.0"
 rocket_db_pools = { version = "0.2.0", default-features = false, features = ["sqlx_sqlite"] }
 rocket_okapi = { version = "0.9", default-features = false, features = ["swagger", "rapidoc", "secrets", "rocket_db_pools"] }
 rusty_ytdl = { version = "0.7.0", optional = true }
-schemars = { workspace = true }
+schemars = { version = "0.8.16", features = ["uuid1"]}
 serde = { workspace = true }
 serde_json = "1.0.114"
 serde_yml = { workspace = true }
