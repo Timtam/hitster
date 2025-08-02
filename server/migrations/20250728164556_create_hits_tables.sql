@@ -14,12 +14,12 @@ CREATE TABLE hits (
     -- date of last modification
     last_modified TEXT NOT NULL,
     -- wether the hit was downloaded or not (boolean)
-    downloaded INTEGER NOT NULL,
+    downloaded BOOLEAN NOT NULL,
     -- wether the hit was imported from the codebase (false) or created manually (true) (boolean)
-    custom INTEGER NOT NULL,
+    custom BOOLEAN NOT NULL,
     -- wether the hit was removed (true) or not (false) (boolean)
     -- we don't just remove the hit or else it'll be restored on next launch
-    marked_for_deletion INTEGER NOT NULL
+    marked_for_deletion BOOLEAN NOT NULL
 ) WITHOUT ROWID;
 
 CREATE TABLE packs (
@@ -30,10 +30,10 @@ CREATE TABLE packs (
     -- date of last modification
     last_modified TEXT NOT NULL,
     -- wether the pack was imported from the codebase (false) or created manually (true) (boolean)
-    custom INTEGER NOT NULL,
+    custom BOOLEAN NOT NULL,
     -- wether the pack was removed (true) or not (false) (boolean)
     -- we don't just remove the pack or else it'll be restored on next launch
-    marked_for_deletion INTEGER NOT NULL
+    marked_for_deletion BOOLEAN NOT NULL
 ) WITHOUT ROWID;
 
 CREATE TABLE hits_packs (
@@ -42,10 +42,10 @@ CREATE TABLE hits_packs (
     -- pack id, UUID4 string
     pack_id TEXT NOT NULL,
     -- wether the association was imported from the codebase (false) or created manually (true) (boolean)
-    custom INTEGER NOT NULL,
+    custom BOOLEAN NOT NULL,
     -- wether the association was removed (true) or not (false) (boolean)
     -- we don't just remove the associations or else they'll be restored on next launch
-    marked_for_deletion INTEGER NOT NULL,
+    marked_for_deletion BOOLEAN NOT NULL,
     PRIMARY KEY (hit_id, pack_id),
     FOREIGN KEY (hit_id) REFERENCES hits (id) ON DELETE CASCADE,
     FOREIGN KEY (pack_id) REFERENCES packs (id) ON DELETE CASCADE
