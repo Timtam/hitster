@@ -11,6 +11,8 @@ CREATE TABLE hits (
     year INTEGER NOT NULL,
     -- offset to cut off after downloading, will start playing here
     playback_offset INTEGER NOT NULL,
+    -- belongs to some musical, series, film or whatever
+    belongs_to TEXT NOT NULL,
     -- date of last modification
     last_modified TEXT NOT NULL,
     -- wether the hit was downloaded or not (boolean)
