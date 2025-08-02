@@ -20,10 +20,7 @@ use rocket::{
     http::{Cookie, CookieJar},
     serde::json::Json,
 };
-use rocket_db_pools::{
-    Connection,
-    sqlx::{self, Row},
-};
+use rocket_db_pools::{Connection, sqlx};
 use rocket_okapi::openapi;
 use serde_json;
 use time::{Duration, OffsetDateTime};
@@ -193,18 +190,21 @@ async fn handle_existing_token(
         return u;
     }
 
-    if let Some(mut u) = sqlx::query("SELECT * FROM users where name = ?")
-        .bind(user.name.as_str())
+    let name = user.name.as_str();
+
+    if let Some(mut u) = sqlx::query!("SELECT * FROM users where name = $1", name)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
         .map(|user| User {
-            id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
-            name: user.get::<String, &str>("name"),
-            password: user.get::<String, &str>("password"),
+            id: Uuid::parse_str(&user.id).unwrap(),
+            name: user.name,
+            password: user.password,
             r#virtual: false,
-            tokens: serde_json::from_str::<Vec<Token>>(&user.get::<String, &str>("tokens"))
-                .unwrap(),
+            tokens: user
+                .tokens
+                .map(|t| serde_json::from_str::<Vec<Token>>(&t).unwrap())
+                .unwrap_or_default(),
         })
     {
         // user exists within the db
@@ -411,18 +411,21 @@ pub async fn login(
         }
     }
 
-    if let Some(mut u) = sqlx::query("SELECT * FROM users where name = ?")
-        .bind(credentials.username.as_str())
+    let name = credentials.username.as_str();
+
+    if let Some(mut u) = sqlx::query!("SELECT * FROM users where name = $1", name)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
         .map(|user| User {
-            id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
-            name: user.get::<String, &str>("name"),
-            password: user.get::<String, &str>("password"),
+            id: Uuid::parse_str(&user.id).unwrap(),
+            name: user.name,
+            password: user.password,
             r#virtual: false,
-            tokens: serde_json::from_str::<Vec<Token>>(&user.get::<String, &str>("tokens"))
-                .unwrap(),
+            tokens: user
+                .tokens
+                .map(|t| serde_json::from_str::<Vec<Token>>(&t).unwrap())
+                .unwrap_or_default(),
         })
     {
         let password_hash = PasswordHash::new(&u.password).unwrap();
@@ -490,8 +493,9 @@ pub async fn register(
         .unwrap()
         .to_string();
 
-    if sqlx::query("SELECT * FROM users WHERE name = ?")
-        .bind(credentials.username.as_str())
+    let name = credentials.username.as_str();
+
+    if sqlx::query!("SELECT * FROM users WHERE name = $1", name)
         .fetch_optional(&mut **db)
         .await
         .unwrap()

@@ -71,6 +71,7 @@ RUN cargo build --release --no-default-features --features yt_dl && \
     rm core/src/*.rs
 
 # copy your source tree
+COPY ./.sqlx ./.sqlx
 COPY ./etc ./etc
 COPY ./server/migrations ./server/migrations
 COPY ./server/src ./server/src
@@ -79,7 +80,7 @@ COPY ./core/src ./core/src
 # build for release
 RUN rm ./target/release/deps/hitster* && \
     rm ./target/release/deps/libhitster* && \
-    cargo build --release --no-default-features --features yt_dl
+    SQLX_OFFLINE=true cargo build --release --no-default-features --features yt_dl
 
 # our final bases, platform-dependent
 
