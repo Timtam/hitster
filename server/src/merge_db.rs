@@ -54,10 +54,10 @@ impl Fairing for MergeDbService {
         let db = HitsterConfig::fetch(&rocket).unwrap();
         let static_hits = get_hitster_data();
 
-        rocket::debug!("Starting merging database...");
+        rocket::info!("Start merging database...");
 
-        rocket::debug!("Loaded {} static packs", static_hits.get_packs().len());
-        rocket::debug!("Loaded {} static hits", static_hits.get_hits().len());
+        rocket::info!("Loaded {} static packs", static_hits.get_packs().len());
+        rocket::info!("Loaded {} static hits", static_hits.get_hits().len());
 
         let packs = sqlx::query_as!(
             PackRow,
@@ -78,7 +78,7 @@ FROM packs"#
             m
         });
 
-        rocket::debug!("Loaded {} packs from db", packs.len());
+        rocket::info!("Loaded {} packs from db", packs.len());
 
         let hits = sqlx::query_as!(
             HitRow,
@@ -98,7 +98,7 @@ FROM hits"#
         .map(|row| (vec![HitId::Id(row.id), HitId::YtId(row.yt_id.clone())], row))
         .collect::<MultiKeyMap<HitId, HitRow>>();
 
-        rocket::debug!("Loaded {} hits from db", hits.values().count());
+        rocket::info!("Loaded {} hits from db", hits.values().count());
 
         let static_packs = static_hits
             .get_packs()
@@ -108,7 +108,7 @@ FROM hits"#
 
         for static_pack in static_packs.values() {
             if !packs.contains_key(&static_pack.id) {
-                rocket::debug!(
+                rocket::info!(
                     "Inserting new pack {} ({})",
                     static_pack.name,
                     static_pack.id
@@ -136,7 +136,7 @@ INSERT INTO packs (
                 .await;
             } else if packs.get(&static_pack.id).unwrap().last_modified < static_pack.last_modified
             {
-                rocket::debug!(
+                rocket::info!(
                     "Updating pack {} ({}), (old {}, new {})",
                     static_pack.name,
                     static_pack.id,
@@ -161,7 +161,7 @@ WHERE id = $3",
 
         for pack in packs.values() {
             if !static_packs.contains_key(&pack.id) && !pack.custom {
-                rocket::debug!("Deleting old pack {} ({})", pack.name, pack.id);
+                rocket::info!("Deleting old pack {} ({})", pack.name, pack.id);
                 let _ = sqlx::query!("DELETE FROM packs WHERE id = $1", pack.id)
                     .execute(&db.0)
                     .await;
@@ -187,9 +187,9 @@ FROM hits_packs"#
             m
         });
 
-        rocket::debug!(
-            "Loaded {} hits to packs assocations from db",
-            hits_packs.len()
+        rocket::info!(
+            "Loaded {} hits to packs associations from db",
+            hits_packs.values().map(|h| h.len()).sum::<usize>()
         );
 
         for static_hit in static_hits.get_hits().into_iter() {
@@ -198,7 +198,7 @@ FROM hits_packs"#
                 if hit.is_some() {
                     // the link is already in use, but not under this id
                     // delete the entry in the db
-                    rocket::debug!(
+                    rocket::info!(
                         "Delete accidental duplicate {} (same yt id as {}: {} ({}))",
                         hit.unwrap().id,
                         static_hit.artist,
@@ -212,7 +212,7 @@ FROM hits_packs"#
                 // the hit is entirely new and needs to be created
                 let exists = static_hit.exists();
                 let marked_for_deletion = hit.map(|h| h.marked_for_deletion).unwrap_or(false);
-                rocket::debug!(
+                rocket::info!(
                     "Insert new hit {}: {} ({})",
                     static_hit.artist,
                     static_hit.title,
@@ -293,8 +293,8 @@ INSERT INTO hits (
                                 .map(|p| p.marked_for_deletion)
                         })
                         .unwrap_or(false);
-                    rocket::debug!(
-                        "Insert association of hit {} ({}: {}) with pack {} ({}) (custom: {})",
+                    rocket::info!(
+                        "Insert association of hit {}: {} ({}) with pack {} ({}) (custom: {})",
                         static_hit.artist,
                         static_hit.title,
                         static_hit.id,
@@ -326,7 +326,7 @@ INSERT INTO hits_packs (
                 && hit.last_modified < static_hit.last_modified
             {
                 // the hit exists and got updated in the meantime
-                rocket::debug!(
+                rocket::info!(
                     "Updating hit {}: {} ({}) (old {}, new {})",
                     static_hit.artist,
                     static_hit.title,
@@ -369,7 +369,7 @@ UPDATE hits SET
                     .map(|packs| packs.iter().any(|p| p.pack_id == *pack))
                     .unwrap_or(false)
                 {
-                    rocket::debug!(
+                    rocket::info!(
                         "Insert new association of hit {}: {} ({}) with pack {} ({})",
                         static_hit.artist,
                         static_hit.title,
@@ -401,7 +401,7 @@ INSERT INTO hits_packs (
             for pack in hits_packs.get(&HitId::Id(static_hit.id)).unwrap().iter() {
                 if !pack.custom && !static_hit.packs.contains(&pack.pack_id) {
                     // this association has been removed in the static dataset
-                    rocket::debug!(
+                    rocket::info!(
                         "Delete dangling association from hit {}: {} ({}) to pack {} ({})",
                         static_hit.artist,
                         static_hit.title,
@@ -424,7 +424,7 @@ INSERT INTO hits_packs (
             if static_hits.get_hit(&HitId::Id(hit.id)).is_none() && !hit.custom
                 || (hit.custom && hit.marked_for_deletion)
             {
-                rocket::debug!(
+                rocket::info!(
                     "Deleting hit {} (custom: {}, marked for deletion: {})",
                     hit.id,
                     hit.custom,
@@ -436,7 +436,7 @@ INSERT INTO hits_packs (
             }
         }
 
-        rocket::debug!("Finished merging database.");
+        rocket::info!("Finished merging database.");
 
         Ok(rocket)
     }
