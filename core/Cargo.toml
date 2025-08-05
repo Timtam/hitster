@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-multi_key_map = "0.3.0"
+multi_key_map = { workspace = true }
 natord = "1.0.9"
 serde = { workspace = true }
 time = { workspace = true }
