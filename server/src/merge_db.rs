@@ -30,7 +30,7 @@ struct HitRow {
     marked_for_deletion: bool,
 }
 
-#[derive(FromRow)]
+#[derive(FromRow, Clone)]
 struct HitPackRow {
     hit_id: Uuid,
     pack_id: Uuid,
@@ -183,12 +183,9 @@ FROM hits_packs"#
         .unwrap()
         .into_iter()
         .fold(HashMap::<HitId, Vec<HitPackRow>>::new(), |mut m, row| {
-            if m.contains_key(&HitId::Id(row.hit_id)) {
-                m.get_mut(&HitId::Id(row.hit_id)).unwrap().push(row);
-            } else {
-                m.insert(HitId::Id(row.hit_id), vec![row]);
-            }
-
+            m.entry(HitId::Id(row.hit_id))
+                .or_insert(vec![row.clone()])
+                .push(row);
             m
         });
 
@@ -371,7 +368,7 @@ UPDATE hits SET
             for pack in static_hit.packs.iter() {
                 if !hits_packs
                     .get(&HitId::Id(static_hit.id))
-                    .map(|packs| packs.iter().find(|p| p.pack_id == *pack).is_some())
+                    .map(|packs| packs.iter().any(|p| p.pack_id == *pack))
                     .unwrap_or(false)
                 {
                     rocket::debug!(
@@ -426,8 +423,15 @@ INSERT INTO hits_packs (
         }
 
         for hit in hits.values() {
-            if static_hits.get_hit(&HitId::Id(hit.id)).is_none() && !hit.custom {
-                rocket::debug!("Deleting old hit {}", hit.id);
+            if static_hits.get_hit(&HitId::Id(hit.id)).is_none() && !hit.custom
+                || (hit.custom && hit.marked_for_deletion)
+            {
+                rocket::debug!(
+                    "Deleting hit {} (custom: {}, marked for deletion: {})",
+                    hit.id,
+                    hit.custom,
+                    hit.marked_for_deletion
+                );
                 let _ = sqlx::query!("DELETE FROM hits WHERE id = $1", hit.id)
                     .execute(&db.0)
                     .await;
