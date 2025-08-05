@@ -30,7 +30,7 @@ struct HitRow {
     marked_for_deletion: bool,
 }
 
-#[derive(FromRow, Clone)]
+#[derive(FromRow)]
 struct HitPackRow {
     hit_id: Uuid,
     pack_id: Uuid,
@@ -183,9 +183,7 @@ FROM hits_packs"#
         .unwrap()
         .into_iter()
         .fold(HashMap::<HitId, Vec<HitPackRow>>::new(), |mut m, row| {
-            m.entry(HitId::Id(row.hit_id))
-                .or_insert(vec![row.clone()])
-                .push(row);
+            m.entry(HitId::Id(row.hit_id)).or_default().push(row);
             m
         });
 
