@@ -1,5 +1,6 @@
 mod games;
 mod hits;
+mod merge_db;
 mod responses;
 mod routes;
 mod services;
@@ -8,6 +9,7 @@ mod users;
 use dotenvy::dotenv;
 use games::GameEvent;
 use hits::download_hits;
+use merge_db::MergeDbService;
 use rocket::{
     Build, Config, Rocket,
     fairing::{self, AdHoc},
@@ -78,6 +80,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
     rocket::custom(figment)
         .attach(HitsterConfig::init())
         .attach(migrations_fairing)
+        .attach(MergeDbService::default())
         .attach(CachedCompression::path_suffix_fairing(
             CachedCompression::static_paths(vec![".js", ".js", ".html", ".htm", ".json", ".mp3"]),
         ))

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\nUPDATE hits SET\n    title = $1,\n    artist = $2,\n    yt_id = $3,\n    year = $4,\n    playback_offset = $5,\n    belongs_to = $6,\n    last_modified = $7,\n    downloaded = $8,\n    custom = $9\n    WHERE id = $10",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 10
+    },
+    "nullable": []
+  },
+  "hash": "064e7c1f7b490fe1b8e420f9f1c8d6a450eef2450fe65900f7717ef9c5035702"
+}

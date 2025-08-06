@@ -83,7 +83,10 @@ pub fn migrate(file: PathBuf) -> bool {
                         belongs_to,
                         id: hit_ref.as_ref().map(|h| h.id).unwrap_or_else(Uuid::new_v4),
                         yt_id: my_yt_id,
-                        last_modified: hit_ref.as_ref().map(|h| h.last_modified).unwrap_or_else(OffsetDateTime::now_utc),
+                        last_modified: hit_ref
+                            .as_ref()
+                            .map(|h| h.last_modified)
+                            .unwrap_or_else(OffsetDateTime::now_utc),
                     },
                 );
             } else if let Some(hit) = hits.get_mut(&my_yt_id) {

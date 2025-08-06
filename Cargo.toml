@@ -4,6 +4,7 @@ resolver = "3"
 default-members = ["server"]
 
 [workspace.dependencies]
+multi_key_map = "0.3.0"
 serde = { version = "1.0.197", features = ["derive"]}
 serde_yml = "0.0.12"
 time = { version = "0.3.34", features = ["serde", "serde-well-known"]}
