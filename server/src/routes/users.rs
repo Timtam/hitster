@@ -1,10 +1,6 @@
 use crate::{
     HitsterConfig,
-    hits::DownloadingGuard,
-    responses::{
-        AuthorizedServerBusyError, GetUserError, MessageResponse, RegisterUserError,
-        ServerBusyError, UserLoginError, UsersResponse,
-    },
+    responses::{GetUserError, MessageResponse, RegisterUserError, UserLoginError, UsersResponse},
     services::ServiceStore,
     users::{Token, User, UserCookie, UserLoginPayload},
 };
@@ -311,13 +307,10 @@ async fn handle_existing_token(
 
 #[openapi(tag = "Users")]
 #[get("/users")]
-pub fn get_all(
-    serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Json<UsersResponse>, ServerBusyError> {
-    Ok(Json(UsersResponse {
+pub fn get_all(serv: &State<ServiceStore>) -> Json<UsersResponse> {
+    Json(UsersResponse {
         users: serv.user_service().lock().get_all(),
-    }))
+    })
 }
 
 /// Get all info about a certain user
@@ -327,11 +320,7 @@ pub fn get_all(
 
 #[openapi(tag = "Users")]
 #[get("/users/<user_id>")]
-pub fn get(
-    user_id: &str,
-    serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Json<User>, GetUserError> {
+pub fn get(user_id: &str, serv: &State<ServiceStore>) -> Result<Json<User>, GetUserError> {
     if let Ok(u) = Uuid::parse_str(user_id) {
         match serv.user_service().lock().get_by_id(u) {
             Some(u) => Ok(Json(u)),
@@ -360,7 +349,6 @@ pub async fn login(
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
 ) -> Result<Json<User>, UserLoginError> {
     let u = serv
         .user_service()
@@ -484,7 +472,6 @@ pub async fn register(
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     svc: &State<ServiceStore>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, RegisterUserError> {
     let salt = SaltString::generate(&mut OsRng);
     let argon2 = Argon2::default();
@@ -555,8 +542,7 @@ pub async fn logout(
     user: User,
     serv: &State<ServiceStore>,
     cookies: &CookieJar<'_>,
-    _g: DownloadingGuard,
-) -> Result<Json<MessageResponse>, AuthorizedServerBusyError> {
+) -> Json<MessageResponse> {
     let game_srv = serv.game_service();
     let games = game_srv.lock();
 
@@ -571,10 +557,10 @@ pub async fn logout(
     cookies.remove("user");
     users.remove(user.id);
 
-    Ok(Json(MessageResponse {
+    Json(MessageResponse {
         message: "logged out".into(),
         r#type: "success".into(),
-    }))
+    })
 }
 
 #[openapi(tag = "Users")]
@@ -583,8 +569,7 @@ pub async fn authorize(
     db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Json<MessageResponse>, ServerBusyError> {
+) -> Json<MessageResponse> {
     let token = cookies
         .get_private("id")
         .map(|cookie| cookie.value().to_string());
@@ -603,10 +588,10 @@ pub async fn authorize(
         )
         .await;
 
-        Ok(Json(MessageResponse {
+        Json(MessageResponse {
             message: "success".into(),
             r#type: "success".into(),
-        }))
+        })
     } else {
         let (u, t) = generate_virtual_user(serv);
 
@@ -619,9 +604,9 @@ pub async fn authorize(
 
         set_cookies(&u, &t, cookies);
 
-        Ok(Json(MessageResponse {
+        Json(MessageResponse {
             message: "success".into(),
             r#type: "success".into(),
-        }))
+        })
     }
 }

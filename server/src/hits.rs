@@ -1,19 +1,12 @@
-use crate::{HitsterConfig, responses::MessageResponse, services::ServiceStore};
+use crate::{HitsterConfig, services::ServiceStore};
 use crossbeam_channel::unbounded;
 use hitster_core::{Hit, HitsterData, Pack};
 use rocket::{
-    Orbit, Rocket, State,
+    Orbit, Rocket,
     fairing::{Fairing, Info, Kind},
-    http::Status,
-    request::{FromRequest, Outcome, Request},
-    serde::json::Json,
 };
 use rocket_db_pools::Database;
-use rocket_okapi::{
-    r#gen::OpenApiGenerator,
-    okapi::{schemars, schemars::JsonSchema},
-    request::{OpenApiFromRequest, RequestHeaderInput},
-};
+use rocket_okapi::okapi::schemars::JsonSchema;
 use serde::Serialize;
 use sqlx::FromRow;
 use std::{
@@ -84,7 +77,7 @@ pub fn get_hitster_data() -> &'static HitsterData {
     })
 }
 
-struct DownloadHitData {
+pub struct DownloadHitData {
     in_file: PathBuf,
     hit: Hit,
 }
@@ -104,16 +97,24 @@ impl Fairing for HitDownloadService {
     async fn on_liftoff(&self, rocket: &Rocket<Orbit>) {
         let db = HitsterConfig::fetch(rocket).unwrap().0.clone();
         let hit_service = Arc::new(rocket.state::<ServiceStore>().unwrap().hit_service());
-        let (s, r) = unbounded::<DownloadHitData>();
-        let download_dir = Hit::download_dir();
+        let (dl_s, dl_r) = unbounded::<Hit>();
+        let (process_s, process_r) = unbounded::<DownloadHitData>();
+        let _ = create_dir_all(Hit::download_dir().as_str());
 
-        let _ = create_dir_all(download_dir.as_str());
+        hit_service
+            .lock()
+            .set_download_info(dl_s.clone(), dl_r.clone(), process_r.clone());
 
         rocket::tokio::spawn({
             let db = db.clone();
             let hit_service = Arc::clone(&hit_service);
             async move {
-                rocket::info!("Starting background download of hits");
+                let paths = read_dir(Hit::download_dir()).unwrap();
+                let mut files: HashSet<String> = HashSet::new();
+
+                for p in paths.flatten() {
+                    files.insert(p.file_name().into_string().unwrap());
+                }
 
                 let packs = sqlx::query_as!(
                     PackRow,
@@ -178,47 +179,60 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     m
                 });
 
-                let hits = {
-                    let mut hh = vec![];
-                    for h in hits.values().map(|h| Hit {
-                        title: h.title.clone(),
-                        artist: h.artist.clone(),
-                        id: h.id,
-                        yt_id: h.yt_id.clone(),
-                        year: h.year,
-                        playback_offset: h.playback_offset,
-                        last_modified: h.last_modified,
-                        belongs_to: h.belongs_to.clone(),
-                        packs: hits_packs.get(&h.id).cloned().unwrap_or_default(),
-                    }) {
-                        if h.exists() {
-                            if !hits.get(&h.id).unwrap().downloaded {
-                                let _ = sqlx::query!(
-                                    "UPDATE hits SET downloaded = ? WHERE id = ?",
-                                    true,
-                                    h.id
-                                )
-                                .execute(&db)
-                                .await;
-                            }
-                            hit_service.lock().insert_hit(h);
-                        } else {
-                            if hits.get(&h.id).unwrap().downloaded {
-                                let _ = sqlx::query!(
-                                    "UPDATE hits SET downloaded = ? WHERE id = ?",
-                                    false,
-                                    h.id
-                                )
-                                .execute(&db)
-                                .await;
-                            }
-                            hh.push(h);
+                for hit in hits.values().map(|h| Hit {
+                    title: h.title.clone(),
+                    artist: h.artist.clone(),
+                    id: h.id,
+                    yt_id: h.yt_id.clone(),
+                    year: h.year,
+                    playback_offset: h.playback_offset,
+                    last_modified: h.last_modified,
+                    belongs_to: h.belongs_to.clone(),
+                    packs: hits_packs.get(&h.id).cloned().unwrap_or_default(),
+                }) {
+                    if hit.exists() {
+                        files.remove(&format!("{}_{}.mp3", hit.yt_id, hit.playback_offset));
+                        if !hits.get(&hit.id).unwrap().downloaded {
+                            let _ = sqlx::query!(
+                                "UPDATE hits SET downloaded = ? WHERE id = ?",
+                                true,
+                                hit.id
+                            )
+                            .execute(&db)
+                            .await;
                         }
+                        hit_service.lock().insert_hit(hit);
+                    } else {
+                        if hits.get(&hit.id).unwrap().downloaded {
+                            let _ = sqlx::query!(
+                                "UPDATE hits SET downloaded = ? WHERE id = ?",
+                                false,
+                                hit.id
+                            )
+                            .execute(&db)
+                            .await;
+                        }
+                        let _ = dl_s.send(hit);
                     }
-                    hh
-                };
+                }
 
-                for hit in hits.into_iter() {
+                for file in files.into_iter() {
+                    let _ = remove_file(format!(
+                        "{}/{}",
+                        Hit::download_dir().as_str(),
+                        file.as_str()
+                    ));
+                }
+            }
+        });
+
+        rocket::tokio::spawn({
+            let hit_service = Arc::clone(&hit_service);
+            async move {
+                rocket::info!("Starting background download of hits");
+
+                while let Ok(hit) = dl_r.recv() {
+                    hit_service.lock().set_downloading(true);
                     #[cfg(feature = "native_dl")]
                     {
                         use filesize::PathExt;
@@ -234,7 +248,11 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                         };
                         if let Ok(video) = Video::new_with_options(hit.yt_id.as_str(), options) {
                             let in_dl = video
-                                .download(format!("{}/{}.opus", download_dir.as_str(), hit.yt_id))
+                                .download(format!(
+                                    "{}/{}.opus",
+                                    Hit::download_dir().as_str(),
+                                    hit.yt_id
+                                ))
                                 .await;
 
                             if in_dl.is_err()
@@ -253,8 +271,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                     remove_file(&in_file).unwrap();
                                 }
                             } else {
-                                let _ = s.send(DownloadHitData { in_file, hit });
-                                return;
+                                let _ = process_s.send(DownloadHitData { in_file, hit });
+                                continue;
                             }
                         }
                     }
@@ -285,8 +303,9 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             continue;
                         }
 
-                        s.send(DownloadHitData { in_file, hit }).unwrap();
+                        process_s.send(DownloadHitData { in_file, hit }).unwrap();
                     }
+                    hit_service.lock().set_downloading(dl_r.len() > 0);
                 }
             }
         });
@@ -295,7 +314,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
             let db = db.clone();
             let hit_service = Arc::clone(&hit_service);
             async move {
-                while let Ok(hit_data) = r.recv() {
+                while let Ok(hit_data) = process_r.recv() {
+                    hit_service.lock().set_processing(true);
                     if !hit_data.hit.exists() {
                         let out_file = Path::new(&Hit::download_dir()).join(format!(
                             "{}_{}.mp3",
@@ -329,67 +349,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     .await;
                     hit_service.lock().insert_hit(hit_data.hit);
                 }
-
-                rocket::info!("Download finished.");
-
-                rocket::info!("Cleaning up unused hits...");
-
-                let paths = read_dir(Hit::download_dir()).unwrap();
-                let mut files: HashSet<String> = HashSet::new();
-
-                for p in paths.flatten() {
-                    files.insert(p.file_name().into_string().unwrap());
-                }
-
-                for hit in get_hitster_data().get_hits().iter() {
-                    files.remove(&format!("{}_{}.mp3", hit.yt_id, hit.playback_offset));
-                }
-
-                for file in files.into_iter() {
-                    let _ = remove_file(format!(
-                        "{}/{}",
-                        Hit::download_dir().as_str(),
-                        file.as_str()
-                    ));
-                }
-
-                rocket::info!("Finished cleanup.");
-                hit_service.lock().set_finished_downloading();
+                hit_service.lock().set_processing(process_r.len() > 0);
             }
         });
-    }
-}
-
-pub struct DownloadingGuard {}
-
-#[rocket::async_trait]
-impl<'r> FromRequest<'r> for DownloadingGuard {
-    type Error = Json<MessageResponse>;
-
-    async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
-        let serv = req.guard::<&State<ServiceStore>>().await.unwrap();
-        let hit_service = serv.hit_service();
-
-        if hit_service.lock().get_progress().2 {
-            Outcome::Success(Self {})
-        } else {
-            Outcome::Error((
-                Status::ServiceUnavailable,
-                Json(MessageResponse {
-                    message: "server is still downloading hits".into(),
-                    r#type: "error".into(),
-                }),
-            ))
-        }
-    }
-}
-
-impl OpenApiFromRequest<'_> for DownloadingGuard {
-    fn from_request_input(
-        _gen: &mut OpenApiGenerator,
-        _name: String,
-        _required: bool,
-    ) -> rocket_okapi::Result<RequestHeaderInput> {
-        Ok(RequestHeaderInput::None)
     }
 }

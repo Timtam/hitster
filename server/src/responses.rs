@@ -70,17 +70,6 @@ impl OpenApiResponderInner for JoinGameError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -146,17 +135,6 @@ impl OpenApiResponderInner for LeaveGameError {
                 description: "\
                 # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
                 That user isn't part of this game.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -243,17 +221,6 @@ impl OpenApiResponderInner for StartGameError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -335,17 +302,6 @@ impl OpenApiResponderInner for StopGameError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -411,17 +367,6 @@ impl OpenApiResponderInner for HitError {
                 description: "\
                 # [500 Internal Server Error](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500)\n\
                 A hit couldn't be found or a different error occurred.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -508,17 +453,6 @@ impl OpenApiResponderInner for GuessSlotError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -595,17 +529,6 @@ impl OpenApiResponderInner for ConfirmSlotError {
                 description: "\
                 # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
                 The game needs to be running.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -692,17 +615,6 @@ impl OpenApiResponderInner for SkipHitError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -779,17 +691,6 @@ impl OpenApiResponderInner for UpdateGameError {
                 description: "\
                 # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
                 The game can only be updated by the creator or a specified value is invalid.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -904,17 +805,6 @@ impl OpenApiResponderInner for ClaimHitError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -943,113 +833,6 @@ impl<'r> Responder<'r, 'static> for ClaimHitError {
 }
 
 #[derive(Debug, Serialize, JsonSchema)]
-pub struct ServerBusyError {
-    pub message: String,
-    #[serde(skip)]
-    pub http_status_code: u16,
-}
-
-impl OpenApiResponderInner for ServerBusyError {
-    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
-        let mut responses = Map::new();
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        Ok(Responses {
-            responses,
-            ..Default::default()
-        })
-    }
-}
-
-impl std::fmt::Display for ServerBusyError {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
-    }
-}
-
-impl std::error::Error for ServerBusyError {}
-
-impl<'r> Responder<'r, 'static> for ServerBusyError {
-    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
-        // Convert object to json
-        let body = serde_json::to_string(&self).unwrap();
-        Response::build()
-            .sized_body(body.len(), std::io::Cursor::new(body))
-            .header(ContentType::JSON)
-            .status(Status::new(self.http_status_code))
-            .ok()
-    }
-}
-
-#[derive(Debug, Serialize, JsonSchema)]
-pub struct AuthorizedServerBusyError {
-    pub message: String,
-    #[serde(skip)]
-    pub http_status_code: u16,
-}
-
-impl OpenApiResponderInner for AuthorizedServerBusyError {
-    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
-        let mut responses = Map::new();
-        responses.insert(
-            "401".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
-                The API call requires a valid token, but the token needs to be refreshed by calling the /users/auth endpoint.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        Ok(Responses {
-            responses,
-            ..Default::default()
-        })
-    }
-}
-
-impl std::fmt::Display for AuthorizedServerBusyError {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
-    }
-}
-
-impl std::error::Error for AuthorizedServerBusyError {}
-
-impl<'r> Responder<'r, 'static> for AuthorizedServerBusyError {
-    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
-        // Convert object to json
-        let body = serde_json::to_string(&self).unwrap();
-        Response::build()
-            .sized_body(body.len(), std::io::Cursor::new(body))
-            .header(ContentType::JSON)
-            .status(Status::new(self.http_status_code))
-            .ok()
-    }
-}
-
-#[derive(Debug, Serialize, JsonSchema)]
 pub struct GetGameError {
     pub message: String,
     #[serde(skip)]
@@ -1065,17 +848,6 @@ impl OpenApiResponderInner for GetGameError {
                 description: "\
                 # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
                 A game with that ID doesn't exist.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -1129,17 +901,6 @@ impl OpenApiResponderInner for GetUserError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -1183,17 +944,6 @@ impl OpenApiResponderInner for UserLoginError {
                 description: "\
                 # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
                 The user credentials are invalid.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -1264,17 +1014,6 @@ impl OpenApiResponderInner for RegisterUserError {
                 description: "\
                 # [500 Internal Server Error](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500)\n\
                 error while creating a database entry.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()

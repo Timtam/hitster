@@ -1,16 +1,26 @@
+use crate::hits::DownloadHitData;
+use crossbeam_channel::{Receiver, Sender};
 use hitster_core::{Hit, HitsterData, Pack};
 use uuid::Uuid;
 
 pub struct HitService {
     hitster_data: HitsterData,
-    finished_downloading: bool,
+    downloading: bool,
+    processing: bool,
+    dl_sender: Option<Sender<Hit>>,
+    dl_receiver: Option<Receiver<Hit>>,
+    process_receiver: Option<Receiver<DownloadHitData>>,
 }
 
 impl HitService {
     pub fn new(hitster_data: HitsterData) -> Self {
         Self {
             hitster_data,
-            finished_downloading: false,
+            downloading: false,
+            processing: false,
+            dl_sender: None,
+            dl_receiver: None,
+            process_receiver: None,
         }
     }
 
@@ -30,16 +40,20 @@ impl HitService {
         self.hitster_data.insert_pack(pack);
     }
 
-    pub fn get_progress(&self) -> (usize, usize, bool) {
-        (
-            self.hitster_data.get_hits().len(),
-            self.hitster_data.get_hits().len(),
-            self.finished_downloading,
-        )
+    pub fn downloading(&self) -> bool {
+        self.downloading
     }
 
-    pub fn set_finished_downloading(&mut self) {
-        self.finished_downloading = true
+    pub fn set_downloading(&mut self, downloading: bool) {
+        self.downloading = downloading
+    }
+
+    pub fn processing(&self) -> bool {
+        self.processing
+    }
+
+    pub fn set_processing(&mut self, processing: bool) {
+        self.processing = processing
     }
 
     pub fn get_packs(&self) -> Vec<&Pack> {
@@ -48,6 +62,17 @@ impl HitService {
 
     pub fn get_hits_for_packs(&self, packs: &[Uuid]) -> Vec<&Hit> {
         self.hitster_data.get_hits_for_packs(packs)
+    }
+
+    pub fn set_download_info(
+        &mut self,
+        dl_sender: Sender<Hit>,
+        dl_receiver: Receiver<Hit>,
+        process_receiver: Receiver<DownloadHitData>,
+    ) {
+        self.dl_sender = Some(dl_sender);
+        self.dl_receiver = Some(dl_receiver);
+        self.process_receiver = Some(process_receiver);
     }
 }
 impl Default for HitService {

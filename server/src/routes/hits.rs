@@ -1,18 +1,11 @@
-use crate::{
-    hits::DownloadingGuard,
-    responses::{HitsStatusResponse, PacksResponse, ServerBusyError},
-    services::ServiceStore,
-};
+use crate::{responses::PacksResponse, services::ServiceStore};
 use rocket::{State, serde::json::Json};
 use rocket_okapi::openapi;
 use std::collections::HashMap;
 
 #[openapi(tag = "Hits")]
 #[get("/hits/packs")]
-pub fn get_all_packs(
-    serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Json<PacksResponse>, ServerBusyError> {
+pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
     let hs = serv.hit_service();
     let hsl = hs.lock();
 
@@ -30,16 +23,5 @@ pub fn get_all_packs(
     drop(hsl);
     drop(hs);
 
-    Ok(Json(PacksResponse { packs }))
-}
-
-#[openapi(tag = "Hits")]
-#[get("/hits/status")]
-pub fn get_status(serv: &State<ServiceStore>) -> Json<HitsStatusResponse> {
-    let hits_status = serv.hit_service().lock().get_progress();
-    Json(HitsStatusResponse {
-        downloaded: hits_status.0,
-        all: hits_status.1,
-        finished: hits_status.2,
-    })
+    Json(PacksResponse { packs })
 }

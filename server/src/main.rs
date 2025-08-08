@@ -112,7 +112,6 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 games_routes::stop_game,
                 games_routes::update_game,
                 hits_routes::get_all_packs,
-                hits_routes::get_status,
             ],
         )
         .mount(
