@@ -343,7 +343,7 @@ pub fn guess_slot(
 
         if state != game.state {
             let last_scored = game.last_scored.clone();
-            let hit = game.hits_remaining.front().copied();
+            let hit = game.hits_remaining.front().cloned();
             let winner = serv.game_service().lock().get_winner(&game);
 
             if winner.is_some() {
@@ -359,7 +359,7 @@ pub fn guess_slot(
                     if game.state == GameState::Intercepting {
                         None
                     } else {
-                        Some(h.into())
+                        Some((&h).into())
                     }
                 }),
                 last_scored: last_scored.map(|p| (&p).into()),
@@ -427,7 +427,7 @@ pub fn skip_hit(
                     .iter()
                     .find(|p| p.id == player_id.unwrap_or(user.id))
                     .map(|p| vec![p.into()]),
-                hit: Some(hit.into()),
+                hit: Some((&hit).into()),
                 ..Default::default()
             });
 
@@ -460,7 +460,7 @@ pub fn claim_hit(
                 .iter()
                 .find(|p| p.id == player_id.unwrap_or(user.id))
                 .map(|p| vec![p.into()]),
-            hit: Some(hit.into()),
+            hit: Some((&hit).into()),
             ..Default::default()
         });
 

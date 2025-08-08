@@ -20,8 +20,6 @@ pub struct GameSettingsPayload {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub goal: Option<u8>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub remember_hits: Option<bool>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub packs: Option<Vec<Uuid>>,
 }
 
@@ -40,7 +38,6 @@ impl From<Json<GameSettingsPayload>> for GameSettingsPayload {
             hit_duration: src.hit_duration,
             start_tokens: src.start_tokens,
             packs: src.packs.clone(),
-            remember_hits: src.remember_hits,
         }
     }
 }
@@ -78,15 +75,14 @@ pub struct Game {
     pub id: String,
     pub players: Vec<Player>,
     pub state: GameState,
-    pub hits_remaining: VecDeque<&'static Hit>,
+    pub hits_remaining: VecDeque<Hit>,
     pub hit_duration: u8,
     pub start_tokens: u8,
     pub goal: u8,
-    pub hit: Option<&'static Hit>,
+    pub hit: Option<Hit>,
     pub packs: Vec<Uuid>,
     pub mode: GameMode,
-    pub remember_hits: bool,
-    pub remembered_hits: Vec<&'static Hit>,
+    pub remembered_hits: Vec<Hit>,
     pub last_scored: Option<Player>,
 }
 
@@ -101,7 +97,6 @@ pub struct GamePayload {
     pub hit: Option<HitPayload>,
     pub packs: Vec<Uuid>,
     pub mode: GameMode,
-    pub remember_hits: bool,
     pub last_scored: Option<PlayerPayload>,
 }
 
@@ -114,10 +109,9 @@ impl From<&Game> for GamePayload {
             hit_duration: game.hit_duration,
             start_tokens: game.start_tokens,
             goal: game.goal,
-            hit: game.hit.map(|h| h.into()),
+            hit: game.hit.as_ref().map(|h| h.into()),
             packs: game.packs.clone(),
             mode: game.mode,
-            remember_hits: game.remember_hits,
             last_scored: game.last_scored.as_ref().map(|p| p.into()),
         }
     }
@@ -138,7 +132,7 @@ pub struct Player {
     pub name: String,
     pub state: PlayerState,
     pub creator: bool,
-    pub hits: Vec<&'static Hit>,
+    pub hits: Vec<Hit>,
     pub tokens: u8,
     pub slots: Vec<Slot>,
     pub turn_player: bool,
@@ -167,7 +161,7 @@ impl From<&Player> for PlayerPayload {
             name: p.name.clone(),
             state: p.state,
             creator: p.creator,
-            hits: p.hits.iter().map(|h| (*h).into()).collect::<Vec<_>>(),
+            hits: p.hits.iter().map(|h| h.into()).collect::<Vec<_>>(),
             tokens: p.tokens,
             slots: p.slots.clone(),
             turn_player: p.turn_player,

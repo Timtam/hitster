@@ -3,7 +3,6 @@ use uuid::Uuid;
 
 pub struct HitService {
     hitster_data: HitsterData,
-    hits: Vec<&'static Hit>,
     finished_downloading: bool,
 }
 
@@ -11,22 +10,29 @@ impl HitService {
     pub fn new(hitster_data: HitsterData) -> Self {
         Self {
             hitster_data,
-            hits: vec![],
             finished_downloading: false,
         }
     }
 
-    pub fn get_available_hits(&self) -> Vec<&'static Hit> {
-        self.hits.clone()
+    pub fn copy_hits(&self) -> Vec<Hit> {
+        self.hitster_data
+            .get_hits()
+            .into_iter()
+            .cloned()
+            .collect::<Vec<_>>()
     }
 
-    pub fn add(&mut self, hit: &'static Hit) {
-        self.hits.push(hit);
+    pub fn insert_hit(&mut self, hit: Hit) {
+        self.hitster_data.insert_hit(hit);
+    }
+
+    pub fn insert_pack(&mut self, pack: Pack) {
+        self.hitster_data.insert_pack(pack);
     }
 
     pub fn get_progress(&self) -> (usize, usize, bool) {
         (
-            self.hits.len(),
+            self.hitster_data.get_hits().len(),
             self.hitster_data.get_hits().len(),
             self.finished_downloading,
         )
@@ -36,7 +42,16 @@ impl HitService {
         self.finished_downloading = true
     }
 
-    pub fn get_pack(&self, pack_id: Uuid) -> Option<&Pack> {
-        self.hitster_data.get_pack(pack_id)
+    pub fn get_packs(&self) -> Vec<&Pack> {
+        self.hitster_data.get_packs()
+    }
+
+    pub fn get_hits_for_packs(&self, packs: &[Uuid]) -> Vec<&Hit> {
+        self.hitster_data.get_hits_for_packs(packs)
+    }
+}
+impl Default for HitService {
+    fn default() -> Self {
+        HitService::new(HitsterData::new(vec![], vec![]))
     }
 }

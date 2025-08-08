@@ -34,6 +34,3 @@ serde_yml = { workspace = true }
 sqlx = { version = "0.7", default-features = false, features = ["migrate", "macros", "time", "uuid"] }
 time = { workspace = true }
 uuid = { workspace = true }
-
-[dev-dependencies]
-futures = "0.3.30"

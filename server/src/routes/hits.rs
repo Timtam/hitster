@@ -16,16 +16,13 @@ pub fn get_all_packs(
     let hs = serv.hit_service();
     let hsl = hs.lock();
 
-    let hits = hsl.get_available_hits();
-
-    let packs = hits.iter().fold(
+    let packs = hsl.get_packs().iter().fold(
         HashMap::<String, usize>::new(),
-        |mut p: HashMap<String, usize>, h| {
-            h.packs.iter().for_each(|pp| {
-                let name = hsl.get_pack(*pp).unwrap().name.clone();
-
-                p.insert(name.clone(), *p.get::<String>(&name).unwrap_or(&0) + 1);
-            });
+        |mut p: HashMap<String, usize>, pp| {
+            p.insert(
+                pp.name.clone(),
+                *p.get::<String>(&pp.name).unwrap_or(&0) + 1,
+            );
             p
         },
     );

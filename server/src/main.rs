@@ -8,7 +8,7 @@ mod users;
 
 use dotenvy::dotenv;
 use games::GameEvent;
-use hits::download_hits;
+use hits::HitDownloadService;
 use merge_db::MergeDbService;
 use rocket::{
     Build, Config, Rocket,
@@ -81,6 +81,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .attach(HitsterConfig::init())
         .attach(migrations_fairing)
         .attach(MergeDbService::default())
+        .attach(HitDownloadService::default())
         .attach(CachedCompression::path_suffix_fairing(
             CachedCompression::static_paths(vec![".js", ".js", ".html", ".htm", ".json", ".mp3"]),
         ))
@@ -144,7 +145,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
 async fn main() -> Result<(), rocket::Error> {
     let _ = dotenv();
 
-    let r = rocket_from_config(Config::figment().merge((
+    rocket_from_config(Config::figment().merge((
         "databases",
         map![
         "hitster_config" => map![
@@ -152,12 +153,8 @@ async fn main() -> Result<(), rocket::Error> {
         ],
             ],
     )))
-    .ignite()
+    .launch()
     .await?;
-
-    download_hits(r.state::<ServiceStore>().unwrap().hit_service());
-
-    r.launch().await?;
 
     Ok(())
 }
