@@ -68,9 +68,6 @@ gameSettingsHitDuration: Wie viele Sekunden eines Hits werden zu jeder Spielrund
 gameSettingsHitGoal: Wie viele Hits muss ein Spieler erraten, um das Spiel zu gewinnen?
 gameSettingsNotCreator: Nur der Ersteller des Spiels kann es bearbeiten
 gameSettingsPacks: "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:"
-gameSettingsRememberHits: >-
-    Sollen Hits zwischen den Spielen gespeichert werden, damit so selten wie
-    möglich doppelte Hits erraten werden müssen?
 gameSettingsShortcut: Alt+Umschalt+E
 gameSettingsStartTokens: Wie viele Chips bekommt jeder Spieler zu Beginn des Spiels?
 game_one: Spiel

@@ -1,5 +1,6 @@
+import natsort from "natsort"
 import pickRandom from "pick-random"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
@@ -12,7 +13,7 @@ import { BsPrefixRefForwardingComponent } from "react-bootstrap/helpers"
 import { useTranslation } from "react-i18next"
 import slugify from "slugify"
 import { useContext } from "../../context"
-import type { Game } from "../../entities"
+import type { Game, Pack } from "../../entities"
 import { GameSettings as GameSettingsEntity, GameState } from "../../entities"
 import GameService from "../../services/games.service"
 import HitService from "../../services/hits.service"
@@ -28,15 +29,13 @@ export default function GameSettings({
     show: boolean
     onHide: () => void
 }) {
+    const sorter = useMemo(() => natsort(), [])
     const { t } = useTranslation()
     const [goal, setGoal] = useState(0)
     const [startTokens, setStartTokens] = useState(0)
     const [hitDuration, setHitDuration] = useState(0)
-    const [availablePacks, setAvailablePacks] = useState<
-        Record<string, number>
-    >({})
+    const [availablePacks, setAvailablePacks] = useState<Pack[]>([])
     const [packs, setPacks] = useState<string[]>([])
-    const [rememberHits, setRememberHits] = useState(true)
     const selectAllPacks = useRef<
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (HTMLInputElement & BsPrefixRefForwardingComponent<"input", any>) | null
@@ -50,7 +49,6 @@ export default function GameSettings({
             setStartTokens(game.start_tokens)
             setHitDuration(game.hit_duration)
             setPacks(game.packs)
-            setRememberHits(game.remember_hits)
         }
     }, [game, show])
 
@@ -60,10 +58,11 @@ export default function GameSettings({
                 const hs = new HitService()
                 const availablePacks = await hs.getAllPacks()
                 setAvailablePacks(availablePacks)
-                if (packs.length === 0) setPacks(Object.keys(availablePacks))
+                if (packs.length === 0)
+                    setPacks(availablePacks.map((p) => p.id))
             })()
         } else {
-            setAvailablePacks({})
+            setAvailablePacks([])
         }
         // don't do this at home kids
         // we're waiting for useEffectEvent to become stable
@@ -182,24 +181,6 @@ export default function GameSettings({
                                                 }
                                             />
                                         </Form.Group>
-                                        <p>{t("gameSettingsRememberHits")}</p>
-                                        <Form.Group className="mb-2">
-                                            <Form.Label htmlFor="checkbox-remember-hits">
-                                                {t("rememberHits")}
-                                            </Form.Label>
-                                            <Form.Check
-                                                id="checkbox-remember-hits"
-                                                type="checkbox"
-                                                placeholder={t("rememberHits")}
-                                                checked={rememberHits}
-                                                disabled={!editable}
-                                                onChange={() => {
-                                                    setRememberHits(
-                                                        !rememberHits,
-                                                    )
-                                                }}
-                                            />
-                                        </Form.Group>
                                     </Form>
                                     <hr />
                                 </Col>
@@ -227,8 +208,8 @@ export default function GameSettings({
                                             onChange={(e) => {
                                                 if (e.currentTarget.checked)
                                                     setPacks(
-                                                        Object.keys(
-                                                            availablePacks,
+                                                        availablePacks.map(
+                                                            (p) => p.id,
                                                         ),
                                                     )
                                                 else setPacks([])
@@ -243,10 +224,7 @@ export default function GameSettings({
                                             className="mb-2"
                                             type="number"
                                             min={1}
-                                            max={
-                                                Object.keys(availablePacks)
-                                                    .length
-                                            }
+                                            max={availablePacks.length}
                                             placeholder={t("randomPacksLabel")}
                                             value={randomPacks}
                                             disabled={!editable}
@@ -266,14 +244,9 @@ export default function GameSettings({
                                             disabled={!editable}
                                             onClick={() =>
                                                 setPacks(
-                                                    pickRandom(
-                                                        Object.keys(
-                                                            availablePacks,
-                                                        ),
-                                                        {
-                                                            count: randomPacks,
-                                                        },
-                                                    ),
+                                                    pickRandom(availablePacks, {
+                                                        count: randomPacks,
+                                                    }).map((p) => p.id),
                                                 )
                                             }
                                         >
@@ -287,17 +260,19 @@ export default function GameSettings({
                                         value={packs}
                                         onChange={(e) => setPacks(e)}
                                     >
-                                        {Object.keys(availablePacks)
-                                            .toSorted()
+                                        {availablePacks
+                                            .toSorted((a, b) =>
+                                                sorter(a.name, b.name),
+                                            )
                                             .map((p) => (
                                                 <ToggleButton
                                                     className="me-2 mb-2"
-                                                    value={p}
-                                                    id={`pack-${slugify(p)}`}
-                                                    key={`pack-${slugify(p)}`}
+                                                    value={p.id}
+                                                    id={`pack-${slugify(p.name)}`}
+                                                    key={`pack-${slugify(p.name)}`}
                                                     disabled={!editable}
                                                 >
-                                                    {`${p} (${availablePacks[p]} ${t("hit", { count: 2 })})`}
+                                                    {`${p.name} (${p.hits} ${t("hit", { count: 2 })})`}
                                                 </ToggleButton>
                                             ))}
                                     </ToggleButtonGroup>
@@ -319,8 +294,6 @@ export default function GameSettings({
                                                         start_tokens:
                                                             startTokens,
                                                         packs: packs,
-                                                        remember_hits:
-                                                            rememberHits,
                                                     }),
                                                 )
                                                 onHide()

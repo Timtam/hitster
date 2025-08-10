@@ -68,9 +68,6 @@ gameSettingsHitDuration: How many seconds of a hit will every player hear when g
 gameSettingsHitGoal: How many hits do the players need to guess correctly in order to win?
 gameSettingsNotCreator: Only the creator can edit the game settings
 gameSettingsPacks: "Check all the packs you want to use in this game:"
-gameSettingsRememberHits: >-
-    Should hits be remembered across games to prevent duplicates for as long as
-    possible?
 gameSettingsShortcut: Alt+Shift+E
 gameSettingsStartTokens: How many tokens should every player get when starting a game?
 game_one: Game
