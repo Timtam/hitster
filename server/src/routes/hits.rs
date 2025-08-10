@@ -1,7 +1,6 @@
-use crate::{responses::PacksResponse, services::ServiceStore};
+use crate::{games::PackPayload, responses::PacksResponse, services::ServiceStore};
 use rocket::{State, serde::json::Json};
 use rocket_okapi::openapi;
-use std::collections::HashMap;
 
 #[openapi(tag = "Hits")]
 #[get("/hits/packs")]
@@ -9,16 +8,17 @@ pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
     let hs = serv.hit_service();
     let hsl = hs.lock();
 
-    let packs = hsl.get_packs().iter().fold(
-        HashMap::<String, usize>::new(),
-        |mut p: HashMap<String, usize>, pp| {
-            p.insert(
-                pp.name.clone(),
-                *p.get::<String>(&pp.name).unwrap_or(&0) + 1,
-            );
+    let packs = hsl
+        .get_packs()
+        .iter()
+        .fold(vec![], |mut p: Vec<PackPayload>, pp| {
+            p.push(PackPayload {
+                id: pp.id,
+                name: pp.name.clone(),
+                hits: hsl.get_hits_for_packs(&[pp.id]).len(),
+            });
             p
-        },
-    );
+        });
 
     drop(hsl);
     drop(hs);

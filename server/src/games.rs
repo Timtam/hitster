@@ -117,6 +117,13 @@ impl From<&Game> for GamePayload {
     }
 }
 
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema)]
+pub struct PackPayload {
+    pub id: Uuid,
+    pub name: String,
+    pub hits: usize,
+}
+
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Copy)]
 #[serde(rename_all_fields = "snake_case")]
 pub enum PlayerState {
