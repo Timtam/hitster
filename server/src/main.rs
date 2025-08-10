@@ -42,7 +42,7 @@ use users::UserCleanupService;
 extern crate rocket;
 
 #[derive(Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
-#[serde(rename_all_fields = "snake_case")]
+#[serde(rename_all = "snake_case")]
 pub enum GlobalEvent {
     CreateGame(GamePayload),
     ProcessHits {

@@ -117,3 +117,15 @@ export const PacksResponse = z.object({
 })
 
 export type PacksResponse = z.infer<typeof PacksResponse>
+
+export const CreateGameEvent = z.object({
+    create_game: Game,
+})
+
+export type CreateGameEvent = z.infer<typeof CreateGameEvent>
+
+export const RemoveGameEvent = z.object({
+    remove_game: z.string(),
+})
+
+export type RemoveGameEvent = z.infer<typeof RemoveGameEvent>

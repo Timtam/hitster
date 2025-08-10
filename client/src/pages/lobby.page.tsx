@@ -6,26 +6,30 @@ import {
     unbindKeyCombo,
 } from "@rwh/keystrokes"
 import { detect } from "detect-browser"
-import { useCallback, useEffect, useMemo } from "react"
+import { useCallback, useEffect, useMemo, useState } from "react"
 import Dropdown from "react-bootstrap/Dropdown"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router"
 import { useContext } from "../context"
 import { Game, GameMode, GameState } from "../entities"
-import { Events, JoinedGameData } from "../events"
-import { useModalShown, useRevalidateOnInterval } from "../hooks"
+import {
+    Events,
+    GameCreatedData,
+    GameRemovedData,
+    JoinedGameData,
+} from "../events"
+import { useModalShown } from "../hooks"
 import GameService from "../services/games.service"
 
 export default function Lobby() {
     const gameService = useMemo(() => new GameService(), [])
     const { user } = useContext()
-    const games = useLoaderData() as Game[]
+    const loadedGames = useLoaderData() as Game[]
     const navigate = useNavigate()
     const { t } = useTranslation()
     const modalShown = useModalShown()
-
-    useRevalidateOnInterval({ enabled: true, interval: 5000 })
+    const [games, setGames] = useState<Game[]>([])
 
     const createGame = useCallback(
         async (mode: GameMode) => {
@@ -66,12 +70,30 @@ export default function Lobby() {
             bindKeyCombo("alt + shift + l", handleNewLocalGame)
         }
 
+        if (games.length === 0) setGames(loadedGames)
+
+        let unsubscribeGameCreated = EventManager.subscribe(
+            Events.gameCreated,
+            (e: GameCreatedData) => {
+                setGames([...games, e.game])
+            },
+        )
+
+        let unsubscribeGameRemoved = EventManager.subscribe(
+            Events.gameRemoved,
+            (e: GameRemovedData) => {
+                setGames(games.filter((g) => g.id !== e.game))
+            },
+        )
+
         return () => {
             unbindKeyCombo("alt + shift + u", handleNewPublicGame)
             unbindKeyCombo("alt + shift + r", handleNewPrivateGame)
             unbindKeyCombo("alt + shift + l", handleNewLocalGame)
+            unsubscribeGameCreated()
+            unsubscribeGameRemoved()
         }
-    }, [createGame, modalShown])
+    }, [createGame, loadedGames, modalShown, setGames, games])
 
     return (
         <>
