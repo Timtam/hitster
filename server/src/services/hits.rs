@@ -40,16 +40,27 @@ impl HitService {
         self.hitster_data.insert_pack(pack);
     }
 
-    pub fn downloading(&self) -> bool {
-        self.downloading
+    pub fn downloading(&self) -> usize {
+        if self.downloading {
+            self.dl_receiver.as_ref().map(|d| d.len() + 1).unwrap_or(0)
+        } else {
+            0
+        }
     }
 
     pub fn set_downloading(&mut self, downloading: bool) {
         self.downloading = downloading
     }
 
-    pub fn processing(&self) -> bool {
-        self.processing
+    pub fn processing(&self) -> usize {
+        if self.processing {
+            self.process_receiver
+                .as_ref()
+                .map(|p| p.len() + 1)
+                .unwrap_or(0)
+        } else {
+            0
+        }
     }
 
     pub fn set_processing(&mut self, processing: bool) {

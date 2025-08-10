@@ -1,9 +1,10 @@
-use crate::{HitsterConfig, services::ServiceStore};
+use crate::{GlobalEvent, HitsterConfig, services::ServiceStore};
 use crossbeam_channel::unbounded;
 use hitster_core::{Hit, HitsterData, Pack};
 use rocket::{
     Orbit, Rocket,
     fairing::{Fairing, Info, Kind},
+    tokio::sync::broadcast::Sender,
 };
 use rocket_db_pools::Database;
 use rocket_okapi::okapi::schemars::JsonSchema;
@@ -99,6 +100,7 @@ impl Fairing for HitDownloadService {
         let hit_service = Arc::new(rocket.state::<ServiceStore>().unwrap().hit_service());
         let (dl_s, dl_r) = unbounded::<Hit>();
         let (process_s, process_r) = unbounded::<DownloadHitData>();
+        let event_sender = Arc::new(rocket.state::<Sender<GlobalEvent>>().unwrap().clone());
         let _ = create_dir_all(Hit::download_dir().as_str());
 
         hit_service
@@ -107,6 +109,7 @@ impl Fairing for HitDownloadService {
 
         rocket::tokio::spawn({
             let db = db.clone();
+            let event_sender = Arc::clone(&event_sender);
             let hit_service = Arc::clone(&hit_service);
             async move {
                 let paths = read_dir(Hit::download_dir()).unwrap();
@@ -213,6 +216,12 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             .await;
                         }
                         let _ = dl_s.send(hit);
+                        let downloading = hit_service.lock().downloading();
+                        let processing = hit_service.lock().processing();
+                        let _ = event_sender.send(GlobalEvent::ProcessHits {
+                            downloading,
+                            processing,
+                        });
                     }
                 }
 
@@ -227,6 +236,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
         });
 
         rocket::tokio::spawn({
+            let event_sender = Arc::clone(&event_sender);
             let hit_service = Arc::clone(&hit_service);
             async move {
                 rocket::info!("Starting background download of hits");
@@ -272,6 +282,13 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                 }
                             } else {
                                 let _ = process_s.send(DownloadHitData { in_file, hit });
+                                hit_service.lock().set_downloading(!dl_r.is_empty());
+                                let downloading = hit_service.lock().downloading();
+                                let processing = hit_service.lock().processing();
+                                let _ = event_sender.send(GlobalEvent::ProcessHits {
+                                    downloading,
+                                    processing,
+                                });
                                 continue;
                             }
                         }
@@ -300,18 +317,32 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                 title = hit.title,
                                 error = String::from_utf8_lossy(&output_res.stderr)
                             );
+                            hit_service.lock().set_downloading(!dl_r.is_empty());
+                            let downloading = hit_service.lock().downloading();
+                            let processing = hit_service.lock().processing();
+                            let _ = event_sender.send(GlobalEvent::ProcessHits {
+                                downloading,
+                                processing,
+                            });
                             continue;
                         }
 
                         process_s.send(DownloadHitData { in_file, hit }).unwrap();
                     }
-                    hit_service.lock().set_downloading(dl_r.len() > 0);
+                    hit_service.lock().set_downloading(!dl_r.is_empty());
+                    let downloading = hit_service.lock().downloading();
+                    let processing = hit_service.lock().processing();
+                    let _ = event_sender.send(GlobalEvent::ProcessHits {
+                        downloading,
+                        processing,
+                    });
                 }
             }
         });
 
         rocket::tokio::spawn({
             let db = db.clone();
+            let event_sender = Arc::clone(&event_sender);
             let hit_service = Arc::clone(&hit_service);
             async move {
                 while let Ok(hit_data) = process_r.recv() {
@@ -348,8 +379,14 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     .execute(&db)
                     .await;
                     hit_service.lock().insert_hit(hit_data.hit);
+                    hit_service.lock().set_processing(!process_r.is_empty());
+                    let downloading = hit_service.lock().downloading();
+                    let processing = hit_service.lock().processing();
+                    let _ = event_sender.send(GlobalEvent::ProcessHits {
+                        downloading,
+                        processing,
+                    });
                 }
-                hit_service.lock().set_processing(process_r.len() > 0);
             }
         });
     }

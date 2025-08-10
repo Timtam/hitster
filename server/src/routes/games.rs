@@ -1,4 +1,5 @@
 use crate::{
+    GlobalEvent,
     games::{
         ConfirmationPayload, CreateGamePayload, GameEvent, GameMode, GamePayload,
         GameSettingsPayload, GameState, SlotPayload,
@@ -38,6 +39,7 @@ pub fn create_game(
     user: User,
     data: Option<Json<CreateGamePayload>>,
     serv: &State<ServiceStore>,
+    queue: &State<Sender<GlobalEvent>>,
 ) -> Created<Json<GamePayload>> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
@@ -54,6 +56,10 @@ pub fn create_game(
             .update(&game.id, &user, data.unwrap().settings.as_ref().unwrap())
             .ok()
             .unwrap_or(game);
+    }
+
+    if mode == GameMode::Public {
+        let _ = queue.send(GlobalEvent::CreateGame((&game).into()));
     }
 
     Created::new(format!("/games/{}", game.id)).body(Json((&game).into()))
@@ -119,10 +125,15 @@ pub async fn leave_game(
     player_id: PathBuf,
     user: User,
     serv: &State<ServiceStore>,
-    queue: &State<Sender<GameEvent>>,
+    game_event_queue: &State<Sender<GameEvent>>,
+    global_event_queue: &State<Sender<GlobalEvent>>,
 ) -> Result<Json<MessageResponse>, LeaveGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
+    let old_mode = games
+        .get(game_id, Some(&user))
+        .map(|g| g.mode)
+        .unwrap_or(GameMode::Public);
 
     games
         .leave(
@@ -131,7 +142,7 @@ pub async fn leave_game(
             player_id.to_str().and_then(|p| Uuid::parse_str(p).ok()),
         )
         .map(|p| {
-            let _ = queue.send(GameEvent {
+            let _ = game_event_queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "leave".into(),
                 players: Some(vec![(&p).into()]),
@@ -141,9 +152,16 @@ pub async fn leave_game(
             let new_state = games
                 .get(game_id, Some(&user))
                 .map(|g| g.state)
-                .unwrap_or(GameState::Open);
+                .unwrap_or_else(|| {
+                    if old_mode == GameMode::Public {
+                        let _ =
+                            global_event_queue.send(GlobalEvent::RemoveGame(game_id.to_string()));
+                    }
 
-            let _ = queue.send(GameEvent {
+                    GameState::Open
+                });
+
+            let _ = game_event_queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(new_state),
