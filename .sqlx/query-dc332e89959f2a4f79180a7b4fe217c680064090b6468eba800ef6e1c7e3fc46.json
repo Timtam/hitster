@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT\n    id AS \"id: Uuid\",\n    yt_id,\n    last_modified AS \"last_modified: OffsetDateTime\",\n    custom,\n    marked_for_deletion\nFROM hits",
+  "describe": {
+    "columns": [
+      {
+        "name": "id: Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "yt_id",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "last_modified: OffsetDateTime",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "custom",
+        "ordinal": 3,
+        "type_info": "Bool"
+      },
+      {
+        "name": "marked_for_deletion",
+        "ordinal": 4,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "dc332e89959f2a4f79180a7b4fe217c680064090b6468eba800ef6e1c7e3fc46"
+}

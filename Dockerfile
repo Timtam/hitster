@@ -11,7 +11,7 @@ ARG RUST_VERSION=1.88.0
 ARG S6_OVERLAY_VERSION=3.2.1.0
 
 # yt-dlp version
-ARG YT_DLP_BUILD_VERSION=2025.06.30
+ARG YT_DLP_BUILD_VERSION=2025.07.21
 
 FROM node:${NODE_VERSION} AS pot_provider_build_image
 
@@ -71,6 +71,7 @@ RUN cargo build --release --no-default-features --features yt_dl && \
     rm core/src/*.rs
 
 # copy your source tree
+COPY ./.sqlx ./.sqlx
 COPY ./etc ./etc
 COPY ./server/migrations ./server/migrations
 COPY ./server/src ./server/src
@@ -79,7 +80,7 @@ COPY ./core/src ./core/src
 # build for release
 RUN rm ./target/release/deps/hitster* && \
     rm ./target/release/deps/libhitster* && \
-    cargo build --release --no-default-features --features yt_dl
+    SQLX_OFFLINE=true cargo build --release --no-default-features --features yt_dl
 
 # our final bases, platform-dependent
 

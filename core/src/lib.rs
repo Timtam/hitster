@@ -1,6 +1,5 @@
 mod hitster_core {
     use multi_key_map::MultiKeyMap;
-    use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
     use std::{
         cmp::PartialEq,
@@ -58,10 +57,13 @@ mod hitster_core {
         }
     }
 
-    #[derive(Clone, Eq, Debug, Serialize, Deserialize, JsonSchema)]
+    #[derive(Clone, Eq, Debug, Serialize, Deserialize)]
     pub struct Pack {
         pub id: Uuid,
         pub name: String,
+        #[serde(with = "time::serde::rfc3339")]
+        #[serde(default = "OffsetDateTime::now_utc")]
+        pub last_modified: OffsetDateTime,
     }
 
     impl PartialEq for Pack {
@@ -108,14 +110,23 @@ mod hitster_core {
             self.hits.values().collect::<Vec<_>>()
         }
 
+        pub fn insert_pack(&mut self, pack: Pack) {
+            self.packs.insert(pack.id, pack);
+        }
+
+        pub fn insert_hit(&mut self, hit: Hit) {
+            self.hits
+                .insert_many(vec![HitId::Id(hit.id), HitId::YtId(hit.yt_id.clone())], hit);
+        }
+
         pub fn get_packs(&self) -> Vec<&Pack> {
             self.packs.values().collect::<Vec<_>>()
         }
 
-        pub fn get_hits_for_pack(&self, pack: Uuid) -> Vec<&Hit> {
+        pub fn get_hits_for_packs(&self, packs: &[Uuid]) -> Vec<&Hit> {
             self.hits
                 .values()
-                .filter(|h| h.packs.contains(&pack))
+                .filter(|h| packs.iter().any(|p| h.packs.contains(p)))
                 .collect::<Vec<_>>()
         }
 
@@ -140,8 +151,8 @@ mod hitster_core {
 
             hits.sort_by(|a, b| {
                 natord::compare(
-                    &format!("{} {}", &a.artist, &a.title),
-                    &format!("{} {}", &b.artist, &b.title),
+                    &format!("{} {} {} {}", &a.artist, &a.title, a.year, &a.belongs_to),
+                    &format!("{} {} {} {}", &b.artist, &b.title, b.year, &b.belongs_to),
                 )
             });
 

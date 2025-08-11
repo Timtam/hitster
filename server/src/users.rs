@@ -1,15 +1,15 @@
-use crate::{HitsterConfig, responses::MessageResponse, services::ServiceStore};
+use crate::{
+    GlobalEvent, HitsterConfig, games::GameMode, responses::MessageResponse, services::ServiceStore,
+};
 use rocket::{
     Data, State,
     fairing::{Fairing, Info, Kind},
     http::{CookieJar, Status},
     request::{self, FromRequest, Outcome, Request},
     serde::json::Json,
+    tokio::sync::broadcast::Sender,
 };
-use rocket_db_pools::{
-    Connection,
-    sqlx::{self, Row},
-};
+use rocket_db_pools::{Connection, sqlx};
 use rocket_okapi::{
     r#gen::OpenApiGenerator,
     okapi::{schemars, schemars::JsonSchema},
@@ -110,21 +110,21 @@ impl<'r> FromRequest<'r> for User {
                 ));
             }
 
-            return sqlx::query("SELECT * FROM users where name = ?")
-                .bind(user.name.as_str())
+            let name = user.name.as_str();
+            return sqlx::query!("SELECT * FROM users where name = $1", name)
                 .fetch_optional(&mut **db)
                 .await
                 .unwrap()
                 .and_then(|user| {
                     let u = User {
-                        id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
-                        name: user.get::<String, &str>("name"),
-                        password: user.get::<String, &str>("password"),
+                        id: Uuid::parse_str(&user.id).unwrap(),
+                        name: user.name,
+                        password: user.password,
                         r#virtual: false,
-                        tokens: serde_json::from_str::<Vec<Token>>(
-                            &user.get::<String, &str>("tokens"),
-                        )
-                        .unwrap(),
+                        tokens: user
+                            .tokens
+                            .map(|t| serde_json::from_str::<Vec<Token>>(&t).unwrap())
+                            .unwrap_or_default(),
                     };
 
                     if let Some(t) = u
@@ -203,6 +203,7 @@ impl Fairing for UserCleanupService {
 
     async fn on_request(&self, req: &mut Request<'_>, _: &mut Data<'_>) {
         let svc = req.guard::<&State<ServiceStore>>().await.unwrap();
+        let queue = req.guard::<&State<Sender<GlobalEvent>>>().await.unwrap();
         let usvc = svc.user_service();
         let gsvc = svc.game_service();
         let games = gsvc.lock();
@@ -212,6 +213,9 @@ impl Fairing for UserCleanupService {
             if users.cleanup_tokens(user.id) {
                 for game in games.get_all(Some(user)).iter() {
                     let _ = games.leave(&game.id, user, None);
+                    if games.get(&game.id, Some(user)).is_none() && game.mode == GameMode::Public {
+                        let _ = queue.send(GlobalEvent::RemoveGame(game.id.clone()));
+                    }
                 }
                 users.remove(user.id);
             }

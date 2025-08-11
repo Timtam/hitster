@@ -1,13 +1,15 @@
 mod games;
 mod hits;
+mod merge_db;
 mod responses;
 mod routes;
 mod services;
 mod users;
 
 use dotenvy::dotenv;
-use games::GameEvent;
-use hits::download_hits;
+use games::{GameEvent, GamePayload};
+use hits::HitDownloadService;
+use merge_db::MergeDbService;
 use rocket::{
     Build, Config, Rocket,
     fairing::{self, AdHoc},
@@ -18,8 +20,17 @@ use rocket::{
 };
 use rocket_async_compression::CachedCompression;
 use rocket_db_pools::{Database, sqlx};
-use rocket_okapi::{openapi_get_routes, rapidoc::*, settings::UrlObject, swagger_ui::*};
-use routes::{games as games_routes, hits as hits_routes, users as users_routes};
+use rocket_okapi::{
+    okapi::{schemars, schemars::JsonSchema},
+    openapi_get_routes,
+    rapidoc::*,
+    settings::UrlObject,
+    swagger_ui::*,
+};
+use routes::{
+    self as global_routes, games as games_routes, hits as hits_routes, users as users_routes,
+};
+use serde::Serialize;
 use services::ServiceStore;
 use std::{
     env,
@@ -29,6 +40,28 @@ use users::UserCleanupService;
 
 #[macro_use]
 extern crate rocket;
+
+#[derive(Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum GlobalEvent {
+    CreateGame(GamePayload),
+    ProcessHits {
+        available: usize,
+        downloading: usize,
+        processing: usize,
+    },
+    RemoveGame(String),
+}
+
+impl GlobalEvent {
+    pub fn get_name(&self) -> String {
+        match self {
+            Self::CreateGame(_) => String::from("create_game"),
+            Self::ProcessHits { .. } => String::from("process_hits"),
+            Self::RemoveGame(_) => String::from("remove_game"),
+        }
+    }
+}
 
 #[derive(Database)]
 #[database("hitster_config")]
@@ -78,12 +111,17 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
     rocket::custom(figment)
         .attach(HitsterConfig::init())
         .attach(migrations_fairing)
+        .attach(MergeDbService::default())
+        .attach(HitDownloadService::default())
         .attach(CachedCompression::path_suffix_fairing(
-            CachedCompression::static_paths(vec![".js", ".js", ".html", ".htm", ".json", ".mp3"]),
+            CachedCompression::static_paths(vec![".js", ".html", ".htm", ".json", ".opus"]),
         ))
         .attach(UserCleanupService::default())
         .mount("/", routes![index, files,])
-        .mount("/api/", routes![api_index, games_routes::events])
+        .mount(
+            "/api/",
+            routes![api_index, games_routes::events, global_routes::events],
+        )
         .mount(
             "/api/",
             openapi_get_routes![
@@ -108,7 +146,6 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 games_routes::stop_game,
                 games_routes::update_game,
                 hits_routes::get_all_packs,
-                hits_routes::get_status,
             ],
         )
         .mount(
@@ -135,13 +172,14 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         )
         .manage(ServiceStore::default())
         .manage(channel::<GameEvent>(1024).0)
+        .manage(channel::<GlobalEvent>(1024).0)
 }
 
 #[rocket::main]
 async fn main() -> Result<(), rocket::Error> {
     let _ = dotenv();
 
-    let r = rocket_from_config(Config::figment().merge((
+    rocket_from_config(Config::figment().merge((
         "databases",
         map![
         "hitster_config" => map![
@@ -149,12 +187,8 @@ async fn main() -> Result<(), rocket::Error> {
         ],
             ],
     )))
-    .ignite()
+    .launch()
     .await?;
-
-    download_hits(r.state::<ServiceStore>().unwrap().hit_service());
-
-    r.launch().await?;
 
     Ok(())
 }

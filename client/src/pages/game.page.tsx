@@ -284,8 +284,6 @@ export default function Game() {
                     g.start_tokens = ge.settings.start_tokens ?? g.start_tokens
                     g.goal = ge.settings.goal ?? g.goal
                     g.packs = ge.settings.packs ?? g.packs
-                    g.remember_hits =
-                        ge.settings.remember_hits ?? g.remember_hits
                 }
             })
         })
