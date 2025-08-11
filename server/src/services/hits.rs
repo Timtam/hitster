@@ -1,6 +1,6 @@
 use crate::hits::DownloadHitData;
-use crossbeam_channel::{Receiver, Sender};
 use hitster_core::{Hit, HitsterData, Pack};
+use rocket::tokio::sync::broadcast::Sender;
 use uuid::Uuid;
 
 pub struct HitService {
@@ -8,8 +8,7 @@ pub struct HitService {
     downloading: bool,
     processing: bool,
     dl_sender: Option<Sender<Hit>>,
-    dl_receiver: Option<Receiver<Hit>>,
-    process_receiver: Option<Receiver<DownloadHitData>>,
+    process_sender: Option<Sender<DownloadHitData>>,
 }
 
 impl HitService {
@@ -19,9 +18,12 @@ impl HitService {
             downloading: false,
             processing: false,
             dl_sender: None,
-            dl_receiver: None,
-            process_receiver: None,
+            process_sender: None,
         }
+    }
+
+    pub fn get_hits(&self) -> Vec<&Hit> {
+        self.hitster_data.get_hits()
     }
 
     pub fn copy_hits(&self) -> Vec<Hit> {
@@ -42,7 +44,7 @@ impl HitService {
 
     pub fn downloading(&self) -> usize {
         if self.downloading {
-            self.dl_receiver.as_ref().map(|d| d.len() + 1).unwrap_or(0)
+            self.dl_sender.as_ref().map(|d| d.len() + 1).unwrap_or(0)
         } else {
             0
         }
@@ -54,7 +56,7 @@ impl HitService {
 
     pub fn processing(&self) -> usize {
         if self.processing {
-            self.process_receiver
+            self.process_sender
                 .as_ref()
                 .map(|p| p.len() + 1)
                 .unwrap_or(0)
@@ -78,12 +80,10 @@ impl HitService {
     pub fn set_download_info(
         &mut self,
         dl_sender: Sender<Hit>,
-        dl_receiver: Receiver<Hit>,
-        process_receiver: Receiver<DownloadHitData>,
+        process_sender: Sender<DownloadHitData>,
     ) {
         self.dl_sender = Some(dl_sender);
-        self.dl_receiver = Some(dl_receiver);
-        self.process_receiver = Some(process_receiver);
+        self.process_sender = Some(process_sender);
     }
 }
 impl Default for HitService {

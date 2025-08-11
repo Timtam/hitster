@@ -129,3 +129,13 @@ export const RemoveGameEvent = z.object({
 })
 
 export type RemoveGameEvent = z.infer<typeof RemoveGameEvent>
+
+export const ProcessHitsEvent = z.object({
+    process_hits: z.object({
+        available: z.number(),
+        downloading: z.number(),
+        processing: z.number(),
+    }),
+})
+
+export type ProcessHitsEvent = z.infer<typeof ProcessHitsEvent>

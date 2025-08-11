@@ -11,7 +11,12 @@ import { useTranslation } from "react-i18next"
 import { Outlet } from "react-router"
 import usePrefersColorScheme from "use-prefers-color-scheme"
 import type { Context } from "./context"
-import { CreateGameEvent, RemoveGameEvent, User } from "./entities"
+import {
+    CreateGameEvent,
+    ProcessHitsEvent,
+    RemoveGameEvent,
+    User,
+} from "./entities"
 import { Events, GameCreatedData, GameRemovedData } from "./events"
 import ErrorModal from "./modals/error"
 import WelcomeModal from "./modals/welcome"
@@ -72,25 +77,41 @@ export default function Layout() {
             updateUserAuth()
         }
 
-        let eventSource = new EventSource("/api/events")
-
-        eventSource.addEventListener("create_game", (e) => {
-            EventManager.publish(Events.gameCreated, {
-                game: CreateGameEvent.parse(JSON.parse(e.data)).create_game,
-            } satisfies GameCreatedData)
-        })
-
-        eventSource.addEventListener("remove_game", (e) => {
-            EventManager.publish(Events.gameRemoved, {
-                game: RemoveGameEvent.parse(JSON.parse(e.data)).remove_game,
-            } satisfies GameRemovedData)
-        })
-
         return () => {
             if (timer !== null) clearTimeout(timer)
-            eventSource.close()
         }
     }, [cookies, loading])
+
+    useEffect(() => {
+        let eventSource: EventSource | undefined
+
+        if (!loading) {
+            eventSource = new EventSource("/api/events")
+
+            eventSource.addEventListener("create_game", (e) => {
+                EventManager.publish(Events.gameCreated, {
+                    game: CreateGameEvent.parse(JSON.parse(e.data)).create_game,
+                } satisfies GameCreatedData)
+            })
+
+            eventSource.addEventListener("remove_game", (e) => {
+                EventManager.publish(Events.gameRemoved, {
+                    game: RemoveGameEvent.parse(JSON.parse(e.data)).remove_game,
+                } satisfies GameRemovedData)
+            })
+
+            eventSource.addEventListener("process_hits", (e) => {
+                EventManager.publish(
+                    Events.hitsProgressUpdate,
+                    ProcessHitsEvent.parse(JSON.parse(e.data)).process_hits,
+                )
+            })
+        }
+
+        return () => {
+            if (eventSource) eventSource.close()
+        }
+    }, [loading])
 
     useEffect(() => {
         document.documentElement.lang = language

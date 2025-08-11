@@ -33,6 +33,10 @@ creator: creator
 dark: Dark
 deleteAccount: Delete account
 dontIntercept: Don't intercept
+downloaded_one: "{{hits}} downloaded"
+downloaded_other: "{{hits}} downloaded"
+downloading_one: "{{hits}} downloading"
+downloading_other: "{{hits}} downloading"
 error: Error
 features: Features
 featuresList: >
@@ -85,6 +89,11 @@ hitRevealedBelonging: >-
     <0>{{player}}</0> is right! This is <1>{{title}}</1> by <2>{{artist}}</2>
     from <3>{{year}}</3>. You might know this song from <4>{{belongs_to}}</4>.
     You can now play it at full length.
+hitStatusFinishedMessage_one: "{{hits}} is now available."
+hitStatusFinishedMessage_other: "{{hits}} are now available."
+hitStatusFinishedTitle: "Hit status: finished"
+hitStatusProcessingMessage: "{{downloading}}, {{processing}}, {{downloaded}}"
+hitStatusProcessingTitle: "Hit status: preparing"
 hitUnknown: The hit is currently unknown, you'll have to wait for it to be revealed.
 hit_one: Hit
 hit_other: Hits
@@ -190,6 +199,8 @@ player_one: Player
 player_other: Players
 privateGame: Private game
 privateGameShortcut: Alt+Shift+R
+processing_one: "{{hits}} processing"
+processing_other: "{{hits}} processing"
 publicGame: Public game
 publicGameShortcut: Alt+Shift+U
 randomPacksLabel: Select random packs

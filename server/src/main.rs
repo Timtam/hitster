@@ -46,6 +46,7 @@ extern crate rocket;
 pub enum GlobalEvent {
     CreateGame(GamePayload),
     ProcessHits {
+        available: usize,
         downloading: usize,
         processing: usize,
     },
@@ -113,7 +114,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .attach(MergeDbService::default())
         .attach(HitDownloadService::default())
         .attach(CachedCompression::path_suffix_fairing(
-            CachedCompression::static_paths(vec![".js", ".js", ".html", ".htm", ".json", ".mp3"]),
+            CachedCompression::static_paths(vec![".js", ".html", ".htm", ".json", ".opus"]),
         ))
         .attach(UserCleanupService::default())
         .mount("/", routes![index, files,])

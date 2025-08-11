@@ -2,7 +2,7 @@ pub mod games;
 pub mod hits;
 pub mod users;
 
-use crate::GlobalEvent;
+use crate::{GlobalEvent, services::ServiceStore};
 use rocket::{
     Shutdown, State,
     response::stream::{Event, EventStream},
@@ -13,8 +13,23 @@ use rocket::{
 };
 
 #[get("/events")]
-pub async fn events(queue: &State<Sender<GlobalEvent>>, mut end: Shutdown) -> EventStream![] {
+pub async fn events(
+    svc: &State<ServiceStore>,
+    queue: &State<Sender<GlobalEvent>>,
+    mut end: Shutdown,
+) -> EventStream![] {
+    let hs = svc.hit_service();
     let mut rx = queue.subscribe();
+
+    let available = hs.lock().get_hits().len();
+    let downloading = hs.lock().downloading();
+    let processing = hs.lock().processing();
+    let _ = queue.send(GlobalEvent::ProcessHits {
+        available,
+        downloading,
+        processing,
+    });
+
     EventStream! {
         loop {
             let msg = select! {

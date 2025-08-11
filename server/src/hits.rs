@@ -1,10 +1,13 @@
 use crate::{GlobalEvent, HitsterConfig, services::ServiceStore};
-use crossbeam_channel::unbounded;
+use async_process::Command;
 use hitster_core::{Hit, HitsterData, Pack};
 use rocket::{
     Orbit, Rocket,
     fairing::{Fairing, Info, Kind},
-    tokio::sync::broadcast::Sender,
+    tokio::{
+        select,
+        sync::broadcast::{Sender, channel, error::RecvError},
+    },
 };
 use rocket_db_pools::Database;
 use rocket_okapi::okapi::schemars::JsonSchema;
@@ -16,7 +19,6 @@ use std::{
     env,
     fs::{create_dir_all, read_dir, remove_file},
     path::{Path, PathBuf},
-    process::Command,
     sync::{Arc, OnceLock},
 };
 use time::OffsetDateTime;
@@ -78,6 +80,7 @@ pub fn get_hitster_data() -> &'static HitsterData {
     })
 }
 
+#[derive(Clone, Debug)]
 pub struct DownloadHitData {
     in_file: PathBuf,
     hit: Hit,
@@ -98,17 +101,18 @@ impl Fairing for HitDownloadService {
     async fn on_liftoff(&self, rocket: &Rocket<Orbit>) {
         let db = HitsterConfig::fetch(rocket).unwrap().0.clone();
         let hit_service = Arc::new(rocket.state::<ServiceStore>().unwrap().hit_service());
-        let (dl_s, dl_r) = unbounded::<Hit>();
-        let (process_s, process_r) = unbounded::<DownloadHitData>();
+        let dl_sender = channel::<Hit>(100000).0;
+        let process_sender = channel::<DownloadHitData>(100000).0;
         let event_sender = Arc::new(rocket.state::<Sender<GlobalEvent>>().unwrap().clone());
         let _ = create_dir_all(Hit::download_dir().as_str());
 
         hit_service
             .lock()
-            .set_download_info(dl_s.clone(), dl_r.clone(), process_r.clone());
+            .set_download_info(dl_sender.clone(), process_sender.clone());
 
         rocket::tokio::spawn({
             let db = db.clone();
+            let dl_sender = dl_sender.clone();
             let event_sender = Arc::clone(&event_sender);
             let hit_service = Arc::clone(&hit_service);
             async move {
@@ -215,10 +219,12 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             .execute(&db)
                             .await;
                         }
-                        let _ = dl_s.send(hit);
+                        let _ = dl_sender.send(hit);
+                        let available = hit_service.lock().get_hits().len();
                         let downloading = hit_service.lock().downloading();
                         let processing = hit_service.lock().processing();
                         let _ = event_sender.send(GlobalEvent::ProcessHits {
+                            available,
                             downloading,
                             processing,
                         });
@@ -236,13 +242,32 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
         });
 
         rocket::tokio::spawn({
+            let dl_sender = dl_sender.clone();
             let event_sender = Arc::clone(&event_sender);
             let hit_service = Arc::clone(&hit_service);
+            let process_sender = process_sender.clone();
             async move {
                 rocket::info!("Starting background download of hits");
+                let mut rx = dl_sender.subscribe();
 
-                while let Ok(hit) = dl_r.recv() {
+                loop {
+                    let hit = select! {
+                        hit = rx.recv() => match hit {
+                            Ok(hit) => hit,
+                            Err(RecvError::Closed) => break,
+                            Err(RecvError::Lagged(_)) => continue,
+                        },
+                    };
+
                     hit_service.lock().set_downloading(true);
+                    let available = hit_service.lock().get_hits().len();
+                    let downloading = hit_service.lock().downloading();
+                    let processing = hit_service.lock().processing();
+                    let _ = event_sender.send(GlobalEvent::ProcessHits {
+                        available,
+                        downloading,
+                        processing,
+                    });
                     #[cfg(feature = "native_dl")]
                     {
                         use filesize::PathExt;
@@ -281,11 +306,13 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                     remove_file(&in_file).unwrap();
                                 }
                             } else {
-                                let _ = process_s.send(DownloadHitData { in_file, hit });
-                                hit_service.lock().set_downloading(!dl_r.is_empty());
+                                let _ = process_sender.send(DownloadHitData { in_file, hit });
+                                hit_service.lock().set_downloading(!dl_sender.is_empty());
+                                let available = hit_service.lock().get_hits().len();
                                 let downloading = hit_service.lock().downloading();
                                 let processing = hit_service.lock().processing();
                                 let _ = event_sender.send(GlobalEvent::ProcessHits {
+                                    available,
                                     downloading,
                                     processing,
                                 });
@@ -307,32 +334,33 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             .args(["--extractor-args", "youtube:player-client=default,mweb"])
                             .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
 
-                        let output_res =
-                            command.output().expect("Failed to execute ffmpeg process!");
+                        let output = command.output().await;
 
-                        if !output_res.status.success() {
+                        if let Ok(ref output_res) = output
+                            && !output_res.status.success()
+                        {
                             rocket::warn!(
                                 "Error downloading hit with yt-dlp: {artist}: {title}, error: {error}",
                                 artist = hit.artist,
                                 title = hit.title,
                                 error = String::from_utf8_lossy(&output_res.stderr)
                             );
-                            hit_service.lock().set_downloading(!dl_r.is_empty());
-                            let downloading = hit_service.lock().downloading();
-                            let processing = hit_service.lock().processing();
-                            let _ = event_sender.send(GlobalEvent::ProcessHits {
-                                downloading,
-                                processing,
-                            });
-                            continue;
+                        } else if output.is_err() {
+                            rocket::warn!(
+                                "error when trying to run yt-dlp. Maybe it isn't installed?"
+                            );
+                        } else {
+                            process_sender
+                                .send(DownloadHitData { in_file, hit })
+                                .unwrap();
                         }
-
-                        process_s.send(DownloadHitData { in_file, hit }).unwrap();
                     }
-                    hit_service.lock().set_downloading(!dl_r.is_empty());
+                    hit_service.lock().set_downloading(!dl_sender.is_empty());
+                    let available = hit_service.lock().get_hits().len();
                     let downloading = hit_service.lock().downloading();
                     let processing = hit_service.lock().processing();
                     let _ = event_sender.send(GlobalEvent::ProcessHits {
+                        available,
                         downloading,
                         processing,
                     });
@@ -344,9 +372,28 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
             let db = db.clone();
             let event_sender = Arc::clone(&event_sender);
             let hit_service = Arc::clone(&hit_service);
+            let process_sender = process_sender.clone();
             async move {
-                while let Ok(hit_data) = process_r.recv() {
+                let mut rx = process_sender.subscribe();
+
+                loop {
+                    let hit_data = select! {
+                        hit_data = rx.recv() => match hit_data {
+                            Ok(hit_data) => hit_data,
+                            Err(RecvError::Closed) => break,
+                            Err(RecvError::Lagged(_)) => continue,
+                        },
+                    };
+
                     hit_service.lock().set_processing(true);
+                    let available = hit_service.lock().get_hits().len();
+                    let downloading = hit_service.lock().downloading();
+                    let processing = hit_service.lock().processing();
+                    let _ = event_sender.send(GlobalEvent::ProcessHits {
+                        available,
+                        downloading,
+                        processing,
+                    });
                     if !hit_data.hit.exists() {
                         let out_file = Path::new(&Hit::download_dir()).join(format!(
                             "{}_{}.mp3",
@@ -367,7 +414,10 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             .args(["-t", "-18.0"])
                             .arg("-vn");
 
-                        let _ = command.output().expect("Failed to execute ffmpeg process!");
+                        let _ = command
+                            .output()
+                            .await
+                            .expect("Failed to execute ffmpeg process!");
 
                         remove_file(hit_data.in_file).unwrap();
                     }
@@ -379,10 +429,14 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     .execute(&db)
                     .await;
                     hit_service.lock().insert_hit(hit_data.hit);
-                    hit_service.lock().set_processing(!process_r.is_empty());
+                    hit_service
+                        .lock()
+                        .set_processing(!process_sender.is_empty());
+                    let available = hit_service.lock().get_hits().len();
                     let downloading = hit_service.lock().downloading();
                     let processing = hit_service.lock().processing();
                     let _ = event_sender.send(GlobalEvent::ProcessHits {
+                        available,
                         downloading,
                         processing,
                     });
