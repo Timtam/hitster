@@ -1,10 +1,13 @@
-use crate::{HitsterConfig, responses::MessageResponse, services::ServiceStore};
+use crate::{
+    GlobalEvent, HitsterConfig, games::GameMode, responses::MessageResponse, services::ServiceStore,
+};
 use rocket::{
     Data, State,
     fairing::{Fairing, Info, Kind},
     http::{CookieJar, Status},
     request::{self, FromRequest, Outcome, Request},
     serde::json::Json,
+    tokio::sync::broadcast::Sender,
 };
 use rocket_db_pools::{Connection, sqlx};
 use rocket_okapi::{
@@ -200,6 +203,7 @@ impl Fairing for UserCleanupService {
 
     async fn on_request(&self, req: &mut Request<'_>, _: &mut Data<'_>) {
         let svc = req.guard::<&State<ServiceStore>>().await.unwrap();
+        let queue = req.guard::<&State<Sender<GlobalEvent>>>().await.unwrap();
         let usvc = svc.user_service();
         let gsvc = svc.game_service();
         let games = gsvc.lock();
@@ -209,6 +213,9 @@ impl Fairing for UserCleanupService {
             if users.cleanup_tokens(user.id) {
                 for game in games.get_all(Some(user)).iter() {
                     let _ = games.leave(&game.id, user, None);
+                    if games.get(&game.id, Some(user)).is_none() && game.mode == GameMode::Public {
+                        let _ = queue.send(GlobalEvent::RemoveGame(game.id.clone()));
+                    }
                 }
                 users.remove(user.id);
             }

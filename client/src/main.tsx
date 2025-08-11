@@ -7,7 +7,6 @@ import { RouterProvider, createBrowserRouter } from "react-router"
 import "./i18n"
 import "./index.css"
 import Layout from "./layout"
-import LayoutLoader from "./layout.loader"
 import ErrorPage from "./pages/error-page"
 import GameLoader from "./pages/game.loader"
 import Game from "./pages/game.page"
@@ -17,15 +16,12 @@ import LoginAction from "./pages/login.action"
 import Login from "./pages/login.page"
 import RegistrationAction from "./pages/registration.action"
 import Registration from "./pages/registration.page"
-import StatusLoader from "./pages/status.loader"
-import Status from "./pages/status.page"
 import { ToastsProvider } from "./toasts"
 
 const router = createBrowserRouter([
     {
         hydrateFallbackElement: <p>Loading...</p>,
         element: <Layout />,
-        loader: LayoutLoader,
         children: [
             {
                 element: <Lobby />,
@@ -49,11 +45,6 @@ const router = createBrowserRouter([
             },
         ],
         errorElement: <ErrorPage />,
-    },
-    {
-        element: <Status />,
-        path: "/status",
-        loader: StatusLoader,
     },
 ])
 

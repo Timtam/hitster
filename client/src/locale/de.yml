@@ -33,6 +33,10 @@ creator: Ersteller
 dark: Dunkel
 deleteAccount: Benutzerkonto löschen
 dontIntercept: Keine Vermutung äußern
+downloaded_one: "{{hits}} verfügbar"
+downloaded_other: "{{hits}} verfügbar"
+downloading_one: "{{hits}} wird heruntergeladen"
+downloading_other: "{{hits}} werden heruntergeladen"
 error: Fehler
 features: Funktionen
 featuresList: >
@@ -68,9 +72,6 @@ gameSettingsHitDuration: Wie viele Sekunden eines Hits werden zu jeder Spielrund
 gameSettingsHitGoal: Wie viele Hits muss ein Spieler erraten, um das Spiel zu gewinnen?
 gameSettingsNotCreator: Nur der Ersteller des Spiels kann es bearbeiten
 gameSettingsPacks: "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:"
-gameSettingsRememberHits: >-
-    Sollen Hits zwischen den Spielen gespeichert werden, damit so selten wie
-    möglich doppelte Hits erraten werden müssen?
 gameSettingsShortcut: Alt+Umschalt+E
 gameSettingsStartTokens: Wie viele Chips bekommt jeder Spieler zu Beginn des Spiels?
 game_one: Spiel
@@ -89,6 +90,11 @@ hitRevealedBelonging: >-
     <0>{{player}}</0> hat Recht! Das ist <1>{{title}}</1> von <2>{{artist}}</2>
     aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus <4>{{belongs_to}}</4>.
     Du kannst dir den Hit jetzt in voller Länge anhören.
+hitStatusFinishedMessage_one: "{{hits}} ist nun verfügbar."
+hitStatusFinishedMessage_other: "{{hits}} sind nun verfügbar."
+hitStatusFinishedTitle: "Hit-Status: abgeschlossen"
+hitStatusProcessingMessage: "{{downloading}}, {{processing}}, {{downloaded}}"
+hitStatusProcessingTitle: "Hit-Status: in Arbeit"
 hitUnknown: Der Hit ist derzeit unbekannt, du musst wohl warten, bis er aufgedeckt wird.
 hit_one: Hit
 hit_other: Hits
@@ -197,6 +203,8 @@ player_one: Spieler
 player_other: Spieler
 privateGame: Privates Spiel
 privateGameShortcut: Alt+Umschalt+R
+processing_one: "{{hits}} wird verarbeitet"
+processing_other: "{{hits}} werden verarbeitet"
 publicGame: Öffentliches Spiel
 publicGameShortcut: Alt+Umschalt+U
 randomPacksLabel: Wähle zufällige Packs aus

@@ -2,7 +2,6 @@ mod games;
 mod hits;
 mod users;
 
-use crate::hits::get_hitster_data;
 pub use games::GameService;
 pub use hits::HitService;
 use parking_lot::{MappedMutexGuard, Mutex, MutexGuard};
@@ -43,9 +42,8 @@ impl ServiceStore {
         let mut data = self.data.lock();
 
         if data.hit_service.is_none() {
-            data.hit_service.replace(ServiceHandle::new(HitService::new(
-                get_hitster_data().clone(),
-            )));
+            data.hit_service
+                .replace(ServiceHandle::new(HitService::default()));
         }
 
         data.hit_service.as_ref().cloned().unwrap()

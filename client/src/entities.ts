@@ -73,7 +73,6 @@ export const Game = z.object({
     hit: z.nullable(Hit),
     packs: z.array(z.string()),
     mode: z.nativeEnum(GameMode),
-    remember_hits: z.boolean(),
     last_scored: z.nullable(Player),
 })
 
@@ -90,7 +89,6 @@ export const GameSettings = z.object({
     hit_duration: z.optional(z.number()),
     goal: z.optional(z.number()),
     packs: z.optional(z.array(z.string())),
-    remember_hits: z.optional(z.boolean()),
 })
 
 export type GameSettings = z.infer<typeof GameSettings>
@@ -106,16 +104,38 @@ export const GameEvent = z.object({
 
 export type GameEvent = z.infer<typeof GameEvent>
 
+export const Pack = z.object({
+    id: z.string(),
+    name: z.string(),
+    hits: z.number(),
+})
+
+export type Pack = z.infer<typeof Pack>
+
 export const PacksResponse = z.object({
-    packs: z.record(z.string(), z.number()),
+    packs: z.array(Pack),
 })
 
 export type PacksResponse = z.infer<typeof PacksResponse>
 
-export const HitsStatus = z.object({
-    all: z.number(),
-    downloaded: z.number(),
-    finished: z.boolean(),
+export const CreateGameEvent = z.object({
+    create_game: Game,
 })
 
-export type HitsStatus = z.infer<typeof HitsStatus>
+export type CreateGameEvent = z.infer<typeof CreateGameEvent>
+
+export const RemoveGameEvent = z.object({
+    remove_game: z.string(),
+})
+
+export type RemoveGameEvent = z.infer<typeof RemoveGameEvent>
+
+export const ProcessHitsEvent = z.object({
+    process_hits: z.object({
+        available: z.number(),
+        downloading: z.number(),
+        processing: z.number(),
+    }),
+})
+
+export type ProcessHitsEvent = z.infer<typeof ProcessHitsEvent>

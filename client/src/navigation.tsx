@@ -1,12 +1,21 @@
+import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
 import NavDropdown from "react-bootstrap/NavDropdown"
 import Navbar from "react-bootstrap/Navbar"
+import Overlay from "react-bootstrap/Overlay"
+import Popover from "react-bootstrap/Popover"
 import { Trans, useTranslation } from "react-i18next"
+import {
+    BsDatabaseCheck,
+    BsDatabaseExclamation,
+    BsMenuButtonFill,
+} from "react-icons/bs"
 import { NavLink, useNavigate } from "react-router"
 import { User } from "./entities"
+import { Events, HitsProgressUpdateData } from "./events"
 import SettingsModal from "./modals/settings"
 import ShortcutsModal from "./modals/shortcuts"
 
@@ -15,7 +24,27 @@ export default function Navigation({ user }: { user: User | null }) {
     const { t } = useTranslation()
     const [showSettings, setShowSettings] = useState(false)
     const [showShortcuts, setShowShortcuts] = useState(false)
+    const [showHitsStatus, setShowHitsStatus] = useState(false)
+    const [hitsStatus, setHitsStatus] = useState<HitsProgressUpdateData>({
+        available: 0,
+        downloading: 0,
+        processing: 0,
+    })
     const [, setWelcome] = useLocalStorage("welcome")
+    const [popoverTarget, setPopoverTarget] = useState<any>(null)
+    const popoverRef = useRef(null)
+
+    useEffect(() => {
+        const unsubscribeHitsStatus = EventManager.subscribe(
+            Events.hitsProgressUpdate,
+            (e: HitsProgressUpdateData) => {
+                setHitsStatus(e)
+            },
+        )
+        return () => {
+            unsubscribeHitsStatus()
+        }
+    }, [])
 
     return (
         <>
@@ -33,7 +62,15 @@ export default function Navigation({ user }: { user: User | null }) {
                             navbarScroll
                             style={{ maxHeight: "100px" }}
                         >
-                            <NavDropdown className="me-2" title={t("mainMenu")}>
+                            <NavDropdown
+                                className="me-2"
+                                title={
+                                    <BsMenuButtonFill
+                                        size="2em"
+                                        title={t("mainMenu")}
+                                    />
+                                }
+                            >
                                 <Nav.Item>
                                     <Nav.Link as={NavLink} to="/">
                                         {t("gameLobby")}
@@ -116,6 +153,90 @@ export default function Navigation({ user }: { user: User | null }) {
                                     />
                                 </p>
                             </NavDropdown>
+                        </Nav>
+                        <Nav ref={popoverRef}>
+                            <Nav.Item>
+                                <Nav.Link
+                                    aria-expanded={showHitsStatus}
+                                    onClick={(e) => {
+                                        setShowHitsStatus(!showHitsStatus)
+                                        setPopoverTarget(e.target as any)
+                                    }}
+                                >
+                                    {hitsStatus.downloading > 0 ||
+                                    hitsStatus.processing > 0 ? (
+                                        <BsDatabaseExclamation
+                                            title={t(
+                                                "hitStatusProcessingTitle",
+                                            )}
+                                            size="2em"
+                                        />
+                                    ) : (
+                                        <BsDatabaseCheck
+                                            title={t("hitStatusFinishedTitle")}
+                                            size="2em"
+                                        />
+                                    )}
+                                </Nav.Link>
+                            </Nav.Item>
+                            <Overlay
+                                show={showHitsStatus}
+                                target={popoverTarget}
+                                placement="bottom"
+                                container={popoverRef}
+                                containerPadding={20}
+                            >
+                                <Popover id="hits-status-popover">
+                                    <Popover.Header as="h3">
+                                        {hitsStatus.downloading > 0 ||
+                                        hitsStatus.processing > 0
+                                            ? t("hitStatusProcessingTitle")
+                                            : t("hitStatusFinishedTitle")}
+                                    </Popover.Header>
+                                    <Popover.Body>
+                                        {hitsStatus.downloading > 0 ||
+                                        hitsStatus.processing > 0
+                                            ? t("hitStatusProcessingMessage", {
+                                                  downloading:
+                                                      hitsStatus.downloading.toString() +
+                                                      " " +
+                                                      t("downloading", {
+                                                          count: hitsStatus.downloading,
+                                                          hits: t("hit", {
+                                                              count: hitsStatus.downloading,
+                                                          }),
+                                                      }),
+                                                  processing:
+                                                      hitsStatus.processing.toString() +
+                                                      " " +
+                                                      t("processing", {
+                                                          count: hitsStatus.processing,
+                                                          hits: t("hit", {
+                                                              count: hitsStatus.processing,
+                                                          }),
+                                                      }),
+                                                  downloaded:
+                                                      hitsStatus.available.toString() +
+                                                      " " +
+                                                      t("downloaded", {
+                                                          count: hitsStatus.available,
+                                                          hits: t("hit", {
+                                                              count: hitsStatus.available,
+                                                          }),
+                                                      }),
+                                              })
+                                            : t("hitStatusFinishedMessage", {
+                                                  count: hitsStatus.available,
+                                                  hits:
+                                                      hitsStatus.available.toString() +
+                                                      " " +
+                                                      t("hit", {
+                                                          count: hitsStatus.available,
+                                                      }),
+                                              })}
+                                    </Popover.Body>
+                                </Popover>
+                            </Overlay>
                         </Nav>
                         <Nav className="me-auto"></Nav>
                         <Nav>

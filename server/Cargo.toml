@@ -12,7 +12,7 @@ default = ["native_dl"]
 
 [dependencies]
 argon2 = "0.5.3"
-crossbeam-channel = "0.5.15"
+async-process = "2.4.0"
 dotenvy = "0.15.7"
 filesize = { version = "0.2.0", optional = true }
 hitster_core = { path = "../core" }
@@ -34,6 +34,3 @@ serde_yml = { workspace = true }
 sqlx = { version = "0.7", default-features = false, features = ["migrate", "macros", "time", "uuid"] }
 time = { workspace = true }
 uuid = { workspace = true }
-
-[dev-dependencies]
-futures = "0.3.30"

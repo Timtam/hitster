@@ -90,12 +90,29 @@ export interface SlotSelectedData {
     unavailable: boolean
 }
 
+export interface GameCreatedData {
+    game: Game
+}
+
+export interface GameRemovedData {
+    game: String
+}
+
+export interface HitsProgressUpdateData {
+    available: number
+    downloading: number
+    processing: number
+}
+
 export enum Events {
     claimedHit = "Claimed hit",
+    gameCreated = "Game created",
     gameEnded = "Game ended",
+    gameRemoved = "Game removed",
     gameStarted = "Game started",
     guessed = "Guessed",
     hitRevealed = "Hit revealed",
+    hitsProgressUpdate = "Hits progress update",
     joinedGame = "Joined",
     leftGame = "Left",
     notification = "Notification",

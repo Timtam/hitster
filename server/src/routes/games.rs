@@ -1,13 +1,13 @@
 use crate::{
+    GlobalEvent,
     games::{
         ConfirmationPayload, CreateGamePayload, GameEvent, GameMode, GamePayload,
         GameSettingsPayload, GameState, SlotPayload,
     },
-    hits::DownloadingGuard,
     responses::{
-        AuthorizedServerBusyError, ClaimHitError, ConfirmSlotError, GamesResponse, GetGameError,
-        GuessSlotError, HitError, JoinGameError, LeaveGameError, MessageResponse, ServerBusyError,
-        SkipHitError, StartGameError, StopGameError, UpdateGameError,
+        ClaimHitError, ConfirmSlotError, GamesResponse, GetGameError, GuessSlotError, HitError,
+        JoinGameError, LeaveGameError, MessageResponse, SkipHitError, StartGameError,
+        StopGameError, UpdateGameError,
     },
     services::ServiceStore,
     users::User,
@@ -39,8 +39,8 @@ pub fn create_game(
     user: User,
     data: Option<Json<CreateGamePayload>>,
     serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Created<Json<GamePayload>>, AuthorizedServerBusyError> {
+    queue: &State<Sender<GlobalEvent>>,
+) -> Created<Json<GamePayload>> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
     let mode = if let Some(data) = data.as_ref() {
@@ -58,7 +58,11 @@ pub fn create_game(
             .unwrap_or(game);
     }
 
-    Ok(Created::new(format!("/games/{}", game.id)).body(Json((&game).into())))
+    if mode == GameMode::Public {
+        let _ = queue.send(GlobalEvent::CreateGame((&game).into()));
+    }
+
+    Created::new(format!("/games/{}", game.id)).body(Json((&game).into()))
 }
 
 /// Retrieve all currently known games
@@ -68,12 +72,8 @@ pub fn create_game(
 
 #[openapi(tag = "Games")]
 #[get("/games")]
-pub fn get_all_games(
-    user: Option<User>,
-    serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Json<GamesResponse>, ServerBusyError> {
-    Ok(Json(GamesResponse {
+pub fn get_all_games(user: Option<User>, serv: &State<ServiceStore>) -> Json<GamesResponse> {
+    Json(GamesResponse {
         games: serv
             .game_service()
             .lock()
@@ -81,7 +81,7 @@ pub fn get_all_games(
             .into_iter()
             .map(|g| (&g).into())
             .collect::<Vec<_>>(),
-    }))
+    })
 }
 
 #[openapi(tag = "Games")]
@@ -92,7 +92,6 @@ pub async fn join_game(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, JoinGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
@@ -126,11 +125,15 @@ pub async fn leave_game(
     player_id: PathBuf,
     user: User,
     serv: &State<ServiceStore>,
-    queue: &State<Sender<GameEvent>>,
-    _g: DownloadingGuard,
+    game_event_queue: &State<Sender<GameEvent>>,
+    global_event_queue: &State<Sender<GlobalEvent>>,
 ) -> Result<Json<MessageResponse>, LeaveGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
+    let old_mode = games
+        .get(game_id, Some(&user))
+        .map(|g| g.mode)
+        .unwrap_or(GameMode::Public);
 
     games
         .leave(
@@ -139,7 +142,7 @@ pub async fn leave_game(
             player_id.to_str().and_then(|p| Uuid::parse_str(p).ok()),
         )
         .map(|p| {
-            let _ = queue.send(GameEvent {
+            let _ = game_event_queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "leave".into(),
                 players: Some(vec![(&p).into()]),
@@ -149,9 +152,16 @@ pub async fn leave_game(
             let new_state = games
                 .get(game_id, Some(&user))
                 .map(|g| g.state)
-                .unwrap_or(GameState::Open);
+                .unwrap_or_else(|| {
+                    if old_mode == GameMode::Public {
+                        let _ =
+                            global_event_queue.send(GlobalEvent::RemoveGame(game_id.to_string()));
+                    }
 
-            let _ = queue.send(GameEvent {
+                    GameState::Open
+                });
+
+            let _ = game_event_queue.send(GameEvent {
                 game_id: game_id.into(),
                 event: "change_state".into(),
                 state: Some(new_state),
@@ -177,7 +187,6 @@ pub async fn start_game(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, StartGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
@@ -205,7 +214,6 @@ pub async fn stop_game(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, StopGameError> {
     serv.game_service()
         .lock()
@@ -237,7 +245,6 @@ pub fn get_game(
     game_id: &str,
     user: Option<User>,
     serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
 ) -> Result<Json<GamePayload>, GetGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
@@ -256,7 +263,6 @@ pub async fn events(
     game_id: String,
     queue: &State<Sender<GameEvent>>,
     mut end: Shutdown,
-    _g: DownloadingGuard,
 ) -> EventStream![] {
     let mut rx = queue.subscribe();
     EventStream! {
@@ -283,7 +289,6 @@ pub async fn hit(
     game_id: &str,
     hit_id: PathBuf,
     serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
 ) -> Result<NamedFile, HitError> {
     let hit = serv.game_service().lock().get_hit(
         game_id,
@@ -315,7 +320,6 @@ pub fn guess_slot(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, GuessSlotError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     let state = serv
@@ -343,7 +347,7 @@ pub fn guess_slot(
 
         if state != game.state {
             let last_scored = game.last_scored.clone();
-            let hit = game.hits_remaining.front().copied();
+            let hit = game.hits_remaining.front().cloned();
             let winner = serv.game_service().lock().get_winner(&game);
 
             if winner.is_some() {
@@ -359,7 +363,7 @@ pub fn guess_slot(
                     if game.state == GameState::Intercepting {
                         None
                     } else {
-                        Some(h.into())
+                        Some((&h).into())
                     }
                 }),
                 last_scored: last_scored.map(|p| (&p).into()),
@@ -383,7 +387,6 @@ pub fn confirm_slot(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, ConfirmSlotError> {
     serv.game_service()
         .lock()
@@ -412,7 +415,6 @@ pub fn skip_hit(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, SkipHitError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     serv.game_service()
@@ -427,7 +429,7 @@ pub fn skip_hit(
                     .iter()
                     .find(|p| p.id == player_id.unwrap_or(user.id))
                     .map(|p| vec![p.into()]),
-                hit: Some(hit.into()),
+                hit: Some((&hit).into()),
                 ..Default::default()
             });
 
@@ -446,7 +448,6 @@ pub fn claim_hit(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, ClaimHitError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     let res = serv.game_service().lock().claim(game_id, &user, player_id);
@@ -460,7 +461,7 @@ pub fn claim_hit(
                 .iter()
                 .find(|p| p.id == player_id.unwrap_or(user.id))
                 .map(|p| vec![p.into()]),
-            hit: Some(hit.into()),
+            hit: Some((&hit).into()),
             ..Default::default()
         });
 
@@ -494,7 +495,6 @@ pub fn update_game(
     user: User,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, UpdateGameError> {
     serv.game_service()
         .lock()

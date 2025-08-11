@@ -110,14 +110,23 @@ mod hitster_core {
             self.hits.values().collect::<Vec<_>>()
         }
 
+        pub fn insert_pack(&mut self, pack: Pack) {
+            self.packs.insert(pack.id, pack);
+        }
+
+        pub fn insert_hit(&mut self, hit: Hit) {
+            self.hits
+                .insert_many(vec![HitId::Id(hit.id), HitId::YtId(hit.yt_id.clone())], hit);
+        }
+
         pub fn get_packs(&self) -> Vec<&Pack> {
             self.packs.values().collect::<Vec<_>>()
         }
 
-        pub fn get_hits_for_pack(&self, pack: Uuid) -> Vec<&Hit> {
+        pub fn get_hits_for_packs(&self, packs: &[Uuid]) -> Vec<&Hit> {
             self.hits
                 .values()
-                .filter(|h| h.packs.contains(&pack))
+                .filter(|h| packs.iter().any(|p| h.packs.contains(p)))
                 .collect::<Vec<_>>()
         }
 
