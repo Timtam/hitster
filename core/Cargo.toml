@@ -4,8 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+bitflags = "2.9.1"
 multi_key_map = { workspace = true }
 natord = "1.0.9"
 serde = { workspace = true }
+serde_json = { workspace = true }
+sqlx = { workspace = true }
 time = { workspace = true }
 uuid = { workspace = true }

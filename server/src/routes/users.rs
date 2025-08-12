@@ -2,12 +2,13 @@ use crate::{
     HitsterConfig,
     responses::{GetUserError, MessageResponse, RegisterUserError, UserLoginError, UsersResponse},
     services::ServiceStore,
-    users::{Token, User, UserCookie, UserLoginPayload},
+    users::{UserAuthenticator, UserCookie, UserLoginPayload, UserPayload},
 };
 use argon2::{
     Argon2,
     password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString, rand_core::OsRng},
 };
+use hitster_core::{Permissions, Token, User};
 use petname::{Generator, Petnames};
 use rand::{RngCore, SeedableRng, rng};
 use rand_chacha::ChaCha8Rng;
@@ -40,6 +41,7 @@ fn generate_virtual_user(svc: &ServiceStore) -> (User, Token) {
         r#virtual: true,
         tokens: vec![],
         password: "".into(),
+        permissions: Permissions::default(),
     };
 
     let t = Token {
@@ -188,20 +190,11 @@ async fn handle_existing_token(
 
     let name = user.name.as_str();
 
-    if let Some(mut u) = sqlx::query!("SELECT * FROM users where name = $1", name)
+    if let Some(mut u) = sqlx::query_as::<_, User>("SELECT * FROM users WHERE name = ?")
+        .bind(name)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
-        .map(|user| User {
-            id: Uuid::parse_str(&user.id).unwrap(),
-            name: user.name,
-            password: user.password,
-            r#virtual: false,
-            tokens: user
-                .tokens
-                .map(|t| serde_json::from_str::<Vec<Token>>(&t).unwrap())
-                .unwrap_or_default(),
-        })
     {
         // user exists within the db
 
@@ -309,7 +302,13 @@ async fn handle_existing_token(
 #[get("/users")]
 pub fn get_all(serv: &State<ServiceStore>) -> Json<UsersResponse> {
     Json(UsersResponse {
-        users: serv.user_service().lock().get_all(),
+        users: serv
+            .user_service()
+            .lock()
+            .get_all()
+            .iter()
+            .map(|u| u.into())
+            .collect::<Vec<_>>(),
     })
 }
 
@@ -320,10 +319,10 @@ pub fn get_all(serv: &State<ServiceStore>) -> Json<UsersResponse> {
 
 #[openapi(tag = "Users")]
 #[get("/users/<user_id>")]
-pub fn get(user_id: &str, serv: &State<ServiceStore>) -> Result<Json<User>, GetUserError> {
+pub fn get(user_id: &str, serv: &State<ServiceStore>) -> Result<Json<UserPayload>, GetUserError> {
     if let Ok(u) = Uuid::parse_str(user_id) {
         match serv.user_service().lock().get_by_id(u) {
-            Some(u) => Ok(Json(u)),
+            Some(u) => Ok(Json((&u).into())),
             None => Err(GetUserError {
                 message: "user id not found".into(),
                 http_status_code: 404,
@@ -345,11 +344,11 @@ pub fn get(user_id: &str, serv: &State<ServiceStore>) -> Result<Json<User>, GetU
 #[post("/users/login", format = "json", data = "<credentials>")]
 pub async fn login(
     credentials: Json<UserLoginPayload>,
-    user: Option<User>,
+    user: Option<UserAuthenticator>,
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
-) -> Result<Json<User>, UserLoginError> {
+) -> Result<Json<UserPayload>, UserLoginError> {
     let u = serv
         .user_service()
         .lock()
@@ -371,7 +370,7 @@ pub async fn login(
             set_cookies(&u, &t, cookies);
 
             if let Some(cu) = user {
-                serv.user_service().lock().remove(cu.id);
+                serv.user_service().lock().remove(cu.0.id);
             }
 
             u.tokens.push(t);
@@ -390,7 +389,7 @@ pub async fn login(
 
             serv.user_service().lock().add(u.clone());
 
-            return Ok(Json(u));
+            return Ok(Json((&u).into()));
         } else {
             return Err(UserLoginError {
                 message: "incorrect user credentials".into(),
@@ -401,20 +400,11 @@ pub async fn login(
 
     let name = credentials.username.as_str();
 
-    if let Some(mut u) = sqlx::query!("SELECT * FROM users where name = $1", name)
+    if let Some(mut u) = sqlx::query_as::<_, User>("SELECT * FROM users WHERE name = ?")
+        .bind(name)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
-        .map(|user| User {
-            id: Uuid::parse_str(&user.id).unwrap(),
-            name: user.name,
-            password: user.password,
-            r#virtual: false,
-            tokens: user
-                .tokens
-                .map(|t| serde_json::from_str::<Vec<Token>>(&t).unwrap())
-                .unwrap_or_default(),
-        })
     {
         let password_hash = PasswordHash::new(&u.password).unwrap();
         if Argon2::default()
@@ -445,7 +435,7 @@ pub async fn login(
 
             serv.user_service().lock().add(u.clone());
 
-            return Ok(Json(u));
+            return Ok(Json((&u).into()));
         } else {
             return Err(UserLoginError {
                 message: "incorrect user credentials".into(),
@@ -468,7 +458,7 @@ pub async fn login(
 #[post("/users/register", format = "json", data = "<credentials>")]
 pub async fn register(
     mut credentials: Json<UserLoginPayload>,
-    mut user: User,
+    mut user: UserAuthenticator,
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     svc: &State<ServiceStore>,
@@ -482,7 +472,8 @@ pub async fn register(
 
     let name = credentials.username.as_str();
 
-    if sqlx::query!("SELECT * FROM users WHERE name = $1", name)
+    if sqlx::query_as::<_, User>("SELECT * FROM users WHERE name = ?")
+        .bind(name)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
@@ -492,33 +483,33 @@ pub async fn register(
             message: "username is already in use".into(),
             http_status_code: 409,
         })
-    } else if !user.r#virtual {
+    } else if !user.0.r#virtual {
         Err(RegisterUserError {
             message: "A user is already authenticated and registered.".into(),
             http_status_code: 405,
         })
-    } else if sqlx::query("INSERT INTO users (id, name, password, tokens) VALUES (?1, ?2, ?3, ?4)")
-        .bind(user.id.to_string())
+    } else if sqlx::query("INSERT INTO users (id, name, password, tokens) VALUES (?, ?, ?, ?)")
+        .bind(user.0.id.to_string())
         .bind(credentials.username.as_str())
         .bind(credentials.password.as_str())
-        .bind(serde_json::to_string(&user.tokens).unwrap())
+        .bind(serde_json::to_string(&user.0.tokens).unwrap())
         .execute(&mut **db)
         .await
         .is_ok()
     {
-        user.name.clone_from(&credentials.username);
-        user.password.clone_from(&credentials.password);
-        user.r#virtual = false;
+        user.0.name.clone_from(&credentials.username);
+        user.0.password.clone_from(&credentials.password);
+        user.0.r#virtual = false;
 
         let token = cookies
             .get_private("id")
             .map(|c| c.value().to_string())
-            .and_then(|t| user.tokens.iter().find(|ti| ti.token == t))
+            .and_then(|t| user.0.tokens.iter().find(|ti| ti.token == t))
             .unwrap();
 
-        set_cookies(&user, token, cookies);
+        set_cookies(&user.0, token, cookies);
 
-        svc.user_service().lock().add(user);
+        svc.user_service().lock().add(user.0);
 
         Ok(Json(MessageResponse {
             message: "user registered".into(),
@@ -539,15 +530,15 @@ pub async fn register(
 #[openapi(tag = "Users")]
 #[post("/users/logout")]
 pub async fn logout(
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     cookies: &CookieJar<'_>,
 ) -> Json<MessageResponse> {
     let game_srv = serv.game_service();
     let games = game_srv.lock();
 
-    for game in games.get_all(Some(&user)).iter() {
-        let _ = games.leave(&game.id, &user, None);
+    for game in games.get_all(Some(&user.0)).iter() {
+        let _ = games.leave(&game.id, &user.0, None);
     }
 
     let user_srv = serv.user_service();
@@ -555,7 +546,7 @@ pub async fn logout(
 
     cookies.remove_private("id");
     cookies.remove("user");
-    users.remove(user.id);
+    users.remove(user.0.id);
 
     Json(MessageResponse {
         message: "logged out".into(),

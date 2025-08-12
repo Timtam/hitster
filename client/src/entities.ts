@@ -1,10 +1,18 @@
 import { z } from "zod"
 
+export const Permissions = z.object({
+    can_write_hits: z.boolean(),
+    can_write_packs: z.boolean(),
+})
+
+export type Permissions = z.infer<typeof Permissions>
+
 export const User = z.object({
     name: z.string(),
     id: z.string(),
     virtual: z.boolean(),
     valid_until: z.coerce.date(),
+    permissions: Permissions,
 })
 
 export type User = z.infer<typeof User>

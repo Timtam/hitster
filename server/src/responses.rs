@@ -1,6 +1,6 @@
 use crate::{
     games::{GamePayload, PackPayload},
-    users::User,
+    users::UserPayload,
 };
 use rocket::{
     http::{ContentType, Status},
@@ -738,7 +738,7 @@ pub struct MessageResponse {
 
 #[derive(Serialize, JsonSchema)]
 pub struct UsersResponse {
-    pub users: Vec<User>,
+    pub users: Vec<UserPayload>,
 }
 
 #[derive(Serialize, JsonSchema)]

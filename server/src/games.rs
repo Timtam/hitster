@@ -1,5 +1,5 @@
-use crate::{hits::HitPayload, users::User};
-use hitster_core::Hit;
+use crate::hits::HitPayload;
+use hitster_core::{Hit, User};
 use rocket::serde::json::Json;
 use rocket_okapi::okapi::{schemars, schemars::JsonSchema};
 use serde::{Deserialize, Serialize};

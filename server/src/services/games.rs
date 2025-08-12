@@ -5,9 +5,8 @@ use crate::{
         SkipHitError, StartGameError, StopGameError, UpdateGameError,
     },
     services::{HitService, ServiceHandle},
-    users::User,
 };
-use hitster_core::Hit;
+use hitster_core::{Hit, User};
 use itertools::sorted;
 use rand::{
     distr::{Alphanumeric, SampleString},
