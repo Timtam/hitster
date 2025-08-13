@@ -488,18 +488,22 @@ pub async fn register(
             message: "A user is already authenticated and registered.".into(),
             http_status_code: 405,
         })
-    } else if sqlx::query("INSERT INTO users (id, name, password, tokens) VALUES (?, ?, ?, ?)")
-        .bind(user.0.id.to_string())
-        .bind(credentials.username.as_str())
-        .bind(credentials.password.as_str())
-        .bind(serde_json::to_string(&user.0.tokens).unwrap())
-        .execute(&mut **db)
-        .await
-        .is_ok()
+    } else if sqlx::query(
+        "INSERT INTO users (id, name, password, tokens, permissions) VALUES (?, ?, ?, ?, ?)",
+    )
+    .bind(user.0.id.to_string())
+    .bind(credentials.username.as_str())
+    .bind(credentials.password.as_str())
+    .bind(serde_json::to_string(&user.0.tokens).unwrap())
+    .bind(0)
+    .execute(&mut **db)
+    .await
+    .is_ok()
     {
         user.0.name.clone_from(&credentials.username);
         user.0.password.clone_from(&credentials.password);
         user.0.r#virtual = false;
+        user.0.permissions = Permissions::from_bits(0).unwrap();
 
         let token = cookies
             .get_private("id")

@@ -2,7 +2,7 @@
 ARG NODE_VERSION=22
 
 # pot provider version
-ARG POT_PROVIDER_VERSION=1.1.0
+ARG POT_PROVIDER_VERSION=1.2.1
 
 # rust version
 ARG RUST_VERSION=1.88.0
@@ -11,7 +11,7 @@ ARG RUST_VERSION=1.88.0
 ARG S6_OVERLAY_VERSION=3.2.1.0
 
 # yt-dlp version
-ARG YT_DLP_BUILD_VERSION=2025.07.21
+ARG YT_DLP_BUILD_VERSION=2025.08.11
 
 FROM node:${NODE_VERSION} AS pot_provider_build_image
 
@@ -21,7 +21,7 @@ ENV POT_PROVIDER_VERSION ${POT_PROVIDER_VERSION}
 
 RUN git clone --single-branch --branch ${POT_PROVIDER_VERSION} https://github.com/Brainicism/bgutil-ytdlp-pot-provider.git /pot-provider && \
     cd /pot-provider/server && \
-    yarn install --frozen-lockfile && \
+    npm install && \
     npx tsc
 
 FROM node:${NODE_VERSION} AS client_build_image
