@@ -1,6 +1,8 @@
 mod hitster_core {
+    use bitflags::bitflags;
     use multi_key_map::MultiKeyMap;
     use serde::{Deserialize, Serialize};
+    use sqlx::{FromRow, Row, sqlite::SqliteRow};
     use std::{
         cmp::PartialEq,
         collections::HashMap,
@@ -180,6 +182,69 @@ mod hitster_core {
             }
         }
     }
+
+    bitflags! {
+        #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+        pub struct Permissions: u32 {
+            const CAN_WRITE_HITS = 0b01;
+            const CAN_WRITE_PACKS = 0b10;
+        }
+    }
+
+    impl Default for Permissions {
+        fn default() -> Self {
+            Self::from_bits(0).unwrap()
+        }
+    }
+
+    #[derive(Deserialize, Serialize, Clone, Eq, PartialEq, Debug, Hash)]
+    pub struct Token {
+        pub token: String,
+        #[serde(with = "time::serde::rfc3339")]
+        pub expiration_time: OffsetDateTime,
+        #[serde(with = "time::serde::rfc3339")]
+        pub refresh_time: OffsetDateTime,
+    }
+
+    impl Default for Token {
+        fn default() -> Self {
+            Self {
+                token: "".into(),
+                expiration_time: OffsetDateTime::now_utc(),
+                refresh_time: OffsetDateTime::now_utc(),
+            }
+        }
+    }
+
+    #[derive(Clone, Eq, PartialEq, Debug, Hash)]
+    pub struct User {
+        pub id: Uuid,
+        pub name: String,
+        pub password: String,
+        pub tokens: Vec<Token>,
+        pub r#virtual: bool,
+        pub permissions: Permissions,
+    }
+
+    impl FromRow<'_, SqliteRow> for User {
+        fn from_row(row: &SqliteRow) -> sqlx::Result<Self> {
+            Ok(Self {
+                id: Uuid::parse_str(&row.try_get::<String, &str>("id")?).unwrap(),
+                name: row.try_get("name")?,
+                password: row.try_get("password")?,
+                r#virtual: false,
+                tokens: serde_json::from_str::<Vec<Token>>(
+                    &row.try_get::<String, &str>("tokens")
+                        .unwrap_or(String::from("[]")),
+                )
+                .unwrap(),
+                permissions: Permissions::from_bits(row.try_get::<u32, &str>("permissions")?)
+                    .unwrap(),
+            })
+        }
+    }
 }
 
-pub use hitster_core::{Hit, HitId, HitsterData, HitsterFileFormat, Pack};
+pub use hitster_core::{
+    Hit, HitId, HitsterData, HitsterFileFormat, Pack, Permissions, Token, User,
+};

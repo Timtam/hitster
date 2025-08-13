@@ -55,6 +55,7 @@ export default function Layout() {
                     id: cookies.user.id,
                     virtual: cookies.user.virtual,
                     valid_until: cookies.user.valid_until,
+                    permissions: cookies.user.permissions,
                 })
 
                 setUser(user)

@@ -1,6 +1,7 @@
 use crate::{
     GlobalEvent, HitsterConfig, games::GameMode, responses::MessageResponse, services::ServiceStore,
 };
+use hitster_core::{Permissions, User};
 use rocket::{
     Data, State,
     fairing::{Fairing, Info, Kind},
@@ -26,38 +27,42 @@ pub struct UserLoginPayload {
     pub password: String,
 }
 
-#[derive(Deserialize, Serialize, Clone, Eq, PartialEq, Debug, Hash)]
-pub struct Token {
-    pub token: String,
-    #[serde(with = "time::serde::rfc3339")]
-    pub expiration_time: OffsetDateTime,
-    #[serde(with = "time::serde::rfc3339")]
-    pub refresh_time: OffsetDateTime,
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize, JsonSchema, Hash)]
+pub struct PermissionsPayload {
+    pub can_write_hits: bool,
+    pub can_write_packs: bool,
 }
 
-impl Default for Token {
-    fn default() -> Self {
+impl From<&Permissions> for PermissionsPayload {
+    fn from(p: &Permissions) -> Self {
         Self {
-            token: "".into(),
-            expiration_time: OffsetDateTime::now_utc(),
-            refresh_time: OffsetDateTime::now_utc(),
+            can_write_hits: p.contains(Permissions::CAN_WRITE_HITS),
+            can_write_packs: p.contains(Permissions::CAN_WRITE_PACKS),
         }
     }
 }
 
-#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Hash)]
-pub struct User {
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema)]
+pub struct UserPayload {
     pub id: Uuid,
     pub name: String,
-    #[serde(skip)]
-    pub password: String,
-    #[serde(skip)]
-    pub tokens: Vec<Token>,
     pub r#virtual: bool,
 }
 
+impl From<&User> for UserPayload {
+    fn from(user: &User) -> Self {
+        Self {
+            id: user.id,
+            name: user.name.clone(),
+            r#virtual: user.r#virtual,
+        }
+    }
+}
+
+pub struct UserAuthenticator(pub User);
+
 #[rocket::async_trait]
-impl<'r> FromRequest<'r> for User {
+impl<'r> FromRequest<'r> for UserAuthenticator {
     type Error = Json<MessageResponse>;
 
     async fn from_request(req: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
@@ -87,7 +92,7 @@ impl<'r> FromRequest<'r> for User {
                     .find(|t| &t.token == token.as_ref().unwrap())
                 {
                     if t.expiration_time >= OffsetDateTime::now_utc() {
-                        return Outcome::Success(u);
+                        return Outcome::Success(UserAuthenticator(u));
                     }
                 }
 
@@ -111,22 +116,12 @@ impl<'r> FromRequest<'r> for User {
             }
 
             let name = user.name.as_str();
-            return sqlx::query!("SELECT * FROM users where name = $1", name)
+            return sqlx::query_as::<_, User>("SELECT * FROM users WHERE name = ?")
+                .bind(name)
                 .fetch_optional(&mut **db)
                 .await
                 .unwrap()
-                .and_then(|user| {
-                    let u = User {
-                        id: Uuid::parse_str(&user.id).unwrap(),
-                        name: user.name,
-                        password: user.password,
-                        r#virtual: false,
-                        tokens: user
-                            .tokens
-                            .map(|t| serde_json::from_str::<Vec<Token>>(&t).unwrap())
-                            .unwrap_or_default(),
-                    };
-
+                .and_then(|u| {
                     if let Some(t) = u
                         .tokens
                         .iter()
@@ -135,7 +130,7 @@ impl<'r> FromRequest<'r> for User {
                         if t.expiration_time >= OffsetDateTime::now_utc() {
                             serv.user_service().lock().add(u.clone());
 
-                            return Some(Outcome::Success(u));
+                            return Some(Outcome::Success(UserAuthenticator(u)));
                         }
                     }
                     None
@@ -159,7 +154,7 @@ impl<'r> FromRequest<'r> for User {
     }
 }
 
-impl OpenApiFromRequest<'_> for User {
+impl OpenApiFromRequest<'_> for UserAuthenticator {
     fn from_request_input(
         _gen: &mut OpenApiGenerator,
         _name: String,
@@ -176,6 +171,7 @@ pub struct UserCookie {
     pub r#virtual: bool,
     #[serde(with = "time::serde::rfc3339")]
     pub valid_until: OffsetDateTime,
+    pub permissions: PermissionsPayload,
 }
 
 impl From<&User> for UserCookie {
@@ -185,6 +181,7 @@ impl From<&User> for UserCookie {
             id: src.id,
             r#virtual: src.r#virtual,
             valid_until: OffsetDateTime::now_utc(),
+            permissions: (&src.permissions).into(),
         }
     }
 }

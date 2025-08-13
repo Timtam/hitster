@@ -10,7 +10,7 @@ use crate::{
         StopGameError, UpdateGameError,
     },
     services::ServiceStore,
-    users::User,
+    users::UserAuthenticator,
 };
 use rocket::{
     Shutdown, State,
@@ -36,7 +36,7 @@ use uuid::Uuid;
 #[openapi(tag = "Games")]
 #[post("/games", format = "json", data = "<data>")]
 pub fn create_game(
-    user: User,
+    user: UserAuthenticator,
     data: Option<Json<CreateGamePayload>>,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GlobalEvent>>,
@@ -49,11 +49,11 @@ pub fn create_game(
         GameMode::Public
     };
 
-    let mut game = games.add(&user, mode);
+    let mut game = games.add(&user.0, mode);
 
     if data.is_some() && data.as_ref().unwrap().settings.is_some() {
         game = games
-            .update(&game.id, &user, data.unwrap().settings.as_ref().unwrap())
+            .update(&game.id, &user.0, data.unwrap().settings.as_ref().unwrap())
             .ok()
             .unwrap_or(game);
     }
@@ -72,12 +72,15 @@ pub fn create_game(
 
 #[openapi(tag = "Games")]
 #[get("/games")]
-pub fn get_all_games(user: Option<User>, serv: &State<ServiceStore>) -> Json<GamesResponse> {
+pub fn get_all_games(
+    user: Option<UserAuthenticator>,
+    serv: &State<ServiceStore>,
+) -> Json<GamesResponse> {
     Json(GamesResponse {
         games: serv
             .game_service()
             .lock()
-            .get_all(user.as_ref())
+            .get_all(user.map(|u| u.0).as_ref())
             .into_iter()
             .map(|g| (&g).into())
             .collect::<Vec<_>>(),
@@ -89,7 +92,7 @@ pub fn get_all_games(user: Option<User>, serv: &State<ServiceStore>) -> Json<Gam
 pub async fn join_game(
     game_id: &str,
     player: PathBuf,
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, JoinGameError> {
@@ -99,7 +102,7 @@ pub async fn join_game(
     games
         .join(
             game_id,
-            &user,
+            &user.0,
             player
                 .to_str()
                 .and_then(|p| if !p.is_empty() { Some(p) } else { None }),
@@ -123,7 +126,7 @@ pub async fn join_game(
 pub async fn leave_game(
     game_id: &str,
     player_id: PathBuf,
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     game_event_queue: &State<Sender<GameEvent>>,
     global_event_queue: &State<Sender<GlobalEvent>>,
@@ -131,14 +134,14 @@ pub async fn leave_game(
     let game_svc = serv.game_service();
     let games = game_svc.lock();
     let old_mode = games
-        .get(game_id, Some(&user))
+        .get(game_id, Some(&user.0))
         .map(|g| g.mode)
         .unwrap_or(GameMode::Public);
 
     games
         .leave(
             game_id,
-            &user,
+            &user.0,
             player_id.to_str().and_then(|p| Uuid::parse_str(p).ok()),
         )
         .map(|p| {
@@ -150,7 +153,7 @@ pub async fn leave_game(
             });
 
             let new_state = games
-                .get(game_id, Some(&user))
+                .get(game_id, Some(&user.0))
                 .map(|g| g.state)
                 .unwrap_or_else(|| {
                     if old_mode == GameMode::Public {
@@ -166,7 +169,7 @@ pub async fn leave_game(
                 event: "change_state".into(),
                 state: Some(new_state),
                 players: games
-                    .get(game_id, Some(&user))
+                    .get(game_id, Some(&user.0))
                     .map(|g| g.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
                 ..Default::default()
             });
@@ -184,14 +187,14 @@ pub async fn leave_game(
 #[patch("/games/<game_id>/start")]
 pub async fn start_game(
     game_id: &str,
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, StartGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
-    games.start(game_id, &user).map(|g| {
+    games.start(game_id, &user.0).map(|g| {
         let _ = queue.send(GameEvent {
             game_id: game_id.into(),
             event: "change_state".into(),
@@ -211,13 +214,13 @@ pub async fn start_game(
 #[patch("/games/<game_id>/stop")]
 pub async fn stop_game(
     game_id: &str,
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, StopGameError> {
     serv.game_service()
         .lock()
-        .stop(game_id, Some(&user))
+        .stop(game_id, Some(&user.0))
         .map(|g| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
@@ -243,13 +246,13 @@ pub async fn stop_game(
 #[get("/games/<game_id>")]
 pub fn get_game(
     game_id: &str,
-    user: Option<User>,
+    user: Option<UserAuthenticator>,
     serv: &State<ServiceStore>,
 ) -> Result<Json<GamePayload>, GetGameError> {
     let game_svc = serv.game_service();
     let games = game_svc.lock();
 
-    match games.get(game_id, user.as_ref()) {
+    match games.get(game_id, user.map(|u| u.0).as_ref()) {
         Some(g) => Ok(Json((&g).into())),
         None => Err(GetGameError {
             message: "game id not found".into(),
@@ -317,7 +320,7 @@ pub fn guess_slot(
     game_id: &str,
     player_id: PathBuf,
     slot: Json<SlotPayload>,
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, GuessSlotError> {
@@ -325,13 +328,13 @@ pub fn guess_slot(
     let state = serv
         .game_service()
         .lock()
-        .get(game_id, Some(&user))
+        .get(game_id, Some(&user.0))
         .map(|g| g.state)
         .unwrap_or(GameState::Guessing);
     let game = serv
         .game_service()
         .lock()
-        .guess(game_id, &user, slot.id, player_id);
+        .guess(game_id, &user.0, slot.id, player_id);
 
     game.map(|mut game| {
         let _ = queue.send(GameEvent {
@@ -340,7 +343,7 @@ pub fn guess_slot(
             players: game
                 .players
                 .iter()
-                .find(|p| p.id == player_id.unwrap_or(user.id))
+                .find(|p| p.id == player_id.unwrap_or(user.0.id))
                 .map(|p| vec![p.into()]),
             ..Default::default()
         });
@@ -384,13 +387,13 @@ pub fn guess_slot(
 pub fn confirm_slot(
     game_id: &str,
     confirmation: Json<ConfirmationPayload>,
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, ConfirmSlotError> {
     serv.game_service()
         .lock()
-        .confirm(game_id, &user, confirmation.confirm)
+        .confirm(game_id, &user.0, confirmation.confirm)
         .map(|game| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
@@ -412,14 +415,14 @@ pub fn confirm_slot(
 pub fn skip_hit(
     game_id: &str,
     player_id: PathBuf,
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, SkipHitError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     serv.game_service()
         .lock()
-        .skip(game_id, &user, player_id)
+        .skip(game_id, &user.0, player_id)
         .map(|(game, hit)| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
@@ -427,7 +430,7 @@ pub fn skip_hit(
                 players: game
                     .players
                     .iter()
-                    .find(|p| p.id == player_id.unwrap_or(user.id))
+                    .find(|p| p.id == player_id.unwrap_or(user.0.id))
                     .map(|p| vec![p.into()]),
                 hit: Some((&hit).into()),
                 ..Default::default()
@@ -445,12 +448,15 @@ pub fn skip_hit(
 pub fn claim_hit(
     game_id: &str,
     player_id: PathBuf,
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, ClaimHitError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
-    let res = serv.game_service().lock().claim(game_id, &user, player_id);
+    let res = serv
+        .game_service()
+        .lock()
+        .claim(game_id, &user.0, player_id);
 
     res.map(|(mut game, hit)| {
         let _ = queue.send(GameEvent {
@@ -459,7 +465,7 @@ pub fn claim_hit(
             players: game
                 .players
                 .iter()
-                .find(|p| p.id == player_id.unwrap_or(user.id))
+                .find(|p| p.id == player_id.unwrap_or(user.0.id))
                 .map(|p| vec![p.into()]),
             hit: Some((&hit).into()),
             ..Default::default()
@@ -492,13 +498,13 @@ pub fn claim_hit(
 pub fn update_game(
     game_id: &str,
     settings: Json<GameSettingsPayload>,
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, UpdateGameError> {
     serv.game_service()
         .lock()
-        .update(game_id, &user, &settings)
+        .update(game_id, &user.0, &settings)
         .map(|_| {
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),

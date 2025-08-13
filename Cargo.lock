@@ -1590,6 +1590,7 @@ dependencies = [
  "regex-lite",
  "serde",
  "serde_yml",
+ "sqlx",
  "terminal-menu",
  "time",
  "uuid",
@@ -1628,9 +1629,12 @@ dependencies = [
 name = "hitster_core"
 version = "0.1.0"
 dependencies = [
+ "bitflags 2.9.1",
  "multi_key_map",
  "natord",
  "serde",
+ "serde_json",
+ "sqlx",
  "time",
  "uuid",
 ]
