@@ -235,6 +235,50 @@ Start by cloning this repository. Open a command line and navigate into the fold
   
 Please note that you'll need to specify a certain set of environment variables when running the application locally in order for it to start. You can find <a href="#environment-variables">the list of environment variables</a> below.
   
+### Creating the hitster database
+
+When trying to run the server, you might ask yourself, how do I get this hitster.sqlite file everyone is talking about? You might be seeing errors like these:
+
+```sh
+error: error returned from database: (code: 14) unable to open database file
+```
+
+All you need to do to fix this is provide an empty file, the server will populate all the necessary database info it needs. To do this, just create an empty text file and call it hitster.sqlite, or if on a Unix-based command line, use:
+
+```sh
+touch hitster.sqlite
+```
+
+### Creating an administrator account
+
+Chances are high you won't ever need an administrator account, as the game can be played without even registering a user. If you want to create your own packs or hits though, or fix already existing ones, you'll need to have at least one administrator account registered. You can easily do that with the help of the hitster cli tool.
+
+#### Local
+
+When running Hitster locally, run the following command:
+
+```sh
+cargo run -p hitster-cli -- users create -a <username>
+```
+
+Replace <username\> with the username of choice. You'll be prompted to input a password and your new user will be created. You should be able to login via the web interface and use this account to make changes to the Hitster database.
+
+#### Docker
+
+When running Hitster in Docker, you can run the following command to create a new administrative user:
+
+```sh
+docker run -v hitster.sqlite:/hitster.sqlite --entrypoint /hitster/cli tonironaldbarth/hitster:latest users create -a <username>
+```
+
+If running in Docker Compose, the command would look something like this:
+
+```sh
+docker compose run --entrypoint /hitster/cli hitster users create -a <username>
+```
+
+Replace <username\> with the username of choice. You'll be prompted to input a password and your new user will be created. You should be able to login via the web interface and use this account to make changes to the Hitster database.
+
 ### yt-dlp
 
 By default, the Hitster server will try to download songs from YouTube with the help of a rust-native library called rusty_ytdl. This requires less dependencies to be running alongside the Hitster server and thus is preferred when setting up Hitster locally. It however is also less reliable as it runs into YouTube blocking mechanisms more frequently. If you therefore want to use yt-dlp instead, you'll need to build the Hitster server with the yt_dl feature enabled. Navigate into the server directory and run:
@@ -248,6 +292,8 @@ This will enable yt-dlp support as a fallback for the rust-native way of downloa
 ```sh
 cargo run --no-default-features --features yt_dl
 ```
+
+This also is the default within the Docker container.
 
 ### Environment Variables
 

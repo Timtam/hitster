@@ -5,7 +5,7 @@ ARG NODE_VERSION=22
 ARG POT_PROVIDER_VERSION=1.2.1
 
 # rust version
-ARG RUST_VERSION=1.88.0
+ARG RUST_VERSION=1.89.0
 
 # s6-overlay version
 ARG S6_OVERLAY_VERSION=3.2.1.0
@@ -67,8 +67,10 @@ COPY ./server/Cargo.toml ./server/Cargo.toml
 
 # this build step will cache your dependencies
 RUN cargo build --release --no-default-features --features yt_dl && \
+    cargo build --release -p hitster-cli && \
     rm server/src/*.rs && \
-    rm core/src/*.rs
+    rm core/src/*.rs && \
+    rm cli/src/*.rs
 
 # copy your source tree
 COPY ./.sqlx ./.sqlx
@@ -76,11 +78,13 @@ COPY ./etc ./etc
 COPY ./server/migrations ./server/migrations
 COPY ./server/src ./server/src
 COPY ./core/src ./core/src
+COPY ./cli/src ./cli/src
 
 # build for release
 RUN rm ./target/release/deps/hitster* && \
     rm ./target/release/deps/libhitster* && \
-    SQLX_OFFLINE=true cargo build --release --no-default-features --features yt_dl
+    SQLX_OFFLINE=true cargo build --release --no-default-features --features yt_dl && \
+    cargo build --release -p hitster-cli
 
 # our final bases, platform-dependent
 
@@ -147,8 +151,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 
 ADD --chmod=777 https://github.com/yt-dlp/yt-dlp/releases/download/${YT_DLP_BUILD_VERSION}/yt-dlp /usr/local/bin/yt-dlp
 
-# copy the build artifact from the build stage
-COPY --from=server_build_image /hitster/target/release/hitster-server /hitster/server/hitster
+# copy the build artifacts from the build stage
+COPY --from=server_build_image /hitster/target/release/hitster-server /hitster/server
+COPY --from=server_build_image /hitster/target/release/hitster-cli /hitster/cli
 COPY --from=client_build_image /app/dist /hitster/client
 COPY --from=pot_provider_build_image /pot-provider/server/build /pot-provider/build
 COPY --from=pot_provider_build_image /pot-provider/server/node_modules /pot-provider/node_modules
