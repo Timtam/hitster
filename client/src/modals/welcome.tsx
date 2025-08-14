@@ -57,7 +57,7 @@ export default function WelcomModale({
                                                 acc + e.hits,
                                             0,
                                         ),
-                                        packs: packs.map((p) => p.name),
+                                        packs: packs.length,
                                     }}
                                     i18nKey="featuresList"
                                 />

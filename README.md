@@ -115,10 +115,11 @@ There is more to it, like tokens you can earn by also guessing title and artist 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-Hitster consists of two separate projects:
+Hitster consists of multiple separate projects:
 
 * a server component deploying a REST API, written in Rust and based on Rocket
 * a client application responsible for displaying the game's UI and interacting with the server, written in React and TypeScript
+* a cli helper to run some tasks that aren't necessary to have within the server itself
 
 Follow these steps to get a dev environment ready to run the project locally.
 
@@ -214,7 +215,7 @@ yt-dlp -v
 
 #### Building
 
-Start by cloning this repository. Open a command line and navigate into the folder of the cloned repository. Afterwards, run those commands to build both components of the Hitster project:
+Start by cloning this repository. Open a command line and navigate into the folder of the cloned repository. Afterwards, run those commands to build all components of the Hitster project:
 
 * client:
   ```sh
@@ -223,18 +224,17 @@ Start by cloning this repository. Open a command line and navigate into the fold
   npm run build
   cd ..
   ```
+* cli:
+  ```sh
+  cargo build -p hitster-cli
+  ```
 * server:
   ```sh
-  cd server
   cargo run
   ```
   
 Please note that you'll need to specify a certain set of environment variables when running the application locally in order for it to start. You can find <a href="#environment-variables">the list of environment variables</a> below.
   
-### ATTENTION
-
-When launching the server, Hitster will always download all missing hits. That means that especially when starting it for the first time, downloading all hits will take quite a while. You can monitor the progress by skimming through the process output. The server will not be running while the download is in progress. It is planned to further parallelize the process to have the server running while downloading in the background.
-
 ### yt-dlp
 
 By default, the Hitster server will try to download songs from YouTube with the help of a rust-native library called rusty_ytdl. This requires less dependencies to be running alongside the Hitster server and thus is preferred when setting up Hitster locally. It however is also less reliable as it runs into YouTube blocking mechanisms more frequently. If you therefore want to use yt-dlp instead, you'll need to build the Hitster server with the yt_dl feature enabled. Navigate into the server directory and run:

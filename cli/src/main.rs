@@ -1,17 +1,19 @@
 mod migrate;
+mod users;
 
 use anyhow::Result;
-use clap::{Parser, Subcommand};
-use std::{path::PathBuf, process::ExitCode};
+use clap::{Args, Parser, Subcommand};
+use dotenvy::dotenv;
+use std::{env, error::Error, path::PathBuf, process::ExitCode};
 
 /// hitster-cli - a tool for managing everything that needs to happen
 ///               behind the scenes of the hitster project
 
 #[derive(Parser)]
-#[command(version, about, long_about = None, arg_required_else_help(true))]
+#[command(version, about, long_about = None)]
 struct Cli {
     #[command(subcommand)]
-    command: Option<Commands>,
+    command: Commands,
 }
 
 #[derive(Subcommand)]
@@ -21,21 +23,48 @@ enum Commands {
         /// the path to the csv file
         file: PathBuf,
     },
+    /// manage user permissions
+    Users(UsersArgs),
 }
 
-fn main() -> Result<ExitCode> {
+#[derive(Args)]
+#[command(args_conflicts_with_subcommands = true)]
+#[command(flatten_help = true)]
+#[command(arg_required_else_help = true)]
+struct UsersArgs {
+    #[command(subcommand)]
+    command: UsersCommands,
+}
+
+#[derive(Subcommand)]
+enum UsersCommands {
+    /// list all users currently in the database
+    List {},
+}
+
+#[tokio::main]
+async fn main() -> Result<ExitCode, Box<dyn Error>> {
+    let _ = dotenv();
     let cli = Cli::parse();
 
     match &cli.command {
-        Some(Commands::Migrate { file }) => {
+        Commands::Migrate { file } => {
             let success = migrate::migrate(file.clone());
-            if success {
-                return Ok(ExitCode::from(0));
-            } else {
+            if !success {
                 return Ok(ExitCode::from(1));
             }
         }
-        _ => {}
+        Commands::Users(args) => {
+            let db = env::var("DATABASE_URL").expect("DATABASEURL environment variable not found");
+            match args.command {
+                UsersCommands::List {} => {
+                    let success = users::list(&db).await;
+                    if !success {
+                        return Ok(ExitCode::from(1));
+                    }
+                }
+            }
+        }
     }
 
     Ok(ExitCode::from(0))
