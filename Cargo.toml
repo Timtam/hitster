@@ -4,6 +4,7 @@ resolver = "3"
 default-members = ["server"]
 
 [workspace.dependencies]
+argon2 = { version = "0.5.3", features = ["std"]}
 bitflags = "2.9.1"
 dotenvy = "0.15.7"
 multi_key_map = "0.3.0"

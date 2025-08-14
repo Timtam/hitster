@@ -11,7 +11,7 @@ yt_dl = []
 default = ["native_dl"]
 
 [dependencies]
-argon2 = "0.5.3"
+argon2 = { workspace = true }
 async-process = "2.4.0"
 dotenvy = { workspace = true }
 filesize = { version = "0.2.0", optional = true }
