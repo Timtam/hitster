@@ -80,14 +80,14 @@ pub fn get_hitster_data() -> &'static HitsterData {
     })
 }
 
-#[derive(Copy, Clone, Deserialize, Eq, JsonSchema, PartialEq)]
+#[derive(Copy, Clone, Deserialize, Eq, JsonSchema, PartialEq, FromFormField)]
 #[serde(rename_all = "snake_case")]
 pub enum SortDirection {
     Ascending,
     Descending,
 }
 
-#[derive(Clone, Deserialize, JsonSchema)]
+#[derive(Clone, Deserialize, JsonSchema, FromFormField)]
 #[serde(rename_all = "snake_case")]
 pub enum SortBy {
     Title,
@@ -96,7 +96,7 @@ pub enum SortBy {
     BelongsTo,
 }
 
-#[derive(Deserialize, JsonSchema)]
+#[derive(Deserialize, JsonSchema, FromForm)]
 pub struct HitSearchQuery {
     pub sort_by: Option<Vec<SortBy>>,
     pub sort_direction: Option<SortDirection>,

@@ -77,6 +77,11 @@ export default function Navigation({ user }: { user: User | null }) {
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
+                                    <Nav.Link as={NavLink} to="/hits">
+                                        {t("browseHits")}
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
                                     <Nav.Link
                                         aria-expanded="false"
                                         onClick={() => setWelcome("false")}

@@ -7,6 +7,8 @@ import { RouterProvider, createBrowserRouter } from "react-router"
 import "./i18n"
 import "./index.css"
 import Layout from "./layout"
+import BrowserLoader from "./pages/browser.loader"
+import Browser from "./pages/browser.page"
 import ErrorPage from "./pages/error-page"
 import GameLoader from "./pages/game.loader"
 import Game from "./pages/game.page"
@@ -27,6 +29,11 @@ const router = createBrowserRouter([
                 element: <Lobby />,
                 path: "/",
                 loader: LobbyLoader,
+            },
+            {
+                element: <Browser />,
+                path: "/hits",
+                loader: BrowserLoader,
             },
             {
                 element: <Registration />,

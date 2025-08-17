@@ -13,6 +13,7 @@ automatic: Automatisch
 beforeYear: vor {{year}}
 belongsTo: Zugehörig zu
 betweenYears: von {{year1}} bis {{year2}}
+browseHits: Hits durchsuchen
 cancel: Abbrechen
 cannotClaimHit: Du kannst dir derzeit keinen Hit nehmen
 cannotSkipHit: Du kannst derzeit keinen Hit überspringen

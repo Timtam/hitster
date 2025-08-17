@@ -32,28 +32,25 @@ pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
 }
 
 #[openapi(tag = "Hits")]
-#[get("/hits/search", format = "json", data = "<query>")]
+#[get("/hits/search?<query..>")]
 pub fn search_hits(
-    query: Json<Option<HitSearchQuery>>,
+    query: HitSearchQuery,
     svc: &State<ServiceStore>,
 ) -> Json<PaginatedResponse<HitPayload>> {
     let hs = svc.hit_service();
 
     Json(
-        Some(
-            hs.lock()
-                .search_hits(query.as_ref().unwrap_or(&HitSearchQuery::default())),
-        )
-        .map(|res| PaginatedResponse {
-            results: res
-                .results
-                .into_iter()
-                .map(|h| (&h).into())
-                .collect::<Vec<_>>(),
-            total: res.total,
-            start: res.start,
-            end: res.end,
-        })
-        .unwrap(),
+        Some(hs.lock().search_hits(&query))
+            .map(|res| PaginatedResponse {
+                results: res
+                    .results
+                    .into_iter()
+                    .map(|h| (&h).into())
+                    .collect::<Vec<_>>(),
+                total: res.total,
+                start: res.start,
+                end: res.end,
+            })
+            .unwrap(),
     )
 }
