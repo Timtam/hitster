@@ -1,5 +1,6 @@
 mod hitster_core {
     use bitflags::bitflags;
+    use fuse_rust::{FuseProperty, Fuseable};
     use multi_key_map::MultiKeyMap;
     use serde::{Deserialize, Serialize};
     use sqlx::{FromRow, Row, sqlite::SqliteRow};
@@ -56,6 +57,29 @@ mod hitster_core {
     impl Hash for Hit {
         fn hash<H: Hasher>(&self, state: &mut H) {
             self.yt_id.hash(state);
+        }
+    }
+
+    impl Fuseable for &Hit {
+        fn properties(&self) -> Vec<FuseProperty> {
+            vec![
+                FuseProperty {
+                    value: String::from("title"),
+                    weight: 0.7,
+                },
+                FuseProperty {
+                    value: String::from("artist"),
+                    weight: 0.3,
+                },
+            ]
+        }
+
+        fn lookup(&self, key: &str) -> Option<&str> {
+            match key {
+                "title" => Some(&self.title),
+                "artist" => Some(&self.artist),
+                _ => None,
+            }
         }
     }
 
