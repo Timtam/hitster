@@ -31,6 +31,7 @@ confirmText: Hat <0>{{player}}</0> den Titel und Interpreten korrekt erraten?
 confirmYes: Titel und Interpret des Hits wurde richtig erraten
 createNewGame: Spiel erstellen
 creator: Ersteller
+current: (aktuell)
 dark: Dunkel
 deleteAccount: Benutzerkonto löschen
 dontIntercept: Keine Vermutung äußern
@@ -61,6 +62,7 @@ featuresList: >
     <0>entscheide dich für ein helles oder dunkles Farbschema, oder passe dich
     automatisch deinem verwendeten Gerät an</0>
 finalScore: "Hier sind die finalen Ergebnisse:"
+first: Erste
 game: Spiel
 gameActions: "Spielaktionen:"
 gameAlreadyRunning: Das Spiel läuft bereits
@@ -111,6 +113,7 @@ keyboardShortcut_other: Tastenkombinationen
 kick: Kicken
 knownAs: Du bist derzeit bekannt als {{username}}
 language: Sprache
+last: Letzte
 leaveGame: Spiel verlassen
 leaveGameQuestion: Möchtest du das Spiel wirklich verlassen, während es noch läuft?
 leaveGameShortcut: Alt+Umschalt+Q
@@ -161,6 +164,7 @@ mode: Modus
 musicVolume: Musiklautstärke
 name: Name
 navigation: Navigation
+next: Nächste
 "no": Nein
 noHitAvailable: Kein Hit verfügbar
 noShortcut: Alt+Umschalt+N
@@ -202,6 +206,7 @@ playOrStopHitShortcut: Alt+Umschalt+H
 playerStatsNotification: "{{player}}: {{hits}} Hits, {{tokens}} Chips"
 player_one: Spieler
 player_other: Spieler
+previous: Vorherige
 privateGame: Privates Spiel
 privateGameShortcut: Alt+Umschalt+R
 processing_one: "{{hits}} wird verarbeitet"
@@ -227,6 +232,7 @@ selectPreviousSlotShortcut: Alt+Umschalt+Pfeil nach oben
 selectSlotFirst: Wähle erst eine Möglichkeit
 settings: Einstellungen
 sfxVolume: Lautstärke der Sound Effekte
+showResults: Zeige Ergebnis {{start}} bis {{end}} von {{total}}
 skipHit: Überspringe diesen Hit, indem du einen Chip bezahlst
 skipHitNoToken: Du musst einen Chip bezahlen können, um einen Hit zu überspringen
 skipHitNotGuessing: Nur der Zugspieler kann einen Hit überspringen
