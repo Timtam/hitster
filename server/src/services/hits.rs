@@ -125,7 +125,7 @@ impl HitService {
             hits = fs
                 .search_text_in_fuse_list(q, &hits)
                 .into_iter()
-                .filter(|r| r.score <= 0.03)
+                .filter(|r| r.score <= 0.05)
                 .map(|r| *hits.get(r.index).unwrap())
                 .collect::<Vec<_>>();
         }
