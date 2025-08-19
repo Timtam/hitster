@@ -49,6 +49,7 @@ export default function Navigation({ user }: { user: User | null }) {
     return (
         <>
             <Navbar
+                collapseOnSelect
                 aria-label={t("navigation")}
                 fixed="top"
                 variant="light"
@@ -72,12 +73,16 @@ export default function Navigation({ user }: { user: User | null }) {
                                 }
                             >
                                 <Nav.Item>
-                                    <Nav.Link as={NavLink} to="/">
+                                    <Nav.Link as={NavLink} eventKey="/" to="/">
                                         {t("gameLobby")}
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link as={NavLink} to="/hits">
+                                    <Nav.Link
+                                        as={NavLink}
+                                        eventKey="/hits"
+                                        to="/hits"
+                                    >
                                         {t("browseHits")}
                                     </Nav.Link>
                                 </Nav.Item>
