@@ -62,7 +62,7 @@ mod hitster_core {
 
     impl Fuseable for &Hit {
         fn properties(&self) -> Vec<FuseProperty> {
-            vec![
+            let mut prop = vec![
                 FuseProperty {
                     value: String::from("title"),
                     weight: 0.7,
@@ -71,13 +71,23 @@ mod hitster_core {
                     value: String::from("artist"),
                     weight: 0.3,
                 },
-            ]
+            ];
+
+            if !self.belongs_to.is_empty() {
+                prop.push(FuseProperty {
+                    value: String::from("belongs_to"),
+                    weight: 0.5,
+                });
+            }
+
+            prop
         }
 
         fn lookup(&self, key: &str) -> Option<&str> {
             match key {
                 "title" => Some(&self.title),
                 "artist" => Some(&self.artist),
+                "belongs_to" => Some(&self.belongs_to),
                 _ => None,
             }
         }
