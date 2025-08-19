@@ -1,8 +1,26 @@
 //import { useLoaderData } from "react-router"
 //import { Pack } from "../entities"
+import {
+    closestCenter,
+    DndContext,
+    DragEndEvent,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from "@dnd-kit/core"
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    useSortable,
+    verticalListSortingStrategy,
+} from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import { Helmet } from "@dr.pogodin/react-helmet"
 import EventManager from "@lomray/event-manager"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { toCamelCase } from "js-convert-case"
+import { ReactNode, useCallback, useEffect, useMemo, useState } from "react"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import Pagination from "react-bootstrap/Pagination"
@@ -23,6 +41,31 @@ const PAGE_RANGE = 4
 const PAGE_SIZE = 50
 const PAGE_SKIPS = [10, 50, 100, 500, 1000]
 const SEARCH_DELAY = 300
+const SORT_BY_INDEX: SortBy[] = [
+    SortBy.Title,
+    SortBy.Artist,
+    SortBy.BelongsTo,
+    SortBy.Year,
+]
+
+export function SortableItem(props: { id: number; children: ReactNode }) {
+    const { t } = useTranslation()
+    const { attributes, listeners, setNodeRef, transform, transition } =
+        useSortable({ id: props.id })
+
+    const style = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    }
+
+    attributes["aria-roledescription"] = t("sortable")
+
+    return (
+        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            {props.children}
+        </div>
+    )
+}
 
 export default function Browser() {
     //const packs = useLoaderData() as Pack[]
@@ -39,6 +82,14 @@ export default function Browser() {
     const [searchTimer, setSearchTimer] = useState<ReturnType<
         typeof setTimeout
     > | null>(null)
+    const [sortByItems, setSortByItems] = useState([0, 1, 2, 3])
+    const sensors = useSensors(
+        useSensor(PointerSensor),
+        useSensor(KeyboardSensor, {
+            coordinateGetter: sortableKeyboardCoordinates,
+        }),
+    )
+    const [sortDirection, setSortDirection] = useState(SortDirection.Ascending)
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -71,6 +122,44 @@ export default function Browser() {
         [hitResults.start],
     )
 
+    const mapSortByIndexToElement = useCallback(
+        (i: number) => (
+            <SortableItem id={i} key={`sort-by-${i}`}>
+                <li key={"sort-by-" + SORT_BY_INDEX[i]}>
+                    {t(toCamelCase(SORT_BY_INDEX[i]))}
+                </li>
+            </SortableItem>
+        ),
+        [t],
+    )
+
+    const handleDragEnd = useCallback(
+        (event: DragEndEvent) => {
+            const { active, over } = event
+
+            if (over === null) return
+
+            if (active.id !== over.id) {
+                const oldIndex = sortByItems.indexOf(active.id as number)
+                const newIndex = sortByItems.indexOf(over.id as number)
+
+                let sortBy = arrayMove(sortByItems, oldIndex, newIndex)
+
+                ;(async () =>
+                    await search({
+                        query: query,
+                        start: 1,
+                        amount: PAGE_SIZE,
+                        sort_by: sortBy.map((i) => SORT_BY_INDEX[i]),
+                        sort_direction: sortDirection,
+                        packs: [],
+                    } satisfies HitSearchQuery))()
+                setSortByItems(sortBy)
+            }
+        },
+        [sortByItems, setSortByItems, search, query, sortDirection],
+    )
+
     useEffect(() => {
         ;(async () => {
             await search({
@@ -101,7 +190,6 @@ export default function Browser() {
                         <h3>{t("search")}</h3>
                         <Form>
                             <Form.Group className="mb-2">
-                                <Form.Label>{t("search")}</Form.Label>
                                 <Form.Control
                                     type="search"
                                     placeholder={t("search")}
@@ -118,14 +206,11 @@ export default function Browser() {
                                                     query: q,
                                                     start: 1,
                                                     amount: PAGE_SIZE,
-                                                    sort_by: [
-                                                        SortBy.Title,
-                                                        SortBy.Artist,
-                                                        SortBy.BelongsTo,
-                                                        SortBy.Year,
-                                                    ],
+                                                    sort_by: sortByItems.map(
+                                                        (i) => SORT_BY_INDEX[i],
+                                                    ),
                                                     sort_direction:
-                                                        SortDirection.Ascending,
+                                                        sortDirection,
                                                     packs: [],
                                                 } satisfies HitSearchQuery)
                                                 setSearchTimer(null)
@@ -133,6 +218,228 @@ export default function Browser() {
                                         )
                                     }}
                                 />
+                            </Form.Group>
+                            <Form.Group className="mb-2">
+                                <fieldset>
+                                    <legend>{t("sortBy")}</legend>
+                                    <span className="visually-hidden">
+                                        {t("reorderHintARIA")}
+                                    </span>
+                                    <span aria-hidden={true}>
+                                        {t("reorderHintVisual")}
+                                    </span>
+                                    <ul>
+                                        <DndContext
+                                            accessibility={{
+                                                announcements: {
+                                                    onDragStart: ({ active }) =>
+                                                        t("dragStart", {
+                                                            draggable: t(
+                                                                toCamelCase(
+                                                                    SORT_BY_INDEX[
+                                                                        active.id as number
+                                                                    ],
+                                                                ),
+                                                            ),
+                                                        }),
+                                                    onDragOver: ({
+                                                        active,
+                                                        over,
+                                                    }) => {
+                                                        if (over) {
+                                                            return t(
+                                                                "dragOverDroppable",
+                                                                {
+                                                                    draggable:
+                                                                        t(
+                                                                            toCamelCase(
+                                                                                SORT_BY_INDEX[
+                                                                                    active.id as number
+                                                                                ],
+                                                                            ),
+                                                                        ),
+                                                                    droppable:
+                                                                        t(
+                                                                            toCamelCase(
+                                                                                SORT_BY_INDEX[
+                                                                                    over.id as number
+                                                                                ],
+                                                                            ),
+                                                                        ),
+                                                                },
+                                                            )
+                                                        }
+                                                        return t(
+                                                            "dragNotOverDroppable",
+                                                            {
+                                                                draggable: t(
+                                                                    toCamelCase(
+                                                                        SORT_BY_INDEX[
+                                                                            active.id as number
+                                                                        ],
+                                                                    ),
+                                                                ),
+                                                            },
+                                                        )
+                                                    },
+                                                    onDragEnd: ({
+                                                        active,
+                                                        over,
+                                                    }) => {
+                                                        if (over) {
+                                                            return t(
+                                                                "dragEndOverDroppable",
+                                                                {
+                                                                    draggable:
+                                                                        t(
+                                                                            toCamelCase(
+                                                                                SORT_BY_INDEX[
+                                                                                    active.id as number
+                                                                                ],
+                                                                            ),
+                                                                        ),
+                                                                    droppable:
+                                                                        t(
+                                                                            toCamelCase(
+                                                                                SORT_BY_INDEX[
+                                                                                    over.id as number
+                                                                                ],
+                                                                            ),
+                                                                        ),
+                                                                },
+                                                            )
+                                                        }
+
+                                                        return t(
+                                                            "dragEndNotOverDroppable",
+                                                            {
+                                                                draggable: t(
+                                                                    toCamelCase(
+                                                                        SORT_BY_INDEX[
+                                                                            active.id as number
+                                                                        ],
+                                                                    ),
+                                                                ),
+                                                            },
+                                                        )
+                                                    },
+                                                    onDragCancel: ({
+                                                        active,
+                                                    }) =>
+                                                        t("dragCanceled", {
+                                                            draggable: t(
+                                                                toCamelCase(
+                                                                    SORT_BY_INDEX[
+                                                                        active.id as number
+                                                                    ],
+                                                                ),
+                                                            ),
+                                                        }),
+                                                },
+                                                screenReaderInstructions: {
+                                                    draggable: t(
+                                                        "reorderInstructions",
+                                                    ),
+                                                },
+                                            }}
+                                            sensors={sensors}
+                                            collisionDetection={closestCenter}
+                                            onDragEnd={handleDragEnd}
+                                        >
+                                            <SortableContext
+                                                items={sortByItems}
+                                                strategy={
+                                                    verticalListSortingStrategy
+                                                }
+                                            >
+                                                {sortByItems.map((id) =>
+                                                    mapSortByIndexToElement(id),
+                                                )}
+                                            </SortableContext>
+                                        </DndContext>
+                                    </ul>
+                                </fieldset>
+                            </Form.Group>
+                            <Form.Group className="mb-2">
+                                <fieldset>
+                                    <legend>{t("sortDirection")}</legend>
+                                    <div className="form-check">
+                                        <input
+                                            type="radio"
+                                            className="form-check-input"
+                                            id="sort-direction-ascending"
+                                            checked={
+                                                sortDirection ===
+                                                SortDirection.Ascending
+                                            }
+                                            onChange={() => {
+                                                setSortDirection(
+                                                    SortDirection.Ascending,
+                                                )
+                                                ;(async () =>
+                                                    await search({
+                                                        query: query,
+                                                        start: 1,
+                                                        amount: PAGE_SIZE,
+                                                        sort_by:
+                                                            sortByItems.map(
+                                                                (i) =>
+                                                                    SORT_BY_INDEX[
+                                                                        i
+                                                                    ],
+                                                            ),
+                                                        sort_direction:
+                                                            SortDirection.Ascending,
+                                                        packs: [],
+                                                    } satisfies HitSearchQuery))()
+                                            }}
+                                        />
+                                        <label
+                                            htmlFor="sort-direction-ascending"
+                                            className="form-check-label"
+                                        >
+                                            {t("ascending")}
+                                        </label>
+                                    </div>
+                                    <div className="form-check">
+                                        <input
+                                            type="radio"
+                                            className="form-check-input"
+                                            id="sort-direction-descending"
+                                            checked={
+                                                sortDirection ===
+                                                SortDirection.Descending
+                                            }
+                                            onChange={() => {
+                                                setSortDirection(
+                                                    SortDirection.Descending,
+                                                )
+                                                ;(async () =>
+                                                    await search({
+                                                        query: query,
+                                                        start: 1,
+                                                        amount: PAGE_SIZE,
+                                                        sort_by:
+                                                            sortByItems.map(
+                                                                (i) =>
+                                                                    SORT_BY_INDEX[
+                                                                        i
+                                                                    ],
+                                                            ),
+                                                        sort_direction:
+                                                            SortDirection.Descending,
+                                                        packs: [],
+                                                    } satisfies HitSearchQuery))()
+                                            }}
+                                        />
+                                        <label
+                                            htmlFor="sort-direction-descending"
+                                            className="form-check-label"
+                                        >
+                                            {t("descending")}
+                                        </label>
+                                    </div>
+                                </fieldset>
                             </Form.Group>
                         </Form>
                     </search>
@@ -176,13 +483,10 @@ export default function Browser() {
                                 await search({
                                     start: 1,
                                     amount: PAGE_SIZE,
-                                    sort_by: [
-                                        SortBy.Title,
-                                        SortBy.Artist,
-                                        SortBy.BelongsTo,
-                                        SortBy.Year,
-                                    ],
-                                    sort_direction: SortDirection.Ascending,
+                                    sort_by: sortByItems.map(
+                                        (i) => SORT_BY_INDEX[i],
+                                    ),
+                                    sort_direction: sortDirection,
                                     query: query,
                                     packs: [],
                                 } satisfies HitSearchQuery)
@@ -197,13 +501,10 @@ export default function Browser() {
                                     start:
                                         PAGE_SIZE * (getCurrentPage() - 2) + 1,
                                     amount: PAGE_SIZE,
-                                    sort_by: [
-                                        SortBy.Title,
-                                        SortBy.Artist,
-                                        SortBy.BelongsTo,
-                                        SortBy.Year,
-                                    ],
-                                    sort_direction: SortDirection.Ascending,
+                                    sort_by: sortByItems.map(
+                                        (i) => SORT_BY_INDEX[i],
+                                    ),
+                                    sort_direction: sortDirection,
                                     query: query,
                                     packs: [],
                                 } satisfies HitSearchQuery)
@@ -233,14 +534,10 @@ export default function Browser() {
                                             await search({
                                                 start: PAGE_SIZE * i + 1,
                                                 amount: PAGE_SIZE,
-                                                sort_by: [
-                                                    SortBy.Title,
-                                                    SortBy.Artist,
-                                                    SortBy.BelongsTo,
-                                                    SortBy.Year,
-                                                ],
-                                                sort_direction:
-                                                    SortDirection.Ascending,
+                                                sort_by: sortByItems.map(
+                                                    (i) => SORT_BY_INDEX[i],
+                                                ),
+                                                sort_direction: sortDirection,
                                                 query: query,
                                                 packs: [],
                                             } satisfies HitSearchQuery)
@@ -270,13 +567,10 @@ export default function Browser() {
                                 await search({
                                     start: PAGE_SIZE * getCurrentPage() + 1,
                                     amount: PAGE_SIZE,
-                                    sort_by: [
-                                        SortBy.Title,
-                                        SortBy.Artist,
-                                        SortBy.BelongsTo,
-                                        SortBy.Year,
-                                    ],
-                                    sort_direction: SortDirection.Ascending,
+                                    sort_by: sortByItems.map(
+                                        (i) => SORT_BY_INDEX[i],
+                                    ),
+                                    sort_direction: sortDirection,
                                     query: query,
                                     packs: [],
                                 } satisfies HitSearchQuery)
@@ -290,13 +584,10 @@ export default function Browser() {
                                 await search({
                                     start: PAGE_SIZE * (getPageCount() - 1) + 1,
                                     amount: PAGE_SIZE,
-                                    sort_by: [
-                                        SortBy.Title,
-                                        SortBy.Artist,
-                                        SortBy.BelongsTo,
-                                        SortBy.Year,
-                                    ],
-                                    sort_direction: SortDirection.Ascending,
+                                    sort_by: sortByItems.map(
+                                        (i) => SORT_BY_INDEX[i],
+                                    ),
+                                    sort_direction: sortDirection,
                                     query: query,
                                     packs: [],
                                 } satisfies HitSearchQuery)

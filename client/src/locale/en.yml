@@ -9,6 +9,7 @@ afterYear: after {{year}}
 allRightsReserved: All rights reserved
 and: and
 artist: Artist
+ascending: Ascending
 automatic: Automatic
 beforeYear: before {{year}}
 belongsTo: Belongs to
@@ -34,11 +35,18 @@ creator: creator
 current: (current)
 dark: Dark
 deleteAccount: Delete account
+descending: Descending
 dontIntercept: Don't intercept
 downloaded_one: "{{hits}} downloaded"
 downloaded_other: "{{hits}} downloaded"
 downloading_one: "{{hits}} downloading"
 downloading_other: "{{hits}} downloading"
+dragCanceled: "{{draggable}} dropped"
+dragEndNotOverDroppable: "{{draggable}} dropped"
+dragEndOverDroppable: "{{draggable}} moved to position of {{droppable}}"
+dragNotOverDroppable: "{{draggable}} no longer over droppable area"
+dragOverDroppable: "{{draggable}} moved over {{droppable}}"
+dragStart: Started dragging {{draggable}}
 error: Error
 features: Features
 featuresList: >
@@ -213,6 +221,13 @@ randomPacksLabel: Select random packs
 register: Register
 registrationSuccessful: You've been registered and logged in successfully.
 rememberHits: Remember hits across games?
+reorderHintARIA: Select the items in focus mode to reorder
+reorderHintVisual: Drag and drop to reorder
+reorderInstructions: >-
+    Press space to start reordering the sorting criteria. While dragging, use
+    the up and down arrow keys to move the item up or down respectively. Press
+    space or enter again to drop the item in its new position, or press escape
+    to cancel.
 repeatPassword: Repeat password
 running: Running
 save: Save
@@ -234,6 +249,9 @@ skipHit: Skip this hit by paying one token
 skipHitNoToken: You need to pay a token to skip a hit
 skipHitNotGuessing: Only the guessing player can skip a hit
 skipHitShortcut: Alt+Shift+I
+sortBy: Sort by
+sortDirection: Sort direction
+sortable: Sortable
 sourceCodeAvailableAt: Source Code available at <0>GitHub</0>
 speakPlayerInfo: Speak important information about player {{player}}
 speakPlayerInfoShortcut: Alt+Shift+{{player}}

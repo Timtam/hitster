@@ -9,6 +9,7 @@ afterYear: nach {{year}}
 allRightsReserved: Alle Rechte vorbehalten
 and: und
 artist: Interpret
+ascending: Aufsteigend
 automatic: Automatisch
 beforeYear: vor {{year}}
 belongsTo: Zugehörig zu
@@ -34,11 +35,18 @@ creator: Ersteller
 current: (aktuell)
 dark: Dunkel
 deleteAccount: Benutzerkonto löschen
+descending: Absteigend
 dontIntercept: Keine Vermutung äußern
 downloaded_one: "{{hits}} verfügbar"
 downloaded_other: "{{hits}} verfügbar"
 downloading_one: "{{hits}} wird heruntergeladen"
 downloading_other: "{{hits}} werden heruntergeladen"
+dragCanceled: "{{draggable}} Bewegung beendet"
+dragEndNotOverDroppable: "{{draggable}} Bewegung beendet"
+dragEndOverDroppable: "{{draggable}} wurde an die Position von {{droppable}} bewegt"
+dragNotOverDroppable: "{{draggable}} kann hier nicht hinbewegt werden"
+dragOverDroppable: "{{draggable}} über {{droppable}} bewegt"
+dragStart: Bewege {{draggable}}
 error: Fehler
 features: Funktionen
 featuresList: >
@@ -217,6 +225,13 @@ randomPacksLabel: Wähle zufällige Packs aus
 register: Registrieren
 registrationSuccessful: Du wurdest erfolgreich registriert und angemeldet.
 rememberHits: Hits zwischen Spielen speichern?
+reorderHintARIA: Wähle die Einträge im Fokusmodus aus, um sie zu sortieren
+reorderHintVisual: Mit der Maus ziehen zum sortieren
+reorderInstructions: >-
+    Verwende die Leertaste oder Enter um einen Eintrag zu bewegen. Verwende
+    anschließend die Pfeiltaste hoch/runter, um den Eintrag hoch oder runter zu
+    bewegen. Drücke die Leertaste oder Enter, um den Eintrag zu platzieren, oder
+    Escape, um abzubrechen.
 repeatPassword: Passwort wiederholen
 running: läuft
 save: Speichern
@@ -238,6 +253,9 @@ skipHit: Überspringe diesen Hit, indem du einen Chip bezahlst
 skipHitNoToken: Du musst einen Chip bezahlen können, um einen Hit zu überspringen
 skipHitNotGuessing: Nur der Zugspieler kann einen Hit überspringen
 skipHitShortcut: Alt+Umschalt+I
+sortBy: Sortieren nach
+sortDirection: Sortierreihenfolge
+sortable: Sortierbar
 sourceCodeAvailableAt: Quellcode verfügbar auf <0>GitHub</0>
 speakPlayerInfo: Sprich wichtige Informationen zu Spieler {{player}}
 speakPlayerInfoShortcut: Alt+Umschalt+{{player}}

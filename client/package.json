@@ -16,6 +16,7 @@
         "version": "node -e \"import('@corteks/gitversion').then(({default: _}) => _.default().then((gv) => console.log(!gv.COMMITS_SINCE_TAG ? gv.LAST_TAG_NAME : gv.LAST_TAG_NAME + '+' + gv.COMMITS_SINCE_TAG + '-' + gv.CURRENT_COMMIT_SHORT_ID)))\""
     },
     "dependencies": {
+        "@dnd-kit/sortable": "^10.0.0",
         "@dr.pogodin/react-helmet": "^3.0.1",
         "@lomray/event-manager": "^2.0.2",
         "@rwh/keystrokes": "^1.5.6",
@@ -27,6 +28,7 @@
         "howler": "^2.2.4",
         "i18next": "^25.2.1",
         "i18next-browser-languagedetector": "^8.0.2",
+        "js-convert-case": "^4.2.0",
         "natsort": "^2.0.3",
         "pick-random": "^4.0.0",
         "query-string": "^9.2.2",

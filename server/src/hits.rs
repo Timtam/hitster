@@ -83,16 +83,22 @@ pub fn get_hitster_data() -> &'static HitsterData {
 #[derive(Copy, Clone, Deserialize, Eq, JsonSchema, PartialEq, FromFormField)]
 #[serde(rename_all = "snake_case")]
 pub enum SortDirection {
+    #[field(value = "ascending")]
     Ascending,
+    #[field(value = "descending")]
     Descending,
 }
 
-#[derive(Clone, Deserialize, JsonSchema, FromFormField)]
+#[derive(Clone, Deserialize, JsonSchema, FromFormField, Debug)]
 #[serde(rename_all = "snake_case")]
 pub enum SortBy {
+    #[field(value = "title")]
     Title,
+    #[field(value = "artist")]
     Artist,
+    #[field(value = "year")]
     Year,
+    #[field(value = "belongs_to")]
     BelongsTo,
 }
 
