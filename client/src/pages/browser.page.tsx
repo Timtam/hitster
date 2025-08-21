@@ -1,5 +1,3 @@
-//import { useLoaderData } from "react-router"
-//import { Pack } from "../entities"
 import {
     closestCenter,
     DndContext,
@@ -20,7 +18,9 @@ import { CSS } from "@dnd-kit/utilities"
 import { Helmet } from "@dr.pogodin/react-helmet"
 import EventManager from "@lomray/event-manager"
 import { toCamelCase } from "js-convert-case"
+import natsort from "natsort"
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react"
+import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import Pagination from "react-bootstrap/Pagination"
@@ -28,13 +28,17 @@ import Row from "react-bootstrap/Row"
 import Spinner from "react-bootstrap/Spinner"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
+import { useLoaderData } from "react-router"
+import { useImmer } from "use-immer"
 import {
     HitSearchQuery,
+    Pack,
     PaginatedHitsResponse,
     SortBy,
     SortDirection,
 } from "../entities"
 import { Events, NotificationData } from "../events"
+import ViewPacksModal from "../modals/view-packs"
 import HitService from "../services/hits.service"
 
 const PAGE_RANGE = 4
@@ -68,7 +72,8 @@ export function SortableItem(props: { id: number; children: ReactNode }) {
 }
 
 export default function Browser() {
-    //const packs = useLoaderData() as Pack[]
+    const sorter = useMemo(() => natsort(), [])
+    const availablePacks = useLoaderData() as Pack[]
     const hitService = useMemo(() => new HitService(), [])
     const { t } = useTranslation()
     const [searching, setSearching] = useState(true)
@@ -90,6 +95,7 @@ export default function Browser() {
         }),
     )
     const [sortDirection, setSortDirection] = useState(SortDirection.Ascending)
+    const [showViewPacksModal, setShowViewPacksModal] = useImmer<boolean[]>([])
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -106,8 +112,11 @@ export default function Browser() {
             } satisfies NotificationData)
             setHitResults(results)
             setSearching(false)
+            setShowViewPacksModal(
+                Array.from({ length: results.results.length }, () => false),
+            )
         },
-        [hitService, setSearching, setHitResults],
+        [hitService, setSearching, setHitResults, setShowViewPacksModal],
     )
 
     const getPageCount = useCallback(
@@ -463,15 +472,47 @@ export default function Browser() {
                                 <th>{t("artist")}</th>
                                 <th>{t("year")}</th>
                                 <th>{t("belongsTo")}</th>
+                                <th>{t("pack", { count: 2 })}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {hitResults.results.map((hit) => (
+                            {hitResults.results.map((hit, i) => (
                                 <tr key={hit.id}>
                                     <td>{hit.title}</td>
                                     <td>{hit.artist}</td>
                                     <td>{hit.year}</td>
                                     <td>{hit.belongs_to}</td>
+                                    <td>
+                                        <Button
+                                            aria-expanded={false}
+                                            onClick={() =>
+                                                setShowViewPacksModal((v) => {
+                                                    v[i] = true
+                                                })
+                                            }
+                                        >
+                                            {t("pack", {
+                                                count: hit.packs.length,
+                                            }) +
+                                                ": " +
+                                                hit.packs.length}
+                                        </Button>
+                                        <ViewPacksModal
+                                            show={showViewPacksModal[i]}
+                                            onHide={() =>
+                                                setShowViewPacksModal((v) => {
+                                                    v[i] = false
+                                                })
+                                            }
+                                            packs={availablePacks
+                                                .filter((p) =>
+                                                    hit.packs.includes(p.id),
+                                                )
+                                                .toSorted((a, b) =>
+                                                    sorter(a.name, b.name),
+                                                )}
+                                        />
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
