@@ -195,6 +195,8 @@ export default function Navigation({ user }: { user: User | null }) {
                                 placement="bottom"
                                 container={popoverRef}
                                 containerPadding={20}
+                                rootClose
+                                onHide={() => setShowHitsStatus(false)}
                             >
                                 <Popover id="hits-status-popover">
                                     <Popover.Header as="h3">
