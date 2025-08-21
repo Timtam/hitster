@@ -96,6 +96,8 @@ export default function Browser() {
     )
     const [sortDirection, setSortDirection] = useState(SortDirection.Ascending)
     const [showViewPacksModal, setShowViewPacksModal] = useImmer<boolean[]>([])
+    const [packs, setPacks] = useState<string[]>([])
+    const [showPackFilter, setShowPackFilter] = useState(false)
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -161,12 +163,12 @@ export default function Browser() {
                         amount: PAGE_SIZE,
                         sort_by: sortBy.map((i) => SORT_BY_INDEX[i]),
                         sort_direction: sortDirection,
-                        packs: [],
+                        packs: packs,
                     } satisfies HitSearchQuery))()
                 setSortByItems(sortBy)
             }
         },
-        [sortByItems, setSortByItems, search, query, sortDirection],
+        [sortByItems, setSortByItems, search, query, sortDirection, packs],
     )
 
     useEffect(() => {
@@ -220,7 +222,7 @@ export default function Browser() {
                                                     ),
                                                     sort_direction:
                                                         sortDirection,
-                                                    packs: [],
+                                                    packs: packs,
                                                 } satisfies HitSearchQuery)
                                                 setSearchTimer(null)
                                             }, SEARCH_DELAY),
@@ -399,7 +401,7 @@ export default function Browser() {
                                                             ),
                                                         sort_direction:
                                                             SortDirection.Ascending,
-                                                        packs: [],
+                                                        packs: packs,
                                                     } satisfies HitSearchQuery))()
                                             }}
                                         />
@@ -437,7 +439,7 @@ export default function Browser() {
                                                             ),
                                                         sort_direction:
                                                             SortDirection.Descending,
-                                                        packs: [],
+                                                        packs: packs,
                                                     } satisfies HitSearchQuery))()
                                             }}
                                         />
@@ -449,6 +451,44 @@ export default function Browser() {
                                         </label>
                                     </div>
                                 </fieldset>
+                            </Form.Group>
+                            <Form.Group className="mb-2">
+                                <Button
+                                    aria-disabled={false}
+                                    onClick={(e) => {
+                                        e.preventDefault()
+                                        setShowPackFilter(true)
+                                    }}
+                                >
+                                    {packs.length === 0
+                                        ? t("packFilterDisabled")
+                                        : t("packFilterEnabled", {
+                                              packs: packs.length,
+                                          })}
+                                </Button>
+                                <ViewPacksModal
+                                    selected={packs}
+                                    packs={availablePacks.toSorted((a, b) =>
+                                        sorter(a.name, b.name),
+                                    )}
+                                    show={showPackFilter}
+                                    onHide={(selected) => {
+                                        setPacks(selected)
+                                        setShowPackFilter(false)
+                                        ;(async () =>
+                                            await search({
+                                                query: query,
+                                                start: 1,
+                                                amount: PAGE_SIZE,
+                                                sort_by: sortByItems.map(
+                                                    (i) => SORT_BY_INDEX[i],
+                                                ),
+                                                sort_direction:
+                                                    SortDirection.Descending,
+                                                packs: selected,
+                                            } satisfies HitSearchQuery))()
+                                    }}
+                                />
                             </Form.Group>
                         </Form>
                     </search>
@@ -529,7 +569,7 @@ export default function Browser() {
                                     ),
                                     sort_direction: sortDirection,
                                     query: query,
-                                    packs: [],
+                                    packs: packs,
                                 } satisfies HitSearchQuery)
                             }
                         >
@@ -547,7 +587,7 @@ export default function Browser() {
                                     ),
                                     sort_direction: sortDirection,
                                     query: query,
-                                    packs: [],
+                                    packs: packs,
                                 } satisfies HitSearchQuery)
                             }
                         >
@@ -580,7 +620,7 @@ export default function Browser() {
                                                 ),
                                                 sort_direction: sortDirection,
                                                 query: query,
-                                                packs: [],
+                                                packs: packs,
                                             } satisfies HitSearchQuery)
                                         }
                                     >
@@ -613,7 +653,7 @@ export default function Browser() {
                                     ),
                                     sort_direction: sortDirection,
                                     query: query,
-                                    packs: [],
+                                    packs: packs,
                                 } satisfies HitSearchQuery)
                             }
                         >
@@ -630,7 +670,7 @@ export default function Browser() {
                                     ),
                                     sort_direction: sortDirection,
                                     query: query,
-                                    packs: [],
+                                    packs: packs,
                                 } satisfies HitSearchQuery)
                             }
                         >
