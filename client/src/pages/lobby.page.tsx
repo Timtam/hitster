@@ -102,7 +102,7 @@ export default function Lobby() {
             </Helmet>
             <h2>{t("gameLobby")}</h2>
             <Dropdown>
-                <Dropdown.Toggle variant="success" disabled={user === null}>
+                <Dropdown.Toggle disabled={user === null}>
                     {t("createNewGame")}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>

@@ -33,7 +33,14 @@ export default function ViewPacksModal({
                             selected ? (
                                 <Form.Check
                                     type="checkbox"
-                                    label={`${p.name} (${p.hits})`}
+                                    label={
+                                        p.name +
+                                        " (" +
+                                        p.hits +
+                                        " " +
+                                        t("hit", { count: 2 }) +
+                                        ")"
+                                    }
                                     id={`pack-${p.id}`}
                                     key={`pack-${p.id}`}
                                     checked={selectedPacks.includes(p.id)}
@@ -49,9 +56,7 @@ export default function ViewPacksModal({
                                     }
                                 />
                             ) : (
-                                <li
-                                    key={`pack-${p.id}`}
-                                >{`${p.name} (${p.hits})`}</li>
+                                <li key={`pack-${p.id}`}>{`${p.name}`}</li>
                             ),
                         )}
                     </ul>

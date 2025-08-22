@@ -205,8 +205,8 @@ otherWins: "{{player}} hat dieses Spiel gewonnen!"
 ownedBy: >-
     Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel,
     welches <0>Koninklijke Jumbo B.V.</0> gehört.
-packFilterDisabled: Keine Packs gefiltert
-packFilterEnabled: Filtere nach {{packs}} Packs
+packFilterDisabled: "Gefilterte Packs: keine"
+packFilterEnabled: "Gefilterte Packs: {{packs}}"
 pack_one: Pack
 pack_other: Packs
 password: Passwort

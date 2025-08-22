@@ -454,7 +454,7 @@ export default function Browser() {
                             </Form.Group>
                             <Form.Group className="mb-2">
                                 <Button
-                                    aria-disabled={false}
+                                    aria-expanded={false}
                                     onClick={(e) => {
                                         e.preventDefault()
                                         setShowPackFilter(true)
@@ -483,8 +483,7 @@ export default function Browser() {
                                                 sort_by: sortByItems.map(
                                                     (i) => SORT_BY_INDEX[i],
                                                 ),
-                                                sort_direction:
-                                                    SortDirection.Descending,
+                                                sort_direction: sortDirection,
                                                 packs: selected,
                                             } satisfies HitSearchQuery))()
                                     }}

@@ -42,6 +42,7 @@ export default function Layout() {
     const [welcome, setWelcome] = useLocalStorage("welcome")
     const prefersColorScheme = usePrefersColorScheme()
     const [error, setError] = useState<string | undefined>(undefined)
+    const [navHeight, setNavHeight] = useState(50)
 
     useEffect(() => {
         let timer: ReturnType<typeof setTimeout> | null = null
@@ -124,6 +125,10 @@ export default function Layout() {
                   : "light"
     }, [language, colorScheme, prefersColorScheme])
 
+    useEffect(() => {
+        document.body.style.paddingTop = navHeight.toString() + "px"
+    }, [navHeight])
+
     return (
         <Container fluid className="justify-content-center">
             {user === null ? (
@@ -136,7 +141,10 @@ export default function Layout() {
                         <header>
                             <Col>
                                 <NotificationPlayer user={user} />
-                                <Navigation user={user} />
+                                <Navigation
+                                    user={user}
+                                    onResize={setNavHeight}
+                                />
                             </Col>
                         </header>
                     </Row>
