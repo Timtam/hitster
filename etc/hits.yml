@@ -121,6 +121,7 @@ hits:
   year: 1995
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 38
   id: '9efb8c0c-372e-41e1-aea4-109901a8abb1'
@@ -263,6 +264,16 @@ hits:
   id: d6251588-8594-4a27-90b2-1739dcd3bac5
   yt_id: cK2Y3NdQ7do
   last_modified: '2025-07-24T09:31:09.9858083Z'
+- artist: '22-Pistepirkko'
+  title: Birdy
+  belongs_to: ''
+  year: 1992
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 9
+  id: '2300988c-085c-42fb-9a30-756a9863d3fd'
+  yt_id: MTSQakv6fuU
+  last_modified: '2025-08-23T23:20:17.3385506Z'
 - artist: '24kGoldn, iann dior'
   title: Mood
   belongs_to: ''
@@ -576,6 +587,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   - df0964f7-0354-466d-85dc-997c388625a6
@@ -652,6 +664,16 @@ hits:
   id: b4f749eb-5141-428d-aae3-4f172556653e
   yt_id: tLsJQ5srVQA
   last_modified: '2025-07-24T09:31:09.6869575Z'
+- artist: ALMA
+  title: Chasing Highs
+  belongs_to: ''
+  year: 2017
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 2
+  id: fd438d24-1161-43f3-8d2c-ea0d34563b96
+  yt_id: w6DukrYK5wQ
+  last_modified: '2025-08-23T23:20:17.3414384Z'
 - artist: ANNA
   title: Bando
   belongs_to: ''
@@ -1246,6 +1268,16 @@ hits:
   id: d869986b-bbf8-42a3-85e2-fd5ab11bb664
   yt_id: bGKk15y7ZBQ
   last_modified: '2025-07-24T09:31:10.6774728Z'
+- artist: Aikakone
+  title: Odota
+  belongs_to: ''
+  year: 1995
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 13
+  id: '992c2ceb-ed03-4d70-bf5d-3ddd49cab2f9'
+  yt_id: PEnNDyAd3rQ
+  last_modified: '2025-08-23T23:20:17.3393596Z'
 - artist: Aitana
   title: '11 RAZONES'
   belongs_to: ''
@@ -1266,6 +1298,26 @@ hits:
   id: '02020d2e-55ed-4c3c-9f40-48f3278350bd'
   yt_id: OAIe4Y1M6eY
   last_modified: '2025-07-24T09:31:10.9897364Z'
+- artist: Aki Sirkesalo
+  title: Naispaholainen
+  belongs_to: ''
+  year: 1995
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 10
+  id: '6e223d3d-1d9e-4cdd-befe-bb9647e6ce73'
+  yt_id: y3NvMgbsVyM
+  last_modified: '2025-08-23T23:20:17.3396752Z'
+- artist: Aknestik
+  title: Suomirokkia
+  belongs_to: ''
+  year: 1998
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 32
+  id: '1c9f5002-c58c-4f0b-9520-a3e42fa09502'
+  yt_id: K8uI5eeZv30
+  last_modified: '2025-08-23T23:20:17.339971Z'
 - artist: Akon
   title: Lonely
   belongs_to: ''
@@ -1320,6 +1372,7 @@ hits:
   year: 1971
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 10
   id: f670e965-9746-4535-8f34-60548f703503
@@ -2073,6 +2126,7 @@ hits:
   year: 1989
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 38
@@ -2097,6 +2151,7 @@ hits:
   year: 1998
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 50
   id: '1fbd7cf2-a244-4695-83b3-2082547f9028'
@@ -2224,6 +2279,7 @@ hits:
   year: 2000
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 19
   id: '8c413552-c562-4bb6-9b23-04e4a2199fd4'
@@ -2456,6 +2512,7 @@ hits:
   year: 2013
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 12
   id: eab99d8b-9cef-4c25-91a1-4180991fb7a2
@@ -2536,6 +2593,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -2647,6 +2705,7 @@ hits:
   year: 2000
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
@@ -3490,6 +3549,16 @@ hits:
   id: cbe1a399-4f1a-4f87-9712-6ac6a8c52dd7
   yt_id: yq6wUeRp15Q
   last_modified: '2025-08-13T14:56:57.5537103Z'
+- artist: Anne Mattila
+  title: Perutaan häät
+  belongs_to: ''
+  year: 2005
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 12
+  id: '8dea25cc-3f29-46c5-a5f2-ca57e364f878'
+  yt_id: '8fBR0YzopLU'
+  last_modified: '2025-08-23T23:20:17.3424061Z'
 - artist: Anneke Gronloh
   title: Brandend Zand
   belongs_to: ''
@@ -3623,6 +3692,16 @@ hits:
   id: '3478c710-1f12-468b-91cc-d233ff111533'
   yt_id: o8dnL-W8kFc
   last_modified: '2025-07-24T09:31:11.0476086Z'
+- artist: Anssi Kela
+  title: '1972'
+  belongs_to: ''
+  year: 2003
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 5
+  id: c3634b3f-44ba-4fa7-9933-3de4cda398d8
+  yt_id: A8Yahj2fUgA
+  last_modified: '2025-08-23T23:20:17.3426932Z'
 - artist: Anthony Gonzalez, Gael Garcia Bernal
   title: Un Poco Loco
   belongs_to: Coco
@@ -3703,6 +3782,16 @@ hits:
   id: '14f2344b-6aa0-49a6-a165-15e3f4e1c5a9'
   yt_id: DdyjQD0xqLU
   last_modified: '2025-07-24T09:31:11.1608468Z'
+- artist: Antti Tuisku
+  title: Peto on irti
+  belongs_to: ''
+  year: 2015
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 8
+  id: '49470ebe-0b8c-4417-afeb-c5487bf38f31'
+  yt_id: pjjz9xOcsz0
+  last_modified: '2025-08-23T23:20:17.3430314Z'
 - artist: António Variações
   title: Canção de engate
   belongs_to: ''
@@ -3773,6 +3862,16 @@ hits:
   id: '06366c13-a32c-4057-8003-594ef2134e90'
   yt_id: v-FvZaaLKSI
   last_modified: '2025-07-24T09:31:11.443148Z'
+- artist: Apulanta
+  title: Pahempi toistaan
+  belongs_to: ''
+  year: 2005
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 45
+  id: '14dfc2d7-2370-4fb0-81e0-402f8ff67fb6'
+  yt_id: YTYRdwy4MI4
+  last_modified: '2025-08-23T23:20:17.3433408Z'
 - artist: Aqua
   title: Around the World
   belongs_to: ''
@@ -3977,6 +4076,7 @@ hits:
   year: 2018
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
   playback_offset: 0
@@ -4194,6 +4294,16 @@ hits:
   id: '2ba5edd6-310d-4853-a121-376386c3609b'
   yt_id: m8bZGxR86SI
   last_modified: '2025-07-24T09:31:11.1047701Z'
+- artist: Arttu Wiskari
+  title: Suomen muotoisen pilven alla
+  belongs_to: ''
+  year: 2018
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 14
+  id: '0fdd0bcf-9957-41bb-b66f-c9822ff4b561'
+  yt_id: a22mUEFz5JU
+  last_modified: '2025-08-23T23:20:17.343984Z'
 - artist: Artur Rojek
   title: Beksa
   belongs_to: ''
@@ -4417,6 +4527,7 @@ hits:
   year: 2018
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
@@ -4472,6 +4583,7 @@ hits:
   year: 2013
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -4774,6 +4886,16 @@ hits:
   id: a6054fcc-4e3f-462c-b77f-5efbbc1afe22
   yt_id: u2jQSbwkasI
   last_modified: '2025-07-24T09:31:10.5100302Z'
+- artist: BESS
+  title: Ram pam pam
+  belongs_to: ''
+  year: 2022
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 20
+  id: a8d4a67f-c704-4cab-a175-b077ac187347
+  yt_id: QQPlQbgps90
+  last_modified: '2025-08-23T23:20:17.3461439Z'
 - artist: BIG BANG
   title: BANG BANG BANG
   belongs_to: ''
@@ -4904,6 +5026,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - df0964f7-0354-466d-85dc-997c388625a6
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -4960,6 +5083,7 @@ hits:
   year: 2003
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 23
   id: '5fceacf8-edf2-4870-9f7e-2631624765f0'
@@ -5404,6 +5528,7 @@ hits:
   year: 1980
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -5500,6 +5625,7 @@ hits:
   year: 1974
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 19
@@ -5850,6 +5976,7 @@ hits:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
@@ -5926,6 +6053,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -6123,6 +6251,7 @@ hits:
   year: 1937
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 8
   id: '9c4d8458-8695-4c66-9fb1-bf22c6fc4fb2'
@@ -6690,6 +6819,7 @@ hits:
   year: 1971
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
@@ -7312,6 +7442,7 @@ hits:
   year: 2021
   packs:
   - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   playback_offset: 23
   id: deb82995-f193-4db7-95df-81595dc27a79
@@ -7414,6 +7545,7 @@ hits:
   year: 1997
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 26
   id: fc5aa337-05e4-417e-9f4a-9ab84fb100c1
@@ -7641,6 +7773,7 @@ hits:
   year: 1973
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 29
   id: ff216c87-3bd4-424f-b5a8-4ce73c1d5482
@@ -7844,6 +7977,7 @@ hits:
   year: 1988
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -7915,6 +8049,16 @@ hits:
   id: '0c0eda2a-dcea-4853-932a-75ca1e6bd8e4'
   yt_id: jO90ullM3FQ
   last_modified: '2025-07-24T09:31:10.8835332Z'
+- artist: Bogart Co.
+  title: All the Best Girls
+  belongs_to: ''
+  year: 1985
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 15
+  id: '52e724db-c922-483b-b854-2fd32ff1c5c5'
+  yt_id: rAxSqOg4ZME
+  last_modified: '2025-08-23T23:20:17.3478814Z'
 - artist: Bolland & Bolland
   title: Wait For The Sun
   belongs_to: ''
@@ -7945,6 +8089,16 @@ hits:
   id: dee459f3-4291-4ac7-b86f-6bb4d775140c
   yt_id: HyIKe7ksqiw
   last_modified: '2025-07-24T09:31:10.6829877Z'
+- artist: Bomfunk MC's
+  title: Freestyler
+  belongs_to: ''
+  year: 1999
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 67
+  id: '03c6d4e9-7867-4fa5-bebd-dfe9e2aed495'
+  yt_id: ymNFyxvIdaM
+  last_modified: '2025-08-23T23:20:17.348182Z'
 - artist: Bon Entendeur, Isabelle Pierre
   title: Le temps est bon
   belongs_to: ''
@@ -8002,6 +8156,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
@@ -8496,6 +8651,16 @@ hits:
   id: '575ec5ed-5dba-437e-b1a6-f49334aad1b4'
   yt_id: NKQfdL83qgs
   last_modified: '2025-08-13T14:56:57.5594494Z'
+- artist: Brita Koivunen
+  title: Suklaasydän - Mama's Pearls
+  belongs_to: ''
+  year: 1956
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 11
+  id: '154872f6-1df8-44c7-b6f4-79827b1e888f'
+  yt_id: '0EHTu2A4G40'
+  last_modified: '2025-08-23T23:20:17.3486445Z'
 - artist: Britney Spears
   title: '...Baby One More Time'
   belongs_to: ''
@@ -9078,6 +9243,7 @@ hits:
   year: 1984
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -9338,6 +9504,7 @@ hits:
   year: 1990
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -9892,6 +10059,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 17
   id: caf290c6-f0af-4c85-9f74-3508df4d27b1
@@ -10487,6 +10655,17 @@ hits:
   id: '07bcde9b-931c-4fc0-b0f5-7d6bcf1aa770'
   yt_id: wBZM6RSqW-Y
   last_modified: '2025-08-02T11:34:04.2493321Z'
+- artist: Catcat
+  title: Bye Bye Baby
+  belongs_to: ''
+  year: 1994
+  packs:
+  - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 30
+  id: '0aa0015b-dd11-45af-8506-0b8bc6fa2d39'
+  yt_id: '9_ZimsL7dqw'
+  last_modified: '2025-08-23T23:20:16.9531238Z'
 - artist: Caterina Caselli
   title: Insieme A Te Non Ci Sto Più
   belongs_to: ''
@@ -10564,6 +10743,7 @@ hits:
   year: 2010
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - eac81124-ab2e-4330-b4ac-0ece3f991323
@@ -10770,6 +10950,7 @@ hits:
   year: 1970
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 8
   id: f7b4656f-f762-486a-8455-7afe1e0affc9
@@ -10948,6 +11129,16 @@ hits:
   id: '3e4edaf2-8299-443f-bd6c-ac73427aaa6e'
   yt_id: '4VH5hu8TrUc'
   last_modified: '2025-07-24T09:31:11.473721Z'
+- artist: Cheek
+  title: Sokka irti
+  belongs_to: ''
+  year: 2012
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 19
+  id: '9cd537f0-3054-4b14-9747-292a682fb2f3'
+  yt_id: tG8XpMDbHGM
+  last_modified: '2025-08-23T23:20:17.3506428Z'
 - artist: Chef'Special
   title: Amigo
   belongs_to: ''
@@ -11103,6 +11294,16 @@ hits:
   id: '22e9420b-acd3-420c-90ce-d942453c247e'
   yt_id: '44bESFGZM74'
   last_modified: '2025-07-24T09:31:10.8308044Z'
+- artist: Chisu
+  title: Baden-Baden
+  belongs_to: ''
+  year: 2009
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 23
+  id: b18fa0bc-38e0-4b39-8ac0-af42f864996d
+  yt_id: Yu19IWuIArY
+  last_modified: '2025-08-23T23:20:17.3509321Z'
 - artist: Chor der Southwark Cathedral
   title: Ecce Homo
   belongs_to: Mr. Bean
@@ -11140,6 +11341,7 @@ hits:
   year: 1962
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 9
   id: '6cc05dbf-0f30-4065-8675-bed8baa8a77b'
@@ -11609,6 +11811,7 @@ hits:
   packs:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
@@ -12184,6 +12387,7 @@ hits:
   year: 2007
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 12
   id: '4b9098ed-ea11-4803-a749-36be4d07fcb9'
@@ -12496,6 +12700,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -12601,6 +12806,7 @@ hits:
   year: 1997
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 17
   id: '5e88a556-12c6-4033-abd3-2a9c1e940aa6'
@@ -12776,6 +12982,7 @@ hits:
   year: 2000
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 9
   id: '88722da9-f7f2-4056-ace2-c029e12282d8'
@@ -13188,6 +13395,7 @@ hits:
   year: 1993
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 22
   id: '6830085f-e4fc-4396-bf1b-49ded5e41dc3'
@@ -13231,6 +13439,7 @@ hits:
   year: 1996
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 4
@@ -14315,6 +14524,16 @@ hits:
   id: '9e6f22dd-e775-4113-b963-0e269225dfd1'
   yt_id: vhBHaz9SaLI
   last_modified: '2025-07-24T09:31:10.7438315Z'
+- artist: Danny
+  title: Kesäkatu
+  belongs_to: ''
+  year: 1966
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 7
+  id: '1facd274-08de-456e-bf96-aff31b43de66'
+  yt_id: Jn_JKefqh84
+  last_modified: '2025-08-23T23:20:17.3530546Z'
 - artist: Danny Lux
   title: Main Title
   belongs_to: Sliders
@@ -14483,6 +14702,7 @@ hits:
   belongs_to: ''
   year: 2000
   packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - eac81124-ab2e-4330-b4ac-0ece3f991323
   playback_offset: 28
   id: d4bfb14f-713f-4027-897c-0c3ecf62a5bb
@@ -14524,6 +14744,7 @@ hits:
   year: 1984
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 39
   id: c0aecd3c-2e04-4d91-b41b-35aae09a71fc
@@ -14807,6 +15028,7 @@ hits:
   year: 2009
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -15015,6 +15237,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 42
   id: '02e1e8a6-0202-44c0-a3a6-914438c37946'
@@ -15138,6 +15361,7 @@ hits:
   year: 2018
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 3
   id: '2adfe1b0-9d16-417c-80ea-67fd24a95967'
@@ -15221,6 +15445,7 @@ hits:
   year: 1995
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   - eac81124-ab2e-4330-b4ac-0ece3f991323
@@ -15328,6 +15553,7 @@ hits:
   year: 1961
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 6
   id: '39eede13-ee7c-48a3-9db6-6ad94067d8fb'
@@ -15523,6 +15749,7 @@ hits:
   year: 1981
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -15659,6 +15886,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
@@ -15714,6 +15942,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - eac81124-ab2e-4330-b4ac-0ece3f991323
@@ -15758,6 +15987,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -15819,6 +16049,7 @@ hits:
   year: 1997
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 15
@@ -16332,11 +16563,22 @@ hits:
   year: 1959
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 15
   id: f26ae48a-0047-4763-98fb-9183c607d38a
   yt_id: OmBxVfQTuvI
   last_modified: '2025-07-24T09:31:10.1142354Z'
+- artist: Dingo
+  title: Autiotalo
+  belongs_to: ''
+  year: 1984
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 34
+  id: b9377567-2c91-4a50-97db-e95a209a90b8
+  yt_id: '62VqTXv0b-c'
+  last_modified: '2025-08-23T23:20:17.356089Z'
 - artist: Dio
   title: Holy Diver
   belongs_to: ''
@@ -16390,6 +16632,7 @@ hits:
   year: 1982
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 21
   id: cf723f9e-dd96-4bb8-8981-a6e99b77770e
@@ -16729,6 +16972,16 @@ hits:
   id: a9e164db-4f83-4425-80e9-4e6f18cc6119
   yt_id: '6RUIeX6UCT8'
   last_modified: '2025-07-24T09:31:10.8918819Z'
+- artist: Don Huonot
+  title: Hyvää yötä ja huomenta
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 1
+  id: '142080fe-1048-4d78-8aca-99ede74aba2c'
+  yt_id: zcrnnOp61wM
+  last_modified: '2025-08-23T23:20:17.3566755Z'
 - artist: Don McLean
   title: American Pie
   belongs_to: ''
@@ -17504,6 +17757,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -18201,6 +18455,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -18582,6 +18837,16 @@ hits:
   id: '165fef43-8160-4cbd-80f9-af2bd3136ced'
   yt_id: TDK2RAxtg9g
   last_modified: '2025-07-24T09:31:11.1133676Z'
+- artist: Eini
+  title: Yes sir, alkaa polttaa
+  belongs_to: ''
+  year: 1978
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 34
+  id: '05d270ad-c3f9-46c1-9abe-f53012cfbe68'
+  yt_id: W9aFisKYYEA
+  last_modified: '2025-08-23T23:20:17.3575009Z'
 - artist: El Arrebato
   title: Búscate un hombre que te quiera
   belongs_to: ''
@@ -18899,6 +19164,7 @@ hits:
   year: 2014
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
   id: '0251a5c5-8a27-4c9d-b38c-ff050434bba5'
@@ -18928,6 +19194,16 @@ hits:
   id: '79b68054-1dd1-4361-9827-d83c2f4dd5ad'
   yt_id: '725WlG1idPc'
   last_modified: '2025-07-24T09:31:10.3836875Z'
+- artist: Ellinoora
+  title: Leijonakuningas
+  belongs_to: ''
+  year: 2016
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 7
+  id: '29f1d586-7767-4e8b-978d-cedb97b65ce7'
+  yt_id: bc5-6zT2iGY
+  last_modified: '2025-08-23T23:20:17.358089Z'
 - artist: Elodie
   title: Bagno a mezzanotte
   belongs_to: ''
@@ -18955,6 +19231,7 @@ hits:
   packs:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   - eac81124-ab2e-4330-b4ac-0ece3f991323
@@ -19452,6 +19729,7 @@ hits:
   year: 1916
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 15
   id: '51a2376c-5e1f-4a4d-b1af-0e91d7be2780'
@@ -19604,6 +19882,16 @@ hits:
   id: '99cc3860-ccd4-4a65-96ce-df763f0fa79c'
   yt_id: q8L5XatLa48
   last_modified: '2025-07-24T09:31:11.1146234Z'
+- artist: Eppu Normaali
+  title: Vuonna '85
+  belongs_to: ''
+  year: 1986
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 16
+  id: '8a4b5e15-d468-4ff1-bc14-71ab9135d232'
+  yt_id: slmVk9n8BlA
+  last_modified: '2025-08-23T23:20:17.3588396Z'
 - artist: Equipe 84
   title: Io ho in mente te
   belongs_to: ''
@@ -19703,6 +19991,7 @@ hits:
   year: 1974
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - df0964f7-0354-466d-85dc-997c388625a6
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -19805,6 +20094,16 @@ hits:
   id: '10b1b571-73ce-4b96-b298-1fb83d44acd8'
   yt_id: '4FJa3Xx7sRU'
   last_modified: '2025-07-24T09:31:09.6699665Z'
+- artist: Erika Vikman
+  title: Cicciolina
+  belongs_to: ''
+  year: 2020
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 14
+  id: '8d97f558-7681-4255-81c3-549cff8fb445'
+  yt_id: Wlk4ulVs-2M
+  last_modified: '2025-08-23T23:20:17.3594673Z'
 - artist: Erma Franklin
   title: Piece of My Heart
   belongs_to: ''
@@ -19955,6 +20254,7 @@ hits:
   year: 1960
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 18
   id: db13d97e-72ae-4b5d-8d46-8ad4fb3bd56a
@@ -19997,6 +20297,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
@@ -20110,6 +20411,16 @@ hits:
   id: '3f516d6c-d279-4d3e-888b-96d996bd3e78'
   yt_id: isY3rtuSsK8
   last_modified: '2025-07-24T09:31:09.6891075Z'
+- artist: Evelina, Mikael Gabriel
+  title: Honey
+  belongs_to: ''
+  year: 2015
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 16
+  id: '54d1827d-9335-44d4-90a0-3a206e715fff'
+  yt_id: n0PhDb81nCM
+  last_modified: '2025-08-23T23:20:17.3602856Z'
 - artist: Everything But The Girl, Todd Terry
   title: Missing
   belongs_to: ''
@@ -20480,6 +20791,7 @@ hits:
   year: 2014
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
@@ -20672,6 +20984,7 @@ hits:
   packs:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - eac81124-ab2e-4330-b4ac-0ece3f991323
   playback_offset: 35
@@ -20984,6 +21297,7 @@ hits:
   year: 2015
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 8
   id: '95ce2fc2-1aa4-45c1-be32-f8908922ae70'
@@ -21044,6 +21358,16 @@ hits:
   id: '25efe80c-521e-4be7-b584-7dfc13d9f773'
   yt_id: cXEaNAIkNd8
   last_modified: '2025-07-24T09:31:09.8665959Z'
+- artist: Fintelligens
+  title: Mikä boogie
+  belongs_to: ''
+  year: 2010
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 17
+  id: '3fb2e46d-f3d0-4eb9-9e36-3eccdda57182'
+  yt_id: pFCJBhj6ooc
+  last_modified: '2025-08-23T23:20:17.3614022Z'
 - artist: Fiordaliso
   title: Non voglio mica la luna
   belongs_to: ''
@@ -21102,6 +21426,7 @@ hits:
   year: 1998
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 13
@@ -21236,6 +21561,7 @@ hits:
   year: 2011
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 22
   id: '8f9ad87d-9135-4460-803f-3f4665fd0a25'
@@ -21403,6 +21729,7 @@ hits:
   year: 1984
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '7c557823-64fc-4f3a-a651-d972d664824c'
   playback_offset: 14
@@ -21465,6 +21792,7 @@ hits:
   year: 2010
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 33
   id: '6ff7f0ed-17ab-4c44-96cb-ef02c7f9890f'
@@ -21979,6 +22307,7 @@ hits:
   year: 1964
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 7
   id: '6e4b1299-f27d-453f-ac1b-d641f93da594'
@@ -22195,6 +22524,7 @@ hits:
   year: 1962
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 7
   id: '46f42b54-8ddd-4364-ac91-6c74cfcf96f8'
@@ -22527,6 +22857,16 @@ hits:
   id: '2d16ab52-a8a9-4360-8d1e-d462e1bfe618'
   yt_id: or4T2IPhRVc
   last_modified: '2025-07-24T09:31:10.5234996Z'
+- artist: Frederik
+  title: Titanic
+  belongs_to: ''
+  year: 1981
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 4
+  id: '4867293f-89ee-4f22-b24d-a1d39e718df7'
+  yt_id: M1U-IyXiXGc
+  last_modified: '2025-08-23T23:20:17.3632123Z'
 - artist: Fredz
   title: Nova
   belongs_to: ''
@@ -23368,6 +23708,7 @@ hits:
   year: 1986
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 15
   id: a275b4b1-bb7c-4e12-b72a-9b115f0779d9
@@ -24090,6 +24431,16 @@ hits:
   id: e9be6d0b-db60-4486-8f89-eed0d104e23f
   yt_id: oCG1R7pAyxU
   last_modified: '2025-07-24T09:31:10.0049505Z'
+- artist: Gimmel
+  title: Etsit Muijaa Seuraavaa
+  belongs_to: ''
+  year: 2002
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 16
+  id: '89b8911d-c526-437b-ba31-48adbfb0fa00'
+  yt_id: '9YrQydgWTXA'
+  last_modified: '2025-08-23T23:20:17.3638077Z'
 - artist: Gin Blossoms
   title: Follow You Down
   belongs_to: ''
@@ -24107,6 +24458,7 @@ hits:
   year: 1996
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - eac81124-ab2e-4330-b4ac-0ece3f991323
   playback_offset: 22
@@ -25238,6 +25590,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - df0964f7-0354-466d-85dc-997c388625a6
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -25266,6 +25619,7 @@ hits:
   year: 2011
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
   id: '450cf239-05aa-434b-b354-6fe6d632fb4e'
@@ -25342,6 +25696,16 @@ hits:
   id: '1430c5c0-8788-4b8a-9628-23a5e514c0c5'
   yt_id: W1k8M1Cq_pE
   last_modified: '2025-07-24T09:31:09.6769271Z'
+- artist: HIM
+  title: Join Me In Death
+  belongs_to: ''
+  year: 1999
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 30
+  id: c98c65b1-7af8-4a5d-94d3-2d842111c347
+  yt_id: J4wWq9LlnRE
+  last_modified: '2025-08-23T23:20:17.367036Z'
 - artist: HUGEL, Amber Van Day
   title: Mamma Mia
   belongs_to: ''
@@ -25421,6 +25785,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -25486,6 +25851,16 @@ hits:
   id: '24677c13-7201-435b-8d8b-d20c9f5ade66'
   yt_id: HXQiWKS5vtg
   last_modified: '2025-07-24T09:31:11.0097793Z'
+- artist: Haloo Helsinki!
+  title: Beibi
+  belongs_to: ''
+  year: 2014
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 11
+  id: dacd7bfc-01c4-4d4f-a89a-2b3e7dd7b768
+  yt_id: CyMpHXAjosA
+  last_modified: '2025-08-23T23:20:17.365037Z'
 - artist: Halvdan Sivertsen
   title: Ti Tusen Tommeltotta
   belongs_to: ''
@@ -25538,6 +25913,16 @@ hits:
   id: fbcf5fc4-fc75-4d98-a52c-a69e5a48a2b0
   yt_id: SN8gLMjErds
   last_modified: '2025-07-24T09:31:10.52691Z'
+- artist: Hanoi Rocks
+  title: Up Around The Bend
+  belongs_to: ''
+  year: 1984
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 14
+  id: cbd1f394-2028-4bd2-bcc7-88b630f52204
+  yt_id: '4bl5Fai-Z1c'
+  last_modified: '2025-08-23T23:20:17.3653264Z'
 - artist: Hans De Booij
   title: Annabel
   belongs_to: ''
@@ -25634,6 +26019,16 @@ hits:
   id: '46be039e-5077-457a-bd51-aa37a91cfee5'
   yt_id: '-GRHmEEaxv0'
   last_modified: '2025-07-24T09:31:10.5270901Z'
+- artist: Happoradio
+  title: Che Guevara
+  belongs_to: ''
+  year: 2008
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 12
+  id: '14b057f7-eb58-49b6-bd1a-7c36c2e7e3c9'
+  yt_id: Rdqzp03D-3Y
+  last_modified: '2025-08-23T23:20:17.365622Z'
 - artist: Happy End
   title: Jak Się Masz Kochanie
   belongs_to: ''
@@ -25705,6 +26100,7 @@ hits:
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '0a4a898a-37ad-4391-92ce-8273158d741c'
@@ -25744,6 +26140,7 @@ hits:
   year: 1968
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 8
   id: '097fc954-3bd1-4620-bae6-2d72346f91f0'
@@ -25771,6 +26168,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - df0964f7-0354-466d-85dc-997c388625a6
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -25811,6 +26209,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   - '7fb8f902-90a1-4765-b101-8ac49bd819a0'
@@ -25828,6 +26227,16 @@ hits:
   id: '2871ae6b-45d1-4e99-a6e3-584d620abaab'
   yt_id: ZNTl6Hbs45c
   last_modified: '2025-07-24T09:31:11.4873265Z'
+- artist: Hassisen Kone
+  title: Rappiolla
+  belongs_to: ''
+  year: 1980
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 10
+  id: '5c1b9ca8-bdc8-416a-91b5-bcb4acc8383b'
+  yt_id: LPy2zlvesm4
+  last_modified: '2025-08-23T23:20:17.3667352Z'
 - artist: Hazy Osterwald Sextett
   title: Kriminal-Tango
   belongs_to: ''
@@ -26655,6 +27064,7 @@ hits:
   year: 2013
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
   id: bbaf523b-bc41-46b7-ba9c-7fe8e7d1e022
@@ -26774,6 +27184,16 @@ hits:
   id: a1ff9e7a-0388-47a1-b6a9-1220aea57831
   yt_id: '-GOypbamLUU'
   last_modified: '2025-07-24T09:31:10.1951889Z'
+- artist: Hurriganes
+  title: Get On
+  belongs_to: ''
+  year: 1974
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 5
+  id: c57fc3ad-b187-442b-91e4-93dd8eb6772f
+  yt_id: yGCviZAdxeY
+  last_modified: '2025-08-23T23:20:17.3676523Z'
 - artist: Hurts
   title: Stay
   belongs_to: ''
@@ -27604,6 +28024,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -27736,6 +28157,16 @@ hits:
   id: '0b56ef45-c906-412c-bc15-6861fd39c81a'
   yt_id: kxOPWnq13Tk
   last_modified: '2025-07-24T09:31:11.1260014Z'
+- artist: Irina
+  title: Pokka
+  belongs_to: ''
+  year: 2007
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 13
+  id: '2d546398-8ddb-4092-9126-c4c2d38e5e5f'
+  yt_id: LpPdSpYxo04
+  last_modified: '2025-08-23T23:20:17.368313Z'
 - artist: Iron Maiden
   title: Fear of the Dark
   belongs_to: ''
@@ -27796,6 +28227,16 @@ hits:
   id: '50b522b4-ab96-4246-b174-ae7c58b471c5'
   yt_id: mUiK3o_tqsw
   last_modified: '2025-07-24T09:31:11.4905601Z'
+- artist: Irwin Goodman
+  title: Rentun ruusu
+  belongs_to: ''
+  year: 1988
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 15
+  id: c3e9178f-96ea-4d27-82d1-3908c6962b70
+  yt_id: '58amTnpzOIg'
+  last_modified: '2025-08-23T23:20:17.3686Z'
 - artist: Isaac Hayes
   title: Shaft
   belongs_to: Shaft
@@ -27836,6 +28277,16 @@ hits:
   id: '2fc1127b-a4e7-4082-afec-bacbffc34bba'
   yt_id: x3eVPwoL3Lc
   last_modified: '2025-07-24T09:31:10.0067273Z'
+- artist: Ismo Alanko
+  title: Taiteilijaelämää
+  belongs_to: ''
+  year: 1995
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 9
+  id: '398cd03b-0085-4a55-af99-1aa547dad73e'
+  yt_id: btmBgm-hR7I
+  last_modified: '2025-08-23T23:20:17.3688868Z'
 - artist: Israel Kamakawiwo'ole
   title: Over the Rainbow
   belongs_to: ''
@@ -27972,6 +28423,16 @@ hits:
   id: ea447a0d-dbbf-4f4b-a402-b54b2d700dcc
   yt_id: ACr4kSWHnmM
   last_modified: '2025-07-24T09:31:10.0069049Z'
+- artist: J. Karjalainen
+  title: Mennyt mies
+  belongs_to: ''
+  year: 2012
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 33
+  id: cd304478-9163-4ab9-86a1-0dd754014f37
+  yt_id: '6ym2F3rbKmM'
+  last_modified: '2025-08-23T23:20:17.3691874Z'
 - artist: JACK JONES
   title: The Love Boat
   belongs_to: Love Boat
@@ -28039,12 +28500,23 @@ hits:
   id: c5e43dfa-ae16-4bfe-9151-406458ff97f8
   yt_id: _d3t9cKPWrY
   last_modified: '2025-07-24T09:31:10.8452558Z'
+- artist: JVG, Märkä-Simo
+  title: Häissä
+  belongs_to: ''
+  year: 2011
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 13
+  id: '20d90f15-fd4e-42d5-8606-5f80496236b2'
+  yt_id: jVmw9MliefU
+  last_modified: '2025-08-23T23:20:17.3738883Z'
 - artist: Ja Rule, Ashanti
   title: Always On Time
   belongs_to: ''
   year: 2001
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 20
   id: '54881361-c9ac-4966-a1d5-30f4824b4287'
@@ -28076,6 +28548,7 @@ hits:
   year: 2022
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 41
   id: '3d25c36b-6931-42ab-95e3-82c97fd441e3'
@@ -28402,6 +28875,7 @@ hits:
   year: 1993
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 15
   id: eaa0faa2-777f-4f2f-80c3-7c2c7646f1a3
@@ -28622,6 +29096,7 @@ hits:
   year: 1971
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 10
   id: d8c5c6e6-6284-4fc5-a801-923ef6d35572
@@ -28750,6 +29225,7 @@ hits:
   year: 2008
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -29051,6 +29527,16 @@ hits:
   id: '02125a00-37fb-48c3-a9e6-6fbf3f7f19fc'
   yt_id: '03-V4y-giBI'
   last_modified: '2025-07-24T09:31:10.1976788Z'
+- artist: Jenni Vartiainen
+  title: Ihmisten edessä
+  belongs_to: ''
+  year: 2007
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 15
+  id: d0da44ef-97cb-4d21-becf-a57cc8fdf3d3
+  yt_id: PKidLh1Ryq4
+  last_modified: '2025-08-23T23:20:17.3708374Z'
 - artist: Jennifer Lopez, Dayvi, Victor Cardenas
   title: Baila Conmigo
   belongs_to: ''
@@ -29142,6 +29628,7 @@ hits:
   year: 1984
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
   id: d3c56961-dae8-48cf-8244-28714a63c3d9
@@ -29284,6 +29771,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
   id: e6f184b1-fd3e-43dc-ab0b-270570c06d62
@@ -29305,6 +29793,7 @@ hits:
   year: 2015
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 3
   id: '0b8c09ef-0234-4a89-8b15-47d1c7362ea8'
@@ -29707,6 +30196,7 @@ hits:
   year: 1995
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 58
   id: '5ddf536f-bf07-43bf-a545-0d81455bfde3'
@@ -29810,7 +30300,7 @@ hits:
   playback_offset: 48
   id: b3251bf8-b4b8-49ec-b164-85058926e79b
   yt_id: eXV4WyQMHFM
-  last_modified: '2025-08-13T14:56:57.9713871Z'
+  last_modified: '2025-08-23T23:20:18.576485Z'
 - artist: Joe Cocker
   title: You Can Leave Your Hat On
   belongs_to: ''
@@ -30163,6 +30653,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - df0964f7-0354-466d-85dc-997c388625a6
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -30188,6 +30679,7 @@ hits:
   year: 1986
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 24
   id: cda27859-9bb2-48d1-88d5-611d7fbde28a
@@ -30392,7 +30884,7 @@ hits:
   playback_offset: 8
   id: e2088c2d-ddcf-45a9-8911-c163e6af1c56
   yt_id: A_J2bcNx3Gw
-  last_modified: '2025-08-13T14:56:56.8726229Z'
+  last_modified: '2025-08-23T23:20:17.4944852Z'
 - artist: John Travolta, Olivia Newton-John
   title: You're The One That I Want
   belongs_to: Grease
@@ -30422,6 +30914,7 @@ hits:
   year: 1984
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 19
   id: df27e760-e6a3-4f72-a771-ce450a35a0b5
@@ -31181,6 +31674,7 @@ hits:
   year: 2005
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -31232,6 +31726,16 @@ hits:
   id: d709c9a3-a4f3-42b7-a7ba-377a60b4d872
   yt_id: PSZxmZmBfnU
   last_modified: '2025-07-24T09:31:10.066206Z'
+- artist: Juice Leskinen, Coïtus Int.
+  title: Marilyn
+  belongs_to: ''
+  year: 1974
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 5
+  id: '8e6dcf3a-157d-4063-8b7e-450d6c3cd6cc'
+  yt_id: '8BtgCBf5yus'
+  last_modified: '2025-08-23T23:20:17.3730556Z'
 - artist: Juice WRLD
   title: Hide
   belongs_to: 'Spider-Man: Into the Spiderverse'
@@ -31254,6 +31758,16 @@ hits:
   id: d17047c4-d2f1-4a67-9b05-c979e3ea36d7
   yt_id: mzB1VGEGcSU
   last_modified: '2025-07-24T09:31:10.6455198Z'
+- artist: Jukka Poika
+  title: Silkkii
+  belongs_to: ''
+  year: 2011
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 5
+  id: fbdd3db7-8b3c-4534-9214-f14b6ce06a53
+  yt_id: '0AN7cj3xc9M'
+  last_modified: '2025-08-23T23:20:17.3733431Z'
 - artist: Jul
   title: Tchikita
   belongs_to: ''
@@ -31523,6 +32037,7 @@ hits:
   year: 2002
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - eac81124-ab2e-4330-b4ac-0ece3f991323
@@ -32022,6 +32537,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -32101,6 +32617,26 @@ hits:
   id: ddede243-f8c1-41c4-acda-0074afa84e5a
   yt_id: YJpT1pydWjM
   last_modified: '2025-07-24T09:31:09.7823901Z'
+- artist: Kaija Koo
+  title: Tinakenkätyttö
+  belongs_to: ''
+  year: 1999
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 28
+  id: '776d062e-b5af-4247-b2c1-47f3a2c261c7'
+  yt_id: '6KM918xY95k'
+  last_modified: '2025-08-23T23:20:17.3741918Z'
+- artist: Kaija Koo
+  title: Vapaa
+  belongs_to: ''
+  year: 2010
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 16
+  id: '8b0ad147-619b-4fbe-b207-8cd5c63fd01a'
+  yt_id: '6aVPVlKh0KA'
+  last_modified: '2025-08-23T23:20:17.3744916Z'
 - artist: Kaiser Chiefs
   title: Ruby
   belongs_to: ''
@@ -32292,6 +32828,16 @@ hits:
   id: '107c0bf3-d2fa-4e72-88b3-4dd234c74363'
   yt_id: Twg25xkACwo
   last_modified: '2025-07-24T09:31:10.7544073Z'
+- artist: Kari Tapio
+  title: Olen suomalainen
+  belongs_to: ''
+  year: 1983
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 0
+  id: '4585d3c9-d85d-4136-9a0e-2530e052d0f2'
+  yt_id: _uChPZHrX_k
+  last_modified: '2025-08-23T23:20:17.3748894Z'
 - artist: Karim Ouellet
   title: L'amour
   belongs_to: ''
@@ -32393,6 +32939,16 @@ hits:
   id: '2311b336-c28a-448f-93a7-ed4090f508ad'
   yt_id: WEmdUN0cAhw
   last_modified: '2025-07-24T09:31:10.5334835Z'
+- artist: Kaseva
+  title: Striptease tanssija
+  belongs_to: ''
+  year: 1974
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 6
+  id: d05f9edd-d544-443e-9bb4-4b715a5cf399
+  yt_id: dsat-3PpYBc
+  last_modified: '2025-08-23T23:20:17.3751815Z'
 - artist: Kashmir
   title: Rocket Brothers
   belongs_to: ''
@@ -32460,6 +33016,7 @@ hits:
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 25
   id: '9849b1e8-24a3-4ea6-8687-c6762dabe5f6'
@@ -32597,6 +33154,16 @@ hits:
   id: '145f67b0-04a5-43c9-9aa6-b5cd42ec9717'
   yt_id: '5YPgEQw208w'
   last_modified: '2025-07-24T09:31:09.7836314Z'
+- artist: Katri Helena
+  title: Puhelinlangat laulaa
+  belongs_to: ''
+  year: 1964
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 5
+  id: f028bcd1-5022-4e09-a26f-20f18c389643
+  yt_id: '1xgtWNTxAXM'
+  last_modified: '2025-08-23T23:20:17.3756446Z'
 - artist: Katrina & The Waves
   title: Walking On Sunshine
   belongs_to: ''
@@ -32842,6 +33409,7 @@ hits:
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 19
   id: '7a4e0956-8d86-425f-9802-6f32987a142c'
@@ -33019,7 +33587,7 @@ hits:
   playback_offset: 24
   id: '19eed71d-fdca-451c-9a24-8c6c378af1d8'
   yt_id: bjQ9vTsMQ4I
-  last_modified: '2025-08-13T14:56:57.2011639Z'
+  last_modified: '2025-08-23T23:20:17.8201289Z'
 - artist: Kenny Rogers
   title: The Gambler
   belongs_to: ''
@@ -33027,6 +33595,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 4
   id: bc54338e-2429-4e98-9c05-01ea0fda9e38
@@ -33163,6 +33732,16 @@ hits:
   id: '22ba5940-88b0-496e-89f0-7cea9103d0f3'
   yt_id: Nn1Zs_ijOZA
   last_modified: '2025-07-24T09:31:11.2399972Z'
+- artist: Kikka
+  title: Mä haluun viihdyttää
+  belongs_to: ''
+  year: 1989
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 32
+  id: '95a92458-015f-4fa2-9b9b-ad52200093c5'
+  yt_id: XwduZBLFzx4
+  last_modified: '2025-08-23T23:20:17.3762759Z'
 - artist: Kiko Veneno
   title: Volando Voy
   belongs_to: ''
@@ -33229,6 +33808,7 @@ hits:
   year: 1981
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 10
   id: '866d7fe8-e471-46d5-9c60-472e9c124327'
@@ -33279,21 +33859,21 @@ hits:
   belongs_to: ''
   year: 2000
   packs:
-  - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
-  playback_offset: 0
-  id: '3d121085-9334-4fbe-a64e-8723157652b1'
-  yt_id: '28J65ZZbAUE'
-  last_modified: '2025-07-24T09:31:11.240175Z'
-- artist: King Africa
-  title: La Bomba
-  belongs_to: ''
-  year: 2000
-  packs:
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   playback_offset: 0
   id: f9bf9b29-2ce9-4e41-9b4a-f0266b5df9d6
   yt_id: QlPS16NeBO0
   last_modified: '2025-07-24T09:31:10.2605276Z'
+- artist: King Africa
+  title: La Bomba
+  belongs_to: ''
+  year: 2000
+  packs:
+  - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
+  playback_offset: 0
+  id: '3d121085-9334-4fbe-a64e-8723157652b1'
+  yt_id: '28J65ZZbAUE'
+  last_modified: '2025-07-24T09:31:11.240175Z'
 - artist: King Gnu
   title: BOY
   belongs_to: Ranking of Kings
@@ -33368,6 +33948,27 @@ hits:
   id: '18f393ac-6802-4fc1-926b-55d0ed1d8c74'
   yt_id: '3sbz0zaOxMk'
   last_modified: '2025-07-24T09:31:11.4096339Z'
+- artist: Kirka, The Islanders
+  title: Hetki lyö
+  belongs_to: ''
+  year: 1967
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 3
+  id: '0adb85da-779b-4e69-8ba6-2fb11417cab4'
+  yt_id: '3gvZEuNy71Q'
+  last_modified: '2025-08-23T23:20:17.3770362Z'
+- artist: Kirka
+  title: Hengaillaan
+  belongs_to: ''
+  year: 1984
+  packs:
+  - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 3
+  id: '4d2f4410-877f-4c24-90e0-a45a440d514c'
+  yt_id: GFE8MF6iWe0
+  last_modified: '2025-08-23T23:20:16.958522Z'
 - artist: Kirsti Sparboe
   title: Oj Oj Oj Så Glad Jeg Skal Bli
   belongs_to: ''
@@ -33536,6 +34137,7 @@ hits:
   year: 2013
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 6
   id: b4020588-ad51-4adb-a10c-2c8cfb9a9155
@@ -33651,6 +34253,16 @@ hits:
   id: d3684852-da84-4e7c-9372-8adaf800ada8
   yt_id: zi8ShAosqzI
   last_modified: '2025-07-24T09:31:09.7857724Z'
+- artist: Kolmas Nainen
+  title: Tästä Asti Aikaa
+  belongs_to: ''
+  year: 1990
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 11
+  id: '59e66f0c-ec41-409e-a798-08d42c1de0de'
+  yt_id: '2rduNgC9ScA'
+  last_modified: '2025-08-23T23:20:17.377784Z'
 - artist: Kombi
   title: Słodkiego, miłego życia
   belongs_to: ''
@@ -33849,6 +34461,7 @@ hits:
   year: 1992
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -34267,6 +34880,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -34585,6 +35199,7 @@ hits:
   year: 2024
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 8
   id: '4062dfbf-2985-41e4-860d-e5f8d7f50ec4'
@@ -34727,6 +35342,16 @@ hits:
   id: d66c398d-1180-47c7-9100-6fc3d85e7ab6
   yt_id: urAx7-a_tUA
   last_modified: '2025-07-24T09:31:10.5930578Z'
+- artist: Laila Kinnunen
+  title: Kellä kulta sillä onni - Everybody Loves A Lover
+  belongs_to: ''
+  year: 1958
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 10
+  id: '54d63aec-df63-4b6b-8621-b599a1d42ac7'
+  yt_id: '5WuMnLp_izY'
+  last_modified: '2025-08-23T23:20:17.3785371Z'
 - artist: Laing
   title: Ich bin morgens immer müde
   belongs_to: ''
@@ -35140,6 +35765,16 @@ hits:
   id: '9179de3a-9e80-4679-9bdf-871df8f3c03d'
   yt_id: Q-bGaHYp8mg
   last_modified: '2025-07-24T09:31:10.2621266Z'
+- artist: Lauri Tähkä & Elonkerjuu
+  title: Pauhaava sydän
+  belongs_to: ''
+  year: 2007
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 13
+  id: '2c40c244-5875-4e6b-9263-8c2d20d07ad0'
+  yt_id: t9j-ZKwoVLQ
+  last_modified: '2025-08-23T23:20:17.3788258Z'
 - artist: Laurie Johnson
   title: Theme from The Professionals
   belongs_to: Die Profis
@@ -35290,6 +35925,7 @@ hits:
   year: 1971
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '14f42312-4ddd-414a-ab94-3ba5378fa498'
@@ -35340,6 +35976,16 @@ hits:
   id: ed5fd27b-8ca4-421b-a2bc-bcb93ea9ddaa
   yt_id: tqNosoNbQCw
   last_modified: '2025-07-24T09:31:11.5041557Z'
+- artist: Leevi and the leavings
+  title: Pohjois-Karjala
+  belongs_to: ''
+  year: 1986
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 32
+  id: df016c9d-75d2-4abb-8be9-dfaa57dbad37
+  yt_id: enWoByIcXt4
+  last_modified: '2025-08-23T23:20:17.379285Z'
 - artist: Leiva
   title: Terriblemente Cruel
   belongs_to: ''
@@ -36153,6 +36799,7 @@ hits:
   year: 1968
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 5
   id: '57f3db78-a061-4588-9cea-5fb83857d369'
@@ -36458,6 +37105,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
@@ -36845,6 +37493,7 @@ hits:
   year: 2006
   packs:
   - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   playback_offset: 15
   id: '271c1c22-736c-46aa-b34e-e2e6faea7f45'
   yt_id: '3ITvi0rXKW8'
@@ -37073,6 +37722,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
@@ -37456,6 +38106,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 4
   id: a8684297-3ce5-4a83-b501-622595058551
@@ -38175,6 +38826,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - ec58c124-0e1b-4c6a-bdf9-d82d6d79ef37
@@ -38254,6 +38906,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 54
   id: '0d55a495-17ee-485c-901d-fc56d8d5f262'
@@ -38414,6 +39067,16 @@ hits:
   id: '2cca111e-9a70-4b7b-8c26-d170165a6890'
   yt_id: '0iS-5uUP0Vg'
   last_modified: '2025-07-24T09:31:11.0205826Z'
+- artist: Maarit
+  title: Jäätelökesä
+  belongs_to: ''
+  year: 1978
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 18
+  id: bb195190-ac11-4f21-8418-f393e35559e7
+  yt_id: rKHVqAxJuEM
+  last_modified: '2025-08-23T23:20:17.3806082Z'
 - artist: Mabel
   title: Don't Call Me Up
   belongs_to: ''
@@ -38749,6 +39412,7 @@ hits:
   year: 2016
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 9
   id: d07d7c22-ddc0-43b7-8f31-0ea541b940e8
@@ -38834,6 +39498,16 @@ hits:
   id: a014df37-3308-4daf-99d6-b3abf6cee516
   yt_id: Pz168-XMNIk
   last_modified: '2025-07-24T09:31:11.1330294Z'
+- artist: Maija Vilkkumaa
+  title: Satumaa-tango
+  belongs_to: ''
+  year: 1999
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 16
+  id: '5ac53a6f-50f2-468c-8562-eeb23b17e9cd'
+  yt_id: WygTnKrlyIc
+  last_modified: '2025-08-23T23:20:17.3813564Z'
 - artist: Maite Kelly, Roland Kaiser
   title: Warum hast du nicht nein gesagt
   belongs_to: ''
@@ -38901,6 +39575,7 @@ hits:
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -39744,6 +40419,17 @@ hits:
   id: '7675a35d-62dd-4ddb-930a-414ffb5860a4'
   yt_id: aFBl7hMnMzE
   last_modified: '2025-07-24T09:31:09.7947014Z'
+- artist: Marion Rung
+  title: Tipi-tii
+  belongs_to: ''
+  year: 1962
+  packs:
+  - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 7
+  id: '1c6cae7c-8dd1-4a9f-994a-dc0b64f4d4ae'
+  yt_id: DP5qIuHdESo
+  last_modified: '2025-08-23T23:20:16.9618533Z'
 - artist: Marisol
   title: Corazón Contento
   belongs_to: ''
@@ -40168,6 +40854,7 @@ hits:
   year: 2002
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - df0964f7-0354-466d-85dc-997c388625a6
@@ -40254,6 +40941,7 @@ hits:
   year: 1963
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 28
   id: '60d6c161-6d57-4dac-b96b-af7903768c02'
@@ -40298,6 +40986,7 @@ hits:
   year: 1988
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 18
   id: '71391557-7811-46ac-b054-72a67a80bc8d'
@@ -40454,6 +41143,7 @@ hits:
   year: 1967
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
@@ -40522,6 +41212,7 @@ hits:
   year: 2000
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 11
   id: '0f0d21cc-216d-4527-bdae-73e9b59dcecd'
@@ -40798,6 +41489,7 @@ hits:
   year: 1997
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 19
   id: '0960b6b5-efbb-444c-8b4a-8c1fa2169fc3'
@@ -41006,6 +41698,16 @@ hits:
   id: de46f259-4ba5-48d0-a718-8ac9ca34a55d
   yt_id: o1Z_hskvz1M
   last_modified: '2025-07-24T09:31:10.4646876Z'
+- artist: Maustetytöt
+  title: Tein kai lottorivini väärin
+  belongs_to: ''
+  year: 2019
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 16
+  id: '00176a01-2c8a-4159-a2a2-58b3dd9a0491'
+  yt_id: '9ljq16G060s'
+  last_modified: '2025-08-23T23:20:17.3836057Z'
 - artist: Max Gazzè
   title: Il Solito Sesso
   belongs_to: ''
@@ -42368,6 +43070,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 25
@@ -42445,6 +43148,16 @@ hits:
   id: '1ae8e60a-a9d7-4f41-81ed-cd0eb0d580d2'
   yt_id: N0ixzrZe--0
   last_modified: '2025-07-24T09:31:09.6939784Z'
+- artist: Mika Sundqvist
+  title: Moottoripyörä on moottoripyörä
+  belongs_to: ''
+  year: 1980
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 14
+  id: '2faed02a-5be5-4593-9106-fbc3812a386b'
+  yt_id: vbqqC_vPmGk
+  last_modified: '2025-08-23T23:20:17.3842441Z'
 - artist: Mike & The Mechanics
   title: The Living Years
   belongs_to: ''
@@ -42769,6 +43482,7 @@ hits:
   year: 2009
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -42883,6 +43597,7 @@ hits:
   year: 2001
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 25
   id: '581afaee-035f-4740-8641-8dba2778d712'
@@ -42938,6 +43653,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   - '0a4a898a-37ad-4391-92ce-8273158d741c'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -43384,12 +44100,23 @@ hits:
   id: eb0edf33-86c5-40df-8f64-61fe14cd077c
   yt_id: kBWhvogb3wo
   last_modified: '2025-07-24T09:31:10.8552778Z'
+- artist: Movetron
+  title: Romeo & Julia
+  belongs_to: ''
+  year: 1995
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 3
+  id: '14a53f22-1ad8-48a4-b4b8-6f5a2cce646b'
+  yt_id: PkpbpCrFHSI
+  last_modified: '2025-08-23T23:20:17.3852054Z'
 - artist: Mr. Big
   title: To Be With You
   belongs_to: ''
   year: 1991
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '7c557823-64fc-4f3a-a651-d972d664824c'
   playback_offset: 6
@@ -43413,6 +44140,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -43682,6 +44410,26 @@ hits:
   id: '72d82cb6-021f-46d5-a488-23de31fce406'
   yt_id: Op61Eg83abw
   last_modified: '2025-07-24T09:31:10.5424147Z'
+- artist: Muska
+  title: Krokotiili rock
+  belongs_to: ''
+  year: 1973
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 14
+  id: '87c03e7a-1970-4f8a-afca-563700cdc109'
+  yt_id: v_-VKCsD3nk
+  last_modified: '2025-08-23T23:20:17.3860281Z'
+- artist: Musta Barbaari
+  title: Salil eka salil vika
+  belongs_to: ''
+  year: 2013
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 2
+  id: '7306f328-c02a-495c-958e-cecbcf41f0a5'
+  yt_id: a0efCvco2uI
+  last_modified: '2025-08-23T23:20:17.3863841Z'
 - artist: Mustii
   title: Before the Party's Over
   belongs_to: ''
@@ -44134,6 +44882,7 @@ hits:
   year: 1966
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 12
   id: a72dca1d-c0d9-4c0d-829a-1a32cd7e78b9
@@ -44508,6 +45257,7 @@ hits:
   year: 2005
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 19
   id: f3e28ec3-a838-432c-bcfe-30df6de2a40a
@@ -44666,6 +45416,7 @@ hits:
   year: 1962
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 13
   id: '8507176b-e59a-4be1-904a-7b404b1fcd00'
@@ -44677,6 +45428,7 @@ hits:
   year: 1971
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 34
@@ -44704,6 +45456,26 @@ hits:
   id: '80ed4dd3-a9d5-4177-be15-133e93083ef9'
   yt_id: lH_xQp1zTPw
   last_modified: '2025-07-24T09:31:10.2115505Z'
+- artist: Nelja Baritonia
+  title: Pop-Musiikkia
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 16
+  id: '6991a545-11a4-441e-bd78-36ed138a81a5'
+  yt_id: zkzviqnLaTM
+  last_modified: '2025-08-23T23:20:17.3874565Z'
+- artist: Neljä Ruusua
+  title: Juppihippipunkkari
+  belongs_to: ''
+  year: 1992
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 17
+  id: '20f32cd8-a447-4ac9-8a4d-9f8faee279fb'
+  yt_id: sULPt2XD-Bw
+  last_modified: '2025-08-23T23:20:17.3877448Z'
 - artist: Nell Benjamin, Jeff Richmond, Barrett Wilbert Weed, Erika Henningsen
   title: Apex Predator
   belongs_to: 'Mean Girls: The Musical'
@@ -44975,6 +45747,16 @@ hits:
   id: c20b9b6c-222a-41b4-8a84-0cb7f55fbe95
   yt_id: SnsIdfDOuC8
   last_modified: '2025-07-24T09:31:10.269991Z'
+- artist: Neon 2
+  title: Kemiaa
+  belongs_to: ''
+  year: 1992
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 17
+  id: d669c8fb-0f51-47e0-a289-4c9107c0107d
+  yt_id: uPHczPburbI
+  last_modified: '2025-08-23T23:20:17.3880298Z'
 - artist: Neon Trees
   title: Everybody Talks
   belongs_to: ''
@@ -45130,6 +45912,7 @@ hits:
   year: 1972
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 15
   id: '7a437a38-f452-4e31-a395-0f49a1487a10'
@@ -45253,6 +46036,7 @@ hits:
   year: 2005
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
@@ -45366,20 +46150,11 @@ hits:
   year: 2013
   packs:
   - e6633c59-750f-42b9-94c7-e039e5739dae
+  - eac81124-ab2e-4330-b4ac-0ece3f991323
   playback_offset: 15
   id: '7e106448-162c-41c7-9e15-f4ac58994f0a'
   yt_id: R_4rNKzRXOs
   last_modified: '2025-08-13T14:56:57.5972511Z'
-- artist: Nico & Vinz
-  title: Am I Wrong
-  belongs_to: ''
-  year: 2013
-  packs:
-  - eac81124-ab2e-4330-b4ac-0ece3f991323
-  playback_offset: 15
-  id: '7319b13f-9d90-4e98-a410-b2d1ae3c9ae5'
-  yt_id: VBmEJZofz2s
-  last_modified: '2025-08-11T13:23:44.7729126Z'
 - artist: Nico Haak
   title: Schmidtchen Schleicher
   belongs_to: ''
@@ -45526,7 +46301,7 @@ hits:
   belongs_to: ''
   year: 2004
   packs:
-  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   playback_offset: 15
   id: '9488d362-3912-4e4b-a8d9-e1e5d6e0c8a8'
   yt_id: TK5PHRxIAOk
@@ -46237,6 +47012,16 @@ hits:
   id: '267dc88b-57b7-4f83-8787-b7471bf5a707'
   yt_id: U9O05j8kCCQ
   last_modified: '2025-07-24T09:31:10.0273176Z'
+- artist: Nylon Beat
+  title: Rakastuin mä looseriin
+  belongs_to: ''
+  year: 1996
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 47
+  id: dc41345b-315d-4bf5-b9ae-eb6f9846a64e
+  yt_id: mKK32ZB12bA
+  last_modified: '2025-08-23T23:20:17.3894908Z'
 - artist: Nâdiya
   title: Parle-moi
   belongs_to: ''
@@ -46254,6 +47039,7 @@ hits:
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -46729,6 +47515,7 @@ hits:
   year: 2015
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 25
@@ -47017,6 +47804,7 @@ hits:
   year: 1968
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
   - eac81124-ab2e-4330-b4ac-0ece3f991323
@@ -47102,6 +47890,7 @@ hits:
   year: 2002
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 25
@@ -47252,6 +48041,16 @@ hits:
   id: d49d0f67-2d1e-4988-a649-4452b81fff95
   yt_id: VFGAMdmUcuc
   last_modified: '2025-07-24T09:31:11.4572555Z'
+- artist: PMMP
+  title: Rusketusraidat
+  belongs_to: ''
+  year: 2003
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 21
+  id: fe18adb2-75e2-43e2-94fa-241027397c1c
+  yt_id: uW8m_w75vRs
+  last_modified: '2025-08-23T23:20:17.3935038Z'
 - artist: PRO8L3M
   title: Flary
   belongs_to: ''
@@ -47279,6 +48078,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -47376,6 +48176,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -47540,6 +48341,7 @@ hits:
   year: 1923
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 9
   id: '02ab80d4-ce48-44ce-9395-bb63a93cdc6c'
@@ -47601,6 +48403,7 @@ hits:
   year: 2012
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 26
@@ -47783,6 +48586,7 @@ hits:
   year: 1987
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 14
@@ -48011,6 +48815,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 4
   id: '1c3a9a07-b643-4fba-a055-a3b938c0f026'
@@ -48049,6 +48854,7 @@ hits:
   year: 1985
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 26
   id: '7d385499-4467-4bc0-9ca5-cf8304c79339'
@@ -48074,6 +48880,16 @@ hits:
   id: f7641bf7-70d5-4654-8e0e-c2cdcd5d9d2e
   yt_id: rlA8gQr7ixI
   last_modified: '2025-07-24T09:31:11.5140838Z'
+- artist: Paula Koivuniemi
+  title: Aikuinen nainen - Maledetta Primavera
+  belongs_to: ''
+  year: 1982
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 7
+  id: d88c5ecc-bbd7-45d1-a1ee-45e07df870b3
+  yt_id: a0_tUUVeF0k
+  last_modified: '2025-08-23T23:20:17.3917557Z'
 - artist: Paulina Rubio
   title: Mío
   belongs_to: ''
@@ -48124,6 +48940,16 @@ hits:
   id: '1200748c-f132-40fd-9350-a712ec3808e9'
   yt_id: sIGIuLL_pZE
   last_modified: '2025-07-24T09:31:11.0812563Z'
+- artist: Pave Maijanen
+  title: Lähtisitkö
+  belongs_to: ''
+  year: 1984
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 16
+  id: '9e6e1179-1f8a-461e-8d94-c2c951770bbd'
+  yt_id: LLlNe6vyokI
+  last_modified: '2025-08-23T23:20:17.3921083Z'
 - artist: Paweł Domagała
   title: Weź nie pytaj
   belongs_to: ''
@@ -48261,6 +49087,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 14
   id: '30522b96-655e-4cff-a12d-a3ea50902530'
@@ -48440,6 +49267,7 @@ hits:
   year: 1993
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 32
@@ -48487,6 +49315,16 @@ hits:
   id: '10e8f8de-a259-4c72-8125-61c52ff6afdc'
   yt_id: EsP_TdpsHRg
   last_modified: '2025-07-24T09:31:11.5144466Z'
+- artist: Pete Parkkonen
+  title: Kohta sataa
+  belongs_to: ''
+  year: 2016
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 17
+  id: '31b91e3f-638b-4ffa-bfe1-944f2212b90b'
+  yt_id: L9ZbJrxloQ8
+  last_modified: '2025-08-23T23:20:17.3927462Z'
 - artist: Peter & Sloane
   title: Besoin de rien, envie de toi
   belongs_to: ''
@@ -48557,6 +49395,7 @@ hits:
   year: 1986
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 12
   id: f1fec79a-c252-4888-9ce5-f1628814915b
@@ -49279,6 +50118,7 @@ hits:
   packs:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - df0964f7-0354-466d-85dc-997c388625a6
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -49520,6 +50360,16 @@ hits:
   id: '97efe07d-19b2-460a-8fb6-7964395171f8'
   yt_id: '71Tzgyvjto0'
   last_modified: '2025-07-24T09:31:10.0803788Z'
+- artist: Poju
+  title: Poika saunoo
+  belongs_to: ''
+  year: 2011
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 16
+  id: f465a5fe-b0ab-4644-87ab-7b8aa93e3c4b
+  yt_id: EbAzBRg6ClI
+  last_modified: '2025-08-23T23:20:17.3937893Z'
 - artist: Polarkreis 18
   title: Allein Allein
   belongs_to: ''
@@ -49570,6 +50420,16 @@ hits:
   id: f2c11330-ac7f-47b9-bcd6-1a18df644c9a
   yt_id: '3suy_oCNOK4'
   last_modified: '2025-07-24T09:31:10.6590199Z'
+- artist: Popeda
+  title: Kuuma kesä
+  belongs_to: ''
+  year: 1985
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 8
+  id: '14bbf510-d6a6-49ca-8ed3-2496f495de16'
+  yt_id: '8uHmW72RA1o'
+  last_modified: '2025-08-23T23:20:17.3940767Z'
 - artist: Poppy
   title: Lowlife
   belongs_to: ''
@@ -49600,6 +50460,16 @@ hits:
   id: '7ea997e8-8fa0-4750-b1bc-57bb23b60521'
   yt_id: '6PTIWynY82E'
   last_modified: '2025-07-24T09:31:09.6959431Z'
+- artist: Portion Boys, Matti ja Teppo
+  title: Vauhti kiihtyy
+  belongs_to: ''
+  year: 2021
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 0
+  id: ecbaed92-9c90-41e6-899a-0ddea368989c
+  yt_id: ltAOoA1y3Q8
+  last_modified: '2025-08-23T23:20:17.3943637Z'
 - artist: Portugal. The Man
   title: Feel It Still
   belongs_to: ''
@@ -49622,6 +50492,7 @@ hits:
   year: 2017
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 13
   id: '95b4c7d2-6eef-4174-bf05-d7ca52cbe98e'
@@ -49780,6 +50651,7 @@ hits:
   year: 2020
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
   id: '28c12d8f-65ae-495c-a37c-bc0660c0933d'
@@ -49811,6 +50683,7 @@ hits:
   year: 1994
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 16
   id: '94e59dc8-42d9-4d12-a6e1-7d56117db0c2'
@@ -50016,6 +50889,7 @@ hits:
   year: 1995
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 6
   id: '321b37cf-524c-4b65-a94e-d31a8bb64650'
@@ -50097,6 +50971,7 @@ hits:
   year: 2023
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 18
@@ -50244,6 +51119,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -50549,6 +51425,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -50983,6 +51860,16 @@ hits:
   id: '9252ae62-3623-461c-82d7-df0e9b1f7ebd'
   yt_id: TEwWrpebnkM
   last_modified: '2025-07-24T09:31:10.7186263Z'
+- artist: Raptori
+  title: Oi Beibi
+  belongs_to: ''
+  year: 1990
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 7
+  id: '31ae1cd2-01f5-4241-8e91-f0a75b6e8a29'
+  yt_id: ITyJAcNJXyM
+  last_modified: '2025-08-23T23:20:17.3964928Z'
 - artist: Raquel Rastenni
   title: Heksedansen
   belongs_to: ''
@@ -51043,6 +51930,16 @@ hits:
   id: '4ade93cc-52b1-4bae-9fba-2cfde6c99597'
   yt_id: xLjjIjgoYgY
   last_modified: '2025-07-24T09:31:11.2015848Z'
+- artist: Rauli Badding Somerjoki
+  title: Paratiisi
+  belongs_to: ''
+  year: 1973
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 9
+  id: e8c54ef2-8a9f-405d-840c-5e23d0a632cf
+  yt_id: FJG76l345E4
+  last_modified: '2025-08-23T23:20:17.3967798Z'
 - artist: Ravers Nature
   title: Take off
   belongs_to: ''
@@ -51092,7 +51989,7 @@ hits:
   playback_offset: 5
   id: '32b25669-8d59-4f5f-bee8-c01ae4cad4e2'
   yt_id: SrnWp5O0DEs
-  last_modified: '2025-08-13T14:56:58.1704373Z'
+  last_modified: '2025-08-23T23:20:18.762473Z'
 - artist: Ray Charles
   title: I've Got a Woman
   belongs_to: ''
@@ -52692,6 +53589,16 @@ hits:
   id: acddc38c-67f3-4bb6-ba2b-dc8cbbfa8b6c
   yt_id: BMLpKkyyeI4
   last_modified: '2025-07-24T09:31:11.1484701Z'
+- artist: Robin Packalen
+  title: Frontside Ollie
+  belongs_to: ''
+  year: 2012
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 12
+  id: '9981a6bf-2cd8-4622-9b37-b0e7594c717d'
+  yt_id: oNfwMepTuZ0
+  last_modified: '2025-08-23T23:20:17.397072Z'
 - artist: Robin S
   title: Show Me Love
   belongs_to: ''
@@ -52700,9 +53607,9 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 20
-  id: a4a72b70-f754-4580-af0a-f276f40fc7f4
-  yt_id: Ps2Jc28tQrw
-  last_modified: '2025-07-24T09:31:11.030211Z'
+  id: c6bffaaf-eaa5-46eb-9272-822eaa73ac07
+  yt_id: '7HP9Z_3exGE'
+  last_modified: '2025-08-23T23:20:17.0805975Z'
 - artist: Robin Schulz, Alida
   title: In Your Eyes
   belongs_to: ''
@@ -52738,6 +53645,7 @@ hits:
   year: 2010
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 11
   id: '490806c6-9d72-4938-ab92-31e8eb94fa48'
@@ -53389,6 +54297,7 @@ hits:
   year: 1988
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 17
   id: b8c615d8-e769-4f4e-81a4-2ac072804882
@@ -53721,6 +54630,7 @@ hits:
   year: 1986
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - eac81124-ab2e-4330-b4ac-0ece3f991323
   playback_offset: 16
@@ -54108,6 +55018,7 @@ hits:
   year: 1992
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '7c557823-64fc-4f3a-a651-d972d664824c'
@@ -54157,6 +55068,16 @@ hits:
   id: '8b2426bd-b5c8-4132-9951-f40f8328e8bc'
   yt_id: libAD49_XNw
   last_modified: '2025-07-24T09:31:09.6979058Z'
+- artist: STIG
+  title: Roy Orbison
+  belongs_to: ''
+  year: 2014
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 2
+  id: '811e2dbe-050c-4067-9ebd-e43ff0a5bc3a'
+  yt_id: OdkWwgTEqag
+  last_modified: '2025-08-23T23:20:17.4018074Z'
 - artist: SUNMI, Lena
   title: Full Moon
   belongs_to: ''
@@ -54203,6 +55124,7 @@ hits:
   year: 2022
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 13
   id: '41e012ee-8e12-4c77-8056-7f878920b90a'
@@ -54246,6 +55168,7 @@ hits:
   year: 2024
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
   id: '623d5769-cf6c-4f82-a31e-393b095605e9'
@@ -54499,6 +55422,7 @@ hits:
   year: 2019
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -54532,6 +55456,7 @@ hits:
   year: 2014
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 10
   id: e5076546-05f4-49f7-9db3-331ae289e6ff
@@ -54611,6 +55536,16 @@ hits:
   id: df1fa6dc-094a-4295-9fda-1bda40010044
   yt_id: IAFTqMUtzgg
   last_modified: '2025-07-24T09:31:11.1493609Z'
+- artist: Samuli Edelmann
+  title: Peggy
+  belongs_to: ''
+  year: 1991
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 10
+  id: '74e8e90f-a8b7-4f30-9911-4b518628ba97'
+  yt_id: sYIkfJRUQJ4
+  last_modified: '2025-08-23T23:20:17.3988632Z'
 - artist: Sanae Kobayashi
   title: The Musician - 14th's Melody
   belongs_to: D. Gray-man
@@ -54719,6 +55654,7 @@ hits:
   year: 1999
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -54954,6 +55890,7 @@ hits:
   year: 1996
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 39
   id: '3ffdce99-8c47-4430-a666-f6b13f04bce1'
@@ -55234,6 +56171,7 @@ hits:
   year: 1994
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 13
@@ -55606,6 +56544,7 @@ hits:
   year: 2024
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 12
   id: '92e520e5-a5f3-455a-a833-c49328a6d9f7'
@@ -55639,6 +56578,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - b971d194-30fd-4483-92f2-61f947b8155a
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
@@ -56609,6 +57549,7 @@ hits:
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 32
@@ -56698,6 +57639,7 @@ hits:
   year: 1985
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - eac81124-ab2e-4330-b4ac-0ece3f991323
@@ -56779,6 +57721,16 @@ hits:
   id: afbcf8f0-d719-44a0-9773-b33cbb9f122e
   yt_id: bIWWve64nJY
   last_modified: '2025-07-24T09:31:11.3144788Z'
+- artist: Sini Sabotage, VilleGalle
+  title: Levikset repee
+  belongs_to: ''
+  year: 2013
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 14
+  id: '68a86295-bd24-4bc4-8e5d-02fe14bffd38'
+  yt_id: HHa-bV7WftI
+  last_modified: '2025-08-23T23:20:17.4005957Z'
 - artist: Sinplus
   title: Unbreakable
   belongs_to: ''
@@ -57211,6 +58163,7 @@ hits:
   year: 2004
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '783294ec-ea60-4bcd-bc57-42091af615b4'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -57521,6 +58474,16 @@ hits:
   id: '4aadfd72-4ba9-4ccc-97a6-a8500d2dcc3b'
   yt_id: '3mbBbFH9fAg'
   last_modified: '2025-07-24T09:31:09.9155703Z'
+- artist: Sound of R.E.L.S.
+  title: Raising My Family
+  belongs_to: ''
+  year: 1995
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 20
+  id: '877a4ef3-1a17-4cd7-a336-e1b514f15c10'
+  yt_id: JnNo3D6WHZ4
+  last_modified: '2025-08-23T23:20:17.4012328Z'
 - artist: Spandau Ballet
   title: Gold
   belongs_to: ''
@@ -57537,6 +58500,7 @@ hits:
   year: 1983
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 37
   id: '5f7ee795-edb6-4f5a-a7c7-729622518d3a'
@@ -58581,6 +59545,16 @@ hits:
   id: c9dc093e-55fb-4cbc-8a20-297d7736c8c7
   yt_id: ynY9Ju9fl5Q
   last_modified: '2025-07-24T09:31:09.917341Z'
+- artist: Stratovarius
+  title: Black Diamond
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 50
+  id: '596fb865-8ee9-43f7-b996-cc0613817927'
+  yt_id: Tn58-Nl9NYw
+  last_modified: '2025-08-23T23:20:17.4020948Z'
 - artist: Stray Kids
   title: MANIAC
   belongs_to: ''
@@ -58813,6 +59787,7 @@ hits:
   year: 2005
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 15
   id: '57f3b75c-8e9b-4828-a3c2-bc85c3b9881b'
@@ -58893,6 +59868,7 @@ hits:
   belongs_to: ''
   year: 2011
   packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '7c557823-64fc-4f3a-a651-d972d664824c'
   playback_offset: 13
   id: d492b2b4-7144-4095-8f30-e6b1f7cdccab
@@ -59034,6 +60010,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -59053,6 +60030,16 @@ hits:
   id: a6128384-52e6-4113-9b2d-9b18591789c3
   yt_id: E4R_5-qppQM
   last_modified: '2025-07-24T09:31:09.8528368Z'
+- artist: Suurlähettiläät
+  title: Kun Tänään Lähden
+  belongs_to: ''
+  year: 1993
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 20
+  id: ef4fa7f0-4334-463e-90da-014b081299d6
+  yt_id: uWF4DXP8ZFc
+  last_modified: '2025-08-23T23:20:17.4029376Z'
 - artist: Suzan & Freek
   title: Als Het Avond Is
   belongs_to: ''
@@ -59775,6 +60762,16 @@ hits:
   id: '5bb95e66-f8be-4ae2-ba32-07adad4501ea'
   yt_id: J2l0X0wscmA
   last_modified: '2025-07-24T09:31:10.5561612Z'
+- artist: Taikapeili
+  title: Jos sulla on toinen
+  belongs_to: ''
+  year: 1994
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 36
+  id: '8477d222-e1de-4843-9bd0-2b238aa06802'
+  yt_id: rWolctNslKg
+  last_modified: '2025-08-23T23:20:17.4035175Z'
 - artist: Taio Cruz, Flo Rida
   title: Hangover
   belongs_to: ''
@@ -60018,6 +61015,7 @@ hits:
   year: 2022
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - df0964f7-0354-466d-85dc-997c388625a6
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -60079,6 +61077,7 @@ hits:
   year: 1985
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 28
   id: '2ef133ef-d493-4de6-b292-e28f93bbad9e'
@@ -60119,6 +61118,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -60177,6 +61177,16 @@ hits:
   id: '1331a113-2397-466c-877c-0dd2fd3ea0ab'
   yt_id: FkOpwodhROI
   last_modified: '2025-07-24T09:31:10.0887089Z'
+- artist: Teflon Brothers
+  title: Maradona (kesä ´86)
+  belongs_to: ''
+  year: 2014
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 18
+  id: '2da658e4-700c-4bb2-9ab4-2bd8d0d59632'
+  yt_id: rX1o7LtvfmA
+  last_modified: '2025-08-23T23:20:17.4045359Z'
 - artist: Tegan and Sara
   title: Closer
   belongs_to: ''
@@ -60187,6 +61197,16 @@ hits:
   id: '6871000e-e169-48d4-aa3a-e14d40af3e13'
   yt_id: w7MNGPmrlW0
   last_modified: '2025-07-24T09:31:10.0888867Z'
+- artist: Tehosekoitin
+  title: Kaikki Nuoret Tyypit
+  belongs_to: ''
+  year: 2000
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 34
+  id: '398499ad-d262-44fc-9115-da2ac634c0c5'
+  yt_id: a14i0kXI56w
+  last_modified: '2025-08-23T23:20:17.4048971Z'
 - artist: Temperance
   title: Of Jupiter And Moons
   belongs_to: ''
@@ -60437,6 +61457,7 @@ hits:
   year: 1988
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - ec58c124-0e1b-4c6a-bdf9-d82d6d79ef37
@@ -60572,6 +61593,7 @@ hits:
   year: 1969
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 4
   id: '53a5e22d-9e9b-49b0-a39d-d670c047cfd8'
@@ -60830,6 +61852,7 @@ hits:
   packs:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 16
@@ -60855,6 +61878,7 @@ hits:
   year: 2001
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 8
   id: a8aa0462-7e8d-43e5-b0c7-81c854bf3a97
@@ -60920,6 +61944,7 @@ hits:
   year: 2017
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 7
   id: '04aab773-ab98-45ab-83e2-84e9d8fe8a79'
@@ -61049,6 +62074,7 @@ hits:
   year: 1998
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   playback_offset: 13
@@ -61137,6 +62163,16 @@ hits:
   id: dbb3bb43-e43d-425b-8961-22472f5c4f52
   yt_id: bZFbX19Q-R8
   last_modified: '2025-07-24T09:31:09.9202277Z'
+- artist: The Crash, Stockholm by Adam Kviman AKM Studios
+  title: Lauren Caught My Eye
+  belongs_to: ''
+  year: 2001
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 24
+  id: d0a134fb-7930-4ba7-9e91-a82095853f8d
+  yt_id: V55NewBzPJE
+  last_modified: '2025-08-23T23:20:17.4066622Z'
 - artist: The Crystal Method
   title: Keep Hope Alive
   belongs_to: Third Watch - Einsatz am Limit
@@ -61206,6 +62242,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 15
   id: '4472610a-c203-4df8-b09c-0d86aa752bd3'
@@ -61300,6 +62337,7 @@ hits:
   year: 1968
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 7
   id: a8707234-e5b5-421f-aeb6-7877ea62e748
@@ -61820,6 +62858,7 @@ hits:
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 13
   id: '2e4374d9-ff5d-46b6-a616-63598e4026b1'
@@ -62106,6 +63145,16 @@ hits:
   id: ffb834a0-1501-4d97-96b7-dbf76861d446
   yt_id: OfDKMhTEV5w
   last_modified: '2025-07-24T09:31:10.8694886Z'
+- artist: The Pasadenas
+  title: Tribute (Right On)
+  belongs_to: ''
+  year: 1988
+  packs:
+  - '783294ec-ea60-4bcd-bc57-42091af615b4'
+  playback_offset: 38
+  id: '82994039-39b0-41e9-9864-f2a0a8bbb4dc'
+  yt_id: dTK1ix86u9o
+  last_modified: '2025-07-24T09:31:10.8729436Z'
 - artist: The Platters
   title: Only You (And You Alone)
   belongs_to: ''
@@ -62114,6 +63163,7 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 5
@@ -62250,6 +63300,7 @@ hits:
   year: 2005
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
@@ -62305,6 +63356,7 @@ hits:
   year: 2003
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   playback_offset: 30
   id: '310838a1-249d-40cd-9696-705ffb46f2c8'
   yt_id: J-7kxGmY0FU
@@ -62343,7 +63395,7 @@ hits:
   playback_offset: 10
   id: afece2ab-50b1-4e55-86e5-8fa8797b87f4
   yt_id: y_k681IUS0M
-  last_modified: '2025-08-13T14:56:57.9464217Z'
+  last_modified: '2025-08-23T23:20:18.551379Z'
 - artist: The Rembrandts
   title: Just The Way It is, Baby
   belongs_to: ''
@@ -62361,6 +63413,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
   - eac81124-ab2e-4330-b4ac-0ece3f991323
@@ -62376,6 +63429,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '77188b9b-bce1-4e80-9b43-07565a205700'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '04e55fe1-5ee1-4eec-952d-e4ac4d94ac6a'
@@ -62667,6 +63721,7 @@ hits:
   year: 1972
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 6
   id: f4e3f388-a096-4f0d-8fb8-34d0a4d86a72
@@ -62719,6 +63774,7 @@ hits:
   year: 1964
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 8
   id: '7169216b-aa51-4d7f-a2ad-5923602351eb'
@@ -62848,6 +63904,7 @@ hits:
   year: 2007
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 14
   id: '46e01bd5-1ce4-4e38-a2cb-912518a7cffd'
@@ -62859,6 +63916,7 @@ hits:
   year: 1961
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 29
   id: '9d2c0c00-a7d2-418c-a80f-c8837b745223'
@@ -62910,6 +63968,7 @@ hits:
   year: 1966
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 7
@@ -63429,6 +64488,16 @@ hits:
   id: '62b4c1ea-41c0-41f1-91d9-b9dd51e4a35e'
   yt_id: WflQ02OLVSQ
   last_modified: '2025-07-24T09:31:10.3375872Z'
+- artist: Tiktak
+  title: Heilutaan
+  belongs_to: ''
+  year: 2004
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 14
+  id: '21d69f1b-2d85-4bd3-baa0-e8f514d7dedf'
+  yt_id: SPjuAqoCjHQ
+  last_modified: '2025-08-23T23:20:17.4100765Z'
 - artist: Tilo Alpermann
   title: The Marquis do Hoto
   belongs_to: The Night of the Rabbit
@@ -63557,6 +64626,7 @@ hits:
   packs:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '2b1e9c37-3fd2-4751-b49a-e16306da6531'
   - bb26f3dc-a3bd-43fa-a7cb-e0c7f5136771
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -64387,6 +65457,7 @@ hits:
   year: 2001
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 10
   id: aa042483-25d9-4e57-afb0-748a4bf4c681
@@ -64726,6 +65797,16 @@ hits:
   id: '999874ae-bf4f-442c-906b-66ea95450477'
   yt_id: n6rFwV6EC6U
   last_modified: '2025-07-24T09:31:11.1542204Z'
+- artist: Tuula Amberla
+  title: Lulu
+  belongs_to: ''
+  year: 1984
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 0
+  id: caf1dc5d-c1a4-4da9-82ea-f00a3f5f8b6d
+  yt_id: '8F7vwb24LDo'
+  last_modified: '2025-08-23T23:20:17.4108232Z'
 - artist: Twenty 4 Seven, Stay-C, Stella
   title: We are the World
   belongs_to: ''
@@ -64820,6 +65901,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 6
@@ -64906,6 +65988,7 @@ hits:
   packs:
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - df0964f7-0354-466d-85dc-997c388625a6
@@ -64990,6 +66073,7 @@ hits:
   year: 1983
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - f4f5ad93-afa2-4a05-9121-e4b1a3ac065f
   - e6633c59-750f-42b9-94c7-e039e5739dae
@@ -65036,6 +66120,7 @@ hits:
   - '72af3598-3a66-4a72-964b-bef28821f5fb'
   - '32bd6bc0-470f-4a54-b2db-fdaad4fc0444'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - a8dcd937-8118-48af-94e1-f55a1e7557a2
   - '15c6f1ab-2704-493e-a3e5-2bfe407585da'
   - df0964f7-0354-466d-85dc-997c388625a6
@@ -65231,6 +66316,16 @@ hits:
   id: '227a967a-ab3f-46ac-99c3-880ef7a5e4fa'
   yt_id: dIHWHuy0moY
   last_modified: '2025-07-24T09:31:11.1543992Z'
+- artist: Ultra Bra
+  title: Sinä Lähdit Pois
+  belongs_to: ''
+  year: 1997
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 13
+  id: '47212357-ff47-4255-a68d-05349ebb6546'
+  yt_id: lG19up8xP18
+  last_modified: '2025-08-23T23:20:17.4117871Z'
 - artist: Ultra Naté
   title: Free
   belongs_to: ''
@@ -65482,6 +66577,16 @@ hits:
   id: '67e1653a-2baf-42b3-b1cc-d35bf5be30b6'
   yt_id: A8qPSrUojxI
   last_modified: '2025-07-24T09:31:11.1551312Z'
+- artist: Valvomo
+  title: Mikä kesä?
+  belongs_to: ''
+  year: 2006
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 26
+  id: '539d1358-5547-4470-b91a-0f3659ab8b97'
+  yt_id: iCzz61uAPJ0
+  last_modified: '2025-08-23T23:20:17.412277Z'
 - artist: Valérie Carpentier
   title: Le rendez-vous
   belongs_to: ''
@@ -65567,6 +66672,7 @@ hits:
   year: 1967
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - eac81124-ab2e-4330-b4ac-0ece3f991323
   playback_offset: 14
@@ -65589,6 +66695,7 @@ hits:
   year: 1999
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
   id: '188af449-5f2f-49b4-a0a3-29c3fcb2335d'
@@ -65909,6 +67016,16 @@ hits:
   id: e1122a3b-66ec-4cee-9db8-a0cc6b2f3c5f
   yt_id: hpVJ3htru0M
   last_modified: '2025-07-24T09:31:09.8433248Z'
+- artist: Vesala
+  title: Tequila
+  belongs_to: ''
+  year: 2015
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 0
+  id: '61b278f1-d380-427d-8331-4ae8512eccfd'
+  yt_id: '7Koqo1UzBxI'
+  last_modified: '2025-08-23T23:20:17.4130613Z'
 - artist: Vianney
   title: Pas là
   belongs_to: ''
@@ -66179,6 +67296,17 @@ hits:
   id: '5d02947d-c622-4549-97cd-dca46e0051d2'
   yt_id: pv5_jhim71A
   last_modified: '2025-07-24T09:31:11.0989893Z'
+- artist: Virve Rosti
+  title: Sata salamaa
+  belongs_to: ''
+  year: 1987
+  packs:
+  - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 19
+  id: def9fb35-d132-4db1-86b2-3dc0b0fe2d30
+  yt_id: oQHtS27iXBU
+  last_modified: '2025-08-23T23:20:16.9649865Z'
 - artist: Visage
   title: Fade To Grey
   belongs_to: ''
@@ -66708,6 +67836,7 @@ hits:
   year: 1997
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 11
   id: ecf41d9f-b14d-43d8-8aa5-82dbeb13579b
@@ -66719,6 +67848,7 @@ hits:
   year: 1982
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - '07e193d2-fc2e-4363-94f0-f204e5d9bf4f'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 0
@@ -66769,7 +67899,7 @@ hits:
   playback_offset: 0
   id: '9e1d2673-d830-4802-96c1-1ead6ab89a6d'
   yt_id: '-aZXKvm32JI'
-  last_modified: '2025-08-13T14:56:57.3441952Z'
+  last_modified: '2025-08-23T23:20:17.9608594Z'
 - artist: Whitney Houston
   title: Love Will Save the Day
   belongs_to: ''
@@ -66954,6 +68084,7 @@ hits:
   year: 1965
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 11
   id: '3083f8bb-78ae-4df9-b055-f4966731a7ec'
@@ -67148,6 +68279,7 @@ hits:
   year: 2015
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '70dfbe7a-c797-4335-b859-ea62ff9bedff'
@@ -67351,11 +68483,22 @@ hits:
   year: 2015
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 21
   id: '12b76db4-7eb5-4997-9eb2-046e09968b34'
   yt_id: '8j741TUIET0'
   last_modified: '2025-07-24T09:31:10.1739634Z'
+- artist: XL5
+  title: Kaunis peto
+  belongs_to: ''
+  year: 1996
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 28
+  id: '5ed17901-da0f-4f69-8407-0278fa67c961'
+  yt_id: m6g0dYYgvWo
+  last_modified: '2025-08-23T23:20:17.414844Z'
 - artist: XXL, Peter Steiner
   title: It's Cool Man
   belongs_to: ''
@@ -67621,6 +68764,7 @@ hits:
   year: 2010
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '7c557823-64fc-4f3a-a651-d972d664824c'
   playback_offset: 30
@@ -68023,11 +69167,22 @@ hits:
   year: 2018
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 9
   id: '9fb01862-47c0-4bf0-9260-af4d736617fd'
   yt_id: M3mJkSqZbX4
   last_modified: '2025-07-24T09:31:10.1744379Z'
+- artist: Zen Cafe
+  title: Todella kaunis
+  belongs_to: ''
+  year: 1998
+  packs:
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
+  playback_offset: 7
+  id: d6984e75-05f1-4d55-91e1-a7779acbeafd
+  yt_id: '3N9lyJoPQrA'
+  last_modified: '2025-08-23T23:20:17.4155962Z'
 - artist: Zen
   title: Hair
   belongs_to: ''
@@ -68276,6 +69431,7 @@ hits:
   packs:
   - '451151bc-cfc2-44d5-a039-a2557be9a02f'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 17
   id: '48fac441-98f5-4813-b710-52eceba805e5'
@@ -68371,6 +69527,7 @@ hits:
   year: 1994
   packs:
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - bc55953c-b71d-47cf-a405-67ec6be10b34
   - e6633c59-750f-42b9-94c7-e039e5739dae
   - '8eaf819d-ffad-4a8a-89ec-6c30cc7e182c'
@@ -68541,16 +69698,6 @@ hits:
   id: b5870715-dc86-4e71-bc00-215556348351
   yt_id: UOQlKBlobRY
   last_modified: '2025-07-24T09:31:09.8408424Z'
-- artist: v
-  title: Tribute (Right On)
-  belongs_to: ''
-  year: 1988
-  packs:
-  - '783294ec-ea60-4bcd-bc57-42091af615b4'
-  playback_offset: 38
-  id: '82994039-39b0-41e9-9864-f2a0a8bbb4dc'
-  yt_id: dTK1ix86u9o
-  last_modified: '2025-07-24T09:31:10.8729436Z'
 - artist: will.i.am, Britney Spears
   title: Scream & Shout
   belongs_to: ''
@@ -68697,6 +69844,7 @@ hits:
   packs:
   - '1d98f5c4-3d62-480f-99fc-855626ffeebb'
   - '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
+  - '519cd97b-9446-452e-81dd-11bf762dd93b'
   - e6633c59-750f-42b9-94c7-e039e5739dae
   playback_offset: 11
   id: '11b44f55-1c44-49b5-bb33-64b9ca93320f'
@@ -68831,6 +69979,9 @@ packs:
 - id: '2db0c05d-a3da-497d-a5dc-92b1dd8ddb31'
   name: Hitster - Denmark
   last_modified: '2025-07-30T13:49:20.8017042Z'
+- id: '519cd97b-9446-452e-81dd-11bf762dd93b'
+  name: Hitster - Finland
+  last_modified: '2025-08-23T23:20:17.338543Z'
 - id: b971d194-30fd-4483-92f2-61f947b8155a
   name: Hitster - France
   last_modified: '2025-07-30T13:49:20.8017058Z'
