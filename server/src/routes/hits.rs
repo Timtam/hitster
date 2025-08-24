@@ -1,11 +1,13 @@
 use crate::{
     games::PackPayload,
-    hits::{HitPayload, HitSearchQuery},
-    responses::{PacksResponse, PaginatedResponse},
+    hits::{FullHitPayload, HitPayload, HitSearchQuery},
+    responses::{GetHitError, PacksResponse, PaginatedResponse},
     services::ServiceStore,
 };
+use hitster_core::HitId;
 use rocket::{State, serde::json::Json};
 use rocket_okapi::openapi;
+use uuid::Uuid;
 
 #[openapi(tag = "Hits")]
 #[get("/hits/packs")]
@@ -53,4 +55,23 @@ pub fn search_hits(
             })
             .unwrap(),
     )
+}
+
+#[openapi(tag = "Hits")]
+#[get("/hits/<hit_id>")]
+pub fn get_hit(
+    hit_id: &str,
+    svc: &State<ServiceStore>,
+) -> Result<Json<FullHitPayload>, GetHitError> {
+    let hs = svc.hit_service();
+    let hsl = hs.lock();
+
+    Uuid::parse_str(hit_id)
+        .ok()
+        .and_then(|hit_id| hsl.get_hit(&HitId::Id(hit_id)))
+        .map(|h| Json(h.into()))
+        .ok_or(GetHitError {
+            message: "hit id not found".into(),
+            http_status_code: 404,
+        })
 }

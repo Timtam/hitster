@@ -3,7 +3,7 @@ use crate::{
     responses::PaginatedResponse,
 };
 use fuse_rust::Fuse;
-use hitster_core::{Hit, HitsterData, Pack};
+use hitster_core::{Hit, HitId, HitsterData, Pack};
 use rocket::tokio::sync::broadcast::Sender;
 use std::cmp::Ordering;
 use uuid::Uuid;
@@ -89,6 +89,10 @@ impl HitService {
     ) {
         self.dl_sender = Some(dl_sender);
         self.process_sender = Some(process_sender);
+    }
+
+    pub fn get_hit(&self, hit_id: &HitId) -> Option<&Hit> {
+        self.hitster_data.get_hit(hit_id)
     }
 
     pub fn search_hits(&self, query: &HitSearchQuery) -> PaginatedResponse<Hit> {

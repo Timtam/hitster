@@ -73,6 +73,33 @@ impl From<&Hit> for HitPayload {
     }
 }
 
+#[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema, Deserialize)]
+pub struct FullHitPayload {
+    pub artist: String,
+    pub title: String,
+    pub belongs_to: String,
+    pub year: u32,
+    pub packs: Vec<Uuid>,
+    pub playback_offset: u16,
+    pub id: Uuid,
+    pub yt_id: String,
+}
+
+impl From<&Hit> for FullHitPayload {
+    fn from(hit: &Hit) -> Self {
+        Self {
+            artist: hit.artist.clone(),
+            title: hit.title.clone(),
+            belongs_to: hit.belongs_to.clone(),
+            year: hit.year,
+            packs: hit.packs.clone(),
+            id: hit.id,
+            yt_id: hit.yt_id.clone(),
+            playback_offset: hit.playback_offset,
+        }
+    }
+}
+
 pub fn get_hitster_data() -> &'static HitsterData {
     static DATA: OnceLock<HitsterData> = OnceLock::new();
     DATA.get_or_init(|| {

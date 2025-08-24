@@ -28,7 +28,7 @@ import Row from "react-bootstrap/Row"
 import Spinner from "react-bootstrap/Spinner"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
-import { useLoaderData } from "react-router"
+import { Link, useLoaderData } from "react-router"
 import { useImmer } from "use-immer"
 import {
     HitSearchQuery,
@@ -199,7 +199,7 @@ export default function Browser() {
                 <Col>
                     <search>
                         <h3>{t("search")}</h3>
-                        <Form>
+                        <Form onSubmit={(e) => e.preventDefault()}>
                             <Form.Group className="mb-2">
                                 <Form.Control
                                     type="search"
@@ -517,7 +517,11 @@ export default function Browser() {
                         <tbody>
                             {hitResults.results.map((hit, i) => (
                                 <tr key={hit.id}>
-                                    <td>{hit.title}</td>
+                                    <td>
+                                        <Link to={"/hits/" + hit.id}>
+                                            {hit.title}
+                                        </Link>
+                                    </td>
                                     <td>{hit.artist}</td>
                                     <td>{hit.year}</td>
                                     <td>{hit.belongs_to}</td>
