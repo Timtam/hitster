@@ -19,7 +19,14 @@ import { Events, HitsProgressUpdateData } from "./events"
 import SettingsModal from "./modals/settings"
 import ShortcutsModal from "./modals/shortcuts"
 
-export default function Navigation({ user }: { user: User | null }) {
+export default function Navigation({
+    user,
+    onResize,
+}: {
+    user: User | null
+    onResize: (size: number) => void
+}) {
+    const navRef = useRef<any | null>(null)
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [showSettings, setShowSettings] = useState(false)
@@ -34,7 +41,12 @@ export default function Navigation({ user }: { user: User | null }) {
     const [popoverTarget, setPopoverTarget] = useState<any>(null)
     const popoverRef = useRef(null)
 
+    const handleResize = () => {
+        onResize(navRef.current!.offsetHeight)
+    }
+
     useEffect(() => {
+        window.addEventListener("resize", handleResize)
         const unsubscribeHitsStatus = EventManager.subscribe(
             Events.hitsProgressUpdate,
             (e: HitsProgressUpdateData) => {
@@ -42,6 +54,7 @@ export default function Navigation({ user }: { user: User | null }) {
             },
         )
         return () => {
+            window.removeEventListener("resize", handleResize)
             unsubscribeHitsStatus()
         }
     }, [])
@@ -49,10 +62,14 @@ export default function Navigation({ user }: { user: User | null }) {
     return (
         <>
             <Navbar
+                collapseOnSelect
                 aria-label={t("navigation")}
                 fixed="top"
                 variant="light"
                 style={{ margin: "0px", padding: "0px" }}
+                ref={navRef}
+                bg="primary"
+                data-bs-theme="dark"
             >
                 <Container fluid>
                     <Navbar.Toggle />
@@ -72,8 +89,17 @@ export default function Navigation({ user }: { user: User | null }) {
                                 }
                             >
                                 <Nav.Item>
-                                    <Nav.Link as={NavLink} to="/">
+                                    <Nav.Link as={NavLink} eventKey="/" to="/">
                                         {t("gameLobby")}
+                                    </Nav.Link>
+                                </Nav.Item>
+                                <Nav.Item>
+                                    <Nav.Link
+                                        as={NavLink}
+                                        eventKey="/hits"
+                                        to="/hits"
+                                    >
+                                        {t("browseHits")}
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
@@ -185,6 +211,8 @@ export default function Navigation({ user }: { user: User | null }) {
                                 placement="bottom"
                                 container={popoverRef}
                                 containerPadding={20}
+                                rootClose
+                                onHide={() => setShowHitsStatus(false)}
                             >
                                 <Popover id="hits-status-popover">
                                     <Popover.Header as="h3">

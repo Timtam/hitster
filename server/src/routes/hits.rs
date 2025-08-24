@@ -1,4 +1,9 @@
-use crate::{games::PackPayload, responses::PacksResponse, services::ServiceStore};
+use crate::{
+    games::PackPayload,
+    hits::{HitPayload, HitSearchQuery},
+    responses::{PacksResponse, PaginatedResponse},
+    services::ServiceStore,
+};
 use rocket::{State, serde::json::Json};
 use rocket_okapi::openapi;
 
@@ -24,4 +29,28 @@ pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
     drop(hs);
 
     Json(PacksResponse { packs })
+}
+
+#[openapi(tag = "Hits")]
+#[get("/hits/search?<query..>")]
+pub fn search_hits(
+    query: HitSearchQuery,
+    svc: &State<ServiceStore>,
+) -> Json<PaginatedResponse<HitPayload>> {
+    let hs = svc.hit_service();
+
+    Json(
+        Some(hs.lock().search_hits(&query))
+            .map(|res| PaginatedResponse {
+                results: res
+                    .results
+                    .into_iter()
+                    .map(|h| (&h).into())
+                    .collect::<Vec<_>>(),
+                total: res.total,
+                start: res.start,
+                end: res.end,
+            })
+            .unwrap(),
+    )
 }

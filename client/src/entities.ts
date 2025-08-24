@@ -1,5 +1,16 @@
 import { z } from "zod"
 
+function createPaginatedResponseSchema<ItemType extends z.ZodTypeAny>(
+    itemSchema: ItemType,
+) {
+    return z.object({
+        total: z.number(),
+        start: z.number(),
+        end: z.number(),
+        results: z.array(itemSchema),
+    })
+}
+
 export const Permissions = z.object({
     can_write_hits: z.boolean(),
     can_write_packs: z.boolean(),
@@ -9,7 +20,7 @@ export type Permissions = z.infer<typeof Permissions>
 
 export const User = z.object({
     name: z.string(),
-    id: z.string(),
+    id: z.uuid(),
     virtual: z.boolean(),
     valid_until: z.coerce.date(),
     permissions: Permissions,
@@ -23,7 +34,7 @@ export const Hit = z.object({
     year: z.number(),
     packs: z.array(z.string()),
     belongs_to: z.string(),
-    id: z.string(),
+    id: z.uuid(),
 })
 
 export type Hit = z.infer<typeof Hit>
@@ -57,7 +68,7 @@ export enum PlayerState {
 }
 
 export const Player = z.object({
-    id: z.string(),
+    id: z.uuid(),
     name: z.string(),
     state: z.nativeEnum(PlayerState),
     creator: z.boolean(),
@@ -113,7 +124,7 @@ export const GameEvent = z.object({
 export type GameEvent = z.infer<typeof GameEvent>
 
 export const Pack = z.object({
-    id: z.string(),
+    id: z.uuid(),
     name: z.string(),
     hits: z.number(),
 })
@@ -147,3 +158,30 @@ export const ProcessHitsEvent = z.object({
 })
 
 export type ProcessHitsEvent = z.infer<typeof ProcessHitsEvent>
+
+export const PaginatedHitsResponse = createPaginatedResponseSchema(Hit)
+
+export type PaginatedHitsResponse = z.infer<typeof PaginatedHitsResponse>
+
+export enum SortBy {
+    Title = "title",
+    Artist = "artist",
+    BelongsTo = "belongs_to",
+    Year = "year",
+}
+
+export enum SortDirection {
+    Ascending = "ascending",
+    Descending = "descending",
+}
+
+export const HitSearchQuery = z.object({
+    sort_by: z.optional(z.array(z.nativeEnum(SortBy))),
+    sort_direction: z.optional(z.nativeEnum(SortDirection)),
+    query: z.optional(z.string()),
+    packs: z.optional(z.array(z.uuid())),
+    start: z.optional(z.number()),
+    amount: z.optional(z.number()),
+})
+
+export type HitSearchQuery = z.infer<typeof HitSearchQuery>

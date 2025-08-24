@@ -18,6 +18,14 @@ use rocket_okapi::{
 };
 use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, JsonSchema)]
+pub struct PaginatedResponse<T> {
+    pub results: Vec<T>,
+    pub total: usize,
+    pub start: usize,
+    pub end: usize,
+}
+
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct JoinGameError {
     pub message: String,
@@ -744,13 +752,6 @@ pub struct UsersResponse {
 #[derive(Serialize, JsonSchema)]
 pub struct PacksResponse {
     pub packs: Vec<PackPayload>,
-}
-
-#[derive(Serialize, JsonSchema)]
-pub struct HitsStatusResponse {
-    pub all: usize,
-    pub downloaded: usize,
-    pub finished: bool,
 }
 
 #[derive(Debug, Serialize, JsonSchema)]

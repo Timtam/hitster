@@ -9,10 +9,12 @@ afterYear: after {{year}}
 allRightsReserved: All rights reserved
 and: and
 artist: Artist
+ascending: Ascending
 automatic: Automatic
 beforeYear: before {{year}}
 belongsTo: Belongs to
 betweenYears: between {{year1}} and {{year2}}
+browseHits: Browse hits
 cancel: Cancel
 cannotClaimHit: You cannot claim a hit right now
 cannotSkipHit: You cannot skip a hit right now
@@ -30,13 +32,21 @@ confirmText: Did <0>{{player}}</0> guess artist and title correctly?
 confirmYes: title and artist of the hit was guessed correctly
 createNewGame: Create new game
 creator: creator
+current: (current)
 dark: Dark
 deleteAccount: Delete account
+descending: Descending
 dontIntercept: Don't intercept
 downloaded_one: "{{hits}} downloaded"
 downloaded_other: "{{hits}} downloaded"
 downloading_one: "{{hits}} downloading"
 downloading_other: "{{hits}} downloading"
+dragCanceled: "{{draggable}} dropped"
+dragEndNotOverDroppable: "{{draggable}} dropped"
+dragEndOverDroppable: "{{draggable}} moved to position of {{droppable}}"
+dragNotOverDroppable: "{{draggable}} no longer over droppable area"
+dragOverDroppable: "{{draggable}} moved over {{droppable}}"
+dragStart: Started dragging {{draggable}}
 error: Error
 features: Features
 featuresList: >
@@ -60,6 +70,7 @@ featuresList: >
     <0>support light and dark mode, and respect your device's settings by
     default</0>
 finalScore: "And here are the final results:"
+first: First
 game: Game
 gameActions: "Game actions:"
 gameAlreadyRunning: The game is already running
@@ -107,6 +118,7 @@ keyboardShortcut_other: Keyboard shortcuts
 kick: Kick
 knownAs: You are currently known as {{username}}
 language: Language
+last: Last
 leaveGame: Leave game
 leaveGameQuestion: Do you want to leave the game while it's still running?
 leaveGameShortcut: Alt+Shift+Q
@@ -156,6 +168,7 @@ mode: Mode
 musicVolume: Music volume
 name: Name
 navigation: Navigation
+next: Next
 "no": "No"
 noHitAvailable: No hit available
 noShortcut: Alt+Shift+N
@@ -188,6 +201,8 @@ otherWins: "{{player}} is the winner of this game!"
 ownedBy: >-
     This unofficial version is based on the original Hitster card game which is
     owned by <0>Koninklijke Jumbo B.V.</0>.
+packFilterDisabled: No packs filtered
+packFilterEnabled: Filtered by {{packs}} packs
 pack_one: Pack
 pack_other: Packs
 password: Password
@@ -197,6 +212,7 @@ playOrStopHitShortcut: Alt+Shift+H
 playerStatsNotification: "{{player}}: {{hits}} hits, {{tokens}} tokens"
 player_one: Player
 player_other: Players
+previous: Previous
 privateGame: Private game
 privateGameShortcut: Alt+Shift+R
 processing_one: "{{hits}} processing"
@@ -207,9 +223,17 @@ randomPacksLabel: Select random packs
 register: Register
 registrationSuccessful: You've been registered and logged in successfully.
 rememberHits: Remember hits across games?
+reorderHintARIA: Select the items in focus mode to reorder
+reorderHintVisual: Drag and drop to reorder
+reorderInstructions: >-
+    Press space to start reordering the sorting criteria. While dragging, use
+    the up and down arrow keys to move the item up or down respectively. Press
+    space or enter again to drop the item in its new position, or press escape
+    to cancel.
 repeatPassword: Repeat password
 running: Running
 save: Save
+search: Search
 section: Abschnitt
 select: Select
 selectAll: Select all
@@ -222,10 +246,14 @@ selectPreviousSlotShortcut: Alt+Shift+Up arrow
 selectSlotFirst: Select a slot first
 settings: Settings
 sfxVolume: SFX Volume
+showResults: Show result {{start}} to {{end}} out of {{total}}
 skipHit: Skip this hit by paying one token
 skipHitNoToken: You need to pay a token to skip a hit
 skipHitNotGuessing: Only the guessing player can skip a hit
 skipHitShortcut: Alt+Shift+I
+sortBy: Sort by
+sortDirection: Sort direction
+sortable: Sortable
 sourceCodeAvailableAt: Source Code available at <0>GitHub</0>
 speakPlayerInfo: Speak important information about player {{player}}
 speakPlayerInfoShortcut: Alt+Shift+{{player}}

@@ -11,7 +11,7 @@ use rocket::{
 };
 use rocket_db_pools::Database;
 use rocket_okapi::okapi::schemars::JsonSchema;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use sqlx::FromRow;
 use std::{
     collections::{HashMap, HashSet},
@@ -78,6 +78,51 @@ pub fn get_hitster_data() -> &'static HitsterData {
     DATA.get_or_init(|| {
         serde_yml::from_str::<HitsterData>(include_str!("../../etc/hits.yml")).unwrap()
     })
+}
+
+#[derive(Copy, Clone, Deserialize, Eq, JsonSchema, PartialEq, FromFormField)]
+#[serde(rename_all = "snake_case")]
+pub enum SortDirection {
+    #[field(value = "ascending")]
+    Ascending,
+    #[field(value = "descending")]
+    Descending,
+}
+
+#[derive(Clone, Deserialize, JsonSchema, FromFormField, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum SortBy {
+    #[field(value = "title")]
+    Title,
+    #[field(value = "artist")]
+    Artist,
+    #[field(value = "year")]
+    Year,
+    #[field(value = "belongs_to")]
+    BelongsTo,
+}
+
+#[derive(Deserialize, JsonSchema, FromForm)]
+pub struct HitSearchQuery {
+    pub sort_by: Option<Vec<SortBy>>,
+    pub sort_direction: Option<SortDirection>,
+    pub query: Option<String>,
+    pub packs: Option<Vec<Uuid>>,
+    pub start: Option<usize>,
+    pub amount: Option<usize>,
+}
+
+impl Default for HitSearchQuery {
+    fn default() -> Self {
+        Self {
+            sort_by: Some(vec![SortBy::Title]),
+            sort_direction: Some(SortDirection::Ascending),
+            query: Some(String::from("")),
+            packs: Some(vec![]),
+            start: Some(1),
+            amount: Some(50),
+        }
+    }
 }
 
 #[derive(Clone, Debug)]

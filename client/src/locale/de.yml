@@ -9,10 +9,12 @@ afterYear: nach {{year}}
 allRightsReserved: Alle Rechte vorbehalten
 and: und
 artist: Interpret
+ascending: Aufsteigend
 automatic: Automatisch
 beforeYear: vor {{year}}
 belongsTo: Zugehörig zu
 betweenYears: von {{year1}} bis {{year2}}
+browseHits: Hits durchsuchen
 cancel: Abbrechen
 cannotClaimHit: Du kannst dir derzeit keinen Hit nehmen
 cannotSkipHit: Du kannst derzeit keinen Hit überspringen
@@ -30,13 +32,21 @@ confirmText: Hat <0>{{player}}</0> den Titel und Interpreten korrekt erraten?
 confirmYes: Titel und Interpret des Hits wurde richtig erraten
 createNewGame: Spiel erstellen
 creator: Ersteller
+current: (aktuell)
 dark: Dunkel
 deleteAccount: Benutzerkonto löschen
+descending: Absteigend
 dontIntercept: Keine Vermutung äußern
 downloaded_one: "{{hits}} verfügbar"
 downloaded_other: "{{hits}} verfügbar"
 downloading_one: "{{hits}} wird heruntergeladen"
 downloading_other: "{{hits}} werden heruntergeladen"
+dragCanceled: "{{draggable}} Bewegung beendet"
+dragEndNotOverDroppable: "{{draggable}} Bewegung beendet"
+dragEndOverDroppable: "{{draggable}} wurde an die Position von {{droppable}} bewegt"
+dragNotOverDroppable: "{{draggable}} kann hier nicht hinbewegt werden"
+dragOverDroppable: "{{draggable}} über {{droppable}} bewegt"
+dragStart: Bewege {{draggable}}
 error: Fehler
 features: Funktionen
 featuresList: >
@@ -60,6 +70,7 @@ featuresList: >
     <0>entscheide dich für ein helles oder dunkles Farbschema, oder passe dich
     automatisch deinem verwendeten Gerät an</0>
 finalScore: "Hier sind die finalen Ergebnisse:"
+first: Erste
 game: Spiel
 gameActions: "Spielaktionen:"
 gameAlreadyRunning: Das Spiel läuft bereits
@@ -110,6 +121,7 @@ keyboardShortcut_other: Tastenkombinationen
 kick: Kicken
 knownAs: Du bist derzeit bekannt als {{username}}
 language: Sprache
+last: Letzte
 leaveGame: Spiel verlassen
 leaveGameQuestion: Möchtest du das Spiel wirklich verlassen, während es noch läuft?
 leaveGameShortcut: Alt+Umschalt+Q
@@ -160,6 +172,7 @@ mode: Modus
 musicVolume: Musiklautstärke
 name: Name
 navigation: Navigation
+next: Nächste
 "no": Nein
 noHitAvailable: Kein Hit verfügbar
 noShortcut: Alt+Umschalt+N
@@ -192,6 +205,8 @@ otherWins: "{{player}} hat dieses Spiel gewonnen!"
 ownedBy: >-
     Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel,
     welches <0>Koninklijke Jumbo B.V.</0> gehört.
+packFilterDisabled: "Gefilterte Packs: keine"
+packFilterEnabled: "Gefilterte Packs: {{packs}}"
 pack_one: Pack
 pack_other: Packs
 password: Passwort
@@ -201,6 +216,7 @@ playOrStopHitShortcut: Alt+Umschalt+H
 playerStatsNotification: "{{player}}: {{hits}} Hits, {{tokens}} Chips"
 player_one: Spieler
 player_other: Spieler
+previous: Vorherige
 privateGame: Privates Spiel
 privateGameShortcut: Alt+Umschalt+R
 processing_one: "{{hits}} wird verarbeitet"
@@ -211,9 +227,17 @@ randomPacksLabel: Wähle zufällige Packs aus
 register: Registrieren
 registrationSuccessful: Du wurdest erfolgreich registriert und angemeldet.
 rememberHits: Hits zwischen Spielen speichern?
+reorderHintARIA: Wähle die Einträge im Fokusmodus aus, um sie zu sortieren
+reorderHintVisual: Mit der Maus ziehen zum sortieren
+reorderInstructions: >-
+    Verwende die Leertaste oder Enter um einen Eintrag zu bewegen. Verwende
+    anschließend die Pfeiltaste hoch/runter, um den Eintrag hoch oder runter zu
+    bewegen. Drücke die Leertaste oder Enter, um den Eintrag zu platzieren, oder
+    Escape, um abzubrechen.
 repeatPassword: Passwort wiederholen
 running: läuft
 save: Speichern
+search: Suche
 section: Abschnitt
 select: Auswählen
 selectAll: Alles auswählen
@@ -226,10 +250,14 @@ selectPreviousSlotShortcut: Alt+Umschalt+Pfeil nach oben
 selectSlotFirst: Wähle erst eine Möglichkeit
 settings: Einstellungen
 sfxVolume: Lautstärke der Sound Effekte
+showResults: Zeige Ergebnis {{start}} bis {{end}} von {{total}}
 skipHit: Überspringe diesen Hit, indem du einen Chip bezahlst
 skipHitNoToken: Du musst einen Chip bezahlen können, um einen Hit zu überspringen
 skipHitNotGuessing: Nur der Zugspieler kann einen Hit überspringen
 skipHitShortcut: Alt+Umschalt+I
+sortBy: Sortieren nach
+sortDirection: Sortierreihenfolge
+sortable: Sortierbar
 sourceCodeAvailableAt: Quellcode verfügbar auf <0>GitHub</0>
 speakPlayerInfo: Sprich wichtige Informationen zu Spieler {{player}}
 speakPlayerInfoShortcut: Alt+Umschalt+{{player}}
