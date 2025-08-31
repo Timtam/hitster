@@ -47,6 +47,7 @@ dragEndOverDroppable: "{{draggable}} wurde an die Position von {{droppable}} bew
 dragNotOverDroppable: "{{draggable}} kann hier nicht hinbewegt werden"
 dragOverDroppable: "{{draggable}} über {{droppable}} bewegt"
 dragStart: Bewege {{draggable}}
+edit: Bearbeiten
 error: Fehler
 features: Funktionen
 featuresList: >
@@ -213,6 +214,7 @@ password: Passwort
 playHit: Hit abspielen
 playOrStopHit: Hit abspielen oder stoppen
 playOrStopHitShortcut: Alt+Umschalt+H
+playbackOffset: Abspielbeginn
 playerStatsNotification: "{{player}}: {{hits}} Hits, {{tokens}} Chips"
 player_one: Spieler
 player_other: Spieler
@@ -316,3 +318,5 @@ youSkippedHitBelonging: >-
     <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit ist bekannt aus
     <3>{{belongs_to}}</3>.
 youWin: Gratulation, du hast das Spiel gewonnen!
+youtubeUrl: YouTube URL
+youtubeUrlInvalid: YouTube-URL ungültig

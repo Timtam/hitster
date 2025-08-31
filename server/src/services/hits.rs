@@ -95,6 +95,10 @@ impl HitService {
         self.hitster_data.get_hit(hit_id)
     }
 
+    pub fn remove_hit(&mut self, hit: &HitId) -> bool {
+        self.hitster_data.remove_hit(hit)
+    }
+
     pub fn search_hits(&self, query: &HitSearchQuery) -> PaginatedResponse<Hit> {
         let def = HitSearchQuery::default();
         let start = query.start.or(def.start).unwrap();
@@ -172,6 +176,10 @@ impl HitService {
             end: start + amount - 1,
             total,
         }
+    }
+
+    pub fn download_hit(&self, hit: Hit) {
+        let _ = self.dl_sender.as_ref().unwrap().send(hit);
     }
 }
 

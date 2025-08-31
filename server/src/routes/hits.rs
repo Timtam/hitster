@@ -1,13 +1,29 @@
 use crate::{
+    HitsterConfig,
     games::PackPayload,
     hits::{FullHitPayload, HitPayload, HitSearchQuery},
-    responses::{GetHitError, PacksResponse, PaginatedResponse},
+    responses::{GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError},
     services::ServiceStore,
+    users::UserAuthenticator,
 };
-use hitster_core::HitId;
+use hitster_core::{Hit, HitId, Permissions};
 use rocket::{State, serde::json::Json};
+use rocket_db_pools::{
+    Connection,
+    sqlx::{self, FromRow},
+};
 use rocket_okapi::openapi;
+use std::collections::HashMap;
+use time::OffsetDateTime;
 use uuid::Uuid;
+
+#[derive(FromRow)]
+struct HitPackRow {
+    hit_id: Uuid,
+    pack_id: Uuid,
+    custom: bool,
+    marked_for_deletion: bool,
+}
 
 #[openapi(tag = "Hits")]
 #[get("/hits/packs")]
@@ -74,4 +90,166 @@ pub fn get_hit(
             message: "hit id not found".into(),
             http_status_code: 404,
         })
+}
+
+#[openapi(tag = "Hits")]
+#[patch("/hits", format = "json", data = "<hit>")]
+pub async fn update_hit(
+    hit: Json<FullHitPayload>,
+    user: UserAuthenticator,
+    serv: &State<ServiceStore>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<MessageResponse>, UpdateHitError> {
+    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+        return Err(UpdateHitError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    let hs = serv.hit_service();
+
+    if hs.lock().get_hit(&HitId::Id(hit.id)).is_none() {
+        return Err(UpdateHitError {
+            message: "hit not found".into(),
+            http_status_code: 404,
+        });
+    }
+
+    let new_hit = Hit {
+        id: hit.id,
+        title: hit.title.clone(),
+        artist: hit.artist.clone(),
+        packs: hit.packs.clone(),
+        belongs_to: hit.belongs_to.clone(),
+        yt_id: hit.yt_id.clone(),
+        playback_offset: hit.playback_offset,
+        last_modified: OffsetDateTime::now_utc(),
+        year: hit.year,
+    };
+    let exists = new_hit.exists();
+
+    hs.lock().remove_hit(&HitId::Id(hit.id));
+
+    let _ = sqlx::query!(
+        "
+UPDATE hits SET
+    title = $1,
+    artist = $2,
+    yt_id = $3,
+    year = $4,
+    playback_offset = $5,
+    belongs_to = $6,
+    last_modified = $7,
+    downloaded = $8
+    WHERE id = $9",
+        new_hit.title,
+        new_hit.artist,
+        new_hit.yt_id,
+        new_hit.year,
+        new_hit.playback_offset,
+        new_hit.belongs_to,
+        new_hit.last_modified,
+        exists,
+        new_hit.id,
+    )
+    .execute(&mut **db)
+    .await;
+
+    let mut hits_packs = sqlx::query_as!(
+        HitPackRow,
+        r#"
+SELECT
+    hit_id AS "hit_id: Uuid",
+    pack_id AS "pack_id: Uuid",
+    custom,
+    marked_for_deletion
+FROM hits_packs WHERE hit_id = ?"#,
+        hit.id
+    )
+    .fetch_all(&mut **db)
+    .await
+    .unwrap()
+    .into_iter()
+    .map(|row| (row.pack_id, row))
+    .collect::<HashMap<Uuid, HitPackRow>>();
+
+    for pack in new_hit.packs.iter() {
+        if let Some(row) = hits_packs.get(pack) {
+            if row.marked_for_deletion {
+                let _ = sqlx::query!(
+                    r#"
+UPDATE
+    hits_packs
+SET 
+    marked_for_deletion = ?
+WHERE hit_id = ? AND pack_id = ?"#,
+                    false,
+                    row.hit_id,
+                    row.pack_id
+                )
+                .execute(&mut **db)
+                .await;
+            }
+            let id = row.pack_id;
+            hits_packs.remove(&id);
+        } else {
+            let _ = sqlx::query!(
+                r#"
+INSERT INTO
+    hits_packs (
+    hit_id, 
+    pack_id, 
+    custom, 
+    marked_for_deletion
+) VALUES (
+    ?, ?, ?, ?)"#,
+                new_hit.id,
+                pack,
+                true,
+                false
+            )
+            .execute(&mut **db)
+            .await;
+        }
+    }
+
+    for row in hits_packs.values() {
+        if row.custom {
+            let _ = sqlx::query!(
+                r#"
+DELETE FROM hits_packs
+WHERE hit_id = ? AND pack_id = ?"#,
+                row.hit_id,
+                row.pack_id
+            )
+            .execute(&mut **db)
+            .await;
+        } else if !row.marked_for_deletion {
+            let _ = sqlx::query!(
+                r#"
+UPDATE
+    hits_packs
+SET 
+    marked_for_deletion = ?
+WHERE hit_id = ? AND pack_id = ?"#,
+                true,
+                row.hit_id,
+                row.pack_id
+            )
+            .execute(&mut **db)
+            .await;
+        }
+    }
+
+    if exists {
+        hs.lock().insert_hit(new_hit);
+    } else {
+        hs.lock().download_hit(new_hit);
+    }
+
+    Ok(Json(MessageResponse {
+        message: "hit updated successfully".into(),
+        r#type: "success".into(),
+    }))
 }

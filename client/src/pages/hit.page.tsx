@@ -1,16 +1,44 @@
 import { Helmet } from "@dr.pogodin/react-helmet"
+import classNames from "classnames"
+import deepcopy from "deepcopy"
 import natsort from "natsort"
-import { useMemo } from "react"
+import { useEffect, useMemo, useState } from "react"
+import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
 import { useLoaderData } from "react-router"
 import YouTube from "react-youtube"
+import { useImmer } from "use-immer"
+import { useContext } from "../context"
 import { FullHit, Pack } from "../entities"
+import { useRevalidate } from "../hooks"
+import HitService from "../services/hits.service"
+import { RE_YOUTUBE } from "../utils"
 
 export default function Hit() {
+    const hitService = useMemo(() => new HitService(), [])
     const sorter = useMemo(() => natsort(), [])
     const { t } = useTranslation()
     const [hit, availablePacks] = useLoaderData() as [FullHit, Pack[]]
+    const { user, showError } = useContext()
+    const [editing, setEditing] = useState(false)
+    const [editingHit, setEditingHit] = useImmer<FullHit>({
+        title: "",
+        artist: "",
+        year: 0,
+        belongs_to: "",
+        playback_offset: 0,
+        yt_id: "",
+        packs: [],
+        id: "",
+    } satisfies FullHit)
+    const [youtubeUrl, setYoutubeUrl] = useState("")
+    const [isUrlValid, setIsUrlValid] = useState(true)
+    const reload = useRevalidate()
+
+    useEffect(() => {
+        setIsUrlValid(RE_YOUTUBE.test(youtubeUrl))
+    }, [youtubeUrl, setIsUrlValid])
 
     return (
         <>
@@ -18,42 +46,241 @@ export default function Hit() {
                 <title>{`${hit.artist}: ${hit.title} - Hitster`}</title>
             </Helmet>
             <h2>{`${hit.artist}: ${hit.title}`}</h2>
+            {!editing && user?.permissions.can_write_hits ? (
+                <Button
+                    onClick={() => {
+                        setEditingHit(deepcopy(hit))
+                        setYoutubeUrl(
+                            `https://www.youtube.com/watch?v=${hit.yt_id}`,
+                        )
+                        setEditing(true)
+                    }}
+                >
+                    {t("edit")}
+                </Button>
+            ) : editing ? (
+                <Button
+                    onClick={() => {
+                        setEditing(false)
+                        setEditingHit((h) => {
+                            h.title = ""
+                            h.artist = ""
+                            h.year = 0
+                            h.playback_offset = 0
+                            h.id = ""
+                            h.yt_id = ""
+                            h.packs = []
+                            h.belongs_to = ""
+                        })
+                        setYoutubeUrl("")
+                    }}
+                >
+                    {t("cancel")}
+                </Button>
+            ) : (
+                ""
+            )}
             <Form onSubmit={(e) => e.preventDefault()}>
                 <Form.Group className="mb-2">
-                    <Form.Text muted>{t("title") + ": " + hit.title}</Form.Text>
+                    {editing ? (
+                        <Form.Control
+                            type="input"
+                            placeholder={t("title")}
+                            value={editingHit.title}
+                            onChange={(e) =>
+                                setEditingHit((h) => {
+                                    h.title = e.currentTarget.value
+                                })
+                            }
+                        />
+                    ) : (
+                        <Form.Text muted>
+                            {t("title") + ": " + hit.title}
+                        </Form.Text>
+                    )}
                 </Form.Group>
                 <Form.Group className="mb-2">
-                    <Form.Text muted>
-                        {t("artist") + ": " + hit.artist}
-                    </Form.Text>
+                    {editing ? (
+                        <Form.Control
+                            type="input"
+                            placeholder={t("artist")}
+                            value={editingHit.artist}
+                            onChange={(e) =>
+                                setEditingHit((h) => {
+                                    h.artist = e.currentTarget.value
+                                })
+                            }
+                        />
+                    ) : (
+                        <Form.Text muted>
+                            {t("artist") + ": " + hit.artist}
+                        </Form.Text>
+                    )}
                 </Form.Group>
                 <Form.Group className="mb-2">
-                    <Form.Text muted>{t("year") + ": " + hit.year}</Form.Text>
+                    {editing ? (
+                        <Form.Control
+                            type="number"
+                            title={t("year")}
+                            value={editingHit.year}
+                            onChange={(e) => {
+                                let year = parseInt(e.currentTarget.value, 10)
+                                setEditingHit((h) => {
+                                    h.year = year
+                                })
+                            }}
+                        />
+                    ) : (
+                        <Form.Text muted>
+                            {t("year") + ": " + hit.year}
+                        </Form.Text>
+                    )}
                 </Form.Group>
                 <Form.Group className="mb-2">
-                    <Form.Text muted>
-                        {t("belongsTo") +
-                            ": " +
-                            (hit.belongs_to ? hit.belongs_to : "---")}
-                    </Form.Text>
+                    {editing ? (
+                        <Form.Control
+                            type="input"
+                            placeholder={t("belongsTo")}
+                            value={editingHit.belongs_to}
+                            onChange={(e) =>
+                                setEditingHit((h) => {
+                                    h.belongs_to = e.currentTarget.value
+                                })
+                            }
+                        />
+                    ) : (
+                        <Form.Text muted>
+                            {t("belongsTo") +
+                                ": " +
+                                (hit.belongs_to ? hit.belongs_to : "---")}
+                        </Form.Text>
+                    )}
                 </Form.Group>
                 <Form.Group className="mb-2">
                     <Form.Text muted>{t("pack", { count: 2 })}</Form.Text>
                     <ul>
-                        {availablePacks
-                            .filter((p) => hit.packs.includes(p.id))
-                            .toSorted((a, b) => sorter(a.name, b.name))
-                            .map((p) => (
-                                <li>{p.name}</li>
-                            ))}
+                        {editing
+                            ? availablePacks
+                                  .toSorted((a, b) => sorter(a.name, b.name))
+                                  .map((p) => (
+                                      <Form.Check
+                                          type="checkbox"
+                                          label={p.name}
+                                          id={`pack-${p.id}`}
+                                          key={`pack-${p.id}`}
+                                          checked={editingHit.packs.includes(
+                                              p.id,
+                                          )}
+                                          onChange={() =>
+                                              setEditingHit((h) => {
+                                                  if (h.packs.includes(p.id))
+                                                      h.packs.splice(
+                                                          h.packs.indexOf(p.id),
+                                                          1,
+                                                      )
+                                                  else h.packs.push(p.id)
+                                              })
+                                          }
+                                      />
+                                  ))
+                            : hit.packs
+                                  .map(
+                                      (p) =>
+                                          availablePacks.find(
+                                              (pp) => pp.id === p,
+                                          )!,
+                                  )
+                                  .toSorted((a, b) => sorter(a.name, b.name))
+                                  .map((p) => (
+                                      <li
+                                          key={`pack-${p.id}`}
+                                      >{`${p.name}`}</li>
+                                  ))}
                     </ul>
                 </Form.Group>
-                <YouTube
-                    videoId={hit.yt_id}
-                    opts={{
-                        playerVars: { start: hit.playback_offset, autoplay: 0 },
-                    }}
-                />
+                {editing ? (
+                    <Form.Group className="mb-2">
+                        <Form.Control
+                            type="input"
+                            placeholder={t("youtubeUrl")}
+                            isInvalid={!isUrlValid}
+                            aria-invalid={!isUrlValid}
+                            aria-errormessage={
+                                !isUrlValid ? "error-invalid-url" : ""
+                            }
+                            value={youtubeUrl}
+                            onChange={(e) => {
+                                let text = e.currentTarget.value
+                                setYoutubeUrl(text)
+                                let match = RE_YOUTUBE.exec(text)
+                                if (match !== null)
+                                    setEditingHit((h) => {
+                                        h.yt_id = match[1]
+                                    })
+                            }}
+                        />
+                        <Form.Text
+                            aria-hidden={isUrlValid}
+                            className={classNames({
+                                "visually-hidden": isUrlValid,
+                            })}
+                            muted
+                            id="error-invalid-url"
+                        >
+                            {t("youtubeUrlInvalid")}
+                        </Form.Text>
+                        <Form.Control
+                            type="number"
+                            title={t("playbackOffset")}
+                            min={0}
+                            value={editingHit.playback_offset}
+                            onChange={(e) => {
+                                let offset = parseInt(e.currentTarget.value, 10)
+                                setEditingHit((h) => {
+                                    h.playback_offset = offset
+                                })
+                            }}
+                        />
+                    </Form.Group>
+                ) : (
+                    <YouTube
+                        videoId={hit.yt_id}
+                        opts={{
+                            playerVars: {
+                                start: hit.playback_offset,
+                                autoplay: 0,
+                            },
+                        }}
+                    />
+                )}
+                {editing ? (
+                    <Button
+                        disabled={!isUrlValid}
+                        onClick={async () => {
+                            try {
+                                await hitService.updateHit(editingHit)
+                                setEditing(false)
+                                setEditingHit({
+                                    title: "",
+                                    artist: "",
+                                    year: 0,
+                                    belongs_to: "",
+                                    playback_offset: 0,
+                                    yt_id: "",
+                                    packs: [],
+                                    id: "",
+                                } satisfies FullHit)
+                                reload()
+                            } catch (e) {
+                                showError((e as any).message)
+                            }
+                        }}
+                    >
+                        {t("save")}
+                    </Button>
+                ) : (
+                    ""
+                )}
             </Form>
         </>
     )

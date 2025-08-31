@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT\n    hit_id AS \"hit_id: Uuid\",\n    pack_id AS \"pack_id: Uuid\",\n    custom,\n    marked_for_deletion\nFROM hits_packs WHERE hit_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "hit_id: Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "pack_id: Uuid",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "custom",
+        "ordinal": 2,
+        "type_info": "Bool"
+      },
+      {
+        "name": "marked_for_deletion",
+        "ordinal": 3,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "2db571e2b5accaaf6207ec737c4ca557af5ed6aac7dbb49a3bbf1f0130d37559"
+}

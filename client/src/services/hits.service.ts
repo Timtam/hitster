@@ -6,6 +6,7 @@ import {
     PacksResponse,
     PaginatedHitsResponse,
 } from "../entities"
+import fetchAuth from "../fetch"
 
 export default class HitService {
     async getAllPacks(): Promise<Pack[]> {
@@ -31,5 +32,19 @@ export default class HitService {
         })
 
         if (res.status === 200) return FullHit.parse(await res.json())
+    }
+
+    async updateHit(hit: FullHit) {
+        const res = await fetchAuth("/api/hits", {
+            body: JSON.stringify(hit),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "PATCH",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw { message: (await res.json()).message, status: res.status }
     }
 }
