@@ -51,7 +51,11 @@ export default function HitsView({
                                 <tr key={`hit-${h.id}`}>
                                     <td>{h.artist}</td>
                                     <td>
-                                        <Link to={"/hits/" + h.id}>
+                                        <Link
+                                            to={"/hits/" + h.id}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
                                             {h.title}
                                         </Link>
                                     </td>

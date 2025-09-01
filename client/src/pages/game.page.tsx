@@ -14,7 +14,7 @@ import Dropdown from "react-bootstrap/Dropdown"
 import DropdownButton from "react-bootstrap/DropdownButton"
 import Table from "react-bootstrap/Table"
 import { Trans, useTranslation } from "react-i18next"
-import { useLoaderData, useNavigate } from "react-router"
+import { Link, useLoaderData, useNavigate } from "react-router"
 import { titleCase } from "title-case"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
@@ -587,7 +587,18 @@ export default function Game() {
                                 game.last_scored?.name ?? t("noone"),
                             ),
                         }}
-                        components={[<b />, <b />, <b />, <b />]}
+                        components={[
+                            <b />,
+                            <Link
+                                to={`/hits/${game.hit.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <b />
+                            </Link>,
+                            <b />,
+                            <b />,
+                        ]}
                         shouldUnescape={true}
                         tOptions={{ interpolation: { escapeValue: true } }}
                     />
@@ -603,7 +614,19 @@ export default function Game() {
                                 game.last_scored?.name ?? t("noone"),
                             ),
                         }}
-                        components={[<b />, <b />, <b />, <b />, <b />]}
+                        components={[
+                            <b />,
+                            <Link
+                                to={`/hits/${game.hit.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <b />
+                            </Link>,
+                            <b />,
+                            <b />,
+                            <b />,
+                        ]}
                         shouldUnescape={true}
                         tOptions={{ interpolation: { escapeValue: true } }}
                     />
