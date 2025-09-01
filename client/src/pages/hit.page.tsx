@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
-import { useLoaderData } from "react-router"
+import { useLoaderData, useNavigate } from "react-router"
 import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
@@ -35,6 +35,7 @@ export default function Hit() {
     const [youtubeUrl, setYoutubeUrl] = useState("")
     const [isUrlValid, setIsUrlValid] = useState(true)
     const reload = useRevalidate()
+    const navigate = useNavigate()
 
     useEffect(() => {
         setIsUrlValid(RE_YOUTUBE.test(youtubeUrl))
@@ -47,17 +48,31 @@ export default function Hit() {
             </Helmet>
             <h2>{`${hit.artist}: ${hit.title}`}</h2>
             {!editing && user?.permissions.can_write_hits ? (
-                <Button
-                    onClick={() => {
-                        setEditingHit(deepcopy(hit))
-                        setYoutubeUrl(
-                            `https://www.youtube.com/watch?v=${hit.yt_id}`,
-                        )
-                        setEditing(true)
-                    }}
-                >
-                    {t("edit")}
-                </Button>
+                <>
+                    <Button
+                        onClick={() => {
+                            setEditingHit(deepcopy(hit))
+                            setYoutubeUrl(
+                                `https://www.youtube.com/watch?v=${hit.yt_id}`,
+                            )
+                            setEditing(true)
+                        }}
+                    >
+                        {t("edit")}
+                    </Button>
+                    <Button
+                        onClick={async () => {
+                            try {
+                                await hitService.deleteHit(hit.id)
+                                navigate("/hits")
+                            } catch (e) {
+                                showError((e as any).message)
+                            }
+                        }}
+                    >
+                        {t("delete")}
+                    </Button>
+                </>
             ) : editing ? (
                 <Button
                     onClick={() => {

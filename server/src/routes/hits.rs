@@ -2,7 +2,10 @@ use crate::{
     HitsterConfig,
     games::PackPayload,
     hits::{FullHitPayload, HitPayload, HitSearchQuery},
-    responses::{GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError},
+    responses::{
+        DeleteHitError, GetHitError, MessageResponse, PacksResponse, PaginatedResponse,
+        UpdateHitError,
+    },
     services::ServiceStore,
     users::UserAuthenticator,
 };
@@ -16,6 +19,11 @@ use rocket_okapi::openapi;
 use std::collections::HashMap;
 use time::OffsetDateTime;
 use uuid::Uuid;
+
+#[derive(FromRow)]
+struct HitRow {
+    custom: bool,
+}
 
 #[derive(FromRow)]
 struct HitPackRow {
@@ -250,6 +258,60 @@ WHERE hit_id = ? AND pack_id = ?"#,
 
     Ok(Json(MessageResponse {
         message: "hit updated successfully".into(),
+        r#type: "success".into(),
+    }))
+}
+
+#[openapi(tag = "Hits")]
+#[delete("/hits/<hit_id>")]
+pub async fn delete_hit(
+    hit_id: Uuid,
+    user: UserAuthenticator,
+    serv: &State<ServiceStore>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<MessageResponse>, DeleteHitError> {
+    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+        return Err(DeleteHitError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    let hs = serv.hit_service();
+
+    if hs.lock().get_hit(&HitId::Id(hit_id)).is_none() {
+        return Err(DeleteHitError {
+            message: "hit not found".into(),
+            http_status_code: 404,
+        });
+    }
+
+    hs.lock().remove_hit(&HitId::Id(hit_id));
+
+    let hit = sqlx::query_as!(HitRow, "SELECT custom FROM hits WHERE id = ?", hit_id)
+        .fetch_one(&mut **db)
+        .await
+        .unwrap();
+
+    if hit.custom {
+        let _ = sqlx::query!("DELETE FROM hits WHERE id = ?", hit_id)
+            .execute(&mut **db)
+            .await;
+        let _ = sqlx::query!("DELETE FROM hits_packs WHERE hit_id = ?", hit_id)
+            .execute(&mut **db)
+            .await;
+    } else {
+        let _ = sqlx::query!(
+            "UPDATE hits SET marked_for_deletion = ? WHERE id = ?",
+            true,
+            hit_id
+        )
+        .execute(&mut **db)
+        .await;
+    }
+
+    Ok(Json(MessageResponse {
+        message: "hit deleted successfully".into(),
         r#type: "success".into(),
     }))
 }
