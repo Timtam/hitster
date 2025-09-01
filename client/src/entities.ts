@@ -45,7 +45,7 @@ export const FullHit = z.object({
     year: z.number(),
     packs: z.array(z.string()),
     belongs_to: z.string(),
-    id: z.uuid(),
+    id: z.optional(z.uuid()),
     yt_id: z.string(),
     playback_offset: z.number(),
 })

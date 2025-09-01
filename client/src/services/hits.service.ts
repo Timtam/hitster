@@ -35,7 +35,7 @@ export default class HitService {
     }
 
     async updateHit(hit: FullHit) {
-        const res = await fetchAuth("/api/hits", {
+        const res = await fetchAuth(`/api/hits/${hit.id}`, {
             body: JSON.stringify(hit),
             headers: {
                 "Content-Type": "application/json",

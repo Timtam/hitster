@@ -63,7 +63,7 @@ export default function Hit() {
                     <Button
                         onClick={async () => {
                             try {
-                                await hitService.deleteHit(hit.id)
+                                await hitService.deleteHit(hit.id!)
                                 navigate("/hits")
                             } catch (e) {
                                 showError((e as any).message)

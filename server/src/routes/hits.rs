@@ -101,8 +101,9 @@ pub fn get_hit(
 }
 
 #[openapi(tag = "Hits")]
-#[patch("/hits", format = "json", data = "<hit>")]
+#[patch("/hits/<hit_id>", format = "json", data = "<hit>")]
 pub async fn update_hit(
+    hit_id: Uuid,
     hit: Json<FullHitPayload>,
     user: UserAuthenticator,
     serv: &State<ServiceStore>,
@@ -117,7 +118,7 @@ pub async fn update_hit(
 
     let hs = serv.hit_service();
 
-    if hs.lock().get_hit(&HitId::Id(hit.id)).is_none() {
+    if hs.lock().get_hit(&HitId::Id(hit_id)).is_none() {
         return Err(UpdateHitError {
             message: "hit not found".into(),
             http_status_code: 404,
@@ -125,7 +126,7 @@ pub async fn update_hit(
     }
 
     let new_hit = Hit {
-        id: hit.id,
+        id: hit_id,
         title: hit.title.clone(),
         artist: hit.artist.clone(),
         packs: hit.packs.clone(),
@@ -137,7 +138,7 @@ pub async fn update_hit(
     };
     let exists = new_hit.exists();
 
-    hs.lock().remove_hit(&HitId::Id(hit.id));
+    hs.lock().remove_hit(&HitId::Id(hit_id));
 
     let _ = sqlx::query!(
         "
@@ -173,7 +174,7 @@ SELECT
     custom,
     marked_for_deletion
 FROM hits_packs WHERE hit_id = ?"#,
-        hit.id
+        hit_id
     )
     .fetch_all(&mut **db)
     .await
