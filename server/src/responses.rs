@@ -321,7 +321,7 @@ impl OpenApiResponderInner for StopGameError {
 
 impl std::fmt::Display for StopGameError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Start game error `{}`", self.message,)
+        write!(formatter, "Stop game error `{}`", self.message,)
     }
 }
 
@@ -472,7 +472,7 @@ impl OpenApiResponderInner for GuessSlotError {
 
 impl std::fmt::Display for GuessSlotError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Guess slot error `{}`", self.message,)
     }
 }
 
@@ -553,7 +553,7 @@ impl OpenApiResponderInner for ConfirmSlotError {
 
 impl std::fmt::Display for ConfirmSlotError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Confirm slot error `{}`", self.message,)
     }
 }
 
@@ -634,7 +634,7 @@ impl OpenApiResponderInner for SkipHitError {
 
 impl std::fmt::Display for SkipHitError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Skip hit error `{}`", self.message,)
     }
 }
 
@@ -715,13 +715,131 @@ impl OpenApiResponderInner for UpdateGameError {
 
 impl std::fmt::Display for UpdateGameError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Update game error `{}`", self.message,)
     }
 }
 
 impl std::error::Error for UpdateGameError {}
 
 impl<'r> Responder<'r, 'static> for UpdateGameError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct UpdateHitError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for UpdateHitError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "401".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for hits.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                A hit with that ID doesn't exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for UpdateHitError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Update hit error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for UpdateHitError {}
+
+impl<'r> Responder<'r, 'static> for UpdateHitError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct DeleteHitError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for DeleteHitError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "401".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for hits.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                A hit with that ID doesn't exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for DeleteHitError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Delete hit error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for DeleteHitError {}
+
+impl<'r> Responder<'r, 'static> for DeleteHitError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         // Convert object to json
         let body = serde_json::to_string(&self).unwrap();
@@ -817,7 +935,7 @@ impl OpenApiResponderInner for ClaimHitError {
 
 impl std::fmt::Display for ClaimHitError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Claim hit error `{}`", self.message,)
     }
 }
 
@@ -865,13 +983,61 @@ impl OpenApiResponderInner for GetGameError {
 
 impl std::fmt::Display for GetGameError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
+        write!(formatter, "Get game error `{}`", self.message,)
     }
 }
 
 impl std::error::Error for GetGameError {}
 
 impl<'r> Responder<'r, 'static> for GetGameError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct GetHitError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for GetHitError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                A hit with that ID doesn't exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for GetHitError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Get hit error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for GetHitError {}
+
+impl<'r> Responder<'r, 'static> for GetHitError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         // Convert object to json
         let body = serde_json::to_string(&self).unwrap();
@@ -913,7 +1079,7 @@ impl OpenApiResponderInner for GetUserError {
 
 impl std::fmt::Display for GetUserError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
+        write!(formatter, "Get user error `{}`", self.message,)
     }
 }
 
@@ -961,7 +1127,7 @@ impl OpenApiResponderInner for UserLoginError {
 
 impl std::fmt::Display for UserLoginError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
+        write!(formatter, "User login error `{}`", self.message,)
     }
 }
 
@@ -1031,7 +1197,7 @@ impl OpenApiResponderInner for RegisterUserError {
 
 impl std::fmt::Display for RegisterUserError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
+        write!(formatter, "Register user error `{}`", self.message,)
     }
 }
 

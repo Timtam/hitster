@@ -173,6 +173,16 @@ mod hitster_core {
         pub fn get_pack(&self, pack_id: Uuid) -> Option<&Pack> {
             self.packs.get(&pack_id)
         }
+
+        pub fn remove_hit(&mut self, hit: &HitId) -> bool {
+            if let Some(hit) = self.hits.get(hit) {
+                self.hits
+                    .remove_many([&HitId::Id(hit.id), &HitId::YtId(hit.yt_id.clone())]);
+                true
+            } else {
+                false
+            }
+        }
     }
 
     #[derive(Serialize, Deserialize)]

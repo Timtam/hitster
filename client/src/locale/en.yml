@@ -34,6 +34,7 @@ createNewGame: Create new game
 creator: creator
 current: (current)
 dark: Dark
+delete: Delete
 deleteAccount: Delete account
 descending: Descending
 dontIntercept: Don't intercept
@@ -47,6 +48,7 @@ dragEndOverDroppable: "{{draggable}} moved to position of {{droppable}}"
 dragNotOverDroppable: "{{draggable}} no longer over droppable area"
 dragOverDroppable: "{{draggable}} moved over {{droppable}}"
 dragStart: Started dragging {{draggable}}
+edit: Edit
 error: Error
 features: Features
 featuresList: >
@@ -209,6 +211,7 @@ password: Password
 playHit: Play hit
 playOrStopHit: Play or stop hit
 playOrStopHitShortcut: Alt+Shift+H
+playbackOffset: Playback offset
 playerStatsNotification: "{{player}}: {{hits}} hits, {{tokens}} tokens"
 player_one: Player
 player_other: Players
@@ -310,3 +313,5 @@ youSkippedHitBelonging: >-
     You skipped this hit. This was <0>{{title}}</0> by <1>{{artist}}</1> from
     <2>{{year}}</2>. You might know this song from <3>{{belongs_to}}</3>.
 youWin: Congratulations, you are the winner!
+youtubeUrl: YouTube URL
+youtubeUrlInvalid: Invalid YouTube URL

@@ -3,7 +3,7 @@ use crate::{
     responses::PaginatedResponse,
 };
 use fuse_rust::Fuse;
-use hitster_core::{Hit, HitsterData, Pack};
+use hitster_core::{Hit, HitId, HitsterData, Pack};
 use rocket::tokio::sync::broadcast::Sender;
 use std::cmp::Ordering;
 use uuid::Uuid;
@@ -91,6 +91,14 @@ impl HitService {
         self.process_sender = Some(process_sender);
     }
 
+    pub fn get_hit(&self, hit_id: &HitId) -> Option<&Hit> {
+        self.hitster_data.get_hit(hit_id)
+    }
+
+    pub fn remove_hit(&mut self, hit: &HitId) -> bool {
+        self.hitster_data.remove_hit(hit)
+    }
+
     pub fn search_hits(&self, query: &HitSearchQuery) -> PaginatedResponse<Hit> {
         let def = HitSearchQuery::default();
         let start = query.start.or(def.start).unwrap();
@@ -168,6 +176,10 @@ impl HitService {
             end: start + amount - 1,
             total,
         }
+    }
+
+    pub fn download_hit(&self, hit: Hit) {
+        let _ = self.dl_sender.as_ref().unwrap().send(hit);
     }
 }
 

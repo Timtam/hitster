@@ -12,6 +12,8 @@ import Browser from "./pages/browser.page"
 import ErrorPage from "./pages/error-page"
 import GameLoader from "./pages/game.loader"
 import Game from "./pages/game.page"
+import HitLoader from "./pages/hit.loader"
+import Hit from "./pages/hit.page"
 import LobbyLoader from "./pages/lobby.loader"
 import Lobby from "./pages/lobby.page"
 import LoginAction from "./pages/login.action"
@@ -49,6 +51,11 @@ const router = createBrowserRouter([
                 element: <Game />,
                 path: "/game/:gameId",
                 loader: GameLoader,
+            },
+            {
+                element: <Hit />,
+                path: "/hits/:hitId",
+                loader: HitLoader,
             },
         ],
         errorElement: <ErrorPage />,

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\nUPDATE\n    hits_packs\nSET \n    marked_for_deletion = ?\nWHERE hit_id = ? AND pack_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "11282d1965cad47bd62162a87fa1b90183a2be0526ccace7708b351e4b26f611"
+}

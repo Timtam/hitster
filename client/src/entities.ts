@@ -39,6 +39,19 @@ export const Hit = z.object({
 
 export type Hit = z.infer<typeof Hit>
 
+export const FullHit = z.object({
+    artist: z.string(),
+    title: z.string(),
+    year: z.number(),
+    packs: z.array(z.string()),
+    belongs_to: z.string(),
+    id: z.optional(z.uuid()),
+    yt_id: z.string(),
+    playback_offset: z.number(),
+})
+
+export type FullHit = z.infer<typeof FullHit>
+
 export const Slot = z.object({
     from_year: z.number(),
     to_year: z.number(),

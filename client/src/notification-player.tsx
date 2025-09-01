@@ -3,6 +3,7 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import { flushSync } from "react-dom"
 import { createRoot } from "react-dom/client"
 import { Trans, useTranslation } from "react-i18next"
+import { Link } from "react-router"
 import { User } from "./entities"
 import {
     ClaimedHitData,
@@ -134,7 +135,19 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     belongs_to: e.hit.belongs_to,
                                     player: e.player?.name ?? t("noone"),
                                 }}
-                                components={[<b />, <b />, <b />, <b />, <b />]}
+                                components={[
+                                    <b />,
+                                    <Link
+                                        to={`/hits/${e.hit.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <b />
+                                    </Link>,
+                                    <b />,
+                                    <b />,
+                                    <b />,
+                                ]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -149,7 +162,18 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     year: e.hit.year,
                                     player: e.player?.name ?? t("noone"),
                                 }}
-                                components={[<b />, <b />, <b />, <b />]}
+                                components={[
+                                    <b />,
+                                    <Link
+                                        to={`/hits/${e.hit.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <b />
+                                    </Link>,
+                                    <b />,
+                                    <b />,
+                                ]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -209,7 +233,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     }}
                                     components={[
                                         <b />,
-                                        <b />,
+                                        <Link
+                                            to={`/hits/${e.hit.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <b />
+                                        </Link>,
                                         <b />,
                                         <b />,
                                         <b />,
@@ -228,7 +258,18 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         year: e.hit.year,
                                         player: e.player?.name ?? t("noone"),
                                     }}
-                                    components={[<b />, <b />, <b />, <b />]}
+                                    components={[
+                                        <b />,
+                                        <Link
+                                            to={`/hits/${e.hit.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <b />
+                                        </Link>,
+                                        <b />,
+                                        <b />,
+                                    ]}
                                     shouldUnescape={true}
                                     tOptions={{
                                         interpolation: { escapeValue: true },
@@ -244,7 +285,18 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     year: e.hit.year,
                                     belongs_to: e.hit.belongs_to,
                                 }}
-                                components={[<b />, <b />, <b />, <b />]}
+                                components={[
+                                    <Link
+                                        to={`/hits/${e.hit.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <b />
+                                    </Link>,
+                                    <b />,
+                                    <b />,
+                                    <b />,
+                                ]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -258,7 +310,17 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     artist: e.hit.artist,
                                     year: e.hit.year,
                                 }}
-                                components={[<b />, <b />, <b />]}
+                                components={[
+                                    <Link
+                                        to={`/hits/${e.hit.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <b />
+                                    </Link>,
+                                    <b />,
+                                    <b />,
+                                ]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -287,7 +349,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     }}
                                     components={[
                                         <b />,
-                                        <b />,
+                                        <Link
+                                            to={`/hits/${e.hit.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <b />
+                                        </Link>,
                                         <b />,
                                         <b />,
                                         <b />,
@@ -306,7 +374,18 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                         year: e.hit.year,
                                         player: e.player?.name ?? t("noone"),
                                     }}
-                                    components={[<b />, <b />, <b />, <b />]}
+                                    components={[
+                                        <b />,
+                                        <Link
+                                            to={`/hits/${e.hit.id}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            <b />
+                                        </Link>,
+                                        <b />,
+                                        <b />,
+                                    ]}
                                     shouldUnescape={true}
                                     tOptions={{
                                         interpolation: { escapeValue: true },
@@ -322,7 +401,18 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     year: e.hit.year,
                                     belongs_to: e.hit.belongs_to,
                                 }}
-                                components={[<b />, <b />, <b />, <b />]}
+                                components={[
+                                    <Link
+                                        to={`/hits/${e.hit.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <b />
+                                    </Link>,
+                                    <b />,
+                                    <b />,
+                                    <b />,
+                                ]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
@@ -336,7 +426,17 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     artist: e.hit.artist,
                                     year: e.hit.year,
                                 }}
-                                components={[<b />, <b />, <b />]}
+                                components={[
+                                    <Link
+                                        to={`/hits/${e.hit.id}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        <b />
+                                    </Link>,
+                                    <b />,
+                                    <b />,
+                                ]}
                                 shouldUnescape={true}
                                 tOptions={{
                                     interpolation: { escapeValue: true },
