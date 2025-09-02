@@ -78,6 +78,14 @@ impl HitService {
         self.hitster_data.get_packs()
     }
 
+    pub fn get_pack(&self, pack: Uuid) -> Option<&Pack> {
+        self.hitster_data.get_pack(pack)
+    }
+
+    pub fn remove_pack(&mut self, pack: Uuid) -> bool {
+        self.hitster_data.remove_pack(pack)
+    }
+
     pub fn get_hits_for_packs(&self, packs: &[Uuid]) -> Vec<&Hit> {
         self.hitster_data.get_hits_for_packs(packs)
     }

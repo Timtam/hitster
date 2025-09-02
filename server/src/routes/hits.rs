@@ -3,8 +3,8 @@ use crate::{
     games::PackPayload,
     hits::{FullHitPayload, HitPayload, HitSearchQuery},
     responses::{
-        DeleteHitError, GetHitError, MessageResponse, PacksResponse, PaginatedResponse,
-        UpdateHitError,
+        DeleteHitError, DeletePackError, GetHitError, MessageResponse, PacksResponse,
+        PaginatedResponse, UpdateHitError,
     },
     services::ServiceStore,
     users::UserAuthenticator,
@@ -22,6 +22,11 @@ use uuid::Uuid;
 
 #[derive(FromRow)]
 struct HitRow {
+    custom: bool,
+}
+
+#[derive(FromRow)]
+struct PackRow {
     custom: bool,
 }
 
@@ -50,9 +55,6 @@ pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
             });
             p
         });
-
-    drop(hsl);
-    drop(hs);
 
     Json(PacksResponse { packs })
 }
@@ -313,6 +315,60 @@ pub async fn delete_hit(
 
     Ok(Json(MessageResponse {
         message: "hit deleted successfully".into(),
+        r#type: "success".into(),
+    }))
+}
+
+#[openapi(tag = "Hits")]
+#[delete("/hits/packs/<pack_id>")]
+pub async fn delete_pack(
+    pack_id: Uuid,
+    user: UserAuthenticator,
+    serv: &State<ServiceStore>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<MessageResponse>, DeletePackError> {
+    if !user.0.permissions.contains(Permissions::CAN_WRITE_PACKS) {
+        return Err(DeletePackError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    let hs = serv.hit_service();
+
+    if hs.lock().get_pack(pack_id).is_none() {
+        return Err(DeletePackError {
+            message: "pack not found".into(),
+            http_status_code: 404,
+        });
+    }
+
+    hs.lock().remove_pack(pack_id);
+
+    let pack = sqlx::query_as!(PackRow, "SELECT custom FROM packs WHERE id = ?", pack_id)
+        .fetch_one(&mut **db)
+        .await
+        .unwrap();
+
+    if pack.custom {
+        let _ = sqlx::query!("DELETE FROM packs WHERE id = ?", pack_id)
+            .execute(&mut **db)
+            .await;
+        let _ = sqlx::query!("DELETE FROM hits_packs WHERE pack_id = ?", pack_id)
+            .execute(&mut **db)
+            .await;
+    } else {
+        let _ = sqlx::query!(
+            "UPDATE packs SET marked_for_deletion = ? WHERE id = ?",
+            true,
+            pack_id
+        )
+        .execute(&mut **db)
+        .await;
+    }
+
+    Ok(Json(MessageResponse {
+        message: "pack deleted successfully".into(),
         r#type: "success".into(),
     }))
 }

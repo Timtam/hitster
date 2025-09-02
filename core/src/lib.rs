@@ -183,6 +183,22 @@ mod hitster_core {
                 false
             }
         }
+
+        pub fn remove_pack(&mut self, pack: Uuid) -> bool {
+            if let Some(pack) = self.packs.get(&pack) {
+                let id = pack.id;
+                self.packs.remove(&id);
+
+                for hit in self.hits.values_mut() {
+                    if let Some(pos) = hit.packs.iter().position(|p| p == &id) {
+                        hit.packs.swap_remove(pos);
+                    }
+                }
+                true
+            } else {
+                false
+            }
+        }
     }
 
     #[derive(Serialize, Deserialize)]

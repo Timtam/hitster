@@ -57,4 +57,14 @@ export default class HitService {
         if (res.status == 200) return
         throw { message: (await res.json()).message, status: res.status }
     }
+
+    async deletePack(pack_id: string) {
+        const res = await fetchAuth(`/api/hits/packs/${pack_id}`, {
+            method: "DELETE",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw { message: (await res.json()).message, status: res.status }
+    }
 }

@@ -38,6 +38,7 @@ import {
     SortDirection,
 } from "../entities"
 import { Events, NotificationData } from "../events"
+import { useRevalidate } from "../hooks"
 import ViewPacksModal from "../modals/view-packs"
 import HitService from "../services/hits.service"
 
@@ -98,6 +99,7 @@ export default function Browser() {
     const [showViewPacksModal, setShowViewPacksModal] = useImmer<boolean[]>([])
     const [packs, setPacks] = useState<string[]>([])
     const [showPackFilter, setShowPackFilter] = useState(false)
+    const revalidate = useRevalidate()
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -475,6 +477,7 @@ export default function Browser() {
                                     onHide={(selected) => {
                                         setPacks(selected)
                                         setShowPackFilter(false)
+                                        revalidate()
                                         ;(async () =>
                                             await search({
                                                 query: query,
