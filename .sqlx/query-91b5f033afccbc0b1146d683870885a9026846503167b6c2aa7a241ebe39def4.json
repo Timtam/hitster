@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE packs SET marked_for_deletion = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "91b5f033afccbc0b1146d683870885a9026846503167b6c2aa7a241ebe39def4"
+}

@@ -67,4 +67,20 @@ export default class HitService {
         if (res.status == 200) return
         throw { message: (await res.json()).message, status: res.status }
     }
+
+    async createPack(name: string): Promise<Pack> {
+        const res = await fetchAuth(`/api/hits/packs`, {
+            body: JSON.stringify({
+                name: name,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status === 200) return Pack.parse(await res.json())
+        throw { message: (await res.json()).message, status: res.status }
+    }
 }

@@ -1,15 +1,15 @@
 use crate::{
     HitsterConfig,
     games::PackPayload,
-    hits::{FullHitPayload, HitPayload, HitSearchQuery},
+    hits::{CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery},
     responses::{
-        DeleteHitError, DeletePackError, GetHitError, MessageResponse, PacksResponse,
-        PaginatedResponse, UpdateHitError,
+        CreatePackError, DeleteHitError, DeletePackError, GetHitError, MessageResponse,
+        PacksResponse, PaginatedResponse, UpdateHitError,
     },
     services::ServiceStore,
     users::UserAuthenticator,
 };
-use hitster_core::{Hit, HitId, Permissions};
+use hitster_core::{Hit, HitId, Pack, Permissions};
 use rocket::{State, serde::json::Json};
 use rocket_db_pools::{
     Connection,
@@ -370,5 +370,63 @@ pub async fn delete_pack(
     Ok(Json(MessageResponse {
         message: "pack deleted successfully".into(),
         r#type: "success".into(),
+    }))
+}
+
+#[openapi(tag = "Hits")]
+#[post("/hits/packs", format = "json", data = "<pack>")]
+pub async fn create_pack(
+    pack: Json<CreatePackPayload>,
+    user: UserAuthenticator,
+    serv: &State<ServiceStore>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<PackPayload>, CreatePackError> {
+    if !user.0.permissions.contains(Permissions::CAN_WRITE_PACKS) {
+        return Err(CreatePackError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    if sqlx::query!("SELECT * FROM packs WHERE name = ?", pack.name)
+        .fetch_optional(&mut **db)
+        .await
+        .unwrap()
+        .is_some()
+    {
+        return Err(CreatePackError {
+            message: "a pack with that name already exists".into(),
+            http_status_code: 409,
+        });
+    }
+
+    let pack = Pack {
+        name: pack.name.clone(),
+        id: Uuid::new_v4(),
+        last_modified: OffsetDateTime::now_utc(),
+    };
+
+    let _ = sqlx::query!(
+        r#"
+INSERT INTO packs (
+    id, name, last_modified, custom, marked_for_deletion) VALUES (
+    ?, ?, ?, ?, ?)"#,
+        pack.id,
+        pack.name,
+        pack.last_modified,
+        true,
+        false
+    )
+    .execute(&mut **db)
+    .await;
+
+    let hs = serv.hit_service();
+
+    hs.lock().insert_pack(pack.clone());
+
+    Ok(Json(PackPayload {
+        name: pack.name.clone(),
+        id: pack.id,
+        hits: 0,
     }))
 }

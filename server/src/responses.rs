@@ -1273,3 +1273,62 @@ impl<'r> Responder<'r, 'static> for RegisterUserError {
             .ok()
     }
 }
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct CreatePackError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for CreatePackError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "401".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for packs.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
+                A pack with that name already exists.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for CreatePackError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Create pack error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for CreatePackError {}
+
+impl<'r> Responder<'r, 'static> for CreatePackError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}

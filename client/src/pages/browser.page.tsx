@@ -18,7 +18,6 @@ import { CSS } from "@dnd-kit/utilities"
 import { Helmet } from "@dr.pogodin/react-helmet"
 import EventManager from "@lomray/event-manager"
 import { toCamelCase } from "js-convert-case"
-import natsort from "natsort"
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col"
@@ -39,8 +38,8 @@ import {
 } from "../entities"
 import { Events, NotificationData } from "../events"
 import { useRevalidate } from "../hooks"
-import ViewPacksModal from "../modals/view-packs"
 import HitService from "../services/hits.service"
+import PacksModal from "./browser/packs"
 
 const PAGE_RANGE = 4
 const PAGE_SIZE = 50
@@ -73,7 +72,6 @@ export function SortableItem(props: { id: number; children: ReactNode }) {
 }
 
 export default function Browser() {
-    const sorter = useMemo(() => natsort(), [])
     const availablePacks = useLoaderData() as Pack[]
     const hitService = useMemo(() => new HitService(), [])
     const { t } = useTranslation()
@@ -96,7 +94,7 @@ export default function Browser() {
         }),
     )
     const [sortDirection, setSortDirection] = useState(SortDirection.Ascending)
-    const [showViewPacksModal, setShowViewPacksModal] = useImmer<boolean[]>([])
+    const [showPacksModal, setShowPacksModal] = useImmer<boolean[]>([])
     const [packs, setPacks] = useState<string[]>([])
     const [showPackFilter, setShowPackFilter] = useState(false)
     const revalidate = useRevalidate()
@@ -116,11 +114,11 @@ export default function Browser() {
             } satisfies NotificationData)
             setHitResults(results)
             setSearching(false)
-            setShowViewPacksModal(
+            setShowPacksModal(
                 Array.from({ length: results.results.length }, () => false),
             )
         },
-        [hitService, setSearching, setHitResults, setShowViewPacksModal],
+        [hitService, setSearching, setHitResults, setShowPacksModal],
     )
 
     const getPageCount = useCallback(
@@ -468,11 +466,9 @@ export default function Browser() {
                                               packs: packs.length,
                                           })}
                                 </Button>
-                                <ViewPacksModal
+                                <PacksModal
                                     selected={packs}
-                                    packs={availablePacks.toSorted((a, b) =>
-                                        sorter(a.name, b.name),
-                                    )}
+                                    packs={availablePacks}
                                     show={showPackFilter}
                                     onHide={(selected) => {
                                         setPacks(selected)
@@ -532,7 +528,7 @@ export default function Browser() {
                                         <Button
                                             aria-expanded={false}
                                             onClick={() =>
-                                                setShowViewPacksModal((v) => {
+                                                setShowPacksModal((v) => {
                                                     v[i] = true
                                                 })
                                             }
@@ -543,20 +539,16 @@ export default function Browser() {
                                                 ": " +
                                                 hit.packs.length}
                                         </Button>
-                                        <ViewPacksModal
-                                            show={showViewPacksModal[i]}
+                                        <PacksModal
+                                            show={showPacksModal[i]}
                                             onHide={() =>
-                                                setShowViewPacksModal((v) => {
+                                                setShowPacksModal((v) => {
                                                     v[i] = false
                                                 })
                                             }
-                                            packs={availablePacks
-                                                .filter((p) =>
-                                                    hit.packs.includes(p.id),
-                                                )
-                                                .toSorted((a, b) =>
-                                                    sorter(a.name, b.name),
-                                                )}
+                                            packs={availablePacks.filter((p) =>
+                                                hit.packs.includes(p.id),
+                                            )}
                                         />
                                     </td>
                                 </tr>

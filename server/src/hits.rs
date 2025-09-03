@@ -518,3 +518,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
         });
     }
 }
+
+#[derive(Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+pub struct CreatePackPayload {
+    pub name: String,
+}
