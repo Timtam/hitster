@@ -72,6 +72,7 @@ featuresList: >
 
     <0>entscheide dich für ein helles oder dunkles Farbschema, oder passe dich
     automatisch deinem verwendeten Gerät an</0>
+filtered: Gefiltert
 finalScore: "Hier sind die finalen Ergebnisse:"
 first: Erste
 game: Spiel
@@ -208,8 +209,6 @@ otherWins: "{{player}} hat dieses Spiel gewonnen!"
 ownedBy: >-
     Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel,
     welches <0>Koninklijke Jumbo B.V.</0> gehört.
-packFilterDisabled: "Gefilterte Packs: keine"
-packFilterEnabled: "Gefilterte Packs: {{packs}}"
 pack_one: Pack
 pack_other: Packs
 password: Passwort

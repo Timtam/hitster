@@ -72,6 +72,7 @@ featuresList: >
 
     <0>support light and dark mode, and respect your device's settings by
     default</0>
+filtered: Filtered
 finalScore: "And here are the final results:"
 first: First
 game: Game
@@ -204,8 +205,6 @@ otherWins: "{{player}} is the winner of this game!"
 ownedBy: >-
     This unofficial version is based on the original Hitster card game which is
     owned by <0>Koninklijke Jumbo B.V.</0>.
-packFilterDisabled: No packs filtered
-packFilterEnabled: Filtered by {{packs}} packs
 pack_one: Pack
 pack_other: Packs
 password: Password

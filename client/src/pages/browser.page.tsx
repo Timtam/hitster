@@ -460,11 +460,15 @@ export default function Browser() {
                                         setShowPackFilter(true)
                                     }}
                                 >
-                                    {packs.length === 0
-                                        ? t("packFilterDisabled")
-                                        : t("packFilterEnabled", {
-                                              packs: packs.length,
-                                          })}
+                                    {t("pack", {
+                                        count: availablePacks.length,
+                                    }) +
+                                        ": " +
+                                        availablePacks.length +
+                                        ", " +
+                                        t("filtered") +
+                                        ": " +
+                                        packs.length}
                                 </Button>
                                 <PacksModal
                                     selected={packs}

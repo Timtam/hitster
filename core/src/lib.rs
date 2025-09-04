@@ -69,7 +69,7 @@ mod hitster_core {
                 },
                 FuseProperty {
                     value: String::from("artist"),
-                    weight: 0.3,
+                    weight: 0.5,
                 },
             ];
 
