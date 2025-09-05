@@ -37,6 +37,8 @@ current: (aktuell)
 dark: Dunkel
 delete: Löschen
 deleteAccount: Benutzerkonto löschen
+deletePack: Pack löschen
+deletePackQuestion: Möchtest du das Pack wirklich löschen?
 descending: Absteigend
 dontIntercept: Keine Vermutung äußern
 downloaded_one: "{{hits}} verfügbar"

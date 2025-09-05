@@ -37,6 +37,8 @@ current: (current)
 dark: Dark
 delete: Delete
 deleteAccount: Delete account
+deletePack: Delete pack
+deletePackQuestion: Do you really want to delete this pack?
 descending: Descending
 dontIntercept: Don't intercept
 downloaded_one: "{{hits}} downloaded"

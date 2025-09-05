@@ -1,3 +1,4 @@
+import EventManager from "@lomray/event-manager"
 import natsort from "natsort"
 import { useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
@@ -10,7 +11,41 @@ import { BsFillTrash3Fill } from "react-icons/bs"
 import { useImmer } from "use-immer"
 import { useContext } from "../../context"
 import { Pack } from "../../entities"
+import { Events } from "../../events"
 import HitService from "../../services/hits.service"
+
+function DeletePackModal({
+    show,
+    onHide,
+}: {
+    show: boolean
+    onHide: (yes: boolean) => void
+}) {
+    const { t } = useTranslation()
+
+    useEffect(() => {
+        if (show) EventManager.publish(Events.popup)
+    }, [show])
+
+    return (
+        <Modal show={show} onHide={() => {}}>
+            <Modal.Header>
+                <Modal.Title>{t("deletePack")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {show ? (
+                    <>
+                        <h2>{t("deletePackQuestion")}</h2>
+                        <Button onClick={() => onHide(false)}>{t("no")}</Button>
+                        <Button onClick={() => onHide(true)}>{t("yes")}</Button>
+                    </>
+                ) : (
+                    ""
+                )}
+            </Modal.Body>
+        </Modal>
+    )
+}
 
 function CreatePackModal({
     show,
@@ -85,6 +120,15 @@ export default function PacksModal({
     const [showCreatePackModal, setShowCreatePackModal] = useState(false)
     const { t } = useTranslation()
     const { user, showError } = useContext()
+    const [showDeletePackModal, setShowDeletePackModal] = useImmer<boolean[]>(
+        [],
+    )
+
+    useEffect(() => {
+        setShowDeletePackModal(
+            Array.from({ length: packs.length }, () => false),
+        )
+    }, [packs, setShowDeletePackModal])
 
     useEffect(() => {
         if (selected) setSelectedPacks(selected)
@@ -120,7 +164,7 @@ export default function PacksModal({
                 <Form>
                     {packs
                         .toSorted((a, b) => sorter(a.name, b.name))
-                        .map((p) =>
+                        .map((p, i) =>
                             selected ? (
                                 <Form.Group as={Row} className="mb-3">
                                     <Col sm={10}>
@@ -152,36 +196,62 @@ export default function PacksModal({
                                         />
                                     </Col>
                                     {user?.permissions.can_write_packs ? (
-                                        <Col sm={2}>
-                                            <Button
-                                                onClick={async () => {
-                                                    try {
-                                                        await hitService.deletePack(
-                                                            p.id,
-                                                        )
-                                                        setPacks((packs) => {
-                                                            packs.splice(
-                                                                packs.findIndex(
-                                                                    (pack) =>
-                                                                        pack.id ===
-                                                                        p.id,
-                                                                ),
-                                                                1,
-                                                            )
-                                                        })
-                                                    } catch (e) {
-                                                        showError(
-                                                            (e as any).message,
+                                        <>
+                                            <Col sm={2}>
+                                                <Button
+                                                    onClick={() =>
+                                                        setShowDeletePackModal(
+                                                            (s) => {
+                                                                s[i] = true
+                                                            },
                                                         )
                                                     }
+                                                >
+                                                    <BsFillTrash3Fill
+                                                        title={t("delete")}
+                                                        size="2em"
+                                                    />
+                                                </Button>
+                                            </Col>
+                                            <DeletePackModal
+                                                show={showDeletePackModal[i]}
+                                                onHide={(yes) => {
+                                                    setShowDeletePackModal(
+                                                        (s) => {
+                                                            s[i] = false
+                                                        },
+                                                    )
+                                                    if (yes) {
+                                                        ;(async () => {
+                                                            try {
+                                                                await hitService.deletePack(
+                                                                    p.id,
+                                                                )
+                                                                setPacks(
+                                                                    (packs) => {
+                                                                        packs.splice(
+                                                                            packs.findIndex(
+                                                                                (
+                                                                                    pack,
+                                                                                ) =>
+                                                                                    pack.id ===
+                                                                                    p.id,
+                                                                            ),
+                                                                            1,
+                                                                        )
+                                                                    },
+                                                                )
+                                                            } catch (e) {
+                                                                showError(
+                                                                    (e as any)
+                                                                        .message,
+                                                                )
+                                                            }
+                                                        })()
+                                                    }
                                                 }}
-                                            >
-                                                <BsFillTrash3Fill
-                                                    title={t("delete")}
-                                                    size="2em"
-                                                />
-                                            </Button>
-                                        </Col>
+                                            />
+                                        </>
                                     ) : (
                                         ""
                                     )}
