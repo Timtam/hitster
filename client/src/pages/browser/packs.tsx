@@ -1,9 +1,12 @@
 import natsort from "natsort"
 import { useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
+import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
 import Modal from "react-bootstrap/Modal"
+import Row from "react-bootstrap/Row"
 import { useTranslation } from "react-i18next"
+import { BsFillTrash3Fill } from "react-icons/bs"
 import { useImmer } from "use-immer"
 import { useContext } from "../../context"
 import { Pack } from "../../entities"
@@ -115,12 +118,12 @@ export default function PacksModal({
                     ""
                 )}
                 <Form>
-                    <ul>
-                        {packs
-                            .toSorted((a, b) => sorter(a.name, b.name))
-                            .map((p) =>
-                                selected ? (
-                                    <div role="listitem">
+                    {packs
+                        .toSorted((a, b) => sorter(a.name, b.name))
+                        .map((p) =>
+                            selected ? (
+                                <Form.Group as={Row} className="mb-3">
+                                    <Col sm={10}>
                                         <Form.Check
                                             type="checkbox"
                                             label={
@@ -147,7 +150,9 @@ export default function PacksModal({
                                                 })
                                             }
                                         />
-                                        {user?.permissions.can_write_packs ? (
+                                    </Col>
+                                    {user?.permissions.can_write_packs ? (
+                                        <Col sm={2}>
                                             <Button
                                                 onClick={async () => {
                                                     try {
@@ -171,17 +176,27 @@ export default function PacksModal({
                                                     }
                                                 }}
                                             >
-                                                {t("delete")}
+                                                <BsFillTrash3Fill
+                                                    title={t("delete")}
+                                                    size="2em"
+                                                />
                                             </Button>
-                                        ) : (
-                                            ""
-                                        )}
-                                    </div>
-                                ) : (
-                                    <li key={`pack-${p.id}`}>{`${p.name}`}</li>
-                                ),
-                            )}
-                    </ul>
+                                        </Col>
+                                    ) : (
+                                        ""
+                                    )}
+                                </Form.Group>
+                            ) : (
+                                <Form.Group as={Row} className="mb-3">
+                                    <Col sm={10}>
+                                        <Form.Text
+                                            muted
+                                            key={`pack-${p.id}`}
+                                        >{`${p.name}`}</Form.Text>
+                                    </Col>
+                                </Form.Group>
+                            ),
+                        )}
                 </Form>
             </Modal.Body>
         </Modal>
