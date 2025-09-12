@@ -83,4 +83,18 @@ export default class HitService {
         if (res.status === 200) return Pack.parse(await res.json())
         throw { message: (await res.json()).message, status: res.status }
     }
+
+    async createHit(hit: FullHit) {
+        const res = await fetchAuth(`/api/hits`, {
+            body: JSON.stringify(hit),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return FullHit.parse(await res.json())
+        throw { message: (await res.json()).message, status: res.status }
+    }
 }

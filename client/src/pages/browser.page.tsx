@@ -29,6 +29,7 @@ import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData } from "react-router"
 import { useImmer } from "use-immer"
+import { useContext } from "../context"
 import {
     HitSearchQuery,
     Pack,
@@ -98,6 +99,7 @@ export default function Browser() {
     const [packs, setPacks] = useState<string[]>([])
     const [showPackFilter, setShowPackFilter] = useState(false)
     const revalidate = useRevalidate()
+    const { user } = useContext()
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -504,6 +506,11 @@ export default function Browser() {
                                 {t("loading")}
                             </span>
                         </Spinner>
+                    ) : (
+                        ""
+                    )}
+                    {user?.permissions.can_write_hits ? (
+                        <Link to="/hits/create">{t("createHit")}</Link>
                     ) : (
                         ""
                     )}

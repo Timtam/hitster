@@ -102,11 +102,12 @@ export default function Hit() {
                             type="input"
                             placeholder={t("title")}
                             value={editingHit.title}
-                            onChange={(e) =>
+                            onChange={(e) => {
+                                const title = e.currentTarget.value
                                 setEditingHit((h) => {
-                                    h.title = e.currentTarget.value
+                                    h.title = title
                                 })
-                            }
+                            }}
                         />
                     ) : (
                         <Form.Text muted>
@@ -120,11 +121,12 @@ export default function Hit() {
                             type="input"
                             placeholder={t("artist")}
                             value={editingHit.artist}
-                            onChange={(e) =>
+                            onChange={(e) => {
+                                const artist = e.currentTarget.value
                                 setEditingHit((h) => {
-                                    h.artist = e.currentTarget.value
+                                    h.artist = artist
                                 })
-                            }
+                            }}
                         />
                     ) : (
                         <Form.Text muted>
@@ -157,11 +159,12 @@ export default function Hit() {
                             type="input"
                             placeholder={t("belongsTo")}
                             value={editingHit.belongs_to}
-                            onChange={(e) =>
+                            onChange={(e) => {
+                                const belongsTo = e.currentTarget.value
                                 setEditingHit((h) => {
-                                    h.belongs_to = e.currentTarget.value
+                                    h.belongs_to = belongsTo
                                 })
-                            }
+                            }}
                         />
                     ) : (
                         <Form.Text muted>

@@ -30,6 +30,7 @@ confirmHeading: >-
 confirmNo: title and artist of the hit was guessed incorrectly
 confirmText: Did <0>{{player}}</0> guess artist and title correctly?
 confirmYes: title and artist of the hit was guessed correctly
+createHit: Create hit
 createNewGame: Create new game
 createPack: Create pack
 creator: creator

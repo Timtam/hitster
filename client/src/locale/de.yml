@@ -30,6 +30,7 @@ confirmHeading: >-
 confirmNo: Titel und Interpret des Hits wurde nicht richtig erraten
 confirmText: Hat <0>{{player}}</0> den Titel und Interpreten korrekt erraten?
 confirmYes: Titel und Interpret des Hits wurde richtig erraten
+createHit: Hit erstellen
 createNewGame: Spiel erstellen
 createPack: Pack erstellen
 creator: Ersteller

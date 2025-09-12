@@ -3,8 +3,8 @@ use crate::{
     games::PackPayload,
     hits::{CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery},
     responses::{
-        CreatePackError, DeleteHitError, DeletePackError, GetHitError, MessageResponse,
-        PacksResponse, PaginatedResponse, UpdateHitError,
+        CreateHitError, CreatePackError, DeleteHitError, DeletePackError, GetHitError,
+        MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError,
     },
     services::ServiceStore,
     users::UserAuthenticator,
@@ -429,4 +429,104 @@ INSERT INTO packs (
         id: pack.id,
         hits: 0,
     }))
+}
+
+#[openapi(tag = "Hits")]
+#[post("/hits", format = "json", data = "<hit>")]
+pub async fn create_hit(
+    hit: Json<FullHitPayload>,
+    user: UserAuthenticator,
+    serv: &State<ServiceStore>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<FullHitPayload>, CreateHitError> {
+    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+        return Err(CreateHitError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    if sqlx::query!("SELECT * FROM hits WHERE yt_id = ?", hit.yt_id)
+        .fetch_optional(&mut **db)
+        .await
+        .unwrap()
+        .is_some()
+    {
+        return Err(CreateHitError {
+            message: "a hit for that YouTube ID already exists".into(),
+            http_status_code: 409,
+        });
+    }
+
+    let hit = Hit {
+        title: hit.title.clone(),
+        artist: hit.artist.clone(),
+        last_modified: OffsetDateTime::now_utc(),
+        id: Uuid::new_v4(),
+        yt_id: hit.yt_id.clone(),
+        belongs_to: hit.belongs_to.clone(),
+        playback_offset: hit.playback_offset,
+        year: hit.year,
+        packs: hit.packs.clone(),
+    };
+    let exists = hit.exists();
+
+    let _ = sqlx::query!(
+        r#"
+INSERT INTO hits (
+    id,
+    artist,
+    title,
+    year,
+    belongs_to,
+    yt_id,
+    playback_offset,
+    last_modified,
+    downloaded,
+    custom,
+    marked_for_deletion
+) VALUES (
+    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"#,
+        hit.id,
+        hit.artist,
+        hit.title,
+        hit.year,
+        hit.belongs_to,
+        hit.yt_id,
+        hit.playback_offset,
+        hit.last_modified,
+        exists,
+        true,
+        false
+    )
+    .execute(&mut **db)
+    .await;
+
+    for pack in hit.packs.iter() {
+        let _ = sqlx::query!(
+            r#"
+INSERT INTO hits_packs (
+    hit_id,
+    pack_id,
+    custom,
+    marked_for_deletion) VALUES (
+    ?, ?, ?, ?)"#,
+            hit.id,
+            pack,
+            true,
+            false
+        )
+        .execute(&mut **db)
+        .await;
+    }
+
+    let hs = serv.hit_service();
+
+    if exists {
+        hs.lock().insert_hit(hit.clone());
+    } else {
+        hs.lock().download_hit(hit.clone());
+    }
+
+    Ok(Json((&hit).into()))
 }

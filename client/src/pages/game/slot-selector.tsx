@@ -5,7 +5,7 @@ import {
     unbindKeyCombo,
 } from "@rwh/keystrokes"
 import { detect } from "detect-browser"
-import { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import OverlayTrigger from "react-bootstrap/OverlayTrigger"
 import Tooltip from "react-bootstrap/Tooltip"
@@ -516,7 +516,7 @@ export default function SlotSelector({ game }: { game: Game }) {
                                     })
 
                                 return (
-                                    <>
+                                    <React.Fragment key={`slot-${slot.id}`}>
                                         <OverlayTrigger
                                             overlay={(props) =>
                                                 disabled ? (
@@ -576,8 +576,7 @@ export default function SlotSelector({ game }: { game: Game }) {
                                                         EventManager.publish(
                                                             Events.slotSelected,
                                                             {
-                                                                unavailable:
-                                                                    false,
+                                                                unavailable: false,
                                                                 slot: s,
                                                                 from_year:
                                                                     p.slots[0]
@@ -638,7 +637,7 @@ export default function SlotSelector({ game }: { game: Game }) {
                                         ) : (
                                             ""
                                         )}
-                                    </>
+                                    </React.Fragment>
                                 )
                             })}
                     </div>
