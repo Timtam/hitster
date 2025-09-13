@@ -40,6 +40,7 @@ import {
     SkippedHitData,
     TokenReceivedData,
 } from "../events"
+import FA from "../focus-anchor"
 import { useModalShown } from "../hooks"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
@@ -390,9 +391,11 @@ export default function Game() {
                         " - Hitster"}
                 </title>
             </Helmet>
-            <h2 className="h4">
-                {t("gameId")}: {game.id}, {t("state")}: {game.state}
-            </h2>
+            <FA>
+                <h2 className="h4">
+                    {t("gameId")}: {game.id}, {t("state")}: {game.state}
+                </h2>
+            </FA>
             <LeaveGameQuestion
                 show={showLeaveGameQuestion}
                 onHide={(yes: boolean) => {

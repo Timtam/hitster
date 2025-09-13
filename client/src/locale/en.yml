@@ -97,6 +97,7 @@ goal: Goal
 guess: "{{player}} guesses: {{guess}}"
 guessNothing: "{{player}} doesn't intercept"
 guessText: Where do you think this hit belongs?
+hitCreated: Hit created successfully.
 hitDuration: Hit duration
 hitHeading: What's the hit?
 hitNoGameRunning: No game running, no hit for you!

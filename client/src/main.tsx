@@ -9,6 +9,8 @@ import "./index.css"
 import Layout from "./layout"
 import BrowserLoader from "./pages/browser.loader"
 import Browser from "./pages/browser.page"
+import CreateHitLoader from "./pages/create-hit.loader"
+import CreateHit from "./pages/create-hit.page"
 import ErrorPage from "./pages/error-page"
 import GameLoader from "./pages/game.loader"
 import Game from "./pages/game.page"
@@ -55,6 +57,11 @@ const router = createBrowserRouter([
                 element: <Hit />,
                 path: "/hits/:hitId",
                 loader: HitLoader,
+            },
+            {
+                element: <CreateHit />,
+                path: "/hits/create",
+                loader: CreateHitLoader,
             },
         ],
         errorElement: <ErrorPage />,

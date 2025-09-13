@@ -38,6 +38,7 @@ import {
     SortDirection,
 } from "../entities"
 import { Events, NotificationData } from "../events"
+import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
 import HitService from "../services/hits.service"
 import PacksModal from "./browser/packs"
@@ -196,7 +197,9 @@ export default function Browser() {
             <Helmet>
                 <title>{t("browseHits")} - Hitster</title>
             </Helmet>
-            <h2>{t("browseHits")}</h2>
+            <FA>
+                <h2>{t("browseHits")}</h2>
+            </FA>
             <Row>
                 <Col>
                     <search>

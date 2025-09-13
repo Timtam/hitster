@@ -111,6 +111,7 @@ export enum Events {
     gameRemoved = "Game removed",
     gameStarted = "Game started",
     guessed = "Guessed",
+    hitCreated = "Hit created",
     hitRevealed = "Hit revealed",
     hitsProgressUpdate = "Hits progress update",
     joinedGame = "Joined",

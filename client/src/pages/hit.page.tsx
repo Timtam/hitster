@@ -11,6 +11,7 @@ import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import { FullHit, Pack } from "../entities"
+import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
 import HitService from "../services/hits.service"
 import { RE_YOUTUBE } from "../utils"
@@ -46,7 +47,9 @@ export default function Hit() {
             <Helmet>
                 <title>{`${hit.artist}: ${hit.title} - Hitster`}</title>
             </Helmet>
-            <h2>{`${hit.artist}: ${hit.title}`}</h2>
+            <FA>
+                <h2>{`${hit.artist}: ${hit.title}`}</h2>
+            </FA>
             {!editing && user?.permissions.can_write_hits ? (
                 <>
                     <Button

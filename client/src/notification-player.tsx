@@ -79,6 +79,15 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             },
         )
 
+        const unsubscribeCreatedHit = EventManager.subscribe(
+            Events.hitCreated,
+            () => {
+                EventManager.publish(Events.notification, {
+                    text: t("hitCreated"),
+                } satisfies NotificationData)
+            },
+        )
+
         const unsubscribeJoinedGame = EventManager.subscribe(
             Events.joinedGame,
             (e: JoinedGameData) => {
@@ -446,6 +455,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
 
         return () => {
             unsubscribeClaimedHit()
+            unsubscribeCreatedHit()
             unsubscribeGuessed()
             unsubscribeHitRevealed()
             unsubscribeJoinedGame()

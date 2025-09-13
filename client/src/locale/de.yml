@@ -97,6 +97,7 @@ goal: Ziel
 guess: "{{player}} vermutet: {{guess}}"
 guessNothing: "{{player}} behauptet nichts Gegenteiliges"
 guessText: Wo, glaubst du, gehört dieser Hit hin?
+hitCreated: Der Hit wurde erfolgreich erstellt.
 hitDuration: Abspielzeit der Hits
 hitHeading: Was zum Hit?
 hitNoGameRunning: Derzeit läuft kein Spiel, also gibt es auch keinen Hit für dich!

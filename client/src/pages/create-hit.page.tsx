@@ -1,7 +1,8 @@
 import { Helmet } from "@dr.pogodin/react-helmet"
+import EventManager from "@lomray/event-manager"
 import classNames from "classnames"
 import natsort from "natsort"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
@@ -9,6 +10,8 @@ import { Navigate, useLoaderData } from "react-router"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import { FullHit, Pack } from "../entities"
+import { Events } from "../events"
+import FA from "../focus-anchor"
 import HitService from "../services/hits.service"
 import { RE_YOUTUBE } from "../utils"
 
@@ -29,6 +32,7 @@ export default function CreateHit() {
     } satisfies FullHit)
     const [youtubeUrl, setYoutubeUrl] = useState("")
     const [isUrlValid, setIsUrlValid] = useState(true)
+    const head = useRef<HTMLElement>(null)
 
     useEffect(() => {
         setIsUrlValid(RE_YOUTUBE.test(youtubeUrl))
@@ -41,7 +45,9 @@ export default function CreateHit() {
             <Helmet>
                 <title>{t("createHit") + " - Hitster"}</title>
             </Helmet>
-            <h2>{t("createHit")}</h2>
+            <FA ref={head}>
+                <h2>{t("createHit")}</h2>
+            </FA>
             <Form onSubmit={(e) => e.preventDefault()}>
                 <Form.Group className="mb-2">
                     <Form.Control
@@ -179,6 +185,8 @@ export default function CreateHit() {
                                 packs: editingHit.packs,
                             } satisfies FullHit)
                             setYoutubeUrl("")
+                            head.current?.focus()
+                            EventManager.publish(Events.hitCreated)
                         } catch (e) {
                             showError((e as any).message)
                         }
