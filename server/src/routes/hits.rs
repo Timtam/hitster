@@ -38,6 +38,10 @@ struct HitPackRow {
     marked_for_deletion: bool,
 }
 
+/// # Get all packs
+///
+/// This endpoint returns all packs currently available on this server.
+
 #[openapi(tag = "Hits")]
 #[get("/hits/packs")]
 pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
@@ -58,6 +62,11 @@ pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
 
     Json(PacksResponse { packs })
 }
+
+/// # Search for hits
+///
+/// Search for hits in the database. The search will be executed using fuzzy search, so approximated results will be returned as well.
+/// The results will be paginated, use the parameters to specify the page size.
 
 #[openapi(tag = "Hits")]
 #[get("/hits/search?<query..>")]
@@ -83,6 +92,10 @@ pub fn search_hits(
     )
 }
 
+/// # Get detailed hit information
+///
+/// Retrieve all information about a hit independent from a game.
+
 #[openapi(tag = "Hits")]
 #[get("/hits/<hit_id>")]
 pub fn get_hit(
@@ -101,6 +114,11 @@ pub fn get_hit(
             http_status_code: 404,
         })
 }
+
+/// # Update a hit
+///
+/// Update a hit's info. This endpoint is only usable if the authenticated user has the permission to write hits.
+/// If the YouTube ID or playback offset changed, the hit will be added to the download queue.
 
 #[openapi(tag = "Hits")]
 #[patch("/hits/<hit_id>", format = "json", data = "<hit>")]
@@ -265,6 +283,10 @@ WHERE hit_id = ? AND pack_id = ?"#,
     }))
 }
 
+/// # Delete a hit
+///
+/// Delete a hit. The authenticated user needs to have write permissions for hits.
+
 #[openapi(tag = "Hits")]
 #[delete("/hits/<hit_id>")]
 pub async fn delete_hit(
@@ -319,6 +341,10 @@ pub async fn delete_hit(
     }))
 }
 
+/// # Delete a pack
+///
+/// Delete a pack from the server. The authenticated user needs to have pack write permissions.
+
 #[openapi(tag = "Hits")]
 #[delete("/hits/packs/<pack_id>")]
 pub async fn delete_pack(
@@ -372,6 +398,10 @@ pub async fn delete_pack(
         r#type: "success".into(),
     }))
 }
+
+/// # Create a new pack
+///
+/// Create a new pack. The authenticated user needs to have pack write permissions.
 
 #[openapi(tag = "Hits")]
 #[post("/hits/packs", format = "json", data = "<pack>")]
@@ -430,6 +460,11 @@ INSERT INTO packs (
         hits: 0,
     }))
 }
+
+/// # Create a new hit
+///
+/// Create a new hit. The hit will be added to the download queue and will be available in all new games once the download finishes.
+/// The authenticated user needs to have hit write permissions.
 
 #[openapi(tag = "Hits")]
 #[post("/hits", format = "json", data = "<hit>")]

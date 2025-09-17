@@ -18,11 +18,17 @@ use rocket_okapi::{
 };
 use serde::{Deserialize, Serialize};
 
+/// paginated search results
+
 #[derive(Serialize, JsonSchema)]
 pub struct PaginatedResponse<T> {
+    /// the search results
     pub results: Vec<T>,
+    /// the total amount of search results
     pub total: usize,
+    /// the first result returned
     pub start: usize,
+    /// the last result returned
     pub end: usize,
 }
 
@@ -915,9 +921,13 @@ pub struct GamesResponse {
     pub games: Vec<GamePayload>,
 }
 
+/// a response containing a message
+
 #[derive(Serialize, Deserialize, JsonSchema, Debug)]
 pub struct MessageResponse {
+    /// either success or error
     pub r#type: String,
+    /// a helpful message
     pub message: String,
 }
 

@@ -294,7 +294,7 @@ async fn handle_existing_token(
     u
 }
 
-/// Retrieve a list of all users
+/// # Retrieve a list of all users
 ///
 /// The object returned contains all users currently known by the server.
 
@@ -312,7 +312,7 @@ pub fn get_all(serv: &State<ServiceStore>) -> Json<UsersResponse> {
     })
 }
 
-/// Get all info about a certain user
+/// # Get all info about a certain user
 ///
 /// Retrieve all known info about a specific user. user_id must be identical to a user's id, either returned by POST /users, or by GET /users.
 /// The info here is currently identical with what you get with GET /users, but that might change later.
@@ -336,9 +336,14 @@ pub fn get(user_id: &str, serv: &State<ServiceStore>) -> Result<Json<UserPayload
     }
 }
 
-/// User login
+/// # User login
 ///
 /// The user will log in with the provided username and password
+/// If successful, two cookies will be created/refreshed:
+///
+/// * a private one that contains the token used to authenticate against the server
+///
+/// * a public one that contains user id, validity information and the user's permissions
 
 #[openapi(tag = "Users")]
 #[post("/users/login", format = "json", data = "<credentials>")]
@@ -450,7 +455,7 @@ pub async fn login(
     })
 }
 
-/// Register a new user
+/// # Register a new user
 ///
 /// Register a new user with a given username and password
 
@@ -527,7 +532,7 @@ pub async fn register(
     }
 }
 
-/// Logout user
+/// # Logout user
 ///
 /// Logout user and clear cookies.
 
@@ -557,6 +562,15 @@ pub async fn logout(
         r#type: "success".into(),
     })
 }
+
+/// # (re)authorize user
+///
+/// This endpoint is necessary to update a user's token.
+/// The current token of the user is always just valid for a certain amount of time.
+/// The user however also got a second token that can be used to refresh the first token.
+/// This endpoint will check that the first token is either valid, or refreshes the first token with the refresh token.
+/// Cookies will be updated accordingly.
+/// If tokens are invalid or no token exists at all, a virtual user will be created and authorized instead.
 
 #[openapi(tag = "Users")]
 #[get("/users/auth")]

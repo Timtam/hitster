@@ -331,7 +331,7 @@ export default function Game() {
         const handleStartOrStopGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
-                startOrStopGame()
+                if(canStartOrStopGame()) startOrStopGame()
             },
         }
         const handleShowSettings = {
@@ -343,7 +343,7 @@ export default function Game() {
         const handleSkipHit = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
-                skipHit()
+                if (canSkip()) skipHit()
             },
         }
 
@@ -352,12 +352,8 @@ export default function Game() {
                 bindKeyCombo("alt + shift + q", handleLeaveGame)
             else bindKeyCombo("alt + shift + j", handleJoinGame)
 
-            if (canStartOrStopGame()) {
-                bindKeyCombo("alt + shift + s", handleStartOrStopGame)
-            }
-            if (canSkip()) {
-                bindKeyCombo("alt + shift + i", handleSkipHit)
-            }
+            bindKeyCombo("alt + shift + s", handleStartOrStopGame)
+            bindKeyCombo("alt + shift + i", handleSkipHit)
             bindKeyCombo("alt + shift + e", handleShowSettings)
         }
 

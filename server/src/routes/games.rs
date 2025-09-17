@@ -15,6 +15,7 @@ use crate::{
 use rocket::{
     Shutdown, State,
     fs::NamedFile,
+    futures::stream::Stream,
     response::{
         status::Created,
         stream::{Event, EventStream},
@@ -29,15 +30,16 @@ use rocket_okapi::openapi;
 use std::{default::Default, path::PathBuf};
 use uuid::Uuid;
 
-/// Create a new game
+/// # Create a new game
 ///
 /// Create a new game. The currently logged in user will be the creator of the game. The creator will be the only one who can change game properties later.
+/// You can create the game with pre-defined settings via the data parameter. If supplied, it must be of type `CreateGamePayload`.
 
 #[openapi(tag = "Games")]
 #[post("/games", format = "json", data = "<data>")]
 pub fn create_game(
-    user: UserAuthenticator,
     data: Option<Json<CreateGamePayload>>,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     queue: &State<Sender<GlobalEvent>>,
 ) -> Created<Json<GamePayload>> {
@@ -65,10 +67,15 @@ pub fn create_game(
     Created::new(format!("/games/{}", game.id)).body(Json((&game).into()))
 }
 
-/// Retrieve all currently known games
+/// # Retrieve all currently known games
 ///
 /// Get a flat overview over all current games.
 /// The info returned by this call is currently identical to GET /games/game_id or POST /games/user_id calls, but that might change later.
+/// The games returned by this call depend on the scope of the user cookie:
+///
+///   * If no user or an invalid user is provided, only public games are fetched
+///
+///   * If a valid user is provided, only public games and games created by this user are returned
 
 #[openapi(tag = "Games")]
 #[get("/games")]
@@ -86,6 +93,13 @@ pub fn get_all_games(
             .collect::<Vec<_>>(),
     })
 }
+
+/// # Join a game
+///
+/// Any authenticated user can join a game.
+/// Local games will usually be joined automatically and cannot be joined by users other than the creator. The player parameter however can be used to create virtual players who join the local game instead.
+/// Private games can be joined if the id is known, e.g. by sharing the game link.
+/// Public games can be joined by everyone.
 
 #[openapi(tag = "Games")]
 #[patch("/games/<game_id>/join/<player..>")]
@@ -120,6 +134,11 @@ pub async fn join_game(
             })
         })
 }
+
+/// # (forcefully) leave a game
+///
+/// If called without any additional parameter, the authenticated user will leave the provided game.
+/// If the authenticated user is the creator of said game, you can provide a player id to kick them from the game instead.
 
 #[openapi(tag = "Games")]
 #[patch("/games/<game_id>/leave/<player_id..>")]
@@ -181,7 +200,9 @@ pub async fn leave_game(
         })
 }
 
-/// Start the game
+/// # Start a game
+///
+/// Only the creator of a game can start it.
 
 #[openapi(tag = "Games")]
 #[patch("/games/<game_id>/start")]
@@ -210,6 +231,10 @@ pub async fn start_game(
     })
 }
 
+/// # Stop a game
+///
+/// Only the creator of a game can stop it.
+
 #[openapi(tag = "Games")]
 #[patch("/games/<game_id>/stop")]
 pub async fn stop_game(
@@ -237,9 +262,9 @@ pub async fn stop_game(
         })
 }
 
-/// Get all info about a certain game
+/// # Get all info about a certain game
 ///
-/// Retrieve all known info about a specific game. game_id must be identical to a game's id, either returned by POST /games, or by GET /games.
+/// Retrieve all known info about a specific game.
 /// The info here is currently identical with what you get with GET /games, but that might change later.
 
 #[openapi(tag = "Games")]
@@ -261,12 +286,93 @@ pub fn get_game(
     }
 }
 
+/// # Subscribe to game events
+///
+/// All events that affect the game will be distributed via this event stream (Server-Side Events) in real-time.
+/// The following table lists all the possible payloads that are provided as JSON:
+///
+/// <table>
+///   <thead>
+///     <th>Event Name</th>
+///     <th>Key</th>
+///     <th>Description</th>
+///   </thead>
+///   <tbody>
+///     <tr>
+///       <th rowSpan="6">change_state</th>
+///     </tr>
+///     <tr>
+///       <td>hit</td>
+///       <td>this field is set if the hit is flipped up, mostly when entering GameState.Confirming state</td>
+///     </tr>
+///     <tr>
+///       <td>last_scored</td>
+///       <td>this field is set when someone wins a hit, mostly when entering GameState.Confirming state</td>
+///     </tr>
+///     <tr>
+///       <td>players</td>
+///       <td>Array of player objects in the game</td>
+///     </tr>
+///     <tr>
+///       <td>state</td>
+///       <td>a state as specified within the GameState enum</td>
+///     </tr>
+///     <tr>
+///       <td>winner</td>
+///       <td>this field is set when a player wins the game, e.g. after someone claims a hit or guesses correctly</td>
+///     </tr>
+///     <tr>
+///       <th rowSpan="3">claim</th>
+///     </tr>
+///     <tr>
+///       <td>hit</td>
+///       <td>the HitPayload that was just claimed</td>
+///     </tr>
+///     <tr>
+///       <td>players</td>
+///       <td>Array of players who claimed a hit</td>
+///     </tr>
+///     <tr>
+///       <td>guess</td>
+///       <td>players</td>
+///       <td>Array of players who last updated their guess</td>
+///     </tr>
+///     <tr>
+///       <td>join</td>
+///       <td>players</td>
+///       <td>Array of player objects who joined the game</td>
+///     </tr>
+///     <tr>
+///       <td>leave</td>
+///       <td>players</td>
+///       <td>Array of player objects who left the game</td>
+///     </tr>
+///     <tr>
+///       <th rowSpan="3">skip</th>
+///     </tr>
+///     <tr>
+///       <td>hit</td>
+///       <td>the HitPayload that was just skipped</td>
+///     </tr>
+///     <tr>
+///       <td>players</td>
+///       <td>Array of players who skipped a hit</td>
+///     </tr>
+///     <tr>
+///       <td>update</td>
+///       <td>settings</td>
+///       <td>GameSettingsPayload with the updated game settings</td>
+///     </tr>
+///   </tbody>
+/// </table>
+
+#[openapi(tag = "Games")]
 #[get("/games/<game_id>/events")]
 pub async fn events(
     game_id: String,
     queue: &State<Sender<GameEvent>>,
     mut end: Shutdown,
-) -> EventStream![] {
+) -> EventStream<impl Stream<Item = Event>> {
     let mut rx = queue.subscribe();
     EventStream! {
         loop {
@@ -285,6 +391,13 @@ pub async fn events(
         }
     }
 }
+
+/// # Get the audio file for a revealed hit
+///
+/// Retrieve the audio file for a specific revealed hit in a game.
+/// The audio files are trimmed (see FullHitPayload.playback_offset) and come in MP3 format.
+/// If no hit_id is specified, the last revealed hit will be fetched.
+/// You can provide any hit_id of a hit that is currently in a player's possession to fetch that one instead.
 
 #[openapi(tag = "Games")]
 #[get("/games/<game_id>/hit/<hit_id..>")]
@@ -309,6 +422,13 @@ pub async fn hit(
 
     Err(hit.err().unwrap())
 }
+
+/// # Guess a slot
+///
+/// When in GameState.Guessing or GameState.Intercepting, guess a slot that the player wants to place their bet in.
+/// If its not the player's turn, you can leave the slot's id empty to don't step in.
+/// By default the authenticated user will guess their slot.
+/// When in a local game, the creator can guess for any virtual player by specifying the player id here.
 
 #[openapi(tag = "Games")]
 #[post(
@@ -382,6 +502,10 @@ pub fn guess_slot(
     })
 }
 
+/// # Confirm a guess
+///
+/// After guessing a song, confirm wether the guessing player needs to get a token for their guess.
+
 #[openapi(tag = "Games")]
 #[post("/games/<game_id>/confirm", format = "json", data = "<confirmation>")]
 pub fn confirm_slot(
@@ -409,6 +533,11 @@ pub fn confirm_slot(
             })
         })
 }
+
+/// # Skip a hit
+///
+/// Skip the current hit for the authenticated user.
+/// When in a local game, the creator can skip a hit for any virtual player by specifying the player id.
 
 #[openapi(tag = "Games")]
 #[post("/games/<game_id>/skip/<player_id..>")]
@@ -442,6 +571,11 @@ pub fn skip_hit(
             })
         })
 }
+
+/// # Claim a hit
+///
+/// Claim a hit for the authenticated user.
+/// When in a local game, the crator can claim a hit for a virtual player by specifying the player id.
 
 #[openapi(tag = "Games")]
 #[post("/games/<game_id>/claim/<player_id..>")]
@@ -492,6 +626,10 @@ pub fn claim_hit(
         })
     })
 }
+
+/// # Update a game
+///
+/// A game's settings can be updated by the creator while it isn't running.
 
 #[openapi(tag = "Games")]
 #[patch("/games/<game_id>/update", format = "json", data = "<settings>")]
