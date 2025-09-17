@@ -11,6 +11,7 @@ import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import { FullHit, Pack } from "../entities"
+import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
 import HitService from "../services/hits.service"
 import { RE_YOUTUBE } from "../utils"
@@ -46,7 +47,9 @@ export default function Hit() {
             <Helmet>
                 <title>{`${hit.artist}: ${hit.title} - Hitster`}</title>
             </Helmet>
-            <h2>{`${hit.artist}: ${hit.title}`}</h2>
+            <FA>
+                <h2>{`${hit.artist}: ${hit.title}`}</h2>
+            </FA>
             {!editing && user?.permissions.can_write_hits ? (
                 <>
                     <Button
@@ -102,11 +105,12 @@ export default function Hit() {
                             type="input"
                             placeholder={t("title")}
                             value={editingHit.title}
-                            onChange={(e) =>
+                            onChange={(e) => {
+                                const title = e.currentTarget.value
                                 setEditingHit((h) => {
-                                    h.title = e.currentTarget.value
+                                    h.title = title
                                 })
-                            }
+                            }}
                         />
                     ) : (
                         <Form.Text muted>
@@ -120,11 +124,12 @@ export default function Hit() {
                             type="input"
                             placeholder={t("artist")}
                             value={editingHit.artist}
-                            onChange={(e) =>
+                            onChange={(e) => {
+                                const artist = e.currentTarget.value
                                 setEditingHit((h) => {
-                                    h.artist = e.currentTarget.value
+                                    h.artist = artist
                                 })
-                            }
+                            }}
                         />
                     ) : (
                         <Form.Text muted>
@@ -157,11 +162,12 @@ export default function Hit() {
                             type="input"
                             placeholder={t("belongsTo")}
                             value={editingHit.belongs_to}
-                            onChange={(e) =>
+                            onChange={(e) => {
+                                const belongsTo = e.currentTarget.value
                                 setEditingHit((h) => {
-                                    h.belongs_to = e.currentTarget.value
+                                    h.belongs_to = belongsTo
                                 })
-                            }
+                            }}
                         />
                     ) : (
                         <Form.Text muted>

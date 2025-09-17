@@ -44,8 +44,11 @@ impl From<&Permissions> for PermissionsPayload {
 
 #[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema)]
 pub struct UserPayload {
+    /// the unique user id
     pub id: Uuid,
+    /// the official name that is shown to everyone
     pub name: String,
+    /// wether the user is registered or not
     pub r#virtual: bool,
 }
 

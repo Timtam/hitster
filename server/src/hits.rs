@@ -50,13 +50,21 @@ struct HitPackRow {
     pack_id: Uuid,
 }
 
+/// a hit metadata relevant in a game
+
 #[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema)]
 pub struct HitPayload {
+    /// artist of the song
     pub artist: String,
+    /// title of the song
     pub title: String,
+    /// any movie, musical or whatever the song is known for
     pub belongs_to: String,
+    /// the year the song was released in
     pub year: u32,
+    /// the packs the song lives in
     pub packs: Vec<Uuid>,
+    /// the unique hit id
     pub id: Uuid,
 }
 
@@ -73,16 +81,26 @@ impl From<&Hit> for HitPayload {
     }
 }
 
+/// the full hit dataset as it is used within the Hits-specific endpoints
+
 #[derive(Clone, Eq, PartialEq, Debug, Serialize, JsonSchema, Deserialize)]
 pub struct FullHitPayload {
+    /// artist of the song
     pub artist: String,
+    /// title of the song
     pub title: String,
+    /// any movie, musical or whatever the song is known for
     pub belongs_to: String,
+    /// the year the song was released in
     pub year: u32,
+    /// the packs the song lives in
     pub packs: Vec<Uuid>,
+    /// the YouTube video time offset at which the song starts playing
     pub playback_offset: u16,
+    /// the unique hit id
     #[serde(skip_serializing_if = "Option::is_none")]
     pub id: Option<Uuid>,
+    /// the YouTube video ID
     pub yt_id: String,
 }
 
@@ -117,6 +135,8 @@ pub enum SortDirection {
     Descending,
 }
 
+/// sorting criteria for searching hits
+
 #[derive(Clone, Deserialize, JsonSchema, FromFormField, Debug)]
 #[serde(rename_all = "snake_case")]
 pub enum SortBy {
@@ -130,13 +150,21 @@ pub enum SortBy {
     BelongsTo,
 }
 
+/// a search query for searching hits
+
 #[derive(Deserialize, JsonSchema, FromForm)]
 pub struct HitSearchQuery {
+    /// The sorting criteria that determine the order of returned hits. Earlier criteria have priority.
     pub sort_by: Option<Vec<SortBy>>,
+    /// wether to sort in ascending or descending order
     pub sort_direction: Option<SortDirection>,
+    /// a text to search for in title, artist and belongs to fields. fuzzy search is applied so the result might not be 100% accurate on purpose.
     pub query: Option<String>,
+    /// the packs that you want to limit the search to
     pub packs: Option<Vec<Uuid>>,
+    /// the start of the pagination (default 1)
     pub start: Option<usize>,
+    /// amount of search results you want to get
     pub amount: Option<usize>,
 }
 
@@ -517,4 +545,12 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
             }
         });
     }
+}
+
+/// information necessary for creating a new pack
+
+#[derive(Deserialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
+pub struct CreatePackPayload {
+    /// the name of the new pack
+    pub name: String,
 }

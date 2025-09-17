@@ -40,6 +40,7 @@ import {
     SkippedHitData,
     TokenReceivedData,
 } from "../events"
+import FA from "../focus-anchor"
 import { useModalShown } from "../hooks"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
@@ -330,7 +331,7 @@ export default function Game() {
         const handleStartOrStopGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
-                startOrStopGame()
+                if(canStartOrStopGame()) startOrStopGame()
             },
         }
         const handleShowSettings = {
@@ -342,7 +343,7 @@ export default function Game() {
         const handleSkipHit = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
-                skipHit()
+                if (canSkip()) skipHit()
             },
         }
 
@@ -351,12 +352,8 @@ export default function Game() {
                 bindKeyCombo("alt + shift + q", handleLeaveGame)
             else bindKeyCombo("alt + shift + j", handleJoinGame)
 
-            if (canStartOrStopGame()) {
-                bindKeyCombo("alt + shift + s", handleStartOrStopGame)
-            }
-            if (canSkip()) {
-                bindKeyCombo("alt + shift + i", handleSkipHit)
-            }
+            bindKeyCombo("alt + shift + s", handleStartOrStopGame)
+            bindKeyCombo("alt + shift + i", handleSkipHit)
             bindKeyCombo("alt + shift + e", handleShowSettings)
         }
 
@@ -390,9 +387,11 @@ export default function Game() {
                         " - Hitster"}
                 </title>
             </Helmet>
-            <h2 className="h4">
-                {t("gameId")}: {game.id}, {t("state")}: {game.state}
-            </h2>
+            <FA>
+                <h2 className="h4">
+                    {t("gameId")}: {game.id}, {t("state")}: {game.state}
+                </h2>
+            </FA>
             <LeaveGameQuestion
                 show={showLeaveGameQuestion}
                 onHide={(yes: boolean) => {

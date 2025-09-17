@@ -1,0 +1,80 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT * FROM hits WHERE yt_id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "title",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "artist",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "yt_id",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "year",
+        "ordinal": 4,
+        "type_info": "Int64"
+      },
+      {
+        "name": "playback_offset",
+        "ordinal": 5,
+        "type_info": "Int64"
+      },
+      {
+        "name": "belongs_to",
+        "ordinal": 6,
+        "type_info": "Text"
+      },
+      {
+        "name": "last_modified",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "downloaded",
+        "ordinal": 8,
+        "type_info": "Bool"
+      },
+      {
+        "name": "custom",
+        "ordinal": 9,
+        "type_info": "Bool"
+      },
+      {
+        "name": "marked_for_deletion",
+        "ordinal": 10,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "0a53534556e64cec0e35e3efdfe542d006da79fcab230656f3cbf83bef182adf"
+}

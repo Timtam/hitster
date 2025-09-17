@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT custom FROM packs WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "custom",
+        "ordinal": 0,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "aba03f1376517c056d17dcd2d5ffa1f4f4c497cfa0c2d8bd74b7577db9d456a0"
+}

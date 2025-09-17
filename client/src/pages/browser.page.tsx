@@ -18,7 +18,6 @@ import { CSS } from "@dnd-kit/utilities"
 import { Helmet } from "@dr.pogodin/react-helmet"
 import EventManager from "@lomray/event-manager"
 import { toCamelCase } from "js-convert-case"
-import natsort from "natsort"
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col"
@@ -30,6 +29,7 @@ import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData } from "react-router"
 import { useImmer } from "use-immer"
+import { useContext } from "../context"
 import {
     HitSearchQuery,
     Pack,
@@ -38,8 +38,10 @@ import {
     SortDirection,
 } from "../entities"
 import { Events, NotificationData } from "../events"
-import ViewPacksModal from "../modals/view-packs"
+import FA from "../focus-anchor"
+import { useRevalidate } from "../hooks"
 import HitService from "../services/hits.service"
+import PacksModal from "./browser/packs"
 
 const PAGE_RANGE = 4
 const PAGE_SIZE = 50
@@ -72,7 +74,6 @@ export function SortableItem(props: { id: number; children: ReactNode }) {
 }
 
 export default function Browser() {
-    const sorter = useMemo(() => natsort(), [])
     const availablePacks = useLoaderData() as Pack[]
     const hitService = useMemo(() => new HitService(), [])
     const { t } = useTranslation()
@@ -95,9 +96,11 @@ export default function Browser() {
         }),
     )
     const [sortDirection, setSortDirection] = useState(SortDirection.Ascending)
-    const [showViewPacksModal, setShowViewPacksModal] = useImmer<boolean[]>([])
+    const [showPacksModal, setShowPacksModal] = useImmer<boolean[]>([])
     const [packs, setPacks] = useState<string[]>([])
     const [showPackFilter, setShowPackFilter] = useState(false)
+    const revalidate = useRevalidate()
+    const { user } = useContext()
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -114,11 +117,11 @@ export default function Browser() {
             } satisfies NotificationData)
             setHitResults(results)
             setSearching(false)
-            setShowViewPacksModal(
+            setShowPacksModal(
                 Array.from({ length: results.results.length }, () => false),
             )
         },
-        [hitService, setSearching, setHitResults, setShowViewPacksModal],
+        [hitService, setSearching, setHitResults, setShowPacksModal],
     )
 
     const getPageCount = useCallback(
@@ -194,7 +197,9 @@ export default function Browser() {
             <Helmet>
                 <title>{t("browseHits")} - Hitster</title>
             </Helmet>
-            <h2>{t("browseHits")}</h2>
+            <FA>
+                <h2>{t("browseHits")}</h2>
+            </FA>
             <Row>
                 <Col>
                     <search>
@@ -460,21 +465,24 @@ export default function Browser() {
                                         setShowPackFilter(true)
                                     }}
                                 >
-                                    {packs.length === 0
-                                        ? t("packFilterDisabled")
-                                        : t("packFilterEnabled", {
-                                              packs: packs.length,
-                                          })}
+                                    {t("pack", {
+                                        count: availablePacks.length,
+                                    }) +
+                                        ": " +
+                                        availablePacks.length +
+                                        ", " +
+                                        t("filtered") +
+                                        ": " +
+                                        packs.length}
                                 </Button>
-                                <ViewPacksModal
+                                <PacksModal
                                     selected={packs}
-                                    packs={availablePacks.toSorted((a, b) =>
-                                        sorter(a.name, b.name),
-                                    )}
+                                    packs={availablePacks}
                                     show={showPackFilter}
                                     onHide={(selected) => {
                                         setPacks(selected)
                                         setShowPackFilter(false)
+                                        revalidate()
                                         ;(async () =>
                                             await search({
                                                 query: query,
@@ -504,6 +512,11 @@ export default function Browser() {
                     ) : (
                         ""
                     )}
+                    {user?.permissions.can_write_hits ? (
+                        <Link to="/hits/create">{t("createHit")}</Link>
+                    ) : (
+                        ""
+                    )}
                     <Table responsive>
                         <thead>
                             <tr>
@@ -529,7 +542,7 @@ export default function Browser() {
                                         <Button
                                             aria-expanded={false}
                                             onClick={() =>
-                                                setShowViewPacksModal((v) => {
+                                                setShowPacksModal((v) => {
                                                     v[i] = true
                                                 })
                                             }
@@ -540,20 +553,16 @@ export default function Browser() {
                                                 ": " +
                                                 hit.packs.length}
                                         </Button>
-                                        <ViewPacksModal
-                                            show={showViewPacksModal[i]}
+                                        <PacksModal
+                                            show={showPacksModal[i]}
                                             onHide={() =>
-                                                setShowViewPacksModal((v) => {
+                                                setShowPacksModal((v) => {
                                                     v[i] = false
                                                 })
                                             }
-                                            packs={availablePacks
-                                                .filter((p) =>
-                                                    hit.packs.includes(p.id),
-                                                )
-                                                .toSorted((a, b) =>
-                                                    sorter(a.name, b.name),
-                                                )}
+                                            packs={availablePacks.filter((p) =>
+                                                hit.packs.includes(p.id),
+                                            )}
                                         />
                                     </td>
                                 </tr>

@@ -3,7 +3,7 @@ import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import { flushSync } from "react-dom"
 import { createRoot } from "react-dom/client"
 import { Trans, useTranslation } from "react-i18next"
-import { Link } from "react-router"
+import { ToastContainer, toast } from "react-toastify"
 import { User } from "./entities"
 import {
     ClaimedHitData,
@@ -16,7 +16,6 @@ import {
     SkippedHitData,
     TokenReceivedData,
 } from "./events"
-import { useToasts } from "./toasts"
 
 interface SpeechEvent {
     text: string
@@ -32,13 +31,14 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
     const output = useRef<HTMLParagraphElement | null>(null)
     const events = useRef<SpeechEvent[]>([])
     const timer = useRef<ReturnType<typeof setTimeout> | null>(null)
-    const toasts = useToasts()
 
     const nodeToString = (node: ReactNode) => {
         const div = document.createElement("div")
         const root = createRoot(div)
         flushSync(() => root.render(node))
-        return div.innerText // or innerHTML or textContent
+        const text = div.innerText
+        root.unmount()
+        return text
     }
 
     const handleSpeechEvent = useCallback(() => {
@@ -68,17 +68,23 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                             : nodeToString(e.text),
                 } satisfies SpeechEvent)
                 if (e.toast !== false)
-                    toasts.show({
-                        headerContent: "",
-                        bodyContent: e.text,
-                        toastProps: {
-                            autohide: true,
-                            delay: 5000,
-                        },
-                    })
+                    toast(
+                        <div className="p-3" aria-hidden={true}>
+                            {e.text}
+                        </div>,
+                    )
                 if (timer.current === null) {
                     handleSpeechEvent()
                 }
+            },
+        )
+
+        const unsubscribeCreatedHit = EventManager.subscribe(
+            Events.hitCreated,
+            () => {
+                EventManager.publish(Events.notification, {
+                    text: t("hitCreated"),
+                } satisfies NotificationData)
             },
         )
 
@@ -137,13 +143,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                 }}
                                 components={[
                                     <b />,
-                                    <Link
-                                        to={`/hits/${e.hit.id}`}
+                                    <a
+                                        href={`/hits/${e.hit.id}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         <b />
-                                    </Link>,
+                                    </a>,
                                     <b />,
                                     <b />,
                                     <b />,
@@ -164,13 +170,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                 }}
                                 components={[
                                     <b />,
-                                    <Link
-                                        to={`/hits/${e.hit.id}`}
+                                    <a
+                                        href={`/hits/${e.hit.id}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         <b />
-                                    </Link>,
+                                    </a>,
                                     <b />,
                                     <b />,
                                 ]}
@@ -233,13 +239,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     }}
                                     components={[
                                         <b />,
-                                        <Link
-                                            to={`/hits/${e.hit.id}`}
+                                        <a
+                                            href={`/hits/${e.hit.id}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             <b />
-                                        </Link>,
+                                        </a>,
                                         <b />,
                                         <b />,
                                         <b />,
@@ -260,13 +266,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     }}
                                     components={[
                                         <b />,
-                                        <Link
-                                            to={`/hits/${e.hit.id}`}
+                                        <a
+                                            href={`/hits/${e.hit.id}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             <b />
-                                        </Link>,
+                                        </a>,
                                         <b />,
                                         <b />,
                                     ]}
@@ -286,13 +292,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     belongs_to: e.hit.belongs_to,
                                 }}
                                 components={[
-                                    <Link
-                                        to={`/hits/${e.hit.id}`}
+                                    <a
+                                        href={`/hits/${e.hit.id}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         <b />
-                                    </Link>,
+                                    </a>,
                                     <b />,
                                     <b />,
                                     <b />,
@@ -311,13 +317,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     year: e.hit.year,
                                 }}
                                 components={[
-                                    <Link
-                                        to={`/hits/${e.hit.id}`}
+                                    <a
+                                        href={`/hits/${e.hit.id}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         <b />
-                                    </Link>,
+                                    </a>,
                                     <b />,
                                     <b />,
                                 ]}
@@ -349,13 +355,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     }}
                                     components={[
                                         <b />,
-                                        <Link
-                                            to={`/hits/${e.hit.id}`}
+                                        <a
+                                            href={`/hits/${e.hit.id}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             <b />
-                                        </Link>,
+                                        </a>,
                                         <b />,
                                         <b />,
                                         <b />,
@@ -376,13 +382,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     }}
                                     components={[
                                         <b />,
-                                        <Link
-                                            to={`/hits/${e.hit.id}`}
+                                        <a
+                                            href={`/hits/${e.hit.id}`}
                                             target="_blank"
                                             rel="noopener noreferrer"
                                         >
                                             <b />
-                                        </Link>,
+                                        </a>,
                                         <b />,
                                         <b />,
                                     ]}
@@ -402,13 +408,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     belongs_to: e.hit.belongs_to,
                                 }}
                                 components={[
-                                    <Link
-                                        to={`/hits/${e.hit.id}`}
+                                    <a
+                                        href={`/hits/${e.hit.id}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         <b />
-                                    </Link>,
+                                    </a>,
                                     <b />,
                                     <b />,
                                     <b />,
@@ -427,13 +433,13 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
                                     year: e.hit.year,
                                 }}
                                 components={[
-                                    <Link
-                                        to={`/hits/${e.hit.id}`}
+                                    <a
+                                        href={`/hits/${e.hit.id}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                     >
                                         <b />
-                                    </Link>,
+                                    </a>,
                                     <b />,
                                     <b />,
                                 ]}
@@ -449,6 +455,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
 
         return () => {
             unsubscribeClaimedHit()
+            unsubscribeCreatedHit()
             unsubscribeGuessed()
             unsubscribeHitRevealed()
             unsubscribeJoinedGame()
@@ -457,14 +464,28 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             unsubscribeSkippedHit()
             unsubscribeTokenReceived()
         }
-    }, [handleSpeechEvent, t, toasts, user])
+    }, [handleSpeechEvent, t, user])
 
     return (
-        <p
-            aria-live={politeness}
-            aria-atomic={true}
-            ref={output}
-            className="visually-hidden"
-        />
+        <>
+            <div aria-hidden={true}>
+                <ToastContainer
+                    position="top-right"
+                    autoClose={false}
+                    hideProgressBar={true}
+                    newestOnTop={true}
+                    closeOnClick={false}
+                    pauseOnFocusLoss={false}
+                    role=""
+                    closeButton
+                />
+            </div>
+            <p
+                aria-live={politeness}
+                aria-atomic={true}
+                ref={output}
+                className="visually-hidden"
+            />
+        </>
     )
 }

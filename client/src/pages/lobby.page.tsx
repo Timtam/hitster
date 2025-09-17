@@ -19,6 +19,7 @@ import {
     GameRemovedData,
     JoinedGameData,
 } from "../events"
+import FA from "../focus-anchor"
 import { useModalShown } from "../hooks"
 import GameService from "../services/games.service"
 
@@ -100,7 +101,9 @@ export default function Lobby() {
             <Helmet>
                 <title>{t("gameLobby")} - Hitster</title>
             </Helmet>
-            <h2>{t("gameLobby")}</h2>
+            <FA>
+                <h2>{t("gameLobby")}</h2>
+            </FA>
             <Dropdown>
                 <Dropdown.Toggle disabled={user === null}>
                     {t("createNewGame")}

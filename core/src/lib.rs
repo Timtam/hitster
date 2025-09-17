@@ -69,7 +69,7 @@ mod hitster_core {
                 },
                 FuseProperty {
                     value: String::from("artist"),
-                    weight: 0.3,
+                    weight: 0.5,
                 },
             ];
 
@@ -178,6 +178,22 @@ mod hitster_core {
             if let Some(hit) = self.hits.get(hit) {
                 self.hits
                     .remove_many([&HitId::Id(hit.id), &HitId::YtId(hit.yt_id.clone())]);
+                true
+            } else {
+                false
+            }
+        }
+
+        pub fn remove_pack(&mut self, pack: Uuid) -> bool {
+            if let Some(pack) = self.packs.get(&pack) {
+                let id = pack.id;
+                self.packs.remove(&id);
+
+                for hit in self.hits.values_mut() {
+                    if let Some(pos) = hit.packs.iter().position(|p| p == &id) {
+                        hit.packs.swap_remove(pos);
+                    }
+                }
                 true
             } else {
                 false

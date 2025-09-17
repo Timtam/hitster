@@ -30,12 +30,16 @@ confirmHeading: >-
 confirmNo: Titel und Interpret des Hits wurde nicht richtig erraten
 confirmText: Hat <0>{{player}}</0> den Titel und Interpreten korrekt erraten?
 confirmYes: Titel und Interpret des Hits wurde richtig erraten
+createHit: Hit erstellen
 createNewGame: Spiel erstellen
+createPack: Pack erstellen
 creator: Ersteller
 current: (aktuell)
 dark: Dunkel
 delete: Löschen
 deleteAccount: Benutzerkonto löschen
+deletePack: Pack löschen
+deletePackQuestion: Möchtest du das Pack wirklich löschen?
 descending: Absteigend
 dontIntercept: Keine Vermutung äußern
 downloaded_one: "{{hits}} verfügbar"
@@ -71,6 +75,7 @@ featuresList: >
 
     <0>entscheide dich für ein helles oder dunkles Farbschema, oder passe dich
     automatisch deinem verwendeten Gerät an</0>
+filtered: Gefiltert
 finalScore: "Hier sind die finalen Ergebnisse:"
 first: Erste
 game: Spiel
@@ -92,6 +97,7 @@ goal: Ziel
 guess: "{{player}} vermutet: {{guess}}"
 guessNothing: "{{player}} behauptet nichts Gegenteiliges"
 guessText: Wo, glaubst du, gehört dieser Hit hin?
+hitCreated: Der Hit wurde erfolgreich erstellt.
 hitDuration: Abspielzeit der Hits
 hitHeading: Was zum Hit?
 hitNoGameRunning: Derzeit läuft kein Spiel, also gibt es auch keinen Hit für dich!
@@ -207,8 +213,6 @@ otherWins: "{{player}} hat dieses Spiel gewonnen!"
 ownedBy: >-
     Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel,
     welches <0>Koninklijke Jumbo B.V.</0> gehört.
-packFilterDisabled: "Gefilterte Packs: keine"
-packFilterEnabled: "Gefilterte Packs: {{packs}}"
 pack_one: Pack
 pack_other: Packs
 password: Passwort

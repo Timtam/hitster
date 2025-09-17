@@ -118,10 +118,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         ))
         .attach(UserCleanupService::default())
         .mount("/", routes![index, files,])
-        .mount(
-            "/api/",
-            routes![api_index, games_routes::events, global_routes::events],
-        )
+        .mount("/api/", routes![api_index])
         .mount(
             "/api/",
             openapi_get_routes![
@@ -135,6 +132,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 games_routes::claim_hit,
                 games_routes::confirm_slot,
                 games_routes::create_game,
+                games_routes::events,
                 games_routes::get_all_games,
                 games_routes::get_game,
                 games_routes::guess_slot,
@@ -145,11 +143,15 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 games_routes::start_game,
                 games_routes::stop_game,
                 games_routes::update_game,
+                hits_routes::create_hit,
+                hits_routes::create_pack,
                 hits_routes::delete_hit,
+                hits_routes::delete_pack,
                 hits_routes::get_all_packs,
                 hits_routes::get_hit,
                 hits_routes::search_hits,
                 hits_routes::update_hit,
+                global_routes::events,
             ],
         )
         .mount(
