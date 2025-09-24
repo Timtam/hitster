@@ -331,7 +331,7 @@ export default function Game() {
         const handleStartOrStopGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
-                if(canStartOrStopGame()) startOrStopGame()
+                if (canStartOrStopGame()) startOrStopGame()
             },
         }
         const handleShowSettings = {

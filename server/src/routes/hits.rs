@@ -1,10 +1,12 @@
 use crate::{
     HitsterConfig,
     games::PackPayload,
-    hits::{CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery},
+    hits::{
+        CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery, get_hitster_data_from_db,
+    },
     responses::{
-        CreateHitError, CreatePackError, DeleteHitError, DeletePackError, GetHitError,
-        MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError,
+        CreateHitError, CreatePackError, DeleteHitError, DeletePackError, ExportHitsError,
+        GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError, Yaml,
     },
     services::ServiceStore,
     users::UserAuthenticator,
@@ -564,4 +566,28 @@ INSERT INTO hits_packs (
     }
 
     Ok(Json((&hit).into()))
+}
+
+/// # Export hits database
+///
+/// This endpoint allows authenticated users with hits write permissions to
+/// export the hits database of this server in the YAML format used when
+/// deploying hits within the codebase. Use this to transfer hits between server instances.
+
+#[openapi(tag = "Hits")]
+#[get("/hits/export")]
+pub async fn export_hits(
+    user: UserAuthenticator,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Yaml, ExportHitsError> {
+    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+        return Err(ExportHitsError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    let data = get_hitster_data_from_db(&mut **db, true).await;
+
+    Ok(Yaml(serde_yml::to_string(&data).unwrap()))
 }

@@ -147,6 +147,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 hits_routes::create_pack,
                 hits_routes::delete_hit,
                 hits_routes::delete_pack,
+                hits_routes::export_hits,
                 hits_routes::get_all_packs,
                 hits_routes::get_hit,
                 hits_routes::search_hits,

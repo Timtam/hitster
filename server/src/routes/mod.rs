@@ -17,7 +17,7 @@ use rocket_okapi::openapi;
 /// # Subscribe to global events
 ///
 /// All global events will be distributed via this event stream (Server-Side Events) in real-time.
-/// The following table lists all the possible payloads that are provided as JSON. The event name also is the root key of the JSON object received. 
+/// The following table lists all the possible payloads that are provided as JSON. The event name also is the root key of the JSON object received.
 /// If no key is specified, the returned value is the direct value for the event name key.
 ///
 /// <table>

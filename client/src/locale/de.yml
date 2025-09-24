@@ -54,6 +54,7 @@ dragOverDroppable: "{{draggable}} über {{droppable}} bewegt"
 dragStart: Bewege {{draggable}}
 edit: Bearbeiten
 error: Fehler
+exportHits: Hits exportieren
 features: Funktionen
 featuresList: >
     <0>keine Registrierung notwendig, einfach ein Spiel erstellen und los

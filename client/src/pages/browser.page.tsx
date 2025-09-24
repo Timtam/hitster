@@ -513,7 +513,25 @@ export default function Browser() {
                         ""
                     )}
                     {user?.permissions.can_write_hits ? (
-                        <Link to="/hits/create">{t("createHit")}</Link>
+                        <>
+                            <Link to="/hits/create">
+                                <Button>{t("createHit")}</Button>
+                            </Link>
+                            <Button
+                                onClick={async () => {
+                                    let yml = await hitService.exportHits()
+                                    let elem = document.createElement("a")
+                                    elem.setAttribute(
+                                        "href",
+                                        `data:application/x-yaml;charset=utf-8,${encodeURIComponent(yml)}`,
+                                    )
+                                    elem.setAttribute("download", "hits.yml")
+                                    elem.click()
+                                }}
+                            >
+                                {t("exportHits")}
+                            </Button>
+                        </>
                     ) : (
                         ""
                     )}

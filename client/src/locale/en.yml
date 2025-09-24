@@ -54,6 +54,7 @@ dragOverDroppable: "{{draggable}} moved over {{droppable}}"
 dragStart: Started dragging {{draggable}}
 edit: Edit
 error: Error
+exportHits: Export hits
 features: Features
 featuresList: >
     <0>no registration necessary, just create a game and play</0>
