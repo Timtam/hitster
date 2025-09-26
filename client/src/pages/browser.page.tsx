@@ -527,6 +527,7 @@ export default function Browser() {
                                     )
                                     elem.setAttribute("download", "hits.yml")
                                     elem.click()
+                                    EventManager.publish(Events.downloadStarted)
                                 }}
                             >
                                 {t("exportHits")}

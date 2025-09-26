@@ -42,6 +42,7 @@ deletePack: Delete pack
 deletePackQuestion: Do you really want to delete this pack?
 descending: Descending
 dontIntercept: Don't intercept
+downloadStarted: Download started.
 downloaded_one: "{{hits}} downloaded"
 downloaded_other: "{{hits}} downloaded"
 downloading_one: "{{hits}} downloading"
