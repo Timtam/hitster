@@ -15,7 +15,7 @@ impl<T> ServiceHandle<T> {
         Self(Arc::new(Mutex::new(t)))
     }
 
-    pub fn lock(&self) -> MappedMutexGuard<T> {
+    pub fn lock(&self) -> MappedMutexGuard<'_, T> {
         MutexGuard::map(self.0.lock(), |s| s)
     }
 }
