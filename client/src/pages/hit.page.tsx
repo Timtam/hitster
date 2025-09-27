@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
-import { useLoaderData, useNavigate } from "react-router"
+import { Link, useLoaderData, useNavigate } from "react-router"
 import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
@@ -213,9 +213,11 @@ export default function Hit() {
                                   )
                                   .toSorted((a, b) => sorter(a.name, b.name))
                                   .map((p) => (
-                                      <li
-                                          key={`pack-${p.id}`}
-                                      >{`${p.name}`}</li>
+                                      <li key={`pack-${p.id}`}>
+                                          <Link
+                                              to={`/hits/?pack=${p.id}`}
+                                          >{`${p.name}`}</Link>
+                                      </li>
                                   ))}
                     </ul>
                 </Form.Group>

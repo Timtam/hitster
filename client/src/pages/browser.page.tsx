@@ -17,7 +17,7 @@ import {
 import { CSS } from "@dnd-kit/utilities"
 import { Helmet } from "@dr.pogodin/react-helmet"
 import EventManager from "@lomray/event-manager"
-import { toCamelCase } from "js-convert-case"
+import { toCamelCase, toPascalCase } from "js-convert-case"
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col"
@@ -27,7 +27,7 @@ import Row from "react-bootstrap/Row"
 import Spinner from "react-bootstrap/Spinner"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
-import { Link, useLoaderData } from "react-router"
+import { Link, useLoaderData, useSearchParams } from "react-router"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import {
@@ -101,6 +101,7 @@ export default function Browser() {
     const [showPackFilter, setShowPackFilter] = useState(false)
     const revalidate = useRevalidate()
     const { user } = useContext()
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -159,6 +160,13 @@ export default function Browser() {
 
                 let sortBy = arrayMove(sortByItems, oldIndex, newIndex)
 
+                setSearchParams((p) => {
+                    p.delete("sort_by")
+                    sortBy
+                        .map((i) => SORT_BY_INDEX[i])
+                        .forEach((s) => p.append("sort_by", s))
+                    return p
+                })
                 ;(async () =>
                     await search({
                         query: query,
@@ -171,26 +179,58 @@ export default function Browser() {
                 setSortByItems(sortBy)
             }
         },
-        [sortByItems, setSortByItems, search, query, sortDirection, packs],
+        [
+            sortByItems,
+            setSortByItems,
+            search,
+            query,
+            sortDirection,
+            packs,
+            setSearchParams,
+        ],
     )
 
     useEffect(() => {
+        const q: string = searchParams.get("q") ?? query
+        const packs = searchParams.getAll("pack")
+        const sortDirection =
+            SortDirection[
+                toPascalCase(
+                    searchParams.get("sort_direction") ?? "ascending",
+                ) as keyof typeof SortDirection
+            ] ?? SortDirection.Ascending
+
+        let sortCriteria = searchParams.getAll("sort_by")
+
+        if (sortCriteria.length === 0) sortCriteria = SORT_BY_INDEX
+        else
+            sortCriteria = sortCriteria.reduce((acc, i) => {
+                const crit = SortBy[toPascalCase(i) as keyof typeof SortBy]
+                if (crit) acc.push(crit)
+                return acc
+            }, [] as SortBy[])
+
+        setQuery(q)
+        setPacks(
+            availablePacks.filter((p) => packs.includes(p.id)).map((p) => p.id),
+        )
+        setSortDirection(sortDirection)
+        setSortByItems(
+            (sortCriteria as SortBy[]).map(
+                (crit) => SORT_BY_INDEX.indexOf(crit)!,
+            ),
+        )
         ;(async () => {
             await search({
                 start: 1,
                 amount: PAGE_SIZE,
-                sort_by: [
-                    SortBy.Title,
-                    SortBy.Artist,
-                    SortBy.BelongsTo,
-                    SortBy.Year,
-                ],
-                sort_direction: SortDirection.Ascending,
-                query: "",
-                packs: [],
+                sort_by: sortCriteria as SortBy[],
+                sort_direction: sortDirection,
+                query: q,
+                packs: packs,
             } satisfies HitSearchQuery)
         })()
-    }, [])
+    }, [setQuery, setPacks, setSortDirection, setSortByItems])
 
     return (
         <>
@@ -218,6 +258,10 @@ export default function Browser() {
                                             clearTimeout(searchTimer)
                                         setSearchTimer(
                                             setTimeout(async () => {
+                                                setSearchParams((p) => {
+                                                    p.set("q", q)
+                                                    return p
+                                                })
                                                 await search({
                                                     query: q,
                                                     start: 1,
@@ -392,6 +436,13 @@ export default function Browser() {
                                                 setSortDirection(
                                                     SortDirection.Ascending,
                                                 )
+                                                setSearchParams((p) => {
+                                                    p.set(
+                                                        "sort_direction",
+                                                        SortDirection.Ascending,
+                                                    )
+                                                    return p
+                                                })
                                                 ;(async () =>
                                                     await search({
                                                         query: query,
@@ -430,6 +481,13 @@ export default function Browser() {
                                                 setSortDirection(
                                                     SortDirection.Descending,
                                                 )
+                                                setSearchParams((p) => {
+                                                    p.set(
+                                                        "sort_direction",
+                                                        SortDirection.Descending,
+                                                    )
+                                                    return p
+                                                })
                                                 ;(async () =>
                                                     await search({
                                                         query: query,
@@ -483,6 +541,13 @@ export default function Browser() {
                                         setPacks(selected)
                                         setShowPackFilter(false)
                                         revalidate()
+                                        setSearchParams((p) => {
+                                            p.delete("pack")
+                                            selected.forEach((pack) =>
+                                                p.append("pack", pack),
+                                            )
+                                            return p
+                                        })
                                         ;(async () =>
                                             await search({
                                                 query: query,
@@ -514,9 +579,7 @@ export default function Browser() {
                     )}
                     {user?.permissions.can_write_hits ? (
                         <>
-                            <Link to="/hits/create">
-                                <Button>{t("createHit")}</Button>
-                            </Link>
+                            <Link to="/hits/create">{t("createHit")}</Link>
                             <Button
                                 onClick={async () => {
                                     let yml = await hitService.exportHits()
