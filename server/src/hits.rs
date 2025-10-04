@@ -657,8 +657,13 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     .execute(&db)
                     .await;
                     let mut hs = hit_service.lock();
-                    hs.remove_hit(&HitId::Id(hit_data.hit.id));
-                    hs.insert_hit(hit_data.hit);
+                    if hs.remove_hit(&HitId::Id(hit_data.hit.id)) {
+                        // only insert the hit if it could be removed
+                        // this makes sure that we only insert the hit if it is still available
+                        // e.g. when the hit got deleted while the hit is still downloading, it will not be within the hit service anymore
+                        // and we thus won't insert it here anymore either
+                        hs.insert_hit(hit_data.hit);
+                    }
                     hs.set_processing(!process_sender.is_empty());
                     let available = hs.get_hits().iter().filter(|h| h.downloaded).count();
                     let downloading = hs.downloading();
