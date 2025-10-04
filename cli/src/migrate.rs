@@ -83,6 +83,7 @@ pub fn migrate(file: PathBuf) -> bool {
                         belongs_to,
                         id: hit_ref.as_ref().map(|h| h.id).unwrap_or_else(Uuid::new_v4),
                         yt_id: my_yt_id,
+                        downloaded: false,
                         last_modified: hit_ref
                             .as_ref()
                             .map(|h| h.last_modified)

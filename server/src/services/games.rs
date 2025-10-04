@@ -301,7 +301,7 @@ impl GameService {
                     .lock()
                     .get_hits_for_packs(&game.packs)
                     .into_iter()
-                    .filter(|h| !remembered_hits.contains(h))
+                    .filter(|h| h.downloaded && !remembered_hits.contains(h))
                     .cloned()
                     .collect::<_>();
 
@@ -353,19 +353,18 @@ impl GameService {
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
-            if let Some(u) = user {
-                if !game
+            if let Some(u) = user
+                && !game
                     .players
                     .iter()
                     .find(|p| p.id == u.id)
                     .map(|p| p.creator)
                     .unwrap_or(false)
-                {
-                    return Err(StopGameError {
-                        http_status_code: 403,
-                        message: "you are not the creator of this game".into(),
-                    });
-                }
+            {
+                return Err(StopGameError {
+                    http_status_code: 403,
+                    message: "you are not the creator of this game".into(),
+                });
             }
 
             if game.state == GameState::Open {

@@ -587,15 +587,10 @@ pub async fn authorize(
         .get("user")
         .and_then(|cookie| serde_json::from_str::<UserCookie>(cookie.value()).ok());
 
-    if user.is_some() && token.is_some() {
-        handle_existing_token(
-            token.as_ref().unwrap(),
-            user.as_ref().unwrap(),
-            serv,
-            cookies,
-            db,
-        )
-        .await;
+    if let Some(user) = user.as_ref()
+        && let Some(token) = token.as_ref()
+    {
+        handle_existing_token(token, user, serv, cookies, db).await;
 
         Json(MessageResponse {
             message: "success".into(),

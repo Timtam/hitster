@@ -53,9 +53,11 @@ pub fn create_game(
 
     let mut game = games.add(&user.0, mode);
 
-    if data.is_some() && data.as_ref().unwrap().settings.is_some() {
+    if let Some(data) = data.as_ref()
+        && let Some(settings) = data.settings.as_ref()
+    {
         game = games
-            .update(&game.id, &user.0, data.unwrap().settings.as_ref().unwrap())
+            .update(&game.id, &user.0, settings)
             .ok()
             .unwrap_or(game);
     }
@@ -411,13 +413,11 @@ pub async fn hit(
         hit_id.to_str().and_then(|h| Uuid::parse_str(h).ok()),
     );
 
-    if hit.is_ok() {
-        return NamedFile::open(&hit.unwrap().file())
-            .await
-            .or(Err(HitError {
-                message: "hit file couldn't be found".into(),
-                http_status_code: 404,
-            }));
+    if let Ok(hit) = hit {
+        return NamedFile::open(&hit.file()).await.or(Err(HitError {
+            message: "hit file couldn't be found".into(),
+            http_status_code: 404,
+        }));
     }
 
     Err(hit.err().unwrap())

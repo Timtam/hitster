@@ -147,7 +147,7 @@ pub async fn update_hit(
         });
     }
 
-    let new_hit = Hit {
+    let mut new_hit = Hit {
         id: hit_id,
         title: hit.title.clone(),
         artist: hit.artist.clone(),
@@ -157,8 +157,9 @@ pub async fn update_hit(
         playback_offset: hit.playback_offset,
         last_modified: OffsetDateTime::now_utc(),
         year: hit.year,
+        downloaded: false,
     };
-    let exists = new_hit.exists();
+    new_hit.downloaded = new_hit.exists();
 
     hs.lock().remove_hit(&HitId::Id(hit_id));
 
@@ -181,7 +182,7 @@ UPDATE hits SET
         new_hit.playback_offset,
         new_hit.belongs_to,
         new_hit.last_modified,
-        exists,
+        new_hit.downloaded,
         new_hit.id,
     )
     .execute(&mut **db)
@@ -273,11 +274,11 @@ WHERE hit_id = ? AND pack_id = ?"#,
         }
     }
 
-    if exists {
-        hs.lock().insert_hit(new_hit);
-    } else {
-        hs.lock().download_hit(new_hit);
+    if !new_hit.downloaded {
+        hs.lock().download_hit(new_hit.clone());
     }
+
+    hs.lock().insert_hit(new_hit);
 
     Ok(Json(MessageResponse {
         message: "hit updated successfully".into(),
@@ -495,7 +496,7 @@ pub async fn create_hit(
         });
     }
 
-    let hit = Hit {
+    let mut hit = Hit {
         title: hit.title.clone(),
         artist: hit.artist.clone(),
         last_modified: OffsetDateTime::now_utc(),
@@ -505,8 +506,10 @@ pub async fn create_hit(
         playback_offset: hit.playback_offset,
         year: hit.year,
         packs: hit.packs.clone(),
+        downloaded: false,
     };
-    let exists = hit.exists();
+
+    hit.downloaded = hit.exists();
 
     let _ = sqlx::query!(
         r#"
@@ -532,7 +535,7 @@ INSERT INTO hits (
         hit.yt_id,
         hit.playback_offset,
         hit.last_modified,
-        exists,
+        hit.downloaded,
         true,
         false
     )
@@ -559,11 +562,11 @@ INSERT INTO hits_packs (
 
     let hs = serv.hit_service();
 
-    if exists {
-        hs.lock().insert_hit(hit.clone());
-    } else {
+    if !hit.downloaded {
         hs.lock().download_hit(hit.clone());
     }
+
+    hs.lock().insert_hit(hit.clone());
 
     Ok(Json((&hit).into()))
 }

@@ -1,6 +1,6 @@
 use crate::{GlobalEvent, HitsterConfig, services::ServiceStore};
 use async_process::Command;
-use hitster_core::{Hit, HitsterData, Pack};
+use hitster_core::{Hit, HitId, HitsterData, Pack};
 use rocket::{
     Orbit, Rocket,
     fairing::{Fairing, Info, Kind},
@@ -214,6 +214,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
         last_modified: h.last_modified,
         belongs_to: h.belongs_to.clone(),
         packs: hits_packs.get(&h.id).cloned().unwrap_or_default(),
+        downloaded: h.downloaded,
     }) {
         data.insert_hit(hit);
     }
@@ -385,7 +386,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     m
                 });
 
-                for hit in hits.values().map(|h| Hit {
+                for mut hit in hits.values().map(|h| Hit {
                     title: h.title.clone(),
                     artist: h.artist.clone(),
                     id: h.id,
@@ -395,10 +396,11 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     last_modified: h.last_modified,
                     belongs_to: h.belongs_to.clone(),
                     packs: hits_packs.get(&h.id).cloned().unwrap_or_default(),
+                    downloaded: h.downloaded,
                 }) {
                     if hit.exists() {
                         files.remove(&format!("{}_{}.mp3", hit.yt_id, hit.playback_offset));
-                        if !hits.get(&hit.id).unwrap().downloaded {
+                        if !hit.downloaded {
                             let _ = sqlx::query!(
                                 "UPDATE hits SET downloaded = ? WHERE id = ?",
                                 true,
@@ -406,10 +408,10 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             )
                             .execute(&db)
                             .await;
+                            hit.downloaded = true;
                         }
-                        hit_service.lock().insert_hit(hit);
                     } else {
-                        if hits.get(&hit.id).unwrap().downloaded {
+                        if hit.downloaded {
                             let _ = sqlx::query!(
                                 "UPDATE hits SET downloaded = ? WHERE id = ?",
                                 false,
@@ -417,9 +419,15 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             )
                             .execute(&db)
                             .await;
+                            hit.downloaded = false;
                         }
-                        let _ = dl_sender.send(hit);
-                        let available = hit_service.lock().get_hits().len();
+                        let _ = dl_sender.send(hit.clone());
+                        let available = hit_service
+                            .lock()
+                            .get_hits()
+                            .iter()
+                            .filter(|h| h.downloaded)
+                            .count();
                         let downloading = hit_service.lock().downloading();
                         let processing = hit_service.lock().processing();
                         let _ = event_sender.send(GlobalEvent::ProcessHits {
@@ -428,6 +436,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             processing,
                         });
                     }
+                    hit_service.lock().insert_hit(hit);
                 }
 
                 for file in files.into_iter() {
@@ -459,7 +468,12 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     };
 
                     hit_service.lock().set_downloading(true);
-                    let available = hit_service.lock().get_hits().len();
+                    let available = hit_service
+                        .lock()
+                        .get_hits()
+                        .iter()
+                        .filter(|h| h.downloaded)
+                        .count();
                     let downloading = hit_service.lock().downloading();
                     let processing = hit_service.lock().processing();
                     let _ = event_sender.send(GlobalEvent::ProcessHits {
@@ -507,7 +521,12 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             } else {
                                 let _ = process_sender.send(DownloadHitData { in_file, hit });
                                 hit_service.lock().set_downloading(!dl_sender.is_empty());
-                                let available = hit_service.lock().get_hits().len();
+                                let available = hit_service
+                                    .lock()
+                                    .get_hits()
+                                    .iter()
+                                    .filter(|h| h.downloaded)
+                                    .count();
                                 let downloading = hit_service.lock().downloading();
                                 let processing = hit_service.lock().processing();
                                 let _ = event_sender.send(GlobalEvent::ProcessHits {
@@ -555,7 +574,12 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                         }
                     }
                     hit_service.lock().set_downloading(!dl_sender.is_empty());
-                    let available = hit_service.lock().get_hits().len();
+                    let available = hit_service
+                        .lock()
+                        .get_hits()
+                        .iter()
+                        .filter(|h| h.downloaded)
+                        .count();
                     let downloading = hit_service.lock().downloading();
                     let processing = hit_service.lock().processing();
                     let _ = event_sender.send(GlobalEvent::ProcessHits {
@@ -585,7 +609,12 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     };
 
                     hit_service.lock().set_processing(true);
-                    let available = hit_service.lock().get_hits().len();
+                    let available = hit_service
+                        .lock()
+                        .get_hits()
+                        .iter()
+                        .filter(|h| h.downloaded)
+                        .count();
                     let downloading = hit_service.lock().downloading();
                     let processing = hit_service.lock().processing();
                     let _ = event_sender.send(GlobalEvent::ProcessHits {
@@ -627,13 +656,16 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     )
                     .execute(&db)
                     .await;
-                    hit_service.lock().insert_hit(hit_data.hit);
-                    hit_service
-                        .lock()
-                        .set_processing(!process_sender.is_empty());
-                    let available = hit_service.lock().get_hits().len();
-                    let downloading = hit_service.lock().downloading();
-                    let processing = hit_service.lock().processing();
+                    let mut hs = hit_service.lock();
+                    hs.remove_hit(&HitId::Id(hit_data.hit.id));
+                    hs.insert_hit(hit_data.hit);
+                    hs.set_processing(!process_sender.is_empty());
+                    let available = hs.get_hits().iter().filter(|h| h.downloaded).count();
+                    let downloading = hs.downloading();
+                    let processing = hs.processing();
+
+                    drop(hs);
+
                     let _ = event_sender.send(GlobalEvent::ProcessHits {
                         available,
                         downloading,
