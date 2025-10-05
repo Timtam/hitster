@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "\nSELECT\n    id AS \"id: Uuid\",\n    title,\n    artist,\n    yt_id,\n    belongs_to,\n    year AS \"year: u32\",\n    playback_offset AS \"playback_offset: u16\",\n    last_modified AS \"last_modified: OffsetDateTime\",\n    downloaded,\n    custom\nFROM hits WHERE marked_for_deletion = ?",
+  "query": "\nSELECT\n    id AS \"id: Uuid\",\n    title,\n    artist,\n    yt_id,\n    belongs_to,\n    year AS \"year: u32\",\n    playback_offset AS \"playback_offset: u16\",\n    last_modified AS \"last_modified: OffsetDateTime\",\n    downloaded\nFROM hits WHERE marked_for_deletion = ?",
   "describe": {
     "columns": [
       {
@@ -47,11 +47,6 @@
         "name": "downloaded",
         "ordinal": 8,
         "type_info": "Bool"
-      },
-      {
-        "name": "custom",
-        "ordinal": 9,
-        "type_info": "Bool"
       }
     ],
     "parameters": {
@@ -66,9 +61,8 @@
       false,
       false,
       false,
-      false,
       false
     ]
   },
-  "hash": "149bcd63734af243c1e42667cf3cea8345c2b27580ab664c124cd0d4e7e8f9aa"
+  "hash": "b993c22cd607f7b067b3c9aa90e3d95b0b510347442ea5aeb998753d690e0a65"
 }

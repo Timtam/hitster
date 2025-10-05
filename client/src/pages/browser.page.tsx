@@ -582,7 +582,10 @@ export default function Browser() {
                             <Link to="/hits/create">{t("createHit")}</Link>
                             <Button
                                 onClick={async () => {
-                                    let yml = await hitService.exportHits()
+                                    let yml = await hitService.exportHits(
+                                        query,
+                                        packs,
+                                    )
                                     let elem = document.createElement("a")
                                     elem.setAttribute(
                                         "href",

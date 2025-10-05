@@ -29,7 +29,6 @@ struct PackRow {
     name: String,
     id: Uuid,
     last_modified: OffsetDateTime,
-    custom: bool,
 }
 
 #[derive(FromRow)]
@@ -43,14 +42,12 @@ struct HitRow {
     playback_offset: u16,
     last_modified: OffsetDateTime,
     downloaded: bool,
-    custom: bool,
 }
 
 #[derive(FromRow)]
 struct HitPackRow {
     hit_id: Uuid,
     pack_id: Uuid,
-    custom: bool,
 }
 
 /// a hit metadata relevant in a game
@@ -127,99 +124,6 @@ pub fn get_hitster_data() -> &'static HitsterData {
     DATA.get_or_init(|| {
         serde_yml::from_str::<HitsterData>(include_str!("../../etc/hits.yml")).unwrap()
     })
-}
-
-pub async fn get_hitster_data_from_db<T>(e: &mut T, custom: bool) -> HitsterData
-where
-    for<'e> &'e mut T: sqlx::Executor<'e, Database = sqlx::Sqlite>,
-{
-    let mut data = HitsterData::new(vec![], vec![]);
-    let packs = sqlx::query_as!(
-        PackRow,
-        r#"
-SELECT
-    id AS "id: Uuid",
-    name,
-    last_modified AS "last_modified: OffsetDateTime",
-    custom
-FROM packs WHERE marked_for_deletion = ?"#,
-        false,
-    )
-    .fetch_all(&mut *e)
-    .await
-    .unwrap();
-
-    for pack in packs.iter() {
-        if custom || !pack.custom {
-            data.insert_pack(Pack {
-                id: pack.id,
-                name: pack.name.clone(),
-                last_modified: pack.last_modified,
-            });
-        }
-    }
-
-    let hits = sqlx::query_as!(
-        HitRow,
-        r#"
-SELECT
-    id AS "id: Uuid",
-    title,
-    artist,
-    yt_id,
-    belongs_to,
-    year AS "year: u32",
-    playback_offset AS "playback_offset: u16",
-    last_modified AS "last_modified: OffsetDateTime",
-    downloaded,
-    custom
-FROM hits WHERE marked_for_deletion = ?"#,
-        false,
-    )
-    .fetch_all(&mut *e)
-    .await
-    .unwrap()
-    .into_iter()
-    .map(|h| (h.id, h))
-    .collect::<HashMap<Uuid, HitRow>>();
-
-    let hits_packs = sqlx::query_as!(
-        HitPackRow,
-        r#"
-SELECT
-    hit_id AS "hit_id: Uuid",
-    pack_id AS "pack_id: Uuid",
-    custom
-FROM hits_packs WHERE marked_for_deletion = ?"#,
-        false,
-    )
-    .fetch_all(&mut *e)
-    .await
-    .unwrap()
-    .into_iter()
-    .fold(HashMap::<Uuid, Vec<Uuid>>::new(), |mut m, h| {
-        if custom || !h.custom {
-            m.entry(h.hit_id).or_default().push(h.pack_id);
-        }
-        m
-    });
-
-    for hit in hits.values().filter(|h| custom || !h.custom).map(|h| Hit {
-        title: h.title.clone(),
-        artist: h.artist.clone(),
-        id: h.id,
-        yt_id: h.yt_id.clone(),
-        year: h.year,
-        playback_offset: h.playback_offset,
-        last_modified: h.last_modified,
-        belongs_to: h.belongs_to.clone(),
-        packs: hits_packs.get(&h.id).cloned().unwrap_or_default(),
-        downloaded: h.downloaded,
-    }) {
-        data.insert_hit(hit);
-    }
-
-    data
 }
 
 #[derive(Copy, Clone, Deserialize, Eq, JsonSchema, PartialEq, FromFormField)]
@@ -326,8 +230,7 @@ impl Fairing for HitDownloadService {
 SELECT
     id AS "id: Uuid",
     name,
-    last_modified AS "last_modified: OffsetDateTime",
-    custom
+    last_modified AS "last_modified: OffsetDateTime"
 FROM packs WHERE marked_for_deletion = ?"#,
                     false
                 )
@@ -355,8 +258,7 @@ SELECT
     year AS "year: u32",
     playback_offset AS "playback_offset: u16",
     last_modified AS "last_modified: OffsetDateTime",
-    downloaded,
-    custom
+    downloaded
 FROM hits WHERE marked_for_deletion = ?"#,
                     false
                 )
@@ -372,8 +274,7 @@ FROM hits WHERE marked_for_deletion = ?"#,
                     r#"
 SELECT
     hit_id AS "hit_id: Uuid",
-    pack_id AS "pack_id: Uuid",
-    custom
+    pack_id AS "pack_id: Uuid"
 FROM hits_packs WHERE marked_for_deletion = ?"#,
                     false
                 )

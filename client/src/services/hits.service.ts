@@ -98,11 +98,18 @@ export default class HitService {
         throw { message: (await res.json()).message, status: res.status }
     }
 
-    async exportHits(): Promise<string> {
-        const res = await fetchAuth("/api/hits/export", {
-            method: "GET",
-            credentials: "include",
-        })
+    async exportHits(query?: string, packs?: string[]): Promise<string> {
+        const res = await fetchAuth(
+            "/api/hits/export?" +
+                queryString.stringify({
+                    query: query ? query : undefined,
+                    pack: packs,
+                }),
+            {
+                method: "GET",
+                credentials: "include",
+            },
+        )
 
         if (res.status == 200) return await res.text()
         throw { message: (await res.json()).message, status: res.status }

@@ -1,9 +1,7 @@
 use crate::{
     HitsterConfig,
     games::PackPayload,
-    hits::{
-        CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery, get_hitster_data_from_db,
-    },
+    hits::{CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery},
     responses::{
         CreateHitError, CreatePackError, DeleteHitError, DeletePackError, ExportHitsError,
         GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError, Yaml,
@@ -11,7 +9,7 @@ use crate::{
     services::ServiceStore,
     users::UserAuthenticator,
 };
-use hitster_core::{Hit, HitId, Pack, Permissions};
+use hitster_core::{Hit, HitId, HitsterData, Pack, Permissions};
 use rocket::{State, serde::json::Json};
 use rocket_db_pools::{
     Connection,
@@ -576,12 +574,16 @@ INSERT INTO hits_packs (
 /// This endpoint allows authenticated users with hits write permissions to
 /// export the hits database of this server in the YAML format used when
 /// deploying hits within the codebase. Use this to transfer hits between server instances.
+///
+/// The query and pack parameters behave similarly to those within the /hits/search endpoint.
 
 #[openapi(tag = "Hits")]
-#[get("/hits/export")]
+#[get("/hits/export?<query>&<pack>")]
 pub async fn export_hits(
+    query: Option<&str>,
+    pack: Option<Vec<Uuid>>,
     user: UserAuthenticator,
-    mut db: Connection<HitsterConfig>,
+    serv: &State<ServiceStore>,
 ) -> Result<Yaml, ExportHitsError> {
     if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
         return Err(ExportHitsError {
@@ -590,7 +592,29 @@ pub async fn export_hits(
         });
     }
 
-    let data = get_hitster_data_from_db(&mut **db, true).await;
+    let hs = serv.hit_service();
+    let hsl = hs.lock();
+
+    let hsq = HitSearchQuery {
+        query: query.map(|q| q.to_string()),
+        packs: pack,
+        start: Some(1),
+        amount: Some(hsl.get_hits().len()),
+        ..Default::default()
+    };
+
+    let results = hsl.search_hits(&hsq);
+
+    let mut data = HitsterData::new(vec![], vec![]);
+
+    results.results.iter().for_each(|h| {
+        h.packs.iter().for_each(|p| {
+            if data.get_pack(*p).is_none() {
+                data.insert_pack(hsl.get_pack(*p).cloned().unwrap());
+            }
+        });
+        data.insert_hit(h.clone());
+    });
 
     Ok(Yaml(serde_yml::to_string(&data).unwrap()))
 }
