@@ -65,16 +65,23 @@ pub async fn events(
     let hs = svc.hit_service();
     let mut rx = queue.subscribe();
 
-    let available = hs.lock().get_hits().len();
-    let downloading = hs.lock().downloading();
-    let processing = hs.lock().processing();
-    let _ = queue.send(GlobalEvent::ProcessHits {
-        available,
-        downloading,
-        processing,
-    });
+    let hsl = hs.lock();
+
+    let available = hsl.get_hits().iter().filter(|h| h.downloaded).count();
+    let downloading = hsl.downloading();
+    let processing = hsl.processing();
+
+    drop(hsl);
 
     EventStream! {
+        let msg = GlobalEvent::ProcessHits {
+            available,
+            downloading,
+            processing,
+        };
+
+        yield Event::json(&msg).event(msg.get_name());
+
         loop {
             let msg = select! {
                 msg = rx.recv() => match msg {
