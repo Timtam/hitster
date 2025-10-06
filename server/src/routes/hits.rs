@@ -482,7 +482,8 @@ pub async fn create_hit(
         });
     }
 
-    if sqlx::query!("SELECT * FROM hits WHERE yt_id = ?", hit.yt_id)
+    if sqlx::query("SELECT 1 FROM hits WHERE yt_id = ?")
+        .bind(&hit.yt_id)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
