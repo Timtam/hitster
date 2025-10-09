@@ -102,6 +102,7 @@ export default function Browser() {
     const revalidate = useRevalidate()
     const { user } = useContext()
     const [searchParams, setSearchParams] = useSearchParams()
+    const [page, setPage] = useState(1)
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -132,11 +133,6 @@ export default function Browser() {
         [hitResults.total],
     )
 
-    const getCurrentPage = useCallback(
-        () => Math.floor(hitResults.start / PAGE_SIZE) + 1,
-        [hitResults.start],
-    )
-
     const mapSortByIndexToElement = useCallback(
         (i: number) => (
             <SortableItem id={i} key={`sort-by-${i}`}>
@@ -165,6 +161,7 @@ export default function Browser() {
                     sortBy
                         .map((i) => SORT_BY_INDEX[i])
                         .forEach((s) => p.append("sort_by", s))
+                    p.set("p", "1")
                     return p
                 })
                 ;(async () =>
@@ -191,6 +188,7 @@ export default function Browser() {
     )
 
     useEffect(() => {
+        const p: string = searchParams.get("p") ?? `${page}`
         const q: string = searchParams.get("q") ?? query
         const packs = searchParams.getAll("pack")
         const sortDirection =
@@ -220,9 +218,10 @@ export default function Browser() {
                 (crit) => SORT_BY_INDEX.indexOf(crit)!,
             ),
         )
+        setPage(parseInt(p, 10))
         ;(async () => {
             await search({
-                start: 1,
+                start: (parseInt(p, 10) - 1) * PAGE_SIZE + 1,
                 amount: PAGE_SIZE,
                 sort_by: sortCriteria as SortBy[],
                 sort_direction: sortDirection,
@@ -230,7 +229,7 @@ export default function Browser() {
                 packs: packs,
             } satisfies HitSearchQuery)
         })()
-    }, [setQuery, setPacks, setSortDirection, setSortByItems])
+    }, [setQuery, setPacks, setSortDirection, setSortByItems, setPage])
 
     return (
         <>
@@ -260,6 +259,7 @@ export default function Browser() {
                                             setTimeout(async () => {
                                                 setSearchParams((p) => {
                                                     p.set("q", q)
+                                                    p.set("p", "1")
                                                     return p
                                                 })
                                                 await search({
@@ -441,6 +441,7 @@ export default function Browser() {
                                                         "sort_direction",
                                                         SortDirection.Ascending,
                                                     )
+                                                    p.set("p", "1")
                                                     return p
                                                 })
                                                 ;(async () =>
@@ -486,6 +487,7 @@ export default function Browser() {
                                                         "sort_direction",
                                                         SortDirection.Descending,
                                                     )
+                                                    p.set("p", "1")
                                                     return p
                                                 })
                                                 ;(async () =>
@@ -546,6 +548,7 @@ export default function Browser() {
                                             selected.forEach((pack) =>
                                                 p.append("pack", pack),
                                             )
+                                            p.set("p", "1")
                                             return p
                                         })
                                         ;(async () =>
@@ -657,8 +660,12 @@ export default function Browser() {
                     <Pagination>
                         <Pagination.Item
                             key="page-first"
-                            disabled={getCurrentPage() === 1}
-                            onClick={async () =>
+                            disabled={page === 1}
+                            onClick={async () => {
+                                setSearchParams((p) => {
+                                    p.set("p", "1")
+                                    return p
+                                })
                                 await search({
                                     start: 1,
                                     amount: PAGE_SIZE,
@@ -669,17 +676,20 @@ export default function Browser() {
                                     query: query,
                                     packs: packs,
                                 } satisfies HitSearchQuery)
-                            }
+                            }}
                         >
                             {t("first")}
                         </Pagination.Item>
                         <Pagination.Item
                             key="page-previous"
-                            disabled={getCurrentPage() === 1}
-                            onClick={async () =>
+                            disabled={page === 1}
+                            onClick={async () => {
+                                setSearchParams((p) => {
+                                    p.set("p", `${page - 1}`)
+                                    return p
+                                })
                                 await search({
-                                    start:
-                                        PAGE_SIZE * (getCurrentPage() - 2) + 1,
+                                    start: PAGE_SIZE * (page - 2) + 1,
                                     amount: PAGE_SIZE,
                                     sort_by: sortByItems.map(
                                         (i) => SORT_BY_INDEX[i],
@@ -688,7 +698,8 @@ export default function Browser() {
                                     query: query,
                                     packs: packs,
                                 } satisfies HitSearchQuery)
-                            }
+                                setPage(page - 1)
+                            }}
                         >
                             {t("previous")}
                         </Pagination.Item>
@@ -699,18 +710,20 @@ export default function Browser() {
                             const pages = []
 
                             if (
-                                (i < getCurrentPage() + PAGE_RANGE &&
-                                    i >= getCurrentPage() - PAGE_RANGE - 1) ||
-                                PAGE_SKIPS.includes(
-                                    Math.abs(i - getCurrentPage() + 1),
-                                )
+                                (i < page + PAGE_RANGE &&
+                                    i >= page - PAGE_RANGE - 1) ||
+                                PAGE_SKIPS.includes(Math.abs(i - page + 1))
                             )
                                 pages.push(
                                     <Pagination.Item
                                         key={`page-${i + 1}`}
-                                        active={i + 1 === getCurrentPage()}
+                                        active={i + 1 === page}
                                         activeLabel={t("current")}
-                                        onClick={async () =>
+                                        onClick={async () => {
+                                            setSearchParams((p) => {
+                                                p.set("p", `${i + 1}`)
+                                                return p
+                                            })
                                             await search({
                                                 start: PAGE_SIZE * i + 1,
                                                 amount: PAGE_SIZE,
@@ -721,17 +734,16 @@ export default function Browser() {
                                                 query: query,
                                                 packs: packs,
                                             } satisfies HitSearchQuery)
-                                        }
+                                            setPage(i + 1)
+                                        }}
                                     >
                                         {i + 1}
                                     </Pagination.Item>,
                                 )
 
                             if (
-                                i === getCurrentPage() + PAGE_RANGE - 1 ||
-                                PAGE_SKIPS.includes(
-                                    Math.abs(i - getCurrentPage() + 1),
-                                )
+                                i === page + PAGE_RANGE - 1 ||
+                                PAGE_SKIPS.includes(Math.abs(i - page + 1))
                             )
                                 pages.push(
                                     <Pagination.Item
@@ -746,10 +758,14 @@ export default function Browser() {
                         })}
                         <Pagination.Item
                             key="page-next"
-                            disabled={getCurrentPage() === getPageCount()}
-                            onClick={async () =>
+                            disabled={page === getPageCount()}
+                            onClick={async () => {
+                                setSearchParams((p) => {
+                                    p.set("p", `${page + 1}`)
+                                    return p
+                                })
                                 await search({
-                                    start: PAGE_SIZE * getCurrentPage() + 1,
+                                    start: PAGE_SIZE * page + 1,
                                     amount: PAGE_SIZE,
                                     sort_by: sortByItems.map(
                                         (i) => SORT_BY_INDEX[i],
@@ -758,14 +774,19 @@ export default function Browser() {
                                     query: query,
                                     packs: packs,
                                 } satisfies HitSearchQuery)
-                            }
+                                setPage(page + 1)
+                            }}
                         >
                             {t("next")}
                         </Pagination.Item>
                         <Pagination.Item
                             key="page-last"
-                            disabled={getCurrentPage() === getPageCount()}
-                            onClick={async () =>
+                            disabled={page === getPageCount()}
+                            onClick={async () => {
+                                setSearchParams((p) => {
+                                    p.set("p", `${getPageCount()}`)
+                                    return p
+                                })
                                 await search({
                                     start: PAGE_SIZE * (getPageCount() - 1) + 1,
                                     amount: PAGE_SIZE,
@@ -776,7 +797,8 @@ export default function Browser() {
                                     query: query,
                                     packs: packs,
                                 } satisfies HitSearchQuery)
-                            }
+                                setPage(getPageCount())
+                            }}
                         >
                             {t("last")}
                         </Pagination.Item>
