@@ -51,7 +51,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
         if (output.current) output.current.innerHTML = events.current[0].text
         events.current.shift()
         timer.current = setTimeout(handleSpeechEvent, TIMER_DURATION)
-    }, [])
+    }, [timer])
 
     useEffect(() => {
         const unsubscribeNotification = EventManager.subscribe(
@@ -84,6 +84,15 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
             () => {
                 EventManager.publish(Events.notification, {
                     text: t("hitCreated"),
+                } satisfies NotificationData)
+            },
+        )
+
+        const unsubscribeDownloadStarted = EventManager.subscribe(
+            Events.downloadStarted,
+            () => {
+                EventManager.publish(Events.notification, {
+                    text: t("downloadStarted"),
                 } satisfies NotificationData)
             },
         )
@@ -456,6 +465,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
         return () => {
             unsubscribeClaimedHit()
             unsubscribeCreatedHit()
+            unsubscribeDownloadStarted()
             unsubscribeGuessed()
             unsubscribeHitRevealed()
             unsubscribeJoinedGame()

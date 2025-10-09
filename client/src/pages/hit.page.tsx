@@ -1,12 +1,12 @@
 import { Helmet } from "@dr.pogodin/react-helmet"
+import structuredClone from "@ungap/structured-clone"
 import classNames from "classnames"
-import deepcopy from "deepcopy"
 import natsort from "natsort"
 import { useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
-import { useLoaderData, useNavigate } from "react-router"
+import { Link, useLoaderData, useNavigate } from "react-router"
 import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
@@ -54,7 +54,7 @@ export default function Hit() {
                 <>
                     <Button
                         onClick={() => {
-                            setEditingHit(deepcopy(hit))
+                            setEditingHit(structuredClone(hit))
                             setYoutubeUrl(
                                 `https://www.youtube.com/watch?v=${hit.yt_id}`,
                             )
@@ -144,7 +144,7 @@ export default function Hit() {
                             title={t("year")}
                             value={editingHit.year}
                             onChange={(e) => {
-                                let year = parseInt(e.currentTarget.value, 10)
+                                const year = parseInt(e.currentTarget.value, 10)
                                 setEditingHit((h) => {
                                     h.year = year
                                 })
@@ -213,9 +213,11 @@ export default function Hit() {
                                   )
                                   .toSorted((a, b) => sorter(a.name, b.name))
                                   .map((p) => (
-                                      <li
-                                          key={`pack-${p.id}`}
-                                      >{`${p.name}`}</li>
+                                      <li key={`pack-${p.id}`}>
+                                          <Link
+                                              to={`/hits/?pack=${p.id}`}
+                                          >{`${p.name}`}</Link>
+                                      </li>
                                   ))}
                     </ul>
                 </Form.Group>
@@ -231,9 +233,9 @@ export default function Hit() {
                             }
                             value={youtubeUrl}
                             onChange={(e) => {
-                                let text = e.currentTarget.value
+                                const text = e.currentTarget.value
                                 setYoutubeUrl(text)
-                                let match = RE_YOUTUBE.exec(text)
+                                const match = RE_YOUTUBE.exec(text)
                                 if (match !== null)
                                     setEditingHit((h) => {
                                         h.yt_id = match[1]
@@ -256,7 +258,10 @@ export default function Hit() {
                             min={0}
                             value={editingHit.playback_offset}
                             onChange={(e) => {
-                                let offset = parseInt(e.currentTarget.value, 10)
+                                const offset = parseInt(
+                                    e.currentTarget.value,
+                                    10,
+                                )
                                 setEditingHit((h) => {
                                     h.playback_offset = offset
                                 })

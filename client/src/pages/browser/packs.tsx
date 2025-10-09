@@ -8,6 +8,7 @@ import Modal from "react-bootstrap/Modal"
 import Row from "react-bootstrap/Row"
 import { useTranslation } from "react-i18next"
 import { BsFillTrash3Fill } from "react-icons/bs"
+import { Link } from "react-router"
 import { useImmer } from "use-immer"
 import { useContext } from "../../context"
 import { Pack } from "../../entities"
@@ -257,12 +258,15 @@ export default function PacksModal({
                                     )}
                                 </Form.Group>
                             ) : (
-                                <Form.Group as={Row} className="mb-3">
+                                <Form.Group
+                                    as={Row}
+                                    className="mb-3"
+                                    key={`pack-${p.id}`}
+                                >
                                     <Col sm={10}>
-                                        <Form.Text
-                                            muted
-                                            key={`pack-${p.id}`}
-                                        >{`${p.name}`}</Form.Text>
+                                        <Link to={`/hits/?pack=${p.id}`}>
+                                            {`${p.name}`}
+                                        </Link>
                                     </Col>
                                 </Form.Group>
                             ),

@@ -1,6 +1,6 @@
 import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
 import NavDropdown from "react-bootstrap/NavDropdown"
@@ -41,9 +41,9 @@ export default function Navigation({
     const [popoverTarget, setPopoverTarget] = useState<any>(null)
     const popoverRef = useRef(null)
 
-    const handleResize = () => {
+    const handleResize = useCallback(() => {
         onResize(navRef.current!.offsetHeight)
-    }
+    }, [navRef, onResize])
 
     useEffect(() => {
         window.addEventListener("resize", handleResize)
@@ -57,7 +57,7 @@ export default function Navigation({
             window.removeEventListener("resize", handleResize)
             unsubscribeHitsStatus()
         }
-    }, [])
+    }, [handleResize])
 
     return (
         <>

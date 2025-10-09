@@ -2,16 +2,16 @@
 ARG NODE_VERSION=22
 
 # pot provider version
-ARG POT_PROVIDER_VERSION=1.2.1
+ARG POT_PROVIDER_VERSION=1.2.2
 
 # rust version
-ARG RUST_VERSION=1.89.0
+ARG RUST_VERSION=1.90.0
 
 # s6-overlay version
 ARG S6_OVERLAY_VERSION=3.2.1.0
 
 # yt-dlp version
-ARG YT_DLP_BUILD_VERSION=2025.08.27
+ARG YT_DLP_BUILD_VERSION=2025.09.26
 
 FROM node:${NODE_VERSION} AS pot_provider_build_image
 
@@ -46,7 +46,7 @@ COPY ./client/ /app/
 
 RUN npm run build
 
-FROM rust:${RUST_VERSION}-slim-bookworm AS server_build_image
+FROM rust:${RUST_VERSION}-slim-trixie AS server_build_image
 
 # create a new empty shell project
 RUN apt-get update && apt-get -y install libssl-dev pkg-config && \
@@ -89,7 +89,7 @@ RUN rm ./target/release/deps/hitster* && \
 # our final bases, platform-dependent
 
 # x64
-FROM debian:bookworm-slim AS build_amd64
+FROM debian:trixie-slim AS build_amd64
 
 ARG S6_OVERLAY_VERSION
 
@@ -97,7 +97,7 @@ ONBUILD ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffm
 ONBUILD ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp/s6-overlay.tar.xz
 
 # arm64
-FROM debian:bookworm-slim AS build_arm64
+FROM debian:trixie-slim AS build_arm64
 
 ARG S6_OVERLAY_VERSION
 

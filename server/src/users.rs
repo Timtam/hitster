@@ -81,9 +81,9 @@ impl<'r> FromRequest<'r> for UserAuthenticator {
             .get("user")
             .and_then(|cookie| serde_json::from_str::<UserCookie>(cookie.value()).ok());
 
-        if user.is_some() && token.is_some() {
-            let user = user.unwrap();
-
+        if let Some(user) = user
+            && token.is_some()
+        {
             if let Some(u) = serv
                 .user_service()
                 .lock()
@@ -93,10 +93,9 @@ impl<'r> FromRequest<'r> for UserAuthenticator {
                     .tokens
                     .iter()
                     .find(|t| &t.token == token.as_ref().unwrap())
+                    && t.expiration_time >= OffsetDateTime::now_utc()
                 {
-                    if t.expiration_time >= OffsetDateTime::now_utc() {
-                        return Outcome::Success(UserAuthenticator(u));
-                    }
+                    return Outcome::Success(UserAuthenticator(u));
                 }
 
                 return Outcome::Error((
@@ -129,12 +128,11 @@ impl<'r> FromRequest<'r> for UserAuthenticator {
                         .tokens
                         .iter()
                         .find(|t| &t.token == token.as_ref().unwrap())
+                        && t.expiration_time >= OffsetDateTime::now_utc()
                     {
-                        if t.expiration_time >= OffsetDateTime::now_utc() {
-                            serv.user_service().lock().add(u.clone());
+                        serv.user_service().lock().add(u.clone());
 
-                            return Some(Outcome::Success(UserAuthenticator(u)));
-                        }
+                        return Some(Outcome::Success(UserAuthenticator(u)));
                     }
                     None
                 })

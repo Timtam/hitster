@@ -3,13 +3,13 @@ use crate::{
     games::PackPayload,
     hits::{CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery},
     responses::{
-        CreateHitError, CreatePackError, DeleteHitError, DeletePackError, GetHitError,
-        MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError,
+        CreateHitError, CreatePackError, DeleteHitError, DeletePackError, ExportHitsError,
+        GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError, Yaml,
     },
     services::ServiceStore,
     users::UserAuthenticator,
 };
-use hitster_core::{Hit, HitId, Pack, Permissions};
+use hitster_core::{Hit, HitId, HitsterData, Pack, Permissions};
 use rocket::{State, serde::json::Json};
 use rocket_db_pools::{
     Connection,
@@ -145,7 +145,7 @@ pub async fn update_hit(
         });
     }
 
-    let new_hit = Hit {
+    let mut new_hit = Hit {
         id: hit_id,
         title: hit.title.clone(),
         artist: hit.artist.clone(),
@@ -155,8 +155,9 @@ pub async fn update_hit(
         playback_offset: hit.playback_offset,
         last_modified: OffsetDateTime::now_utc(),
         year: hit.year,
+        downloaded: false,
     };
-    let exists = new_hit.exists();
+    new_hit.downloaded = new_hit.exists();
 
     hs.lock().remove_hit(&HitId::Id(hit_id));
 
@@ -179,7 +180,7 @@ UPDATE hits SET
         new_hit.playback_offset,
         new_hit.belongs_to,
         new_hit.last_modified,
-        exists,
+        new_hit.downloaded,
         new_hit.id,
     )
     .execute(&mut **db)
@@ -271,11 +272,11 @@ WHERE hit_id = ? AND pack_id = ?"#,
         }
     }
 
-    if exists {
-        hs.lock().insert_hit(new_hit);
-    } else {
-        hs.lock().download_hit(new_hit);
+    if !new_hit.downloaded {
+        hs.lock().download_hit(new_hit.clone());
     }
+
+    hs.lock().insert_hit(new_hit);
 
     Ok(Json(MessageResponse {
         message: "hit updated successfully".into(),
@@ -481,7 +482,8 @@ pub async fn create_hit(
         });
     }
 
-    if sqlx::query!("SELECT * FROM hits WHERE yt_id = ?", hit.yt_id)
+    if sqlx::query("SELECT 1 FROM hits WHERE yt_id = ?")
+        .bind(&hit.yt_id)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
@@ -493,7 +495,7 @@ pub async fn create_hit(
         });
     }
 
-    let hit = Hit {
+    let mut hit = Hit {
         title: hit.title.clone(),
         artist: hit.artist.clone(),
         last_modified: OffsetDateTime::now_utc(),
@@ -503,8 +505,10 @@ pub async fn create_hit(
         playback_offset: hit.playback_offset,
         year: hit.year,
         packs: hit.packs.clone(),
+        downloaded: false,
     };
-    let exists = hit.exists();
+
+    hit.downloaded = hit.exists();
 
     let _ = sqlx::query!(
         r#"
@@ -530,7 +534,7 @@ INSERT INTO hits (
         hit.yt_id,
         hit.playback_offset,
         hit.last_modified,
-        exists,
+        hit.downloaded,
         true,
         false
     )
@@ -557,11 +561,61 @@ INSERT INTO hits_packs (
 
     let hs = serv.hit_service();
 
-    if exists {
-        hs.lock().insert_hit(hit.clone());
-    } else {
+    if !hit.downloaded {
         hs.lock().download_hit(hit.clone());
     }
 
+    hs.lock().insert_hit(hit.clone());
+
     Ok(Json((&hit).into()))
+}
+
+/// # Export hits database
+///
+/// This endpoint allows authenticated users with hits write permissions to
+/// export the hits database of this server in the YAML format used when
+/// deploying hits within the codebase. Use this to transfer hits between server instances.
+///
+/// The query and pack parameters behave similarly to those within the /hits/search endpoint.
+
+#[openapi(tag = "Hits")]
+#[get("/hits/export?<query>&<pack>")]
+pub async fn export_hits(
+    query: Option<&str>,
+    pack: Option<Vec<Uuid>>,
+    user: UserAuthenticator,
+    serv: &State<ServiceStore>,
+) -> Result<Yaml, ExportHitsError> {
+    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+        return Err(ExportHitsError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    let hs = serv.hit_service();
+    let hsl = hs.lock();
+
+    let hsq = HitSearchQuery {
+        query: query.map(|q| q.to_string()),
+        packs: pack,
+        start: Some(1),
+        amount: Some(hsl.get_hits().len()),
+        ..Default::default()
+    };
+
+    let results = hsl.search_hits(&hsq);
+
+    let mut data = HitsterData::new(vec![], vec![]);
+
+    results.results.iter().for_each(|h| {
+        h.packs.iter().for_each(|p| {
+            if data.get_pack(*p).is_none() {
+                data.insert_pack(hsl.get_pack(*p).cloned().unwrap());
+            }
+        });
+        data.insert_hit(h.clone());
+    });
+
+    Ok(Yaml(serde_yml::to_string(&data).unwrap()))
 }

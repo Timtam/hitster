@@ -42,6 +42,7 @@ deletePack: Pack löschen
 deletePackQuestion: Möchtest du das Pack wirklich löschen?
 descending: Absteigend
 dontIntercept: Keine Vermutung äußern
+downloadStarted: Download wurde gestartet.
 downloaded_one: "{{hits}} verfügbar"
 downloaded_other: "{{hits}} verfügbar"
 downloading_one: "{{hits}} wird heruntergeladen"
@@ -54,6 +55,7 @@ dragOverDroppable: "{{draggable}} über {{droppable}} bewegt"
 dragStart: Bewege {{draggable}}
 edit: Bearbeiten
 error: Fehler
+exportHits: Hits exportieren
 features: Funktionen
 featuresList: >
     <0>keine Registrierung notwendig, einfach ein Spiel erstellen und los

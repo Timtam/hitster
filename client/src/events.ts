@@ -95,7 +95,7 @@ export interface GameCreatedData {
 }
 
 export interface GameRemovedData {
-    game: String
+    game: string
 }
 
 export interface HitsProgressUpdateData {
@@ -106,6 +106,7 @@ export interface HitsProgressUpdateData {
 
 export enum Events {
     claimedHit = "Claimed hit",
+    downloadStarted = "Download started",
     gameCreated = "Game created",
     gameEnded = "Game ended",
     gameRemoved = "Game removed",

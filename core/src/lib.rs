@@ -28,6 +28,8 @@ mod hitster_core {
         #[serde(with = "time::serde::rfc3339")]
         #[serde(default = "OffsetDateTime::now_utc")]
         pub last_modified: OffsetDateTime,
+        #[serde(skip)]
+        pub downloaded: bool,
     }
 
     impl Hit {

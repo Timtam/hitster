@@ -4,9 +4,9 @@ interface FocusAnchorProps {
     children: ReactNode
 }
 
-export default forwardRef<HTMLElement, FocusAnchorProps>(
+const FocusAnchor = forwardRef<HTMLElement, FocusAnchorProps>(
     ({ children }: FocusAnchorProps, ref) => {
-        let [opened, setOpened] = useState(false)
+        const [opened, setOpened] = useState(false)
 
         return (
             <div
@@ -26,3 +26,5 @@ export default forwardRef<HTMLElement, FocusAnchorProps>(
         )
     },
 )
+
+export default FocusAnchor
