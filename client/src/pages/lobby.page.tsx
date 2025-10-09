@@ -6,13 +6,14 @@ import {
     unbindKeyCombo,
 } from "@rwh/keystrokes"
 import { detect } from "detect-browser"
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef } from "react"
 import Dropdown from "react-bootstrap/Dropdown"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router"
+import { useImmer } from "use-immer"
 import { useContext } from "../context"
-import { Game, GameMode, GameState } from "../entities"
+import { Game, GameEvent, GameMode, GameState } from "../entities"
 import {
     Events,
     GameCreatedData,
@@ -30,7 +31,8 @@ export default function Lobby() {
     const navigate = useNavigate()
     const { t } = useTranslation()
     const modalShown = useModalShown()
-    const [games, setGames] = useState<Game[]>([])
+    const [games, setGames] = useImmer<Game[] | undefined>(undefined)
+    const events = useRef<EventSource[]>([])
 
     const createGame = useCallback(
         async (mode: GameMode) => {
@@ -41,6 +43,43 @@ export default function Lobby() {
             navigate("/game/" + game.id)
         },
         [gameService, navigate],
+    )
+
+    const createEventSource = useCallback(
+        (id: string): EventSource => {
+            let es = new EventSource(`/api/games/${id}/events`)
+
+            es.addEventListener("join", (e) => {
+                let data = GameEvent.parse(JSON.parse(e.data))
+                setGames((g) => {
+                    g!
+                        .find((gg) => gg.id === id)
+                        ?.players.push(data.players![0])
+                })
+            })
+
+            es.addEventListener("leave", (e) => {
+                let data = GameEvent.parse(JSON.parse(e.data))
+                setGames((g) => {
+                    let ggg = g!.find((gg) => gg.id === id)!
+                    ggg.players.splice(
+                        ggg.players.findIndex(
+                            (p) => p.id === data.players![0].id,
+                        ),
+                        1,
+                    )
+                })
+            })
+
+            es.addEventListener("change_state", (e) => {
+                let data = GameEvent.parse(JSON.parse(e.data))
+                setGames((g) => {
+                    g!.find((gg) => gg.id === id)!.state = data.state!
+                })
+            })
+            return es
+        },
+        [setGames],
     )
 
     useEffect(() => {
@@ -71,19 +110,26 @@ export default function Lobby() {
             bindKeyCombo("alt + shift + l", handleNewLocalGame)
         }
 
-        if (games.length === 0) setGames(loadedGames)
+        if (!games) {
+            setGames(loadedGames)
+            events.current = loadedGames.map((g) => createEventSource(g.id))
+        }
 
         let unsubscribeGameCreated = EventManager.subscribe(
             Events.gameCreated,
             (e: GameCreatedData) => {
-                setGames([...games, e.game])
+                setGames([...games!, e.game])
+                events.current.push(createEventSource(e.game.id))
             },
         )
 
         let unsubscribeGameRemoved = EventManager.subscribe(
             Events.gameRemoved,
             (e: GameRemovedData) => {
-                setGames(games.filter((g) => g.id !== e.game))
+                let idx = games!.findIndex((g) => g.id === e.game)
+                setGames(games!.filter((_, i) => i === idx))
+                events.current[idx].close()
+                events.current.splice(idx, 1)
             },
         )
 
@@ -94,7 +140,21 @@ export default function Lobby() {
             unsubscribeGameCreated()
             unsubscribeGameRemoved()
         }
-    }, [createGame, loadedGames, modalShown, setGames, games])
+    }, [
+        createGame,
+        loadedGames,
+        modalShown,
+        setGames,
+        games,
+        events,
+        createEventSource,
+    ])
+
+    useEffect(() => {
+        return () => {
+            events.current.forEach((es) => es.close())
+        }
+    }, [events])
 
     return (
         <>
@@ -154,9 +214,9 @@ export default function Lobby() {
                     </tr>
                 </thead>
                 <tbody>
-                    {games.map((game) => {
+                    {games?.map((game) => {
                         return (
-                            <tr>
+                            <tr key={`game-${game.id}`}>
                                 <td>
                                     <Link to={"/game/" + game.id}>
                                         {game.id}

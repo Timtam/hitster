@@ -656,6 +656,7 @@ export default function Browser() {
                     </Table>
                     <Pagination>
                         <Pagination.Item
+                            key="page-first"
                             disabled={getCurrentPage() === 1}
                             onClick={async () =>
                                 await search({
@@ -673,6 +674,7 @@ export default function Browser() {
                             {t("first")}
                         </Pagination.Item>
                         <Pagination.Item
+                            key="page-previous"
                             disabled={getCurrentPage() === 1}
                             onClick={async () =>
                                 await search({
@@ -732,7 +734,10 @@ export default function Browser() {
                                 )
                             )
                                 pages.push(
-                                    <Pagination.Item as="div">
+                                    <Pagination.Item
+                                        as="div"
+                                        key={`page-div-${i + 1}`}
+                                    >
                                         ...
                                     </Pagination.Item>,
                                 )
@@ -740,6 +745,7 @@ export default function Browser() {
                             return pages
                         })}
                         <Pagination.Item
+                            key="page-next"
                             disabled={getCurrentPage() === getPageCount()}
                             onClick={async () =>
                                 await search({
@@ -757,6 +763,7 @@ export default function Browser() {
                             {t("next")}
                         </Pagination.Item>
                         <Pagination.Item
+                            key="page-last"
                             disabled={getCurrentPage() === getPageCount()}
                             onClick={async () =>
                                 await search({
