@@ -501,7 +501,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                 let mut rx = process_sender.subscribe();
 
                 loop {
-                    let hit_data = select! {
+                    let mut hit_data = select! {
                         hit_data = rx.recv() => match hit_data {
                             Ok(hit_data) => hit_data,
                             Err(RecvError::Closed) => break,
@@ -557,6 +557,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     )
                     .execute(&db)
                     .await;
+                    hit_data.hit.downloaded = true;
                     let mut hs = hit_service.lock();
                     if hs.remove_hit(&HitId::Id(hit_data.hit.id)) {
                         // only insert the hit if it could be removed
