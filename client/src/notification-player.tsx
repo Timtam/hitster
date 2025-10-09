@@ -51,7 +51,7 @@ export default function NotificationPlayer({ user }: { user: User | null }) {
         if (output.current) output.current.innerHTML = events.current[0].text
         events.current.shift()
         timer.current = setTimeout(handleSpeechEvent, TIMER_DURATION)
-    }, [])
+    }, [timer])
 
     useEffect(() => {
         const unsubscribeNotification = EventManager.subscribe(

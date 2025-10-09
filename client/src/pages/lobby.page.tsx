@@ -47,10 +47,10 @@ export default function Lobby() {
 
     const createEventSource = useCallback(
         (id: string): EventSource => {
-            let es = new EventSource(`/api/games/${id}/events`)
+            const es = new EventSource(`/api/games/${id}/events`)
 
             es.addEventListener("join", (e) => {
-                let data = GameEvent.parse(JSON.parse(e.data))
+                const data = GameEvent.parse(JSON.parse(e.data))
                 setGames((g) => {
                     g!
                         .find((gg) => gg.id === id)
@@ -59,9 +59,9 @@ export default function Lobby() {
             })
 
             es.addEventListener("leave", (e) => {
-                let data = GameEvent.parse(JSON.parse(e.data))
+                const data = GameEvent.parse(JSON.parse(e.data))
                 setGames((g) => {
-                    let ggg = g!.find((gg) => gg.id === id)!
+                    const ggg = g!.find((gg) => gg.id === id)!
                     ggg.players.splice(
                         ggg.players.findIndex(
                             (p) => p.id === data.players![0].id,
@@ -72,7 +72,7 @@ export default function Lobby() {
             })
 
             es.addEventListener("change_state", (e) => {
-                let data = GameEvent.parse(JSON.parse(e.data))
+                const data = GameEvent.parse(JSON.parse(e.data))
                 setGames((g) => {
                     g!.find((gg) => gg.id === id)!.state = data.state!
                 })
@@ -115,7 +115,7 @@ export default function Lobby() {
             events.current = loadedGames.map((g) => createEventSource(g.id))
         }
 
-        let unsubscribeGameCreated = EventManager.subscribe(
+        const unsubscribeGameCreated = EventManager.subscribe(
             Events.gameCreated,
             (e: GameCreatedData) => {
                 setGames([...games!, e.game])
@@ -123,10 +123,10 @@ export default function Lobby() {
             },
         )
 
-        let unsubscribeGameRemoved = EventManager.subscribe(
+        const unsubscribeGameRemoved = EventManager.subscribe(
             Events.gameRemoved,
             (e: GameRemovedData) => {
-                let idx = games!.findIndex((g) => g.id === e.game)
+                const idx = games!.findIndex((g) => g.id === e.game)
                 setGames(games!.filter((_, i) => i === idx))
                 events.current[idx].close()
                 events.current.splice(idx, 1)

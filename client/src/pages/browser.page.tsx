@@ -106,7 +106,7 @@ export default function Browser() {
     const search = useCallback(
         async (query: HitSearchQuery) => {
             setSearching(true)
-            let results = await hitService.searchHits(query)
+            const results = await hitService.searchHits(query)
             EventManager.publish(Events.notification, {
                 toast: false,
                 interruptTts: true,
@@ -122,7 +122,7 @@ export default function Browser() {
                 Array.from({ length: results.results.length }, () => false),
             )
         },
-        [hitService, setSearching, setHitResults, setShowPacksModal],
+        [hitService, setSearching, setHitResults, setShowPacksModal, t],
     )
 
     const getPageCount = useCallback(
@@ -158,7 +158,7 @@ export default function Browser() {
                 const oldIndex = sortByItems.indexOf(active.id as number)
                 const newIndex = sortByItems.indexOf(over.id as number)
 
-                let sortBy = arrayMove(sortByItems, oldIndex, newIndex)
+                const sortBy = arrayMove(sortByItems, oldIndex, newIndex)
 
                 setSearchParams((p) => {
                     p.delete("sort_by")
@@ -252,7 +252,7 @@ export default function Browser() {
                                     value={query}
                                     onChange={(e) => {
                                         e.preventDefault()
-                                        let q = e.currentTarget.value
+                                        const q = e.currentTarget.value
                                         setQuery(q)
                                         if (searchTimer !== null)
                                             clearTimeout(searchTimer)
@@ -582,11 +582,11 @@ export default function Browser() {
                             <Link to="/hits/create">{t("createHit")}</Link>
                             <Button
                                 onClick={async () => {
-                                    let yml = await hitService.exportHits(
+                                    const yml = await hitService.exportHits(
                                         query,
                                         packs,
                                     )
-                                    let elem = document.createElement("a")
+                                    const elem = document.createElement("a")
                                     elem.setAttribute(
                                         "href",
                                         `data:application/x-yaml;charset=utf-8,${encodeURIComponent(yml)}`,
@@ -696,7 +696,7 @@ export default function Browser() {
                             { length: getPageCount() },
                             (_, i) => i,
                         ).flatMap((i) => {
-                            let pages = []
+                            const pages = []
 
                             if (
                                 (i < getCurrentPage() + PAGE_RANGE &&

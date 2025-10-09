@@ -81,7 +81,7 @@ export default function CreateHit() {
                         title={t("year")}
                         value={editingHit.year}
                         onChange={(e) => {
-                            let year = parseInt(e.currentTarget.value, 10)
+                            const year = parseInt(e.currentTarget.value, 10)
                             setEditingHit((h) => {
                                 h.year = year
                             })
@@ -138,9 +138,9 @@ export default function CreateHit() {
                         }
                         value={youtubeUrl}
                         onChange={(e) => {
-                            let text = e.currentTarget.value
+                            const text = e.currentTarget.value
                             setYoutubeUrl(text)
-                            let match = RE_YOUTUBE.exec(text)
+                            const match = RE_YOUTUBE.exec(text)
                             if (match !== null)
                                 setEditingHit((h) => {
                                     h.yt_id = match[1]
@@ -163,7 +163,7 @@ export default function CreateHit() {
                         min={0}
                         value={editingHit.playback_offset}
                         onChange={(e) => {
-                            let offset = parseInt(e.currentTarget.value, 10)
+                            const offset = parseInt(e.currentTarget.value, 10)
                             setEditingHit((h) => {
                                 h.playback_offset = offset
                             })

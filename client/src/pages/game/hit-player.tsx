@@ -128,7 +128,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
                 }
                 player.current = null
             }
-        }, [play, src, playing])
+        }, [src, playing])
 
         useEffect(() => {
             const handlePlayOrStopHit = {

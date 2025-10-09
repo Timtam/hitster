@@ -95,7 +95,7 @@ export interface GameCreatedData {
 }
 
 export interface GameRemovedData {
-    game: String
+    game: string
 }
 
 export interface HitsProgressUpdateData {
