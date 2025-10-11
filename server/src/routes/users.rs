@@ -1,17 +1,14 @@
 use crate::{
     HitsterConfig,
-    hits::DownloadingGuard,
-    responses::{
-        AuthorizedServerBusyError, GetUserError, MessageResponse, RegisterUserError,
-        ServerBusyError, UserLoginError, UsersResponse,
-    },
+    responses::{GetUserError, MessageResponse, RegisterUserError, UserLoginError, UsersResponse},
     services::ServiceStore,
-    users::{Token, User, UserCookie, UserLoginPayload},
+    users::{UserAuthenticator, UserCookie, UserLoginPayload, UserPayload},
 };
 use argon2::{
     Argon2,
     password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString, rand_core::OsRng},
 };
+use hitster_core::{Permissions, Token, User};
 use petname::{Generator, Petnames};
 use rand::{RngCore, SeedableRng, rng};
 use rand_chacha::ChaCha8Rng;
@@ -20,10 +17,7 @@ use rocket::{
     http::{Cookie, CookieJar},
     serde::json::Json,
 };
-use rocket_db_pools::{
-    Connection,
-    sqlx::{self, Row},
-};
+use rocket_db_pools::{Connection, sqlx};
 use rocket_okapi::openapi;
 use serde_json;
 use time::{Duration, OffsetDateTime};
@@ -47,6 +41,7 @@ fn generate_virtual_user(svc: &ServiceStore) -> (User, Token) {
         r#virtual: true,
         tokens: vec![],
         password: "".into(),
+        permissions: Permissions::default(),
     };
 
     let t = Token {
@@ -193,19 +188,13 @@ async fn handle_existing_token(
         return u;
     }
 
-    if let Some(mut u) = sqlx::query("SELECT * FROM users where name = ?")
-        .bind(user.name.as_str())
+    let name = user.name.as_str();
+
+    if let Some(mut u) = sqlx::query_as::<_, User>("SELECT * FROM users WHERE name = ?")
+        .bind(name)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
-        .map(|user| User {
-            id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
-            name: user.get::<String, &str>("name"),
-            password: user.get::<String, &str>("password"),
-            r#virtual: false,
-            tokens: serde_json::from_str::<Vec<Token>>(&user.get::<String, &str>("tokens"))
-                .unwrap(),
-        })
     {
         // user exists within the db
 
@@ -305,36 +294,35 @@ async fn handle_existing_token(
     u
 }
 
-/// Retrieve a list of all users
+/// # Retrieve a list of all users
 ///
 /// The object returned contains all users currently known by the server.
 
 #[openapi(tag = "Users")]
 #[get("/users")]
-pub fn get_all(
-    serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Json<UsersResponse>, ServerBusyError> {
-    Ok(Json(UsersResponse {
-        users: serv.user_service().lock().get_all(),
-    }))
+pub fn get_all(serv: &State<ServiceStore>) -> Json<UsersResponse> {
+    Json(UsersResponse {
+        users: serv
+            .user_service()
+            .lock()
+            .get_all()
+            .iter()
+            .map(|u| u.into())
+            .collect::<Vec<_>>(),
+    })
 }
 
-/// Get all info about a certain user
+/// # Get all info about a certain user
 ///
 /// Retrieve all known info about a specific user. user_id must be identical to a user's id, either returned by POST /users, or by GET /users.
 /// The info here is currently identical with what you get with GET /users, but that might change later.
 
 #[openapi(tag = "Users")]
 #[get("/users/<user_id>")]
-pub fn get(
-    user_id: &str,
-    serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Json<User>, GetUserError> {
+pub fn get(user_id: &str, serv: &State<ServiceStore>) -> Result<Json<UserPayload>, GetUserError> {
     if let Ok(u) = Uuid::parse_str(user_id) {
         match serv.user_service().lock().get_by_id(u) {
-            Some(u) => Ok(Json(u)),
+            Some(u) => Ok(Json((&u).into())),
             None => Err(GetUserError {
                 message: "user id not found".into(),
                 http_status_code: 404,
@@ -348,20 +336,24 @@ pub fn get(
     }
 }
 
-/// User login
+/// # User login
 ///
 /// The user will log in with the provided username and password
+/// If successful, two cookies will be created/refreshed:
+///
+/// * a private one that contains the token used to authenticate against the server
+///
+/// * a public one that contains user id, validity information and the user's permissions
 
 #[openapi(tag = "Users")]
 #[post("/users/login", format = "json", data = "<credentials>")]
 pub async fn login(
     credentials: Json<UserLoginPayload>,
-    user: Option<User>,
+    user: Option<UserAuthenticator>,
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Json<User>, UserLoginError> {
+) -> Result<Json<UserPayload>, UserLoginError> {
     let u = serv
         .user_service()
         .lock()
@@ -383,7 +375,7 @@ pub async fn login(
             set_cookies(&u, &t, cookies);
 
             if let Some(cu) = user {
-                serv.user_service().lock().remove(cu.id);
+                serv.user_service().lock().remove(cu.0.id);
             }
 
             u.tokens.push(t);
@@ -402,7 +394,7 @@ pub async fn login(
 
             serv.user_service().lock().add(u.clone());
 
-            return Ok(Json(u));
+            return Ok(Json((&u).into()));
         } else {
             return Err(UserLoginError {
                 message: "incorrect user credentials".into(),
@@ -411,19 +403,13 @@ pub async fn login(
         }
     }
 
-    if let Some(mut u) = sqlx::query("SELECT * FROM users where name = ?")
-        .bind(credentials.username.as_str())
+    let name = credentials.username.as_str();
+
+    if let Some(mut u) = sqlx::query_as::<_, User>("SELECT * FROM users WHERE name = ?")
+        .bind(name)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
-        .map(|user| User {
-            id: Uuid::parse_str(&user.get::<String, &str>("id")).unwrap(),
-            name: user.get::<String, &str>("name"),
-            password: user.get::<String, &str>("password"),
-            r#virtual: false,
-            tokens: serde_json::from_str::<Vec<Token>>(&user.get::<String, &str>("tokens"))
-                .unwrap(),
-        })
     {
         let password_hash = PasswordHash::new(&u.password).unwrap();
         if Argon2::default()
@@ -454,7 +440,7 @@ pub async fn login(
 
             serv.user_service().lock().add(u.clone());
 
-            return Ok(Json(u));
+            return Ok(Json((&u).into()));
         } else {
             return Err(UserLoginError {
                 message: "incorrect user credentials".into(),
@@ -469,7 +455,7 @@ pub async fn login(
     })
 }
 
-/// Register a new user
+/// # Register a new user
 ///
 /// Register a new user with a given username and password
 
@@ -477,11 +463,10 @@ pub async fn login(
 #[post("/users/register", format = "json", data = "<credentials>")]
 pub async fn register(
     mut credentials: Json<UserLoginPayload>,
-    mut user: User,
+    mut user: UserAuthenticator,
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     svc: &State<ServiceStore>,
-    _g: DownloadingGuard,
 ) -> Result<Json<MessageResponse>, RegisterUserError> {
     let salt = SaltString::generate(&mut OsRng);
     let argon2 = Argon2::default();
@@ -490,8 +475,10 @@ pub async fn register(
         .unwrap()
         .to_string();
 
-    if sqlx::query("SELECT * FROM users WHERE name = ?")
-        .bind(credentials.username.as_str())
+    let name = credentials.username.as_str();
+
+    if sqlx::query_as::<_, User>("SELECT * FROM users WHERE name = ?")
+        .bind(name)
         .fetch_optional(&mut **db)
         .await
         .unwrap()
@@ -501,33 +488,37 @@ pub async fn register(
             message: "username is already in use".into(),
             http_status_code: 409,
         })
-    } else if !user.r#virtual {
+    } else if !user.0.r#virtual {
         Err(RegisterUserError {
             message: "A user is already authenticated and registered.".into(),
             http_status_code: 405,
         })
-    } else if sqlx::query("INSERT INTO users (id, name, password, tokens) VALUES (?1, ?2, ?3, ?4)")
-        .bind(user.id.to_string())
-        .bind(credentials.username.as_str())
-        .bind(credentials.password.as_str())
-        .bind(serde_json::to_string(&user.tokens).unwrap())
-        .execute(&mut **db)
-        .await
-        .is_ok()
+    } else if sqlx::query(
+        "INSERT INTO users (id, name, password, tokens, permissions) VALUES (?, ?, ?, ?, ?)",
+    )
+    .bind(user.0.id.to_string())
+    .bind(credentials.username.as_str())
+    .bind(credentials.password.as_str())
+    .bind(serde_json::to_string(&user.0.tokens).unwrap())
+    .bind(0)
+    .execute(&mut **db)
+    .await
+    .is_ok()
     {
-        user.name.clone_from(&credentials.username);
-        user.password.clone_from(&credentials.password);
-        user.r#virtual = false;
+        user.0.name.clone_from(&credentials.username);
+        user.0.password.clone_from(&credentials.password);
+        user.0.r#virtual = false;
+        user.0.permissions = Permissions::from_bits(0).unwrap();
 
         let token = cookies
             .get_private("id")
             .map(|c| c.value().to_string())
-            .and_then(|t| user.tokens.iter().find(|ti| ti.token == t))
+            .and_then(|t| user.0.tokens.iter().find(|ti| ti.token == t))
             .unwrap();
 
-        set_cookies(&user, token, cookies);
+        set_cookies(&user.0, token, cookies);
 
-        svc.user_service().lock().add(user);
+        svc.user_service().lock().add(user.0);
 
         Ok(Json(MessageResponse {
             message: "user registered".into(),
@@ -541,23 +532,22 @@ pub async fn register(
     }
 }
 
-/// Logout user
+/// # Logout user
 ///
 /// Logout user and clear cookies.
 
 #[openapi(tag = "Users")]
 #[post("/users/logout")]
 pub async fn logout(
-    user: User,
+    user: UserAuthenticator,
     serv: &State<ServiceStore>,
     cookies: &CookieJar<'_>,
-    _g: DownloadingGuard,
-) -> Result<Json<MessageResponse>, AuthorizedServerBusyError> {
+) -> Json<MessageResponse> {
     let game_srv = serv.game_service();
     let games = game_srv.lock();
 
-    for game in games.get_all(Some(&user)).iter() {
-        let _ = games.leave(&game.id, &user, None);
+    for game in games.get_all(Some(&user.0)).iter() {
+        let _ = games.leave(&game.id, &user.0, None);
     }
 
     let user_srv = serv.user_service();
@@ -565,13 +555,22 @@ pub async fn logout(
 
     cookies.remove_private("id");
     cookies.remove("user");
-    users.remove(user.id);
+    users.remove(user.0.id);
 
-    Ok(Json(MessageResponse {
+    Json(MessageResponse {
         message: "logged out".into(),
         r#type: "success".into(),
-    }))
+    })
 }
+
+/// # (re)authorize user
+///
+/// This endpoint is necessary to update a user's token.
+/// The current token of the user is always just valid for a certain amount of time.
+/// The user however also got a second token that can be used to refresh the first token.
+/// This endpoint will check that the first token is either valid, or refreshes the first token with the refresh token.
+/// Cookies will be updated accordingly.
+/// If tokens are invalid or no token exists at all, a virtual user will be created and authorized instead.
 
 #[openapi(tag = "Users")]
 #[get("/users/auth")]
@@ -579,8 +578,7 @@ pub async fn authorize(
     db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
     serv: &State<ServiceStore>,
-    _g: DownloadingGuard,
-) -> Result<Json<MessageResponse>, ServerBusyError> {
+) -> Json<MessageResponse> {
     let token = cookies
         .get_private("id")
         .map(|cookie| cookie.value().to_string());
@@ -589,20 +587,15 @@ pub async fn authorize(
         .get("user")
         .and_then(|cookie| serde_json::from_str::<UserCookie>(cookie.value()).ok());
 
-    if user.is_some() && token.is_some() {
-        handle_existing_token(
-            token.as_ref().unwrap(),
-            user.as_ref().unwrap(),
-            serv,
-            cookies,
-            db,
-        )
-        .await;
+    if let Some(user) = user.as_ref()
+        && let Some(token) = token.as_ref()
+    {
+        handle_existing_token(token, user, serv, cookies, db).await;
 
-        Ok(Json(MessageResponse {
+        Json(MessageResponse {
             message: "success".into(),
             r#type: "success".into(),
-        }))
+        })
     } else {
         let (u, t) = generate_virtual_user(serv);
 
@@ -615,9 +608,9 @@ pub async fn authorize(
 
         set_cookies(&u, &t, cookies);
 
-        Ok(Json(MessageResponse {
+        Json(MessageResponse {
             message: "success".into(),
             r#type: "success".into(),
-        }))
+        })
     }
 }

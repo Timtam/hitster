@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\nINSERT INTO hits_packs (\n    hit_id, \n    pack_id, \n    custom, \n    marked_for_deletion) VALUES (\n    $1,\n    $2,\n    $3,\n    $4)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 4
+    },
+    "nullable": []
+  },
+  "hash": "f6a0bfb90412d820bfd0a26f1da2589914da7dffc022e62518c7529224368f80"
+}

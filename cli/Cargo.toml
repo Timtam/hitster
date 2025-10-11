@@ -1,0 +1,22 @@
+[package]
+name = "hitster-cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.98"
+argon2 = { workspace = true }
+bitflags = { workspace = true }
+clap = { version = "4.5.41", features = ["derive"] }
+csv = "1.3.1"
+dialoguer = "0.11.0"
+dotenvy = { workspace = true }
+hitster_core = { path = "../core" }
+regex-lite = "0.1.6"
+serde = { workspace = true }
+serde_yml = { workspace = true }
+sqlx = { workspace = true }
+terminal-menu = "3.0.0"
+time = { workspace = true }
+tokio = { version = "1", features = ["full"]}
+uuid = { workspace = true }

@@ -5,7 +5,7 @@ import {
     BrowserKeyComboEvent,
     unbindKeyCombo,
 } from "@rwh/keystrokes"
-import deepcopy from "deepcopy"
+import structuredClone from "@ungap/structured-clone"
 import { detect } from "detect-browser"
 import { useCallback, useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
@@ -14,7 +14,7 @@ import Dropdown from "react-bootstrap/Dropdown"
 import DropdownButton from "react-bootstrap/DropdownButton"
 import Table from "react-bootstrap/Table"
 import { Trans, useTranslation } from "react-i18next"
-import { useLoaderData, useNavigate } from "react-router"
+import { Link, useLoaderData, useNavigate } from "react-router"
 import { titleCase } from "title-case"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
@@ -40,6 +40,7 @@ import {
     SkippedHitData,
     TokenReceivedData,
 } from "../events"
+import FA from "../focus-anchor"
 import { useModalShown } from "../hooks"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
@@ -148,7 +149,7 @@ export default function Game() {
             } else if (ge.state === GameState.Confirming) {
                 EventManager.publish(Events.scored, {
                     winner: ge.last_scored?.id ?? null,
-                    players: deepcopy(ge.players ?? []),
+                    players: structuredClone(ge.players ?? []),
                     game_mode: game.mode,
                 } satisfies ScoredData)
             }
@@ -168,7 +169,7 @@ export default function Game() {
                             ) as number
                         ] = ge.winner
                     EventManager.publish(Events.gameEnded, {
-                        game: deepcopy(g),
+                        game: structuredClone(g),
                         winner: ge.winner ?? null,
                     } satisfies GameEndedData)
                 } else if (ge.state === GameState.Guessing) {
@@ -284,8 +285,6 @@ export default function Game() {
                     g.start_tokens = ge.settings.start_tokens ?? g.start_tokens
                     g.goal = ge.settings.goal ?? g.goal
                     g.packs = ge.settings.packs ?? g.packs
-                    g.remember_hits =
-                        ge.settings.remember_hits ?? g.remember_hits
                 }
             })
         })
@@ -332,7 +331,7 @@ export default function Game() {
         const handleStartOrStopGame = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
-                startOrStopGame()
+                if (canStartOrStopGame()) startOrStopGame()
             },
         }
         const handleShowSettings = {
@@ -344,7 +343,7 @@ export default function Game() {
         const handleSkipHit = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
-                skipHit()
+                if (canSkip()) skipHit()
             },
         }
 
@@ -353,12 +352,8 @@ export default function Game() {
                 bindKeyCombo("alt + shift + q", handleLeaveGame)
             else bindKeyCombo("alt + shift + j", handleJoinGame)
 
-            if (canStartOrStopGame()) {
-                bindKeyCombo("alt + shift + s", handleStartOrStopGame)
-            }
-            if (canSkip()) {
-                bindKeyCombo("alt + shift + i", handleSkipHit)
-            }
+            bindKeyCombo("alt + shift + s", handleStartOrStopGame)
+            bindKeyCombo("alt + shift + i", handleSkipHit)
             bindKeyCombo("alt + shift + e", handleShowSettings)
         }
 
@@ -392,9 +387,11 @@ export default function Game() {
                         " - Hitster"}
                 </title>
             </Helmet>
-            <h2 className="h4">
-                {t("gameId")}: {game.id}, {t("state")}: {game.state}
-            </h2>
+            <FA>
+                <h2 className="h4">
+                    {t("gameId")}: {game.id}, {t("state")}: {game.state}
+                </h2>
+            </FA>
             <LeaveGameQuestion
                 show={showLeaveGameQuestion}
                 onHide={(yes: boolean) => {
@@ -585,12 +582,22 @@ export default function Game() {
                             title: game.hit.title,
                             artist: game.hit.artist,
                             year: game.hit.year,
-                            pack: game.hit.pack,
                             player: titleCase(
                                 game.last_scored?.name ?? t("noone"),
                             ),
                         }}
-                        components={[<b />, <b />, <b />, <b />, <b />]}
+                        components={[
+                            <b />,
+                            <Link
+                                to={`/hits/${game.hit.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <b />
+                            </Link>,
+                            <b />,
+                            <b />,
+                        ]}
                         shouldUnescape={true}
                         tOptions={{ interpolation: { escapeValue: true } }}
                     />
@@ -601,13 +608,24 @@ export default function Game() {
                             title: game.hit.title,
                             artist: game.hit.artist,
                             year: game.hit.year,
-                            pack: game.hit.pack,
                             belongs_to: game.hit.belongs_to,
                             player: titleCase(
                                 game.last_scored?.name ?? t("noone"),
                             ),
                         }}
-                        components={[<b />, <b />, <b />, <b />, <b />, <b />]}
+                        components={[
+                            <b />,
+                            <Link
+                                to={`/hits/${game.hit.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <b />
+                            </Link>,
+                            <b />,
+                            <b />,
+                            <b />,
+                        ]}
                         shouldUnescape={true}
                         tOptions={{ interpolation: { escapeValue: true } }}
                     />

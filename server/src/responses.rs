@@ -1,4 +1,7 @@
-use crate::{games::Game, users::User};
+use crate::{
+    games::{GamePayload, PackPayload},
+    users::UserPayload,
+};
 use rocket::{
     http::{ContentType, Status},
     request::Request,
@@ -14,7 +17,20 @@ use rocket_okapi::{
     response::OpenApiResponderInner,
 };
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
+
+/// paginated search results
+
+#[derive(Serialize, JsonSchema)]
+pub struct PaginatedResponse<T> {
+    /// the search results
+    pub results: Vec<T>,
+    /// the total amount of search results
+    pub total: usize,
+    /// the first result returned
+    pub start: usize,
+    /// the last result returned
+    pub end: usize,
+}
 
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct JoinGameError {
@@ -65,17 +81,6 @@ impl OpenApiResponderInner for JoinGameError {
                 description: "\
                 # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
                 That user is already part of this game.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -146,17 +151,6 @@ impl OpenApiResponderInner for LeaveGameError {
                 description: "\
                 # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
                 That user isn't part of this game.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -243,17 +237,6 @@ impl OpenApiResponderInner for StartGameError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -335,17 +318,6 @@ impl OpenApiResponderInner for StopGameError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -355,7 +327,7 @@ impl OpenApiResponderInner for StopGameError {
 
 impl std::fmt::Display for StopGameError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Start game error `{}`", self.message,)
+        write!(formatter, "Stop game error `{}`", self.message,)
     }
 }
 
@@ -411,17 +383,6 @@ impl OpenApiResponderInner for HitError {
                 description: "\
                 # [500 Internal Server Error](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500)\n\
                 A hit couldn't be found or a different error occurred.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -508,17 +469,6 @@ impl OpenApiResponderInner for GuessSlotError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -528,7 +478,7 @@ impl OpenApiResponderInner for GuessSlotError {
 
 impl std::fmt::Display for GuessSlotError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Guess slot error `{}`", self.message,)
     }
 }
 
@@ -600,17 +550,6 @@ impl OpenApiResponderInner for ConfirmSlotError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -620,7 +559,7 @@ impl OpenApiResponderInner for ConfirmSlotError {
 
 impl std::fmt::Display for ConfirmSlotError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Confirm slot error `{}`", self.message,)
     }
 }
 
@@ -692,17 +631,6 @@ impl OpenApiResponderInner for SkipHitError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -712,7 +640,7 @@ impl OpenApiResponderInner for SkipHitError {
 
 impl std::fmt::Display for SkipHitError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Skip hit error `{}`", self.message,)
     }
 }
 
@@ -784,17 +712,6 @@ impl OpenApiResponderInner for UpdateGameError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -804,7 +721,7 @@ impl OpenApiResponderInner for UpdateGameError {
 
 impl std::fmt::Display for UpdateGameError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Update game error `{}`", self.message,)
     }
 }
 
@@ -822,32 +739,206 @@ impl<'r> Responder<'r, 'static> for UpdateGameError {
     }
 }
 
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct UpdateHitError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for UpdateHitError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "401".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for hits.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                A hit with that ID doesn't exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for UpdateHitError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Update hit error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for UpdateHitError {}
+
+impl<'r> Responder<'r, 'static> for UpdateHitError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct DeletePackError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for DeletePackError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "401".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for packs.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                A pack with that ID doesn't exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for DeletePackError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Delete pack error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for DeletePackError {}
+
+impl<'r> Responder<'r, 'static> for DeletePackError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct DeleteHitError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for DeleteHitError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "401".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for hits.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                A hit with that ID doesn't exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for DeleteHitError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Delete hit error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for DeleteHitError {}
+
+impl<'r> Responder<'r, 'static> for DeleteHitError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
 #[derive(Serialize, JsonSchema)]
 pub struct GamesResponse {
-    pub games: Vec<Game>,
+    pub games: Vec<GamePayload>,
 }
+
+/// a response containing a message
 
 #[derive(Serialize, Deserialize, JsonSchema, Debug)]
 pub struct MessageResponse {
+    /// either success or error
     pub r#type: String,
+    /// a helpful message
     pub message: String,
 }
 
 #[derive(Serialize, JsonSchema)]
 pub struct UsersResponse {
-    pub users: Vec<User>,
+    pub users: Vec<UserPayload>,
 }
 
 #[derive(Serialize, JsonSchema)]
 pub struct PacksResponse {
-    pub packs: HashMap<&'static str, usize>,
-}
-
-#[derive(Serialize, JsonSchema)]
-pub struct HitsStatusResponse {
-    pub all: usize,
-    pub downloaded: usize,
-    pub finished: bool,
+    pub packs: Vec<PackPayload>,
 }
 
 #[derive(Debug, Serialize, JsonSchema)]
@@ -904,17 +995,6 @@ impl OpenApiResponderInner for ClaimHitError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -924,120 +1004,13 @@ impl OpenApiResponderInner for ClaimHitError {
 
 impl std::fmt::Display for ClaimHitError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Current hit error `{}`", self.message,)
+        write!(formatter, "Claim hit error `{}`", self.message,)
     }
 }
 
 impl std::error::Error for ClaimHitError {}
 
 impl<'r> Responder<'r, 'static> for ClaimHitError {
-    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
-        // Convert object to json
-        let body = serde_json::to_string(&self).unwrap();
-        Response::build()
-            .sized_body(body.len(), std::io::Cursor::new(body))
-            .header(ContentType::JSON)
-            .status(Status::new(self.http_status_code))
-            .ok()
-    }
-}
-
-#[derive(Debug, Serialize, JsonSchema)]
-pub struct ServerBusyError {
-    pub message: String,
-    #[serde(skip)]
-    pub http_status_code: u16,
-}
-
-impl OpenApiResponderInner for ServerBusyError {
-    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
-        let mut responses = Map::new();
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        Ok(Responses {
-            responses,
-            ..Default::default()
-        })
-    }
-}
-
-impl std::fmt::Display for ServerBusyError {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
-    }
-}
-
-impl std::error::Error for ServerBusyError {}
-
-impl<'r> Responder<'r, 'static> for ServerBusyError {
-    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
-        // Convert object to json
-        let body = serde_json::to_string(&self).unwrap();
-        Response::build()
-            .sized_body(body.len(), std::io::Cursor::new(body))
-            .header(ContentType::JSON)
-            .status(Status::new(self.http_status_code))
-            .ok()
-    }
-}
-
-#[derive(Debug, Serialize, JsonSchema)]
-pub struct AuthorizedServerBusyError {
-    pub message: String,
-    #[serde(skip)]
-    pub http_status_code: u16,
-}
-
-impl OpenApiResponderInner for AuthorizedServerBusyError {
-    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
-        let mut responses = Map::new();
-        responses.insert(
-            "401".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
-                The API call requires a valid token, but the token needs to be refreshed by calling the /users/auth endpoint.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
-        Ok(Responses {
-            responses,
-            ..Default::default()
-        })
-    }
-}
-
-impl std::fmt::Display for AuthorizedServerBusyError {
-    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
-    }
-}
-
-impl std::error::Error for AuthorizedServerBusyError {}
-
-impl<'r> Responder<'r, 'static> for AuthorizedServerBusyError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         // Convert object to json
         let body = serde_json::to_string(&self).unwrap();
@@ -1070,12 +1043,49 @@ impl OpenApiResponderInner for GetGameError {
                 ..Default::default()
             }),
         );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for GetGameError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Get game error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for GetGameError {}
+
+impl<'r> Responder<'r, 'static> for GetGameError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct GetHitError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for GetHitError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
         responses.insert(
-            "503".to_string(),
+            "404".to_string(),
             RefOr::Object(OpenApiResponse {
                 description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                A hit with that ID doesn't exist.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -1088,15 +1098,15 @@ impl OpenApiResponderInner for GetGameError {
     }
 }
 
-impl std::fmt::Display for GetGameError {
+impl std::fmt::Display for GetHitError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
+        write!(formatter, "Get hit error `{}`", self.message,)
     }
 }
 
-impl std::error::Error for GetGameError {}
+impl std::error::Error for GetHitError {}
 
-impl<'r> Responder<'r, 'static> for GetGameError {
+impl<'r> Responder<'r, 'static> for GetHitError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         // Convert object to json
         let body = serde_json::to_string(&self).unwrap();
@@ -1129,17 +1139,6 @@ impl OpenApiResponderInner for GetUserError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -1149,7 +1148,7 @@ impl OpenApiResponderInner for GetUserError {
 
 impl std::fmt::Display for GetUserError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
+        write!(formatter, "Get user error `{}`", self.message,)
     }
 }
 
@@ -1188,17 +1187,6 @@ impl OpenApiResponderInner for UserLoginError {
                 ..Default::default()
             }),
         );
-        responses.insert(
-            "503".to_string(),
-            RefOr::Object(OpenApiResponse {
-                description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
-                "
-                .to_string(),
-                ..Default::default()
-            }),
-        );
         Ok(Responses {
             responses,
             ..Default::default()
@@ -1208,7 +1196,7 @@ impl OpenApiResponderInner for UserLoginError {
 
 impl std::fmt::Display for UserLoginError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
+        write!(formatter, "User login error `{}`", self.message,)
     }
 }
 
@@ -1269,12 +1257,60 @@ impl OpenApiResponderInner for RegisterUserError {
                 ..Default::default()
             }),
         );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for RegisterUserError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Register user error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for RegisterUserError {}
+
+impl<'r> Responder<'r, 'static> for RegisterUserError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct CreatePackError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for CreatePackError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
         responses.insert(
-            "503".to_string(),
+            "401".to_string(),
             RefOr::Object(OpenApiResponse {
                 description: "\
-                # [503 Service Unavailable](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/503)\n\
-                The server is currently busy with other tasks.\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for packs.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
+                A pack with that name already exists.\
                 "
                 .to_string(),
                 ..Default::default()
@@ -1287,15 +1323,143 @@ impl OpenApiResponderInner for RegisterUserError {
     }
 }
 
-impl std::fmt::Display for RegisterUserError {
+impl std::fmt::Display for CreatePackError {
     fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(formatter, "Join game error `{}`", self.message,)
+        write!(formatter, "Create pack error `{}`", self.message,)
     }
 }
 
-impl std::error::Error for RegisterUserError {}
+impl std::error::Error for CreatePackError {}
 
-impl<'r> Responder<'r, 'static> for RegisterUserError {
+impl<'r> Responder<'r, 'static> for CreatePackError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct CreateHitError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for CreateHitError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "401".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for hits.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [409 Conflict](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/409)\n\
+                A hit with that YouTube ID already exists.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for CreateHitError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Create hit error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for CreateHitError {}
+
+impl<'r> Responder<'r, 'static> for CreateHitError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Responder)]
+#[response(status = 200, content_type = "application/x-yaml")]
+pub struct Yaml(pub String);
+
+impl OpenApiResponderInner for Yaml {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "200".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "the exported hit database".to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct ExportHitsError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for ExportHitsError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "401".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for hits.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for ExportHitsError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Export hits error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for ExportHitsError {}
+
+impl<'r> Responder<'r, 'static> for ExportHitsError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         // Convert object to json
         let body = serde_json::to_string(&self).unwrap();

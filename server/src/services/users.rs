@@ -1,4 +1,4 @@
-use crate::users::User;
+use hitster_core::User;
 use std::{collections::HashMap, sync::Mutex};
 use time::{Duration, OffsetDateTime};
 use uuid::Uuid;

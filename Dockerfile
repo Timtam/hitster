@@ -2,16 +2,16 @@
 ARG NODE_VERSION=22
 
 # pot provider version
-ARG POT_PROVIDER_VERSION=1.1.0
+ARG POT_PROVIDER_VERSION=1.2.2
 
 # rust version
-ARG RUST_VERSION=1.88.0
+ARG RUST_VERSION=1.90.0
 
 # s6-overlay version
 ARG S6_OVERLAY_VERSION=3.2.1.0
 
 # yt-dlp version
-ARG YT_DLP_BUILD_VERSION=2025.06.30
+ARG YT_DLP_BUILD_VERSION=2025.09.26
 
 FROM node:${NODE_VERSION} AS pot_provider_build_image
 
@@ -21,7 +21,7 @@ ENV POT_PROVIDER_VERSION ${POT_PROVIDER_VERSION}
 
 RUN git clone --single-branch --branch ${POT_PROVIDER_VERSION} https://github.com/Brainicism/bgutil-ytdlp-pot-provider.git /pot-provider && \
     cd /pot-provider/server && \
-    yarn install --frozen-lockfile && \
+    npm install && \
     npx tsc
 
 FROM node:${NODE_VERSION} AS client_build_image
@@ -46,36 +46,50 @@ COPY ./client/ /app/
 
 RUN npm run build
 
-FROM rust:${RUST_VERSION}-slim-bookworm AS server_build_image
+FROM rust:${RUST_VERSION}-slim-trixie AS server_build_image
 
 # create a new empty shell project
 RUN apt-get update && apt-get -y install libssl-dev pkg-config && \
-    USER=root cargo new --bin hitster
+    USER=root mkdir hitster
 
 WORKDIR /hitster
 
+COPY ./Cargo.lock ./Cargo.lock
+COPY ./Cargo.toml ./Cargo.toml
+RUN USER=root cargo new --bin server && \
+    USER=root cargo new --bin cli && \
+    USER=root cargo new --lib core --name hitster_core
+
 # copy over your manifests
-COPY ./server/Cargo.lock ./Cargo.lock
-COPY ./server/Cargo.toml ./Cargo.toml
+COPY ./cli/Cargo.toml ./cli/Cargo.toml
+COPY ./core/Cargo.toml ./core/Cargo.toml
+COPY ./server/Cargo.toml ./server/Cargo.toml
 
 # this build step will cache your dependencies
 RUN cargo build --release --no-default-features --features yt_dl && \
-    rm src/*.rs
+    cargo build --release -p hitster-cli && \
+    rm server/src/*.rs && \
+    rm core/src/*.rs && \
+    rm cli/src/*.rs
 
 # copy your source tree
-COPY ./server/migrations ./migrations
-COPY ./server/src ./src
-COPY ./server/build.rs ./build.rs
-COPY ./server/etc ./etc
+COPY ./.sqlx ./.sqlx
+COPY ./etc ./etc
+COPY ./server/migrations ./server/migrations
+COPY ./server/src ./server/src
+COPY ./core/src ./core/src
+COPY ./cli/src ./cli/src
 
 # build for release
 RUN rm ./target/release/deps/hitster* && \
-    cargo build --release --no-default-features --features yt_dl
+    rm ./target/release/deps/libhitster* && \
+    SQLX_OFFLINE=true cargo build --release --no-default-features --features yt_dl && \
+    cargo build --release -p hitster-cli
 
 # our final bases, platform-dependent
 
 # x64
-FROM debian:bookworm-slim AS build_amd64
+FROM debian:trixie-slim AS build_amd64
 
 ARG S6_OVERLAY_VERSION
 
@@ -83,7 +97,7 @@ ONBUILD ADD https://github.com/yt-dlp/FFmpeg-Builds/releases/download/latest/ffm
 ONBUILD ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz /tmp/s6-overlay.tar.xz
 
 # arm64
-FROM debian:bookworm-slim AS build_arm64
+FROM debian:trixie-slim AS build_arm64
 
 ARG S6_OVERLAY_VERSION
 
@@ -137,8 +151,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 
 ADD --chmod=777 https://github.com/yt-dlp/yt-dlp/releases/download/${YT_DLP_BUILD_VERSION}/yt-dlp /usr/local/bin/yt-dlp
 
-# copy the build artifact from the build stage
-COPY --from=server_build_image /hitster/target/release/hitster-server /hitster/server/hitster
+# copy the build artifacts from the build stage
+COPY --from=server_build_image /hitster/target/release/hitster-server /hitster/server
+COPY --from=server_build_image /hitster/target/release/hitster-cli /hitster/cli
 COPY --from=client_build_image /app/dist /hitster/client
 COPY --from=pot_provider_build_image /pot-provider/server/build /pot-provider/build
 COPY --from=pot_provider_build_image /pot-provider/server/node_modules /pot-provider/node_modules

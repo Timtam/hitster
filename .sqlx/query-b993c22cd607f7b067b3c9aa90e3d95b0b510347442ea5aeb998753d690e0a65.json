@@ -1,0 +1,68 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT\n    id AS \"id: Uuid\",\n    title,\n    artist,\n    yt_id,\n    belongs_to,\n    year AS \"year: u32\",\n    playback_offset AS \"playback_offset: u16\",\n    last_modified AS \"last_modified: OffsetDateTime\",\n    downloaded\nFROM hits WHERE marked_for_deletion = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id: Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "title",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "artist",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "yt_id",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "belongs_to",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "year: u32",
+        "ordinal": 5,
+        "type_info": "Int64"
+      },
+      {
+        "name": "playback_offset: u16",
+        "ordinal": 6,
+        "type_info": "Int64"
+      },
+      {
+        "name": "last_modified: OffsetDateTime",
+        "ordinal": 7,
+        "type_info": "Text"
+      },
+      {
+        "name": "downloaded",
+        "ordinal": 8,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "b993c22cd607f7b067b3c9aa90e3d95b0b510347442ea5aeb998753d690e0a65"
+}

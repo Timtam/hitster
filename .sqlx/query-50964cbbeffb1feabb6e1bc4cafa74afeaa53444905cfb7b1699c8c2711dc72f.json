@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\nDELETE FROM hits_packs\nWHERE hit_id = ? AND pack_id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "50964cbbeffb1feabb6e1bc4cafa74afeaa53444905cfb7b1699c8c2711dc72f"
+}

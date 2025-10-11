@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT * FROM packs WHERE name = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "last_modified",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "custom",
+        "ordinal": 3,
+        "type_info": "Bool"
+      },
+      {
+        "name": "marked_for_deletion",
+        "ordinal": 4,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "3975f2715031b82cdaa5f48be86b269f5a2914227d5023f9445cc4cb328ac0fd"
+}

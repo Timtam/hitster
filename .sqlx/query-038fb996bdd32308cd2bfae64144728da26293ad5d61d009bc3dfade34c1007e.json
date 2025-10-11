@@ -1,0 +1,38 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT\n    id AS \"id: Uuid\",\n    name,\n    last_modified AS \"last_modified: OffsetDateTime\",\n    custom\nFROM packs",
+  "describe": {
+    "columns": [
+      {
+        "name": "id: Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "last_modified: OffsetDateTime",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "custom",
+        "ordinal": 3,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "038fb996bdd32308cd2bfae64144728da26293ad5d61d009bc3dfade34c1007e"
+}
