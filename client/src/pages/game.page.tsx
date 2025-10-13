@@ -5,7 +5,7 @@ import {
     BrowserKeyComboEvent,
     unbindKeyCombo,
 } from "@rwh/keystrokes"
-import structuredClone from "@ungap/structured-clone"
+import deepcopy from "deep-copy"
 import { detect } from "detect-browser"
 import { useCallback, useEffect, useMemo } from "react"
 import Button from "react-bootstrap/Button"
@@ -149,7 +149,7 @@ export default function Game() {
             } else if (ge.state === GameState.Confirming) {
                 EventManager.publish(Events.scored, {
                     winner: ge.last_scored?.id ?? null,
-                    players: structuredClone(ge.players ?? []),
+                    players: deepcopy(ge.players ?? []),
                     game_mode: game.mode,
                 } satisfies ScoredData)
             }
@@ -169,7 +169,7 @@ export default function Game() {
                             ) as number
                         ] = ge.winner
                     EventManager.publish(Events.gameEnded, {
-                        game: structuredClone(g),
+                        game: deepcopy(g),
                         winner: ge.winner ?? null,
                     } satisfies GameEndedData)
                 } else if (ge.state === GameState.Guessing) {
