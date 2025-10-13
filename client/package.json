@@ -25,6 +25,7 @@
         "boolify-string": "^2.0.2",
         "bootstrap": "^5.3.3",
         "classnames": "^2.5.1",
+        "deep-copy": "^1.4.2",
         "detect-browser": "^5.3.0",
         "howler": "^2.2.4",
         "i18next": "^25.2.1",
