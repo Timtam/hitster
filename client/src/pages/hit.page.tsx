@@ -1,6 +1,6 @@
 import { Helmet } from "@dr.pogodin/react-helmet"
-import structuredClone from "@ungap/structured-clone"
 import classNames from "classnames"
+import deepcopy from "deep-copy"
 import natsort from "natsort"
 import { useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
@@ -54,7 +54,7 @@ export default function Hit() {
                 <>
                     <Button
                         onClick={() => {
-                            setEditingHit(structuredClone(hit))
+                            setEditingHit(deepcopy(hit))
                             setYoutubeUrl(
                                 `https://www.youtube.com/watch?v=${hit.yt_id}`,
                             )
