@@ -7,7 +7,6 @@ default-members = ["server"]
 argon2 = { version = "0.5.3", features = ["std"]}
 bitflags = "2.9.1"
 dotenvy = "0.15.7"
-fuse-rust = "0.4.0"
 multi_key_map = "0.3.0"
 natord = "1.0.9"
 serde = { version = "1.0.197", features = ["derive"]}

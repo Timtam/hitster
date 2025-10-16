@@ -1,8 +1,9 @@
 mod hitster_core {
     use bitflags::bitflags;
-    use fuse_rust::{FuseProperty, Fuseable};
+    use deunicode::deunicode;
     use multi_key_map::MultiKeyMap;
     use serde::{Deserialize, Serialize};
+    use simsearch::{SearchOptions, SimSearch};
     use sqlx::{FromRow, Row, sqlite::SqliteRow};
     use std::{
         cmp::PartialEq,
@@ -13,7 +14,14 @@ mod hitster_core {
         path::{Path, PathBuf},
     };
     use time::OffsetDateTime;
+    use unicode_normalization::UnicodeNormalization;
     use uuid::Uuid;
+
+    fn normalize_text(s: &str) -> String {
+        let normalized = s.nfd().collect::<String>();
+        let deunicoded = deunicode(&normalized);
+        deunicoded.to_lowercase()
+    }
 
     #[derive(Clone, Eq, Debug, Serialize, Deserialize)]
     pub struct Hit {
@@ -62,39 +70,6 @@ mod hitster_core {
         }
     }
 
-    impl Fuseable for &Hit {
-        fn properties(&self) -> Vec<FuseProperty> {
-            let mut prop = vec![
-                FuseProperty {
-                    value: String::from("title"),
-                    weight: 0.7,
-                },
-                FuseProperty {
-                    value: String::from("artist"),
-                    weight: 0.5,
-                },
-            ];
-
-            if !self.belongs_to.is_empty() {
-                prop.push(FuseProperty {
-                    value: String::from("belongs_to"),
-                    weight: 0.5,
-                });
-            }
-
-            prop
-        }
-
-        fn lookup(&self, key: &str) -> Option<&str> {
-            match key {
-                "title" => Some(&self.title),
-                "artist" => Some(&self.artist),
-                "belongs_to" => Some(&self.belongs_to),
-                _ => None,
-            }
-        }
-    }
-
     #[derive(Clone, Eq, Debug, Serialize, Deserialize)]
     pub struct Pack {
         pub id: Uuid,
@@ -116,7 +91,7 @@ mod hitster_core {
         }
     }
 
-    #[derive(Clone, Eq, PartialEq, Hash, Debug)]
+    #[derive(Clone, Eq, PartialEq, Hash, Debug, PartialOrd, Ord)]
     pub enum HitId {
         Id(Uuid),
         YtId(String),
@@ -128,6 +103,7 @@ mod hitster_core {
     pub struct HitsterData {
         hits: MultiKeyMap<HitId, Hit>,
         packs: HashMap<Uuid, Pack>,
+        index: SimSearch<HitId>,
     }
 
     impl HitsterData {
@@ -141,6 +117,7 @@ mod hitster_core {
                     .into_iter()
                     .map(|p| (p.id, p))
                     .collect::<HashMap<Uuid, Pack>>(),
+                index: SimSearch::new_with(SearchOptions::new().levenshtein(true)),
             }
         }
 
@@ -153,6 +130,15 @@ mod hitster_core {
         }
 
         pub fn insert_hit(&mut self, hit: Hit) {
+            self.index.insert(
+                HitId::Id(hit.id),
+                &format!(
+                    "{} {} {}",
+                    normalize_text(&hit.title),
+                    normalize_text(&hit.artist),
+                    normalize_text(&hit.belongs_to)
+                ),
+            );
             self.hits
                 .insert_many(vec![HitId::Id(hit.id), HitId::YtId(hit.yt_id.clone())], hit);
         }
@@ -178,6 +164,7 @@ mod hitster_core {
 
         pub fn remove_hit(&mut self, hit: &HitId) -> bool {
             if let Some(hit) = self.hits.get(hit) {
+                self.index.remove(&HitId::Id(hit.id));
                 self.hits
                     .remove_many([&HitId::Id(hit.id), &HitId::YtId(hit.yt_id.clone())]);
                 true
@@ -201,6 +188,14 @@ mod hitster_core {
                 false
             }
         }
+
+        pub fn search_hits(&self, query: &str) -> Vec<&Hit> {
+            self.index
+                .search(&normalize_text(query))
+                .into_iter()
+                .map(|id| self.hits.get(&id).unwrap())
+                .collect::<Vec<_>>()
+        }
     }
 
     #[derive(Serialize, Deserialize)]
@@ -211,7 +206,14 @@ mod hitster_core {
 
     impl From<HitsterData> for HitsterFileFormat {
         fn from(data: HitsterData) -> Self {
-            let mut hits = data.hits.into_values().collect::<Vec<_>>();
+            let mut hits = data
+                .hits
+                .into_values()
+                .map(|mut h| {
+                    h.packs.sort();
+                    h
+                })
+                .collect::<Vec<_>>();
 
             hits.sort_by(|a, b| {
                 natord::compare(
@@ -230,18 +232,7 @@ mod hitster_core {
 
     impl From<HitsterFileFormat> for HitsterData {
         fn from(file: HitsterFileFormat) -> Self {
-            HitsterData {
-                hits: file
-                    .hits
-                    .into_iter()
-                    .map(|h| (vec![HitId::Id(h.id), HitId::YtId(h.yt_id.clone())], h))
-                    .collect::<MultiKeyMap<HitId, Hit>>(),
-                packs: file
-                    .packs
-                    .into_iter()
-                    .map(|p| (p.id, p))
-                    .collect::<HashMap<Uuid, Pack>>(),
-            }
+            HitsterData::new(file.hits, file.packs)
         }
     }
 
