@@ -2,10 +2,9 @@ use crate::{
     hits::{DownloadHitData, HitSearchQuery, SortBy, SortDirection},
     responses::PaginatedResponse,
 };
-use fuse_rust::Fuse;
 use hitster_core::{Hit, HitId, HitsterData, Pack};
 use rocket::tokio::sync::broadcast::Sender;
-use std::cmp::Ordering;
+use std::{cmp::Ordering, collections::HashMap};
 use uuid::Uuid;
 
 pub struct HitService {
@@ -123,26 +122,27 @@ impl HitService {
             sort_by.push(SortBy::Title);
         }
 
-        let mut hits = query
-            .packs
-            .as_ref()
-            .or(def.packs.as_ref())
-            .map(|p| {
-                if p.is_empty() {
-                    self.get_hits()
-                } else {
-                    self.get_hits_for_packs(p)
-                }
-            })
-            .unwrap();
+        let mut hits = if !q.is_empty() {
+            self.hitster_data.search_hits(q)
+        } else {
+            self.get_hits()
+        };
 
-        if !q.is_empty() {
-            let fs = Fuse::default();
-            hits = fs
-                .search_text_in_fuse_list(q, &hits)
-                .into_iter()
-                .filter(|r| r.score <= 0.07)
-                .map(|r| *hits.get(r.index).unwrap())
+        if let Some(packs) = query.packs.as_ref()
+            && !packs.is_empty()
+        {
+            hits = packs
+                .iter()
+                .fold(
+                    hits.into_iter()
+                        .map(|h| (HitId::Id(h.id), h))
+                        .collect::<HashMap<HitId, &Hit>>(),
+                    |mut hits, p| {
+                        hits.retain(|_, hit| hit.packs.contains(p));
+                        hits
+                    },
+                )
+                .into_values()
                 .collect::<Vec<_>>();
         }
 

@@ -15,7 +15,6 @@ argon2 = { workspace = true }
 async-process = "2.4.0"
 dotenvy = { workspace = true }
 filesize = { version = "0.2.0", optional = true }
-fuse-rust = { workspace = true }
 hitster_core = { path = "../core" }
 itertools = "0.14.0"
 multi_key_map = { workspace = true }
