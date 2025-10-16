@@ -211,7 +211,14 @@ mod hitster_core {
 
     impl From<HitsterData> for HitsterFileFormat {
         fn from(data: HitsterData) -> Self {
-            let mut hits = data.hits.into_values().collect::<Vec<_>>();
+            let mut hits = data
+                .hits
+                .into_values()
+                .map(|mut h| {
+                    h.packs.sort();
+                    h
+                })
+                .collect::<Vec<_>>();
 
             hits.sort_by(|a, b| {
                 natord::compare(
