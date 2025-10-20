@@ -190,10 +190,42 @@ mod hitster_core {
         }
 
         pub fn search_hits(&self, query: &str) -> Vec<&Hit> {
+            let query_norm = normalize_text(&query);
+            let query_words: Vec<&str> = query_norm.split_whitespace().collect();
+
+            let tolerance = match query_words.len() {
+                0 | 1 => 0.0,
+                2 => 0.5,
+                3 => 0.66,
+                _ => 0.75,
+            };
+
             self.index
-                .search(&normalize_text(query))
+                .search(&query_norm)
                 .into_iter()
-                .map(|id| self.hits.get(&id).unwrap())
+                .filter_map(|id| {
+                    let hit = self.hits.get(&id).unwrap();
+                    let s = format!(
+                        "{} {} {}",
+                        &normalize_text(&hit.title),
+                        &normalize_text(&hit.artist),
+                        &normalize_text(&hit.belongs_to)
+                    );
+
+                    let mut hits = 0;
+
+                    for word in query_words.iter() {
+                        if s.contains(word) {
+                            hits += 1;
+                        }
+                    }
+
+                    if hits as f32 / query_words.len() as f32 >= tolerance {
+                        Some(hit)
+                    } else {
+                        None
+                    }
+                })
                 .collect::<Vec<_>>()
         }
     }
