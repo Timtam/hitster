@@ -21,6 +21,8 @@ use std::{
     path::{Path, PathBuf},
     sync::{Arc, OnceLock},
 };
+#[cfg(feature = "yt_dl")]
+use time::Duration;
 use time::OffsetDateTime;
 use uuid::Uuid;
 
@@ -358,6 +360,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
             async move {
                 rocket::info!("Starting background download of hits");
                 let mut rx = dl_sender.subscribe();
+                #[cfg(feature = "yt_dl")]
+                let mut yt_dlp_update_time = OffsetDateTime::UNIX_EPOCH;
 
                 loop {
                     let hit = select! {
@@ -442,6 +446,26 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
 
                     #[cfg(feature = "yt_dl")]
                     {
+                        if yt_dlp_update_time + Duration::hours(12) < OffsetDateTime::now_utc() {
+                            let mut command = Command::new("yt-dlp");
+                            command.current_dir(env::current_dir().unwrap()).arg("-U");
+
+                            let output = command.output().await;
+
+                            if let Ok(ref output_res) = output
+                                && !output_res.status.success()
+                            {
+                                rocket::warn!(
+                                    "Error updating yt-dlp. error: {error}",
+                                    error = String::from_utf8_lossy(&output_res.stderr)
+                                );
+                            } else if output.is_err() {
+                                rocket::warn!(
+                                    "error when trying to run yt-dlp. Maybe it isn't installed?"
+                                );
+                            }
+                            yt_dlp_update_time = OffsetDateTime::now_utc();
+                        }
                         let in_file =
                             Path::new(&Hit::download_dir()).join(format!("{}.m4a", hit.yt_id));
 

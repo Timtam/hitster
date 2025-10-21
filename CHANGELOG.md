@@ -17,9 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * [Introduce a permissions system so that certain users can edit and create hits and packs within the client. Permissions can currently be managed via hitster-cli users. (#37)](https://github.com/Timtam/hitster/issues/37)
     * [Added client pages for managing hits in the browser. That includes adding/editing/deleting/browsing hits and packs, as well as exporting existing hits in YAML which allows to be easily imported into the codebase. (#38)](https://github.com/Timtam/hitster/issues/38)
 -   [game settings can now be accessed by all players, although in read-only mode if you are not the creator of the game (#29)](https://github.com/Timtam/issues/29)
--   updated several Rust and JavaScript packages
+-   [update yt-dlp to the latest version every 12 hours (#41)](https://github.com/Timtam/hitster/issues/41)
+-   updated several Rust crates and JavaScript packages
 -   updated to Rust 1.90
--   updated yt-dlp to 2025.09.26 and bgutil-pot-provider to 1.2.2
+-   updated bgutil-pot-provider to 1.2.2
 
 ### Fixed
 

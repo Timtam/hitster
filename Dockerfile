@@ -10,9 +10,6 @@ ARG RUST_VERSION=1.90.0
 # s6-overlay version
 ARG S6_OVERLAY_VERSION=3.2.1.0
 
-# yt-dlp version
-ARG YT_DLP_BUILD_VERSION=2025.10.14
-
 FROM node:${NODE_VERSION} AS pot_provider_build_image
 
 ARG POT_PROVIDER_VERSION
@@ -108,7 +105,6 @@ FROM build_${TARGETARCH}
 
 ARG NODE_VERSION
 ARG S6_OVERLAY_VERSION
-ARG YT_DLP_BUILD_VERSION
 
 WORKDIR /hitster
 
@@ -149,7 +145,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 
 # yt-dlp
 
-ADD --chmod=777 https://github.com/yt-dlp/yt-dlp/releases/download/${YT_DLP_BUILD_VERSION}/yt-dlp /usr/local/bin/yt-dlp
+ADD --chmod=777 https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp /usr/local/bin/yt-dlp
 
 # copy the build artifacts from the build stage
 COPY --from=server_build_image /hitster/target/release/hitster-server /hitster/server
