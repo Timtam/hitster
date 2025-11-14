@@ -1,0 +1,32 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT\n    id AS \"id: Uuid\",\n    name,\n    last_modified AS \"last_modified: OffsetDateTime\"\nFROM packs WHERE marked_for_deletion = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "id: Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "name",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "last_modified: OffsetDateTime",
+        "ordinal": 2,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "5b12d09d8be967af9e3a3a3a44fcd9ff226ee7deef1ae336d87373a77f3f6aa2"
+}

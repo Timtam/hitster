@@ -9,10 +9,12 @@ afterYear: nach {{year}}
 allRightsReserved: Alle Rechte vorbehalten
 and: und
 artist: Interpret
+ascending: Aufsteigend
 automatic: Automatisch
 beforeYear: vor {{year}}
 belongsTo: Zugehörig zu
 betweenYears: von {{year1}} bis {{year2}}
+browseHits: Hits durchsuchen
 cancel: Abbrechen
 cannotClaimHit: Du kannst dir derzeit keinen Hit nehmen
 cannotSkipHit: Du kannst derzeit keinen Hit überspringen
@@ -28,12 +30,32 @@ confirmHeading: >-
 confirmNo: Titel und Interpret des Hits wurde nicht richtig erraten
 confirmText: Hat <0>{{player}}</0> den Titel und Interpreten korrekt erraten?
 confirmYes: Titel und Interpret des Hits wurde richtig erraten
+createHit: Hit erstellen
 createNewGame: Spiel erstellen
+createPack: Pack erstellen
 creator: Ersteller
+current: (aktuell)
 dark: Dunkel
+delete: Löschen
 deleteAccount: Benutzerkonto löschen
+deletePack: Pack löschen
+deletePackQuestion: Möchtest du das Pack wirklich löschen?
+descending: Absteigend
 dontIntercept: Keine Vermutung äußern
+downloadStarted: Download wurde gestartet.
+downloaded_one: "{{hits}} verfügbar"
+downloaded_other: "{{hits}} verfügbar"
+downloading_one: "{{hits}} wird heruntergeladen"
+downloading_other: "{{hits}} werden heruntergeladen"
+dragCanceled: "{{draggable}} Bewegung beendet"
+dragEndNotOverDroppable: "{{draggable}} Bewegung beendet"
+dragEndOverDroppable: "{{draggable}} wurde an die Position von {{droppable}} bewegt"
+dragNotOverDroppable: "{{draggable}} kann hier nicht hinbewegt werden"
+dragOverDroppable: "{{draggable}} über {{droppable}} bewegt"
+dragStart: Bewege {{draggable}}
+edit: Bearbeiten
 error: Fehler
+exportHits: Hits exportieren
 features: Funktionen
 featuresList: >
     <0>keine Registrierung notwendig, einfach ein Spiel erstellen und los
@@ -55,9 +77,12 @@ featuresList: >
 
     <0>entscheide dich für ein helles oder dunkles Farbschema, oder passe dich
     automatisch deinem verwendeten Gerät an</0>
+filtered: Gefiltert
 finalScore: "Hier sind die finalen Ergebnisse:"
+first: Erste
 game: Spiel
 gameActions: "Spielaktionen:"
+gameAlreadyRunning: Das Spiel läuft bereits
 gameEnded: Das Spiel ist vorbei!
 gameId: Spiel ID
 gameLobby: Spielelobby
@@ -65,11 +90,8 @@ gameNotStarted: Das Spiel hat noch nicht begonnen.
 gameSettings: Spieleinstellungen
 gameSettingsHitDuration: Wie viele Sekunden eines Hits werden zu jeder Spielrunde abgespielt?
 gameSettingsHitGoal: Wie viele Hits muss ein Spieler erraten, um das Spiel zu gewinnen?
-gameSettingsNotOpen: Das Spiel muss gestoppt sein, um die Spieleinstellungen zu ändern
+gameSettingsNotCreator: Nur der Ersteller des Spiels kann es bearbeiten
 gameSettingsPacks: "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:"
-gameSettingsRememberHits: >-
-    Sollen Hits zwischen den Spielen gespeichert werden, damit so selten wie
-    möglich doppelte Hits erraten werden müssen?
 gameSettingsShortcut: Alt+Umschalt+E
 gameSettingsStartTokens: Wie viele Chips bekommt jeder Spieler zu Beginn des Spiels?
 game_one: Spiel
@@ -77,18 +99,23 @@ goal: Ziel
 guess: "{{player}} vermutet: {{guess}}"
 guessNothing: "{{player}} behauptet nichts Gegenteiliges"
 guessText: Wo, glaubst du, gehört dieser Hit hin?
+hitCreated: Der Hit wurde erfolgreich erstellt.
 hitDuration: Abspielzeit der Hits
 hitHeading: Was zum Hit?
 hitNoGameRunning: Derzeit läuft kein Spiel, also gibt es auch keinen Hit für dich!
 hitRevealed: >-
     <0>{{player}}</0> hat Recht! Das ist <1>{{title}}</1> von <2>{{artist}}</2>
-    aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem <4>{{pack}}</4> Pack.
-    Du kannst dir den Hit jetzt in voller Länge anhören.
+    aus dem Jahr <3>{{year}}</3>. Du kannst dir den Hit jetzt in voller Länge
+    anhören.
 hitRevealedBelonging: >-
     <0>{{player}}</0> hat Recht! Das ist <1>{{title}}</1> von <2>{{artist}}</2>
-    aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus <4>{{belongs_to}}</4>
-    und stammt aus dem <5>{{pack}}</5> Pack. Du kannst dir den Hit jetzt in
-    voller Länge anhören.
+    aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus <4>{{belongs_to}}</4>.
+    Du kannst dir den Hit jetzt in voller Länge anhören.
+hitStatusFinishedMessage_one: "{{hits}} ist nun verfügbar."
+hitStatusFinishedMessage_other: "{{hits}} sind nun verfügbar."
+hitStatusFinishedTitle: "Hit-Status: abgeschlossen"
+hitStatusProcessingMessage: "{{downloading}}, {{processing}}, {{downloaded}}"
+hitStatusProcessingTitle: "Hit-Status: in Arbeit"
 hitUnknown: Der Hit ist derzeit unbekannt, du musst wohl warten, bis er aufgedeckt wird.
 hit_one: Hit
 hit_other: Hits
@@ -104,6 +131,7 @@ keyboardShortcut_other: Tastenkombinationen
 kick: Kicken
 knownAs: Du bist derzeit bekannt als {{username}}
 language: Sprache
+last: Letzte
 leaveGame: Spiel verlassen
 leaveGameQuestion: Möchtest du das Spiel wirklich verlassen, während es noch läuft?
 leaveGameShortcut: Alt+Umschalt+Q
@@ -154,6 +182,7 @@ mode: Modus
 musicVolume: Musiklautstärke
 name: Name
 navigation: Navigation
+next: Nächste
 "no": Nein
 noHitAvailable: Kein Hit verfügbar
 noShortcut: Alt+Umschalt+N
@@ -163,12 +192,11 @@ notLoggedIn: Nicht angemeldet
 open: geöffnet
 otherClaimedHit: >-
     <0>{{player}}</0> hat sich einen Hit genommen. Das war <1>{{title}}</1> von
-    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem
-    <4>{{pack}}</4> Pack.
+    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>.
 otherClaimedHitBelonging: >-
     <0>{{player}}</0> hat sich einen Hit genommen. Das war <1>{{title}}</1> von
     <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus
-    <4>{{belongs_to}}</4> und stammt aus dem <5>{{pack}}</5> Pack.
+    <4>{{belongs_to}}</4>.
 otherGuessHeading: Du rätst jetzt für <0>{{player}}</0>
 otherInterceptHeading: Du kannst jetzt für <0>{{player}}</0> eine andere Vermutung äußern
 otherJoinedGame: "{{player}} ist dem Spiel beigetreten"
@@ -178,12 +206,11 @@ otherReceivedToken: >-
     genannt wurde
 otherSkippedHit: >-
     <0>{{player}}</0> hat diesen Hit übersprungen. Das war <1>{{title}}</1> von
-    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit stammt aus dem
-    <4>{{pack}}</4> Pack.
+    <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>.
 otherSkippedHitBelonging: >-
     <0>{{player}}</0> hat diesen Hit übersprungen. Das war <1>{{title}}</1> von
     <2>{{artist}}</2> aus dem Jahr <3>{{year}}</3>. Der Hit ist bekannt aus
-    <4>{{belongs_to}}</4> und stammt aus dem <5>{{pack}}</5> Pack.
+    <4>{{belongs_to}}</4>.
 otherWins: "{{player}} hat dieses Spiel gewonnen!"
 ownedBy: >-
     Diese inoffizielle Version basiert auf dem originalen Hitster-Kartenspiel,
@@ -194,20 +221,32 @@ password: Passwort
 playHit: Hit abspielen
 playOrStopHit: Hit abspielen oder stoppen
 playOrStopHitShortcut: Alt+Umschalt+H
+playbackOffset: Abspielbeginn
 playerStatsNotification: "{{player}}: {{hits}} Hits, {{tokens}} Chips"
 player_one: Spieler
 player_other: Spieler
+previous: Vorherige
 privateGame: Privates Spiel
 privateGameShortcut: Alt+Umschalt+R
+processing_one: "{{hits}} wird verarbeitet"
+processing_other: "{{hits}} werden verarbeitet"
 publicGame: Öffentliches Spiel
 publicGameShortcut: Alt+Umschalt+U
 randomPacksLabel: Wähle zufällige Packs aus
 register: Registrieren
 registrationSuccessful: Du wurdest erfolgreich registriert und angemeldet.
 rememberHits: Hits zwischen Spielen speichern?
+reorderHintARIA: Wähle die Einträge im Fokusmodus aus, um sie zu sortieren
+reorderHintVisual: Mit der Maus ziehen zum sortieren
+reorderInstructions: >-
+    Verwende die Leertaste oder Enter um einen Eintrag zu bewegen. Verwende
+    anschließend die Pfeiltaste hoch/runter, um den Eintrag hoch oder runter zu
+    bewegen. Drücke die Leertaste oder Enter, um den Eintrag zu platzieren, oder
+    Escape, um abzubrechen.
 repeatPassword: Passwort wiederholen
 running: läuft
 save: Speichern
+search: Suche
 section: Abschnitt
 select: Auswählen
 selectAll: Alles auswählen
@@ -220,10 +259,14 @@ selectPreviousSlotShortcut: Alt+Umschalt+Pfeil nach oben
 selectSlotFirst: Wähle erst eine Möglichkeit
 settings: Einstellungen
 sfxVolume: Lautstärke der Sound Effekte
+showResults: Zeige Ergebnis {{start}} bis {{end}} von {{total}}
 skipHit: Überspringe diesen Hit, indem du einen Chip bezahlst
 skipHitNoToken: Du musst einen Chip bezahlen können, um einen Hit zu überspringen
 skipHitNotGuessing: Nur der Zugspieler kann einen Hit überspringen
 skipHitShortcut: Alt+Umschalt+I
+sortBy: Sortieren nach
+sortDirection: Sortierreihenfolge
+sortable: Sortierbar
 sourceCodeAvailableAt: Quellcode verfügbar auf <0>GitHub</0>
 speakPlayerInfo: Sprich wichtige Informationen zu Spieler {{player}}
 speakPlayerInfoShortcut: Alt+Umschalt+{{player}}
@@ -262,12 +305,11 @@ year: Jahr
 yesShortcut: Alt+Umschalt+Y
 youClaimedHit: >-
     Du hast dir einen Hit genommen. Das war <0>{{title}}</0> von
-    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit stammt aus dem
-    <3>{{pack}}</3> Pack.
+    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>.
 youClaimedHitBelonging: >-
     Du hast dir einen Hit genommen. Das war <0>{{title}}</0> von
     <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit ist bekannt aus
-    <3>{{belongs_to}}</3> und stammt aus dem <4>{{pack}}</4> Pack.
+    <3>{{belongs_to}}</3>.
 youGuessHeading: Na endlich, jetzt bist du mit Raten dran!
 youInterceptHeading: >-
     Du kannst einschreiten und eine andere Vermutung äußern, denk jedoch daran,
@@ -277,10 +319,11 @@ youLeftGame: Du hast das Spiel verlassen
 youReceivedToken: Du hast einen Token erhalten, da du Künstler und Titel dieses Hits wusstest
 youSkippedHit: >-
     Du hast diesen Hit übersprungen. Das war <0>{{title}}</0> von
-    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit stammt aus dem
-    <3>{{pack}}</3> Pack.
+    <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>.
 youSkippedHitBelonging: >-
     Du hast diesen Hit übersprungen! Das war <0>{{title}}</0> von
     <1>{{artist}}</1> aus dem Jahr <2>{{year}}</2>. Der Hit ist bekannt aus
-    <3>{{belongs_to}}</3> und stammt aus dem <4>{{pack}}</4> Pack.
+    <3>{{belongs_to}}</3>.
 youWin: Gratulation, du hast das Spiel gewonnen!
+youtubeUrl: YouTube URL
+youtubeUrlInvalid: YouTube-URL ungültig

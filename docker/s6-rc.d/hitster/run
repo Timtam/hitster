@@ -1,2 +1,2 @@
 #!/command/with-contenv sh
-/hitster/server/hitster
+/hitster/server

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE hits SET marked_for_deletion = ? WHERE id = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "76e53f630fa7f0aed2ba3537638e4d8d8a61143ddd0d74c81d025171fa4f946a"
+}

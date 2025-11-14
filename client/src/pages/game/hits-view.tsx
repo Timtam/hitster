@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react"
 import Modal from "react-bootstrap/Modal"
 import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
+import { Link } from "react-router"
 import { Player } from "../../entities"
 import { HitPlayer, HitPlayerRef } from "./hit-player"
 
@@ -40,11 +41,6 @@ export default function HitsView({
                             <th>{t("title")}</th>
                             <th>{t("year")}</th>
                             <th>{t("belongsTo")}</th>
-                            <th>
-                                {t("pack", {
-                                    count: 1,
-                                })}
-                            </th>
                             <th>{t("playHit")}</th>
                         </tr>
                     </thead>
@@ -54,10 +50,17 @@ export default function HitsView({
                             .map((h, i) => (
                                 <tr key={`hit-${h.id}`}>
                                     <td>{h.artist}</td>
-                                    <td>{h.title}</td>
+                                    <td>
+                                        <Link
+                                            to={"/hits/" + h.id}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            {h.title}
+                                        </Link>
+                                    </td>
                                     <td>{h.year}</td>
                                     <td>{h.belongs_to}</td>
-                                    <td>{h.pack}</td>
                                     <td>
                                         <HitPlayer
                                             src={`/api/games/${gameId}/hit/${h.id}?key=${Math.random()}`}

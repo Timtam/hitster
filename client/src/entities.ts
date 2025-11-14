@@ -1,10 +1,29 @@
 import { z } from "zod"
 
+function createPaginatedResponseSchema<ItemType extends z.ZodTypeAny>(
+    itemSchema: ItemType,
+) {
+    return z.object({
+        total: z.number(),
+        start: z.number(),
+        end: z.number(),
+        results: z.array(itemSchema),
+    })
+}
+
+export const Permissions = z.object({
+    can_write_hits: z.boolean(),
+    can_write_packs: z.boolean(),
+})
+
+export type Permissions = z.infer<typeof Permissions>
+
 export const User = z.object({
     name: z.string(),
-    id: z.string(),
+    id: z.uuid(),
     virtual: z.boolean(),
     valid_until: z.coerce.date(),
+    permissions: Permissions,
 })
 
 export type User = z.infer<typeof User>
@@ -13,12 +32,25 @@ export const Hit = z.object({
     artist: z.string(),
     title: z.string(),
     year: z.number(),
-    pack: z.string(),
+    packs: z.array(z.string()),
     belongs_to: z.string(),
-    id: z.string(),
+    id: z.uuid(),
 })
 
 export type Hit = z.infer<typeof Hit>
+
+export const FullHit = z.object({
+    artist: z.string(),
+    title: z.string(),
+    year: z.number(),
+    packs: z.array(z.string()),
+    belongs_to: z.string(),
+    id: z.optional(z.uuid()),
+    yt_id: z.string(),
+    playback_offset: z.number(),
+})
+
+export type FullHit = z.infer<typeof FullHit>
 
 export const Slot = z.object({
     from_year: z.number(),
@@ -49,7 +81,7 @@ export enum PlayerState {
 }
 
 export const Player = z.object({
-    id: z.string(),
+    id: z.uuid(),
     name: z.string(),
     state: z.nativeEnum(PlayerState),
     creator: z.boolean(),
@@ -73,7 +105,6 @@ export const Game = z.object({
     hit: z.nullable(Hit),
     packs: z.array(z.string()),
     mode: z.nativeEnum(GameMode),
-    remember_hits: z.boolean(),
     last_scored: z.nullable(Player),
 })
 
@@ -90,7 +121,6 @@ export const GameSettings = z.object({
     hit_duration: z.optional(z.number()),
     goal: z.optional(z.number()),
     packs: z.optional(z.array(z.string())),
-    remember_hits: z.optional(z.boolean()),
 })
 
 export type GameSettings = z.infer<typeof GameSettings>
@@ -106,16 +136,65 @@ export const GameEvent = z.object({
 
 export type GameEvent = z.infer<typeof GameEvent>
 
+export const Pack = z.object({
+    id: z.uuid(),
+    name: z.string(),
+    hits: z.number(),
+})
+
+export type Pack = z.infer<typeof Pack>
+
 export const PacksResponse = z.object({
-    packs: z.record(z.string(), z.number()),
+    packs: z.array(Pack),
 })
 
 export type PacksResponse = z.infer<typeof PacksResponse>
 
-export const HitsStatus = z.object({
-    all: z.number(),
-    downloaded: z.number(),
-    finished: z.boolean(),
+export const CreateGameEvent = z.object({
+    create_game: Game,
 })
 
-export type HitsStatus = z.infer<typeof HitsStatus>
+export type CreateGameEvent = z.infer<typeof CreateGameEvent>
+
+export const RemoveGameEvent = z.object({
+    remove_game: z.string(),
+})
+
+export type RemoveGameEvent = z.infer<typeof RemoveGameEvent>
+
+export const ProcessHitsEvent = z.object({
+    process_hits: z.object({
+        available: z.number(),
+        downloading: z.number(),
+        processing: z.number(),
+    }),
+})
+
+export type ProcessHitsEvent = z.infer<typeof ProcessHitsEvent>
+
+export const PaginatedHitsResponse = createPaginatedResponseSchema(Hit)
+
+export type PaginatedHitsResponse = z.infer<typeof PaginatedHitsResponse>
+
+export enum SortBy {
+    Title = "title",
+    Artist = "artist",
+    BelongsTo = "belongs_to",
+    Year = "year",
+}
+
+export enum SortDirection {
+    Ascending = "ascending",
+    Descending = "descending",
+}
+
+export const HitSearchQuery = z.object({
+    sort_by: z.optional(z.array(z.nativeEnum(SortBy))),
+    sort_direction: z.optional(z.nativeEnum(SortDirection)),
+    query: z.optional(z.string()),
+    packs: z.optional(z.array(z.uuid())),
+    start: z.optional(z.number()),
+    amount: z.optional(z.number()),
+})
+
+export type HitSearchQuery = z.infer<typeof HitSearchQuery>

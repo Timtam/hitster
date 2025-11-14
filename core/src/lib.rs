@@ -1,0 +1,335 @@
+mod hitster_core {
+    use bitflags::bitflags;
+    use deunicode::deunicode;
+    use multi_key_map::MultiKeyMap;
+    use serde::{Deserialize, Serialize};
+    use simsearch::{SearchOptions, SimSearch};
+    use sqlx::{FromRow, Row, sqlite::SqliteRow};
+    use std::{
+        cmp::PartialEq,
+        collections::HashMap,
+        convert::From,
+        env,
+        hash::{Hash, Hasher},
+        path::{Path, PathBuf},
+    };
+    use time::OffsetDateTime;
+    use unicode_normalization::UnicodeNormalization;
+    use uuid::Uuid;
+
+    fn normalize_text(s: &str) -> String {
+        let normalized = s.nfd().collect::<String>();
+        let deunicoded = deunicode(&normalized);
+        deunicoded.to_lowercase()
+    }
+
+    #[derive(Clone, Eq, Debug, Serialize, Deserialize)]
+    pub struct Hit {
+        pub artist: String,
+        pub title: String,
+        pub belongs_to: String,
+        pub year: u32,
+        pub packs: Vec<Uuid>,
+        pub playback_offset: u16,
+        pub id: Uuid,
+        pub yt_id: String,
+        #[serde(with = "time::serde::rfc3339")]
+        #[serde(default = "OffsetDateTime::now_utc")]
+        pub last_modified: OffsetDateTime,
+        #[serde(skip)]
+        pub downloaded: bool,
+    }
+
+    impl Hit {
+        pub fn download_dir() -> String {
+            env::var("DOWNLOAD_DIRECTORY").unwrap_or("./hits".to_string())
+        }
+
+        pub fn file(&self) -> PathBuf {
+            Path::new(&Hit::download_dir()).join(format!(
+                "{}_{}.mp3",
+                self.yt_id.as_str(),
+                self.playback_offset
+            ))
+        }
+
+        pub fn exists(&self) -> bool {
+            self.file().is_file()
+        }
+    }
+
+    impl PartialEq for Hit {
+        fn eq(&self, h: &Self) -> bool {
+            self.yt_id == h.yt_id
+        }
+    }
+
+    impl Hash for Hit {
+        fn hash<H: Hasher>(&self, state: &mut H) {
+            self.yt_id.hash(state);
+        }
+    }
+
+    #[derive(Clone, Eq, Debug, Serialize, Deserialize)]
+    pub struct Pack {
+        pub id: Uuid,
+        pub name: String,
+        #[serde(with = "time::serde::rfc3339")]
+        #[serde(default = "OffsetDateTime::now_utc")]
+        pub last_modified: OffsetDateTime,
+    }
+
+    impl PartialEq for Pack {
+        fn eq(&self, p: &Self) -> bool {
+            self.id == p.id
+        }
+    }
+
+    impl Hash for Pack {
+        fn hash<H: Hasher>(&self, state: &mut H) {
+            self.id.hash(state);
+        }
+    }
+
+    #[derive(Clone, Eq, PartialEq, Hash, Debug, PartialOrd, Ord)]
+    pub enum HitId {
+        Id(Uuid),
+        YtId(String),
+    }
+
+    #[derive(Clone, Debug, Serialize, Deserialize)]
+    #[serde(from = "HitsterFileFormat")]
+    #[serde(into = "HitsterFileFormat")]
+    pub struct HitsterData {
+        hits: MultiKeyMap<HitId, Hit>,
+        packs: HashMap<Uuid, Pack>,
+        index: SimSearch<HitId>,
+    }
+
+    impl HitsterData {
+        pub fn new(hits: Vec<Hit>, packs: Vec<Pack>) -> Self {
+            HitsterData {
+                hits: hits
+                    .into_iter()
+                    .map(|h| (vec![HitId::Id(h.id), HitId::YtId(h.yt_id.clone())], h))
+                    .collect::<MultiKeyMap<HitId, Hit>>(),
+                packs: packs
+                    .into_iter()
+                    .map(|p| (p.id, p))
+                    .collect::<HashMap<Uuid, Pack>>(),
+                index: SimSearch::new_with(SearchOptions::new().levenshtein(true)),
+            }
+        }
+
+        pub fn get_hits(&self) -> Vec<&Hit> {
+            self.hits.values().collect::<Vec<_>>()
+        }
+
+        pub fn insert_pack(&mut self, pack: Pack) {
+            self.packs.insert(pack.id, pack);
+        }
+
+        pub fn insert_hit(&mut self, hit: Hit) {
+            self.index.insert(
+                HitId::Id(hit.id),
+                &format!(
+                    "{} {} {}",
+                    normalize_text(&hit.title),
+                    normalize_text(&hit.artist),
+                    normalize_text(&hit.belongs_to)
+                ),
+            );
+            self.hits
+                .insert_many(vec![HitId::Id(hit.id), HitId::YtId(hit.yt_id.clone())], hit);
+        }
+
+        pub fn get_packs(&self) -> Vec<&Pack> {
+            self.packs.values().collect::<Vec<_>>()
+        }
+
+        pub fn get_hits_for_packs(&self, packs: &[Uuid]) -> Vec<&Hit> {
+            self.hits
+                .values()
+                .filter(|h| packs.iter().any(|p| h.packs.contains(p)))
+                .collect::<Vec<_>>()
+        }
+
+        pub fn get_hit(&self, hit_id: &HitId) -> Option<&Hit> {
+            self.hits.get(hit_id)
+        }
+
+        pub fn get_pack(&self, pack_id: Uuid) -> Option<&Pack> {
+            self.packs.get(&pack_id)
+        }
+
+        pub fn remove_hit(&mut self, hit: &HitId) -> bool {
+            if let Some(hit) = self.hits.get(hit) {
+                self.index.remove(&HitId::Id(hit.id));
+                self.hits
+                    .remove_many([&HitId::Id(hit.id), &HitId::YtId(hit.yt_id.clone())]);
+                true
+            } else {
+                false
+            }
+        }
+
+        pub fn remove_pack(&mut self, pack: Uuid) -> bool {
+            if let Some(pack) = self.packs.get(&pack) {
+                let id = pack.id;
+                self.packs.remove(&id);
+
+                for hit in self.hits.values_mut() {
+                    if let Some(pos) = hit.packs.iter().position(|p| p == &id) {
+                        hit.packs.swap_remove(pos);
+                    }
+                }
+                true
+            } else {
+                false
+            }
+        }
+
+        pub fn search_hits(&self, query: &str) -> Vec<&Hit> {
+            let query_norm = normalize_text(&query);
+            let query_words: Vec<&str> = query_norm.split_whitespace().collect();
+
+            let tolerance = match query_words.len() {
+                0 | 1 => 0.0,
+                2 => 0.5,
+                3 => 0.66,
+                _ => 0.75,
+            };
+
+            self.index
+                .search(&query_norm)
+                .into_iter()
+                .filter_map(|id| {
+                    let hit = self.hits.get(&id).unwrap();
+                    let s = format!(
+                        "{} {} {}",
+                        &normalize_text(&hit.title),
+                        &normalize_text(&hit.artist),
+                        &normalize_text(&hit.belongs_to)
+                    );
+
+                    let mut hits = 0;
+
+                    for word in query_words.iter() {
+                        if s.contains(word) {
+                            hits += 1;
+                        }
+                    }
+
+                    if hits as f32 / query_words.len() as f32 >= tolerance {
+                        Some(hit)
+                    } else {
+                        None
+                    }
+                })
+                .collect::<Vec<_>>()
+        }
+    }
+
+    #[derive(Serialize, Deserialize)]
+    pub struct HitsterFileFormat {
+        hits: Vec<Hit>,
+        packs: Vec<Pack>,
+    }
+
+    impl From<HitsterData> for HitsterFileFormat {
+        fn from(data: HitsterData) -> Self {
+            let mut hits = data
+                .hits
+                .into_values()
+                .map(|mut h| {
+                    h.packs.sort();
+                    h
+                })
+                .collect::<Vec<_>>();
+
+            hits.sort_by(|a, b| {
+                natord::compare(
+                    &format!("{} {} {} {}", &a.artist, &a.title, a.year, &a.belongs_to),
+                    &format!("{} {} {} {}", &b.artist, &b.title, b.year, &b.belongs_to),
+                )
+            });
+
+            let mut packs = data.packs.into_values().collect::<Vec<_>>();
+
+            packs.sort_by(|a, b| natord::compare(&a.name, &b.name));
+
+            HitsterFileFormat { hits, packs }
+        }
+    }
+
+    impl From<HitsterFileFormat> for HitsterData {
+        fn from(file: HitsterFileFormat) -> Self {
+            HitsterData::new(file.hits, file.packs)
+        }
+    }
+
+    bitflags! {
+        #[derive(Clone, Debug, Eq, Hash, PartialEq)]
+        pub struct Permissions: u32 {
+            const CAN_WRITE_HITS = 0b01;
+            const CAN_WRITE_PACKS = 0b10;
+        }
+    }
+
+    impl Default for Permissions {
+        fn default() -> Self {
+            Self::from_bits(0).unwrap()
+        }
+    }
+
+    #[derive(Deserialize, Serialize, Clone, Eq, PartialEq, Debug, Hash)]
+    pub struct Token {
+        pub token: String,
+        #[serde(with = "time::serde::rfc3339")]
+        pub expiration_time: OffsetDateTime,
+        #[serde(with = "time::serde::rfc3339")]
+        pub refresh_time: OffsetDateTime,
+    }
+
+    impl Default for Token {
+        fn default() -> Self {
+            Self {
+                token: "".into(),
+                expiration_time: OffsetDateTime::now_utc(),
+                refresh_time: OffsetDateTime::now_utc(),
+            }
+        }
+    }
+
+    #[derive(Clone, Eq, PartialEq, Debug, Hash)]
+    pub struct User {
+        pub id: Uuid,
+        pub name: String,
+        pub password: String,
+        pub tokens: Vec<Token>,
+        pub r#virtual: bool,
+        pub permissions: Permissions,
+    }
+
+    impl FromRow<'_, SqliteRow> for User {
+        fn from_row(row: &SqliteRow) -> sqlx::Result<Self> {
+            Ok(Self {
+                id: Uuid::parse_str(&row.try_get::<String, &str>("id")?).unwrap(),
+                name: row.try_get("name")?,
+                password: row.try_get("password")?,
+                r#virtual: false,
+                tokens: serde_json::from_str::<Vec<Token>>(
+                    &row.try_get::<String, &str>("tokens")
+                        .unwrap_or(String::from("[]")),
+                )
+                .unwrap(),
+                permissions: Permissions::from_bits(row.try_get::<u32, &str>("permissions")?)
+                    .unwrap(),
+            })
+        }
+    }
+}
+
+pub use hitster_core::{
+    Hit, HitId, HitsterData, HitsterFileFormat, Pack, Permissions, Token, User,
+};

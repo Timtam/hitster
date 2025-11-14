@@ -1,7 +1,7 @@
 import gitVersion from "@corteks/gitversion"
 import ViteYaml from "@modyfi/vite-plugin-yaml"
 import react from "@vitejs/plugin-react-swc"
-import { defineConfig, splitVendorChunkPlugin } from "vite"
+import { defineConfig } from "vite"
 import checker from "vite-plugin-checker"
 import replace from "vite-plugin-filter-replace"
 import viteTsconfigPaths from "vite-tsconfig-paths"
@@ -32,7 +32,6 @@ export default defineConfig(async () => {
             checker({
                 typescript: true,
             }),
-            splitVendorChunkPlugin(),
             replace([
                 {
                     filter: "src/navigation.tsx",

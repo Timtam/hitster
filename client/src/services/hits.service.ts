@@ -1,17 +1,117 @@
-import { HitsStatus, PacksResponse } from "../entities"
+import queryString from "query-string"
+import {
+    FullHit,
+    HitSearchQuery,
+    Pack,
+    PacksResponse,
+    PaginatedHitsResponse,
+} from "../entities"
+import fetchAuth from "../fetch"
 
 export default class HitService {
-    async getAllPacks(): Promise<Record<string, number>> {
+    async getAllPacks(): Promise<Pack[]> {
         const res = await fetch("/api/hits/packs", {
             method: "GET",
         })
         return PacksResponse.parse(await res.json()).packs
     }
 
-    async getStatus(): Promise<HitsStatus> {
-        const res = await fetch("/api/hits/status", {
+    async searchHits(query: HitSearchQuery): Promise<PaginatedHitsResponse> {
+        const res = await fetch(
+            "/api/hits/search?" + queryString.stringify(query),
+            {
+                method: "GET",
+            },
+        )
+        return PaginatedHitsResponse.parse(await res.json())
+    }
+
+    async get(id: string): Promise<FullHit | undefined> {
+        const res = await fetch(`/api/hits/${id}`, {
             method: "GET",
         })
-        return HitsStatus.parse(await res.json())
+
+        if (res.status === 200) return FullHit.parse(await res.json())
+    }
+
+    async updateHit(hit: FullHit) {
+        const res = await fetchAuth(`/api/hits/${hit.id}`, {
+            body: JSON.stringify(hit),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "PATCH",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw { message: (await res.json()).message, status: res.status }
+    }
+
+    async deleteHit(hit_id: string) {
+        const res = await fetchAuth(`/api/hits/${hit_id}`, {
+            method: "DELETE",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw { message: (await res.json()).message, status: res.status }
+    }
+
+    async deletePack(pack_id: string) {
+        const res = await fetchAuth(`/api/hits/packs/${pack_id}`, {
+            method: "DELETE",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return
+        throw { message: (await res.json()).message, status: res.status }
+    }
+
+    async createPack(name: string): Promise<Pack> {
+        const res = await fetchAuth(`/api/hits/packs`, {
+            body: JSON.stringify({
+                name: name,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status === 200) return Pack.parse(await res.json())
+        throw { message: (await res.json()).message, status: res.status }
+    }
+
+    async createHit(hit: FullHit) {
+        const res = await fetchAuth(`/api/hits`, {
+            body: JSON.stringify(hit),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status == 200) return FullHit.parse(await res.json())
+        throw { message: (await res.json()).message, status: res.status }
+    }
+
+    async exportHits(query?: string, packs?: string[]): Promise<string> {
+        const res = await fetchAuth(
+            "/api/hits/export?" +
+                queryString.stringify({
+                    query: query ? query : undefined,
+                    pack: packs,
+                }),
+            {
+                method: "GET",
+                credentials: "include",
+            },
+        )
+
+        if (res.status == 200) return await res.text()
+        throw { message: (await res.json()).message, status: res.status }
     }
 }

@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT custom FROM hits WHERE id = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "custom",
+        "ordinal": 0,
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "dae48ffef8f4a5474844bbbdb38176af42352d4467572ab649d11158f338c0db"
+}

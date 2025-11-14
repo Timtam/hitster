@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\nINSERT INTO hits (\n    id,\n    title,\n    artist,\n    yt_id,\n    year,\n    playback_offset,\n    belongs_to,\n    last_modified,\n    downloaded,\n    custom,\n    marked_for_deletion) VALUES (\n    ?,\n    ?,\n    ?,\n    ?,\n    ?,\n    ?,\n    ?,\n    ?,\n    ?,\n    ?,\n    ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 11
+    },
+    "nullable": []
+  },
+  "hash": "b411442c6dc75d1a3ab4074168716cb29105e9e8518bb3e42414d1b5a840a6c7"
+}

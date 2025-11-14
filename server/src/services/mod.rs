@@ -15,7 +15,7 @@ impl<T> ServiceHandle<T> {
         Self(Arc::new(Mutex::new(t)))
     }
 
-    pub fn lock(&self) -> MappedMutexGuard<T> {
+    pub fn lock(&self) -> MappedMutexGuard<'_, T> {
         MutexGuard::map(self.0.lock(), |s| s)
     }
 }
@@ -43,7 +43,7 @@ impl ServiceStore {
 
         if data.hit_service.is_none() {
             data.hit_service
-                .replace(ServiceHandle::new(HitService::new()));
+                .replace(ServiceHandle::new(HitService::default()));
         }
 
         data.hit_service.as_ref().cloned().unwrap()

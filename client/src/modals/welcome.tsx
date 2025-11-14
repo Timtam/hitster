@@ -5,6 +5,7 @@ import Spinner from "react-bootstrap/Spinner"
 import Tab from "react-bootstrap/Tab"
 import Tabs from "react-bootstrap/Tabs"
 import { Trans, useTranslation } from "react-i18next"
+import { Pack } from "../entities"
 import { Events } from "../events"
 import HitService from "../services/hits.service"
 
@@ -16,7 +17,7 @@ export default function WelcomModale({
     onHide: () => void
 }) {
     const { t } = useTranslation()
-    const [packs, setPacks] = useState<Record<string, number>>({})
+    const [packs, setPacks] = useState<Pack[]>([])
 
     useEffect(() => {
         if (show) {
@@ -51,11 +52,12 @@ export default function WelcomModale({
                                 <Trans
                                     components={[<li />]}
                                     values={{
-                                        hits: Object.values(packs).reduce(
-                                            (acc: number, e: number) => acc + e,
+                                        hits: packs.reduce(
+                                            (acc: number, e: Pack) =>
+                                                acc + e.hits,
                                             0,
                                         ),
-                                        packs: Object.keys(packs).length,
+                                        packs: packs.length,
                                     }}
                                     i18nKey="featuresList"
                                 />
