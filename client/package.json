@@ -52,7 +52,7 @@
     },
     "devDependencies": {
         "@corteks/gitversion": "^0.3.4",
-        "@eslint/compat": "^1.2.4",
+        "@eslint/compat": "^2.0.0",
         "@eslint/eslintrc": "^3.2.0",
         "@eslint/js": "^9.16.0",
         "@modyfi/vite-plugin-yaml": "^1.1.0",
@@ -79,7 +79,7 @@
         "vite-plugin-checker": "^0.11.0",
         "vite-plugin-filter-replace": "^0.1.13",
         "vite-tsconfig-paths": "^5.1.4",
-        "yaml-sort": "^2.1.0"
+        "yaml-sort": "^3.0.0"
     },
     "overrides": {
         "@modyfi/vite-plugin-yaml": {
