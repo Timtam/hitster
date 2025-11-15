@@ -84,6 +84,22 @@ export default class HitService {
         throw { message: (await res.json()).message, status: res.status }
     }
 
+    async updatePack(id: string, name: string) {
+        const res = await fetchAuth(`/api/hits/packs/${id}`, {
+            body: JSON.stringify({
+                name: name,
+            }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "PATCH",
+            credentials: "include",
+        })
+
+        if (res.status != 200)
+            throw { message: (await res.json()).message, status: res.status }
+    }
+
     async createHit(hit: FullHit) {
         const res = await fetchAuth(`/api/hits`, {
             body: JSON.stringify(hit),

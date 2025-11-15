@@ -152,6 +152,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 hits_routes::get_hit,
                 hits_routes::search_hits,
                 hits_routes::update_hit,
+                hits_routes::update_pack,
                 global_routes::events,
             ],
         )
