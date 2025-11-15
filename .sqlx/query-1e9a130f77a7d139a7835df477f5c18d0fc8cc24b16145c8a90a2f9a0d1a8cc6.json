@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "\nUPDATE packs SET\n    name = $1,\n    last_modified = $2\nWHERE id = $3",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 3
+    },
+    "nullable": []
+  },
+  "hash": "1e9a130f77a7d139a7835df477f5c18d0fc8cc24b16145c8a90a2f9a0d1a8cc6"
+}

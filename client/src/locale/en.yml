@@ -54,6 +54,7 @@ dragNotOverDroppable: "{{draggable}} no longer over droppable area"
 dragOverDroppable: "{{draggable}} moved over {{droppable}}"
 dragStart: Started dragging {{draggable}}
 edit: Edit
+editPack: Edit pack
 error: Error
 exportHits: Export hits
 features: Features
