@@ -14,6 +14,7 @@ dotenvy = { workspace = true }
 hitster_core = { path = "../core" }
 regex-lite = "0.1.6"
 serde = { workspace = true }
+serde_json = { workspace = true }
 serde_yml = { workspace = true }
 sqlx = { workspace = true }
 terminal-menu = "3.0.0"
