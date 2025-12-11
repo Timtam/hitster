@@ -185,6 +185,7 @@ services:
     environment:
       - ROCKET_SECRET_KEY=generate_me_a_secret_key
       - ROCKET_ADDRESS=0.0.0.0
+      - ALTCHA_KEY=GENERATE_ME_ANOTHER_SECRET_KEY
     ports:
       - "8000:8000"
 ```
@@ -317,6 +318,7 @@ The following environment variables are available. Required variables are set to
 | variable | required | meaning |
 | -------- | -------- | ------- |
 | DATABASE_URL | yes | location of the database file, must be in the format of sqlite://path_to_file.sqlite, /hitster.sqlite in Docker containers by default |
+| ALTCHA_KEY | no | a random secret key necessary to generate altcha challenges, it isn't required to run the server, but it'll be required if you're planning to allow user registration and other form submissions |
 | CLIENT_DIRECTORY | no | specify the location of the compiled client files, usually not needed in Docker, ./client in local mode |
 | DOWNLOAD_DIRECTORY | no | download location of the songs downloaded by the server, /hits in Docker containers by default, ./hits otherwise |
 
