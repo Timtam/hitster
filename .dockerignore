@@ -1,1 +1,4 @@
 client/node_modules
+server/hits
+server/target
+target

@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form"
 import Modal from "react-bootstrap/Modal"
 import Row from "react-bootstrap/Row"
 import { useTranslation } from "react-i18next"
-import { BsFillTrash3Fill } from "react-icons/bs"
+import { BsFillPencilFill, BsFillTrash3Fill } from "react-icons/bs"
 import { Link } from "react-router"
 import { useImmer } from "use-immer"
 import { useContext } from "../../context"
@@ -103,6 +103,70 @@ function CreatePackModal({
     )
 }
 
+function EditPackModal({
+    pack,
+    show,
+    onHide,
+}: {
+    pack: Pack
+    show: boolean
+    onHide: (pack?: Pack) => void
+}) {
+    const hitService = useMemo(() => new HitService(), [])
+    const { t } = useTranslation()
+    const [name, setName] = useState("")
+    const { showError } = useContext()
+
+    useEffect(() => {
+        setName(pack.name)
+    }, [pack.name])
+
+    return (
+        <Modal show={show} onHide={onHide}>
+            <Modal.Header closeButton closeLabel={t("cancel")}>
+                <Modal.Title>{t("editPack")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <h2 className="h4">{t("editPack")}</h2>
+                <Form>
+                    <Form.Group className="mb-2" controlId="formEditPack">
+                        <Form.Label>{t("pack", { count: 1 })}</Form.Label>
+                        <Form.Control
+                            type="input"
+                            placeholder={t("name")}
+                            value={name}
+                            onChange={(e) => setName(e.currentTarget.value)}
+                        />
+                    </Form.Group>
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={name === ""}
+                        onClick={async (e) => {
+                            e.preventDefault()
+                            try {
+                                await hitService.updatePack(pack.id, name)
+                                onHide(
+                                    Pack.parse({
+                                        name: name,
+                                        id: pack.id,
+                                        hits: pack.hits,
+                                    }),
+                                )
+                                setName("")
+                            } catch (e) {
+                                showError((e as any).message)
+                            }
+                        }}
+                    >
+                        {t("save")}
+                    </Button>
+                </Form>
+            </Modal.Body>
+        </Modal>
+    )
+}
+
 export default function PacksModal({
     packs: initialPacks,
     onHide,
@@ -124,12 +188,14 @@ export default function PacksModal({
     const [showDeletePackModal, setShowDeletePackModal] = useImmer<boolean[]>(
         [],
     )
+    const [showEditPackModal, setShowEditPackModal] = useImmer<boolean[]>([])
 
     useEffect(() => {
         setShowDeletePackModal(
             Array.from({ length: packs.length }, () => false),
         )
-    }, [packs, setShowDeletePackModal])
+        setShowEditPackModal(Array.from({ length: packs.length }, () => false))
+    }, [packs, setShowDeletePackModal, setShowEditPackModal])
 
     useEffect(() => {
         if (selected) setSelectedPacks(selected)
@@ -167,7 +233,11 @@ export default function PacksModal({
                         .toSorted((a, b) => sorter(a.name, b.name))
                         .map((p, i) =>
                             selected ? (
-                                <Form.Group as={Row} className="mb-3">
+                                <Form.Group
+                                    as={Row}
+                                    className="mb-3"
+                                    key={`pack-${p.id}`}
+                                >
                                     <Col sm={10}>
                                         <Form.Check
                                             type="checkbox"
@@ -201,6 +271,22 @@ export default function PacksModal({
                                             <Col sm={2}>
                                                 <Button
                                                     onClick={() =>
+                                                        setShowEditPackModal(
+                                                            (s) => {
+                                                                s[i] = true
+                                                            },
+                                                        )
+                                                    }
+                                                >
+                                                    <BsFillPencilFill
+                                                        title={t("edit")}
+                                                        size="2em"
+                                                    />
+                                                </Button>
+                                            </Col>
+                                            <Col sm={2}>
+                                                <Button
+                                                    onClick={() =>
                                                         setShowDeletePackModal(
                                                             (s) => {
                                                                 s[i] = true
@@ -214,6 +300,27 @@ export default function PacksModal({
                                                     />
                                                 </Button>
                                             </Col>
+                                            <EditPackModal
+                                                pack={p}
+                                                show={showEditPackModal[i]}
+                                                onHide={(pack) => {
+                                                    setShowEditPackModal(
+                                                        (s) => {
+                                                            s[i] = false
+                                                        },
+                                                    )
+                                                    if (pack)
+                                                        setPacks((packs) => {
+                                                            packs[
+                                                                packs.findIndex(
+                                                                    (p) =>
+                                                                        p.id ===
+                                                                        pack.id,
+                                                                )!
+                                                            ] = pack
+                                                        })
+                                                }}
+                                            />
                                             <DeletePackModal
                                                 show={showDeletePackModal[i]}
                                                 onHide={(yes) => {

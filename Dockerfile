@@ -1,11 +1,11 @@
 # node version
-ARG NODE_VERSION=22
+ARG NODE_VERSION=24
 
 # pot provider version
 ARG POT_PROVIDER_VERSION=1.2.2
 
 # rust version
-ARG RUST_VERSION=1.90.0
+ARG RUST_VERSION=1.91.1
 
 # s6-overlay version
 ARG S6_OVERLAY_VERSION=3.2.1.0
