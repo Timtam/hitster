@@ -3,7 +3,9 @@ use crate::{
     responses::{GetUserError, MessageResponse, RegisterUserError, UserLoginError, UsersResponse},
     routes::captcha::verify_captcha,
     services::ServiceStore,
-    users::{UserAuthenticator, UserCookie, UserLoginPayload, UserPayload},
+    users::{
+        UserAuthenticator, UserCookie, UserLoginPayload, UserPayload, UserRegistrationPayload,
+    },
 };
 use argon2::{
     Argon2,
@@ -463,7 +465,7 @@ pub async fn login(
 #[openapi(tag = "Users")]
 #[post("/users/register", format = "json", data = "<credentials>")]
 pub async fn register(
-    mut credentials: Json<UserLoginPayload>,
+    mut credentials: Json<UserRegistrationPayload>,
     mut user: UserAuthenticator,
     mut db: Connection<HitsterConfig>,
     cookies: &CookieJar<'_>,
