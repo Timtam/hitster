@@ -127,7 +127,7 @@ ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLA
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     apt-get install -y curl && \
     curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - && \
-    apt-get -y install --no-install-recommends libssl-dev ca-certificates python3 python3-mutagen python3-pip xz-utils nodejs && \
+    apt-get -y install --no-install-recommends libssl-dev ca-certificates python3 python3-mutagen python3-pip xz-utils && \
     pip3 install --no-cache-dir --break-system-packages ffmpeg-normalize && \
     mkdir /opt/ffmpeg && \
     tar xf /opt/ffmpeg.tar.xz -C /opt/ffmpeg/ --strip-components 1 && \
@@ -141,7 +141,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir /.cache && \
     chmod 777 /.cache && \
-    echo "--ffmpeg-location /opt/ffmpeg/bin/" > /etc/yt-dlp.conf
+    echo "--ffmpeg-location /opt/ffmpeg/bin/ --js-runtimes node" > /etc/yt-dlp.conf
 
 # yt-dlp
 
@@ -154,6 +154,7 @@ COPY --from=client_build_image /app/dist /hitster/client
 COPY --from=pot_provider_build_image /pot-provider/server/build /pot-provider/build
 COPY --from=pot_provider_build_image /pot-provider/server/node_modules /pot-provider/node_modules
 COPY --from=pot_provider_build_image /pot-provider/plugin /etc/yt-dlp/plugins/bgutil-ytdlp-pot-provider
+COPY --from=pot_provider_build_image /usr/local/bin/node /usr/local/bin/node
 
 # setup s6-overlay
 COPY ./docker/s6-rc.d /etc/s6-overlay/s6-rc.d

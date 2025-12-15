@@ -557,6 +557,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                         command
                             .current_dir(env::current_dir().unwrap())
                             .arg(&hit_data.in_file)
+                            .args(["--preset", "streaming-video"])
                             .args(["-ar", "44100"])
                             .args(["-b:a", "128k"])
                             .args(["-c:a", "libmp3lame"])
@@ -564,7 +565,6 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             .args(["--extension", "mp3"])
                             .args(["-o", out_file.to_str().unwrap()])
                             .arg("-sn")
-                            .args(["-t", "-18.0"])
                             .arg("-vn");
 
                         let _ = command
