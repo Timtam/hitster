@@ -11,7 +11,7 @@ yt_dl = []
 default = ["native_dl"]
 
 [dependencies]
-altcha-lib-rs = "0.2.0"
+altcha-lib-rs = { version = "0.2.0", features = ["json"]}
 argon2 = { workspace = true }
 async-process = "2.4.0"
 base64 = "0.22.1"

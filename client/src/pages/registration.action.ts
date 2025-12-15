@@ -10,6 +10,7 @@ const action: ActionFunction = async function ({ request }) {
         body: JSON.stringify({
             username: formData.get("username"),
             password: formData.get("password"),
+            altcha_token: formData.get("altchaToken"),
         }),
     })
 

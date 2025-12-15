@@ -25,6 +25,7 @@ use uuid::Uuid;
 pub struct UserLoginPayload {
     pub username: String,
     pub password: String,
+    pub altcha_token: String,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize, JsonSchema, Hash)]

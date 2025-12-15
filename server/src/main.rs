@@ -119,7 +119,10 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         ))
         .attach(UserCleanupService::default())
         .mount("/", routes![index, files,])
-        .mount("/api/", routes![api_index, captcha_routes::get_altcha_challenge,])
+        .mount(
+            "/api/",
+            routes![api_index, captcha_routes::get_altcha_challenge,],
+        )
         .mount(
             "/api/",
             openapi_get_routes![

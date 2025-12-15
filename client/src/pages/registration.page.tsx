@@ -1,5 +1,5 @@
 import { Helmet } from "@dr.pogodin/react-helmet"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Button from "react-bootstrap/Button"
 import BsForm from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
@@ -17,6 +17,27 @@ export default function Registration() {
     const [password, setPassword] = useState("")
     const [passwordRepetition, setPasswordRepetition] = useState("")
     const { t } = useTranslation()
+    let [altchaVerified, setAltchaVerified] = useState(false)
+
+    useEffect(() => {
+        import("altcha")
+
+        // Listen for Altcha verification
+        const interval = setInterval(() => {
+            const widget = document.querySelector("altcha-widget")
+            if (widget) {
+                widget.addEventListener("statechange", (e) => {
+                    // @ts-expect-error event type not typed
+                    if (e.detail.state === "verified") {
+                        setAltchaVerified(true)
+                    }
+                })
+                clearInterval(interval)
+            }
+        }, 100)
+
+        return () => clearInterval(interval)
+    }, [setAltchaVerified])
 
     return (
         <>
@@ -70,10 +91,16 @@ export default function Registration() {
                                 }
                             />
                         </BsForm.Group>
+                        <altcha-widget
+                            challengeurl="/api/altcha"
+                            name="altchaToken"
+                            auto="onfocus"
+                        />
                         <Button
                             variant="primary"
                             type="submit"
                             disabled={
+                                !altchaVerified ||
                                 username.length === 0 ||
                                 password.length === 0 ||
                                 password !== passwordRepetition

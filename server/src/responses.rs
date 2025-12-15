@@ -1225,6 +1225,17 @@ impl OpenApiResponderInner for RegisterUserError {
     fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
         let mut responses = Map::new();
         responses.insert(
+            "403".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [403 Forbidden](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403)\n\
+                Captcha not solved correctly.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
             "405".to_string(),
             RefOr::Object(OpenApiResponse {
                 description: "\
