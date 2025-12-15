@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   updated API docs to be more precise
 -   updated several Rust crates and JavaScript packages
 -   update Node to 24 (LTS)
--   updated to Rust 1.91.1
+-   updated to Rust 1.92
 -   updated bgutil-pot-provider to 1.2.2
 
 ### Fixed
