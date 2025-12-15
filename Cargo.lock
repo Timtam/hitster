@@ -1736,6 +1736,7 @@ dependencies = [
  "serde_yml",
  "sqlx",
  "time",
+ "timed_set",
  "uuid",
 ]
 
@@ -4559,6 +4560,12 @@ dependencies = [
  "num-conv",
  "time-core",
 ]
+
+[[package]]
+name = "timed_set"
+version = "0.0.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e57db8ee99c8463848cfcfa671c044edc2819c67ce65174fcd91849057964319"
 
 [[package]]
 name = "tinystr"
