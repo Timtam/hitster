@@ -4,7 +4,8 @@ use crate::{
     hits::{CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery},
     responses::{
         CreateHitError, CreatePackError, DeleteHitError, DeletePackError, ExportHitsError,
-        GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError, Yaml,
+        GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError,
+        UpdatePackError, Yaml,
     },
     services::ServiceStore,
     users::UserAuthenticator,
@@ -460,6 +461,62 @@ INSERT INTO packs (
         id: pack.id,
         hits: 0,
     }))
+}
+
+/// # Update a pack
+///
+/// Update a pack. The authenticated user needs to have pack write permissions.
+
+#[openapi(tag = "Hits")]
+#[patch("/hits/packs/<pack_id>", format = "json", data = "<pack>")]
+pub async fn update_pack(
+    pack_id: Uuid,
+    pack: Json<CreatePackPayload>,
+    user: UserAuthenticator,
+    serv: &State<ServiceStore>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<MessageResponse>, UpdatePackError> {
+    if !user.0.permissions.contains(Permissions::CAN_WRITE_PACKS) {
+        return Err(UpdatePackError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    let hs = serv.hit_service();
+
+    if hs.lock().get_pack(pack_id).is_some() {
+        let pack = Pack {
+            name: pack.name.clone(),
+            id: pack_id,
+            last_modified: OffsetDateTime::now_utc(),
+        };
+
+        let _ = sqlx::query!(
+            r#"
+UPDATE packs SET
+    name = $1,
+    last_modified = $2
+WHERE id = $3"#,
+            pack.name,
+            pack.last_modified,
+            pack.id,
+        )
+        .execute(&mut **db)
+        .await;
+
+        hs.lock().insert_pack(pack.clone());
+
+        Ok(Json(MessageResponse {
+            message: "pack updated successfully".into(),
+            r#type: "success".into(),
+        }))
+    } else {
+        Err(UpdatePackError {
+            message: "a pack with that id doesn't exist".into(),
+            http_status_code: 404,
+        })
+    }
 }
 
 /// # Create a new hit

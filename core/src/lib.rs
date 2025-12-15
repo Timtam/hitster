@@ -190,7 +190,7 @@ mod hitster_core {
         }
 
         pub fn search_hits(&self, query: &str) -> Vec<&Hit> {
-            let query_norm = normalize_text(&query);
+            let query_norm = normalize_text(query);
             let query_words: Vec<&str> = query_norm.split_whitespace().collect();
 
             let tolerance = match query_words.len() {

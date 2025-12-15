@@ -54,6 +54,7 @@ dragNotOverDroppable: "{{draggable}} kann hier nicht hinbewegt werden"
 dragOverDroppable: "{{draggable}} über {{droppable}} bewegt"
 dragStart: Bewege {{draggable}}
 edit: Bearbeiten
+editPack: Pack bearbeiten
 error: Fehler
 exportHits: Hits exportieren
 features: Funktionen
