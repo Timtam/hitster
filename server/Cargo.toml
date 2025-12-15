@@ -37,4 +37,5 @@ serde_json = { workspace = true }
 serde_yml = { workspace = true }
 sqlx = { workspace = true }
 time = { workspace = true }
+timed_set = "0.0.4"
 uuid = { workspace = true }
