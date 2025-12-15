@@ -23786,11 +23786,12 @@ hits:
   title: Knightclub
   belongs_to: ''
   year: 2025
-  packs: []
+  packs:
+  - '91bd7215-bc90-49a5-9f5a-a9737851be2d'
   playback_offset: 6
   id: dab9fe1e-32d7-48f9-9931-1e4b66c27bd1
   yt_id: r2SvUKDURGQ
-  last_modified: '2025-12-01T13:34:58.40093468Z'
+  last_modified: '2025-12-15T19:42:20.5679518Z'
 - artist: FiNCH, Scooter
   title: Rave Witchers
   belongs_to: ''
@@ -44759,10 +44760,10 @@ hits:
   year: 1963
   packs:
   - '830dad7c-b334-424a-a59a-9ba55e75aff8'
-  playback_offset: 13
+  playback_offset: 21
   id: '0215988e-0d8c-4560-bcc4-5fd63be6f34d'
-  yt_id: yRzyRlE62Zs
-  last_modified: '2025-11-11T10:58:42.79369392Z'
+  yt_id: Q1h3bArfj3A
+  last_modified: '2025-12-15T19:44:39.02929428Z'
 - artist: Marguerite Viby
   title: Tingelingeling For Mig
   belongs_to: ''
@@ -46330,8 +46331,8 @@ hits:
   - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
   playback_offset: 0
   id: fd0cc23e-1a04-4e2e-a43b-0f203e995166
-  yt_id: te5QzQCLCDw
-  last_modified: '2025-10-20T10:26:06.77051012Z'
+  yt_id: bQ5xOO8shM8
+  last_modified: '2025-12-15T19:41:21.40406736Z'
 - artist: Matthias Raue, Martin Cyrus
   title: Löwenzahn - Titelmelodie
   belongs_to: Löwenzahn
