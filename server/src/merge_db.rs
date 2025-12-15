@@ -398,7 +398,11 @@ INSERT INTO hits_packs (
                 }
             }
             // check for deleted associations
-            for pack in hits_packs.get(&HitId::Id(static_hit.id)).unwrap().iter() {
+            for pack in hits_packs
+                .get(&HitId::Id(static_hit.id))
+                .unwrap_or(&vec![])
+                .iter()
+            {
                 if !pack.custom && !static_hit.packs.contains(&pack.pack_id) {
                     // this association has been removed in the static dataset
                     rocket::info!(
