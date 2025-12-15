@@ -22,10 +22,16 @@ use time::OffsetDateTime;
 use uuid::Uuid;
 
 #[derive(Deserialize, Serialize, JsonSchema)]
-pub struct UserLoginPayload {
+pub struct UserRegistrationPayload {
     pub username: String,
     pub password: String,
     pub altcha_token: String,
+}
+
+#[derive(Deserialize, Serialize, JsonSchema)]
+pub struct UserLoginPayload {
+    pub username: String,
+    pub password: String,
 }
 
 #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize, JsonSchema, Hash)]
