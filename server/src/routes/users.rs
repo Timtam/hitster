@@ -1,6 +1,7 @@
 use crate::{
     HitsterConfig,
     responses::{GetUserError, MessageResponse, RegisterUserError, UserLoginError, UsersResponse},
+    routes::captcha::verify_captcha,
     services::ServiceStore,
     users::{UserAuthenticator, UserCookie, UserLoginPayload, UserPayload},
 };
@@ -468,6 +469,13 @@ pub async fn register(
     cookies: &CookieJar<'_>,
     svc: &State<ServiceStore>,
 ) -> Result<Json<MessageResponse>, RegisterUserError> {
+    if !verify_captcha(&credentials.altcha_token) {
+        return Err(RegisterUserError {
+            message: "altcha solution incorrect".into(),
+            http_status_code: 403,
+        });
+    }
+
     let salt = SaltString::generate(&mut OsRng);
     let argon2 = Argon2::default();
     credentials.password = argon2

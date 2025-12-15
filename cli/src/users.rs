@@ -5,6 +5,7 @@ use argon2::{
 use dialoguer::Password;
 use hitster_core::{Permissions, User};
 use sqlx::sqlite::SqlitePool;
+use time::OffsetDateTime;
 use uuid::Uuid;
 
 pub struct EditArgs {
@@ -50,14 +51,25 @@ pub async fn edit(url: &str, id: &str, args: EditArgs) -> bool {
 
     if let Ok(pool) = SqlitePool::connect(url).await {
         let mut conn = pool.acquire().await.unwrap();
-        if let Some(user) = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
+        if let Some(mut user) = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
             .bind(id)
             .fetch_optional(&mut *conn)
             .await
             .unwrap()
         {
-            let _ = sqlx::query("UPDATE users SET permissions = ? WHERE id = ?")
+            // reset token expiration time so that the client can request a new cookie
+            user.tokens = user
+                .tokens
+                .into_iter()
+                .map(|mut t| {
+                    t.expiration_time = OffsetDateTime::now_utc();
+                    t
+                })
+                .collect::<Vec<_>>();
+
+            let _ = sqlx::query("UPDATE users SET permissions = ?, tokens = ? WHERE id = ?")
                 .bind(permissions.bits())
+                .bind(serde_json::to_string(&user.tokens).unwrap())
                 .bind(id)
                 .execute(&mut *conn)
                 .await;

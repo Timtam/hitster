@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+-   [added an accessible captcha service to prevent spam (#40)](https://github.com/Timtam/hitster/issues/40)
+
 ### Changed
 
 -   Huge efforts have been made to allow hits management while the server is running via a dedicated web interface. This includes the following changes:
@@ -18,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     * [Added client pages for managing hits in the browser. That includes adding/editing/deleting/browsing hits and packs, as well as exporting existing hits in YAML which allows to be easily imported into the codebase. (#38)](https://github.com/Timtam/hitster/issues/38)
 -   [game settings can now be accessed by all players, although in read-only mode if you are not the creator of the game (#29)](https://github.com/Timtam/issues/29)
 -   [update yt-dlp to the latest version every 12 hours (#41)](https://github.com/Timtam/hitster/issues/41)
+-   updated API docs to be more precise
 -   updated several Rust crates and JavaScript packages
 -   update Node to 24 (LTS)
 -   updated to Rust 1.91.1
