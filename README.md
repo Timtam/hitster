@@ -69,10 +69,17 @@
           <li><a href="#prerequisites">Prerequisites</a></li>
           <li><a href="#building">Building</a></li>
         </ul>
-        <li><a href="#attention">ATTENTION</a></li>
+        <li><a href="#creating-the-hitster-database">Creating the Hitster Database</a></li>
+        <li><a href="#creating-an-administrator-account">Creating an Administrator Account</a></li>
+        <ul>
+          <li><a href="#local">Local</a></li>
+          <li><a href="#docker">Docker</a></li>
+        </ul>
+        <li><a href="#yt-dlp">yt-dlp</a></li>
         <li><a href="#environment-variables">Environment Variables</a></li>
       </ul>
     </li>
+    <li><a href="#api">API</a></li>
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
@@ -326,6 +333,20 @@ In addition to those custom environment variables, the server can be further twe
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+<!-- API -->
+## API
+
+The server component of this game comes with a REST API that in turn is used by the client to control all aspects of the game and all that comes with it. We're trying our best to keep the REST API properly documented and strongly motivate you to develop alternative game frontends if you're unhappy with the one provided by us.
+
+Every self-hosted instance launches its own Swagger API documentation under the /swagger-ui route, as well as a Rapidoc API documentation under /rapidoc. Here are the links to the API docs provided by our demo instances:
+
+* [Swagger UI for stable hitster](https://hitster.toni-barth.online/swagger-ui)
+* [Rapidoc for stable hitster](https://hitster.toni-barth.online/rapidoc)
+
+* [Swagger UI for hitster under active development](https://hitster-dev.toni-barth.online/swagger-ui)
+* [Rapidoc for hitster under active development](https://hitster-dev.toni-barth.online/rapidoc)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 <!-- ROADMAP -->
 ## Roadmap

@@ -11811,6 +11811,26 @@ hits:
   id: '7250d3cc-55ff-46a5-8494-61d855f0d4a1'
   yt_id: L1VAv9C6mKQ
   last_modified: '2025-07-24T09:31:10.5125184Z'
+- artist: Cartoons
+  title: Doo Dah
+  belongs_to: ''
+  year: 1998
+  packs:
+  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  playback_offset: 26
+  id: f1e5fd64-d62c-4884-836a-7dd7587d7d21
+  yt_id: XeFGYdvo0C0
+  last_modified: '2025-12-16T09:23:10.74729876Z'
+- artist: Cartoons
+  title: Witch Doctor
+  belongs_to: ''
+  year: 1998
+  packs:
+  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  playback_offset: 31
+  id: '448e9428-abc1-4ee1-bb66-1fe2cb33bfbf'
+  yt_id: UNAr5tzZxdk
+  last_modified: '2025-12-16T09:24:27.1432672Z'
 - artist: Cascada
   title: Because the Night
   belongs_to: ''
@@ -16003,8 +16023,8 @@ hits:
   - '80a4e488-fbd8-4b33-9894-9d2a02a71716'
   playback_offset: 2
   id: e71acb44-e35b-44e4-9cd9-7fa323460eec
-  yt_id: '3GOYaIIeT28'
-  last_modified: '2025-09-03T15:05:38.288788Z'
+  yt_id: NOAKj21ghaU
+  last_modified: '2025-12-16T15:49:33.6092266Z'
 - artist: Dan Bigras
   title: Tue-moi
   belongs_to: ''
@@ -22802,8 +22822,8 @@ hits:
   - '3ca6cc40-4da3-4679-9ba9-5aa4577e21b1'
   playback_offset: 12
   id: b8ccb073-2ddd-452c-9b2e-9e019de1c19d
-  yt_id: CDO3HUMuLec
-  last_modified: '2025-08-02T11:34:04.2630953Z'
+  yt_id: VNDFv-Z1S2U
+  last_modified: '2025-12-16T15:45:50.50565236Z'
 - artist: Eve
   title: Kaikai Kitan
   belongs_to: Jujutsu Kaisen
@@ -29621,6 +29641,16 @@ hits:
   id: ae584575-6895-4de5-af4a-460ad5787436
   yt_id: ekUQpDDBzY4
   last_modified: '2025-07-24T09:31:10.1950098Z'
+- artist: Henrik Müller, Nils Brandt
+  title: Restfeuchte
+  belongs_to: ''
+  year: 2024
+  packs:
+  - '5a074ca6-d370-41bb-8926-893a8fadb9cf'
+  playback_offset: 8
+  id: '4d76aba6-6ab1-4821-95a6-4142f4d2522b'
+  yt_id: M4KgT9vR24g
+  last_modified: '2025-12-16T15:42:51.89522136Z'
 - artist: Henry Mancini
   title: Mystery-Movie-Theme
   belongs_to: Columbo
@@ -51297,8 +51327,8 @@ hits:
   - eac81124-ab2e-4330-b4ac-0ece3f991323
   playback_offset: 15
   id: '7e106448-162c-41c7-9e15-f4ac58994f0a'
-  yt_id: R_4rNKzRXOs
-  last_modified: '2025-08-13T14:56:57.5972511Z'
+  yt_id: '3oUPGbRazaA'
+  last_modified: '2025-12-16T15:52:20.27786432Z'
 - artist: Nico Haak
   title: Schmidtchen Schleicher
   belongs_to: ''
