@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2025.12.16-1] - 2025-12-16
+
 ### Added
 
 -   [added an accessible captcha service to prevent spam (#40)](https://github.com/Timtam/hitster/issues/40)
@@ -14,12 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 -   Huge efforts have been made to allow hits management while the server is running via a dedicated web interface. This includes the following changes:
-    * [Rewriting the hits format within the codebase from csv to yml for better human readibility and storage. A migration tool as available as hitster-cli migrate. (#33)](https://github.com/Timtam/hitster/issues/33)
-    * [The database file now keeps track of all hits known to the server. (#34)](https://github.com/Timtam/hitster/issues/34)
-    * [Automatically merge hits within the server codebase with the hits stored inside the database. (#35)](https://github.com/Timtam/hitster/issues/35)
-    * [Parallelize and speed up hits processing by running multiple threads for downloading and processing hits in parallel. (#36)](https://github.com/Timtam/hitster/issues/36)
-    * [Introduce a permissions system so that certain users can edit and create hits and packs within the client. Permissions can currently be managed via hitster-cli users. (#37)](https://github.com/Timtam/hitster/issues/37)
-    * [Added client pages for managing hits in the browser. That includes adding/editing/deleting/browsing hits and packs, as well as exporting existing hits in YAML which allows to be easily imported into the codebase. (#38)](https://github.com/Timtam/hitster/issues/38)
+    -   [Rewriting the hits format within the codebase from csv to yml for better human readibility and storage. A migration tool as available as hitster-cli migrate. (#33)](https://github.com/Timtam/hitster/issues/33)
+    -   [The database file now keeps track of all hits known to the server. (#34)](https://github.com/Timtam/hitster/issues/34)
+    -   [Automatically merge hits within the server codebase with the hits stored inside the database. (#35)](https://github.com/Timtam/hitster/issues/35)
+    -   [Parallelize and speed up hits processing by running multiple threads for downloading and processing hits in parallel. (#36)](https://github.com/Timtam/hitster/issues/36)
+    -   [Introduce a permissions system so that certain users can edit and create hits and packs within the client. Permissions can currently be managed via hitster-cli users. (#37)](https://github.com/Timtam/hitster/issues/37)
+    -   [Added client pages for managing hits in the browser. That includes adding/editing/deleting/browsing hits and packs, as well as exporting existing hits in YAML which allows to be easily imported into the codebase. (#38)](https://github.com/Timtam/hitster/issues/38)
 -   [game settings can now be accessed by all players, although in read-only mode if you are not the creator of the game (#29)](https://github.com/Timtam/issues/29)
 -   [update yt-dlp to the latest version every 12 hours (#41)](https://github.com/Timtam/hitster/issues/41)
 -   updated API docs to be more precise
@@ -103,7 +105,9 @@ Immediate re-release of 2025.7.23-1 due to a typo in hits.
 -   [Add local player modal no longer requires you to press the "Add" button, you can also just press return within the input box now (#15)](https://github.com/Timtam/hitster/issues/15)
 -   [New versioning (mixture of release date and semver) + changelog #17)](https://github.com/Timtam/hitster/issues/17)
 
-[Unreleased]: https://github.com/Timtam/hitster/compare/2025.7.23-2...HEAD
+[Unreleased]: https://github.com/Timtam/hitster/compare/2025.12.16-1...HEAD
+
+[2025.12.16-1]: https://github.com/Timtam/hitster/compare/2025.7.23-2...2025.12.16-1
 
 [2025.7.23-2]: https://github.com/Timtam/hitster/compare/2025.7.23-1...2025.7.23-2
 
