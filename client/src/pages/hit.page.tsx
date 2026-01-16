@@ -1,20 +1,56 @@
 import { Helmet } from "@dr.pogodin/react-helmet"
+import EventManager from "@lomray/event-manager"
 import classNames from "classnames"
 import deepcopy from "deep-copy"
 import natsort from "natsort"
 import { useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
+import Modal from "react-bootstrap/Modal"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router"
 import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import { FullHit, Pack } from "../entities"
+import { Events } from "../events"
 import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
 import HitService from "../services/hits.service"
 import { RE_YOUTUBE } from "../utils"
+
+function DeleteHitModal({
+    show,
+    onHide,
+}: {
+    show: boolean
+    onHide: (yes: boolean) => void
+}) {
+    const { t } = useTranslation()
+
+    useEffect(() => {
+        if (show) EventManager.publish(Events.popup)
+    }, [show])
+
+    return (
+        <Modal show={show} onHide={() => {}}>
+            <Modal.Header>
+                <Modal.Title>{t("deleteHit")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {show ? (
+                    <>
+                        <h2>{t("deleteHitQuestion")}</h2>
+                        <Button onClick={() => onHide(false)}>{t("no")}</Button>
+                        <Button onClick={() => onHide(true)}>{t("yes")}</Button>
+                    </>
+                ) : (
+                    ""
+                )}
+            </Modal.Body>
+        </Modal>
+    )
+}
 
 export default function Hit() {
     const hitService = useMemo(() => new HitService(), [])
@@ -35,6 +71,7 @@ export default function Hit() {
     } satisfies FullHit)
     const [youtubeUrl, setYoutubeUrl] = useState("")
     const [isUrlValid, setIsUrlValid] = useState(true)
+    const [showDeleteHitModal, setShowDeleteHitModal] = useState(false)
     const reload = useRevalidate()
     const navigate = useNavigate()
 
@@ -63,18 +100,25 @@ export default function Hit() {
                     >
                         {t("edit")}
                     </Button>
-                    <Button
-                        onClick={async () => {
-                            try {
-                                await hitService.deleteHit(hit.id!)
-                                navigate("/hits")
-                            } catch (e) {
-                                showError((e as any).message)
-                            }
-                        }}
-                    >
+                    <Button onClick={() => setShowDeleteHitModal(true)}>
                         {t("delete")}
                     </Button>
+                    <DeleteHitModal
+                        show={showDeleteHitModal}
+                        onHide={(yes) => {
+                            setShowDeleteHitModal(false)
+                            if (yes) {
+                                ;(async () => {
+                                    try {
+                                        await hitService.deleteHit(hit.id!)
+                                        navigate(-1)
+                                    } catch (e) {
+                                        showError((e as any).message)
+                                    }
+                                })()
+                            }
+                        }}
+                    />
                 </>
             ) : editing ? (
                 <Button

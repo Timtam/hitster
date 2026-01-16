@@ -38,6 +38,8 @@ current: (current)
 dark: Dark
 delete: Delete
 deleteAccount: Delete account
+deleteHit: Delete hit
+deleteHitQuestion: Do you really want to delete this hit?
 deletePack: Delete pack
 deletePackQuestion: Do you really want to delete this pack?
 descending: Descending

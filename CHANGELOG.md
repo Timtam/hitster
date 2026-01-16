@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+-   [added confirmation popup when deleting a hit (#45)](https://github.com/Timtam/hitster/issues/45)
+
 ## [2025.12.16-1] - 2025-12-16
 
 ### Added
