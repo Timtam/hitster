@@ -38,6 +38,8 @@ current: (aktuell)
 dark: Dunkel
 delete: Löschen
 deleteAccount: Benutzerkonto löschen
+deleteHit: Hit löschen
+deleteHitQuestion: Möchtest du den Hit wirklich löschen?
 deletePack: Pack löschen
 deletePackQuestion: Möchtest du das Pack wirklich löschen?
 descending: Absteigend
