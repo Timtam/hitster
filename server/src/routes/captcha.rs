@@ -22,13 +22,11 @@ pub fn verify_captcha(payload: &str) -> bool {
                 let hmac = env::var("ALTCHA_KEY").unwrap_or("".to_string());
                 if hmac.is_empty() {
                     false
+                } else if altcha_lib_rs::verify_json_solution(string_payload, &hmac, true).is_ok() {
+                    tokens.write().unwrap().add(payload.to_string());
+                    true
                 } else {
-                    if altcha_lib_rs::verify_json_solution(string_payload, &hmac, true).is_ok() {
-                        tokens.write().unwrap().add(payload.to_string());
-                        true
-                    } else {
-                        false
-                    }
+                    false
                 }
             } else {
                 false

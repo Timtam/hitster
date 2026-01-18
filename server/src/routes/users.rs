@@ -60,6 +60,14 @@ fn generate_virtual_user(svc: &ServiceStore) -> (User, Token) {
     (u, t)
 }
 
+fn newest_valid_token(user: &User) -> Option<Token> {
+    user.tokens
+        .iter()
+        .filter(|t| t.expiration_time > OffsetDateTime::now_utc())
+        .max_by_key(|t| t.expiration_time)
+        .cloned()
+}
+
 fn set_cookies(user: &User, token: &Token, cookies: &CookieJar<'_>) {
     let mut uc = UserCookie::from(user);
 
@@ -105,6 +113,11 @@ async fn handle_existing_token(
             if t.expiration_time < OffsetDateTime::now_utc()
                 && t.refresh_time > OffsetDateTime::now_utc()
             {
+                if let Some(newest) = newest_valid_token(&u) {
+                    set_cookies(&u, &newest, cookies);
+                    return u;
+                }
+
                 // token expired, but can still be refreshed
                 let t = Token {
                     token: generate_token(),
@@ -112,15 +125,12 @@ async fn handle_existing_token(
                     refresh_time: OffsetDateTime::now_utc() + Duration::days(7),
                 };
 
-                let pos = u.tokens.iter().position(|ti| ti.token == token).unwrap();
-
-                let _ = std::mem::replace(&mut u.tokens[pos], t.clone());
-
                 u.tokens = u
                     .tokens
                     .into_iter()
-                    .filter(|t| t.refresh_time >= OffsetDateTime::now_utc())
+                    .filter(|t| t.refresh_time >= OffsetDateTime::now_utc() && t.token == token)
                     .collect::<_>();
+                u.tokens.push(t.clone());
 
                 svc.user_service().lock().add(u.clone());
 
@@ -211,6 +221,11 @@ async fn handle_existing_token(
             if t.expiration_time < OffsetDateTime::now_utc()
                 && t.refresh_time > OffsetDateTime::now_utc()
             {
+                if let Some(newest) = newest_valid_token(&u) {
+                    set_cookies(&u, &newest, cookies);
+                    return u;
+                }
+
                 // token expired, but can still be refreshed
                 let t = Token {
                     token: generate_token(),
@@ -218,15 +233,12 @@ async fn handle_existing_token(
                     refresh_time: OffsetDateTime::now_utc() + Duration::days(7),
                 };
 
-                let pos = u.tokens.iter().position(|ti| ti.token == token).unwrap();
-
-                let _ = std::mem::replace(&mut u.tokens[pos], t.clone());
-
                 u.tokens = u
                     .tokens
                     .into_iter()
-                    .filter(|t| t.refresh_time >= OffsetDateTime::now_utc())
+                    .filter(|t| t.refresh_time >= OffsetDateTime::now_utc() && t.token == token)
                     .collect::<_>();
+                u.tokens.push(t.clone());
 
                 svc.user_service().lock().add(u.clone());
 

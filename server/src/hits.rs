@@ -412,12 +412,12 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                 || !in_file.is_file()
                                 || in_file.size_on_disk().unwrap_or(0) == 0
                             {
-                                if in_dl.is_err() {
+                                if let Err(in_dl) = in_dl {
                                     rocket::warn!(
                                         "Error downloading hit with rusty_ytdl: {artist}: {title}, error: {error}",
                                         artist = hit.artist,
                                         title = hit.title,
-                                        error = in_dl.unwrap_err()
+                                        error = in_dl
                                     );
                                 }
                                 if in_file.is_file() {
