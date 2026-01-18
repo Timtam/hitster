@@ -207,23 +207,48 @@ impl Fairing for UserCleanupService {
     }
 
     async fn on_request(&self, req: &mut Request<'_>, _: &mut Data<'_>) {
-        let svc = req.guard::<&State<ServiceStore>>().await.unwrap();
-        let queue = req.guard::<&State<Sender<GlobalEvent>>>().await.unwrap();
-        let usvc = svc.user_service();
-        let gsvc = svc.game_service();
-        let games = gsvc.lock();
-        let users = usvc.lock();
+        let mut token_updates = Vec::new();
 
-        for user in users.get_all().iter() {
-            if users.cleanup_tokens(user.id) {
-                for game in games.get_all(Some(user)).iter() {
-                    let _ = games.leave(&game.id, user, None);
-                    if games.get(&game.id, Some(user)).is_none() && game.mode == GameMode::Public {
-                        let _ = queue.send(GlobalEvent::RemoveGame(game.id.clone()));
-                    }
+        {
+            let svc = req.guard::<&State<ServiceStore>>().await.unwrap();
+            let queue = req.guard::<&State<Sender<GlobalEvent>>>().await.unwrap();
+            let usvc = svc.user_service();
+            let gsvc = svc.game_service();
+            let games = gsvc.lock();
+            let users = usvc.lock();
+
+            for user in users.get_all().iter() {
+                let before_tokens = user.tokens.clone();
+                let logged_off = users.cleanup_tokens(user.id);
+                if let Some(updated) = users.get_by_id(user.id)
+                    && !updated.r#virtual
+                    && before_tokens != updated.tokens
+                    && let Ok(tokens_json) = serde_json::to_string(&updated.tokens)
+                {
+                    token_updates.push((updated.id.to_string(), tokens_json));
                 }
-                users.remove(user.id);
+                if logged_off {
+                    for game in games.get_all(Some(user)).iter() {
+                        let _ = games.leave(&game.id, user, None);
+                        if games.get(&game.id, Some(user)).is_none()
+                            && game.mode == GameMode::Public
+                        {
+                            let _ = queue.send(GlobalEvent::RemoveGame(game.id.clone()));
+                        }
+                    }
+                    users.remove(user.id);
+                }
             }
+        }
+
+        let mut db = req.guard::<Connection<HitsterConfig>>().await.unwrap();
+
+        for (id, tokens_json) in token_updates {
+            let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
+                .bind(tokens_json)
+                .bind(id)
+                .execute(&mut **db)
+                .await;
         }
     }
 }

@@ -195,12 +195,12 @@ FROM hits_packs"#
         for static_hit in static_hits.get_hits().into_iter() {
             if !hits.contains_key(&HitId::Id(static_hit.id)) {
                 let hit = hits.get(&HitId::YtId(static_hit.yt_id.clone()));
-                if hit.is_some() {
+                if let Some(hit) = hit {
                     // the link is already in use, but not under this id
                     // delete the entry in the db
                     rocket::info!(
                         "Delete accidental duplicate {} (same yt id as {}: {} ({}))",
-                        hit.unwrap().id,
+                        hit.id,
                         static_hit.artist,
                         static_hit.title,
                         static_hit.id
