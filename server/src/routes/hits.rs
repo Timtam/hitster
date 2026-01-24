@@ -130,7 +130,7 @@ pub async fn update_hit(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, UpdateHitError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+    if !user.0.permissions.contains(Permissions::WRITE_HITS) {
         return Err(UpdateHitError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -297,7 +297,7 @@ pub async fn delete_hit(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, DeleteHitError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+    if !user.0.permissions.contains(Permissions::WRITE_HITS) {
         return Err(DeleteHitError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -355,7 +355,7 @@ pub async fn delete_pack(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, DeletePackError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_PACKS) {
+    if !user.0.permissions.contains(Permissions::WRITE_PACKS) {
         return Err(DeletePackError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -413,7 +413,7 @@ pub async fn create_pack(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<PackPayload>, CreatePackError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_PACKS) {
+    if !user.0.permissions.contains(Permissions::WRITE_PACKS) {
         return Err(CreatePackError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -476,7 +476,7 @@ pub async fn update_pack(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, UpdatePackError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_PACKS) {
+    if !user.0.permissions.contains(Permissions::WRITE_PACKS) {
         return Err(UpdatePackError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -532,7 +532,7 @@ pub async fn create_hit(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<FullHitPayload>, CreateHitError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+    if !user.0.permissions.contains(Permissions::WRITE_HITS) {
         return Err(CreateHitError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -643,7 +643,7 @@ pub async fn export_hits(
     user: UserAuthenticator,
     serv: &State<ServiceStore>,
 ) -> Result<Yaml, ExportHitsError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+    if !user.0.permissions.contains(Permissions::WRITE_HITS) {
         return Err(ExportHitsError {
             message: "permission denied".into(),
             http_status_code: 401,

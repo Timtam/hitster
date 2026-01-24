@@ -36,15 +36,21 @@ pub struct UserLoginPayload {
 
 #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize, JsonSchema, Hash)]
 pub struct PermissionsPayload {
-    pub can_write_hits: bool,
-    pub can_write_packs: bool,
+    pub write_hits: bool,
+    pub write_packs: bool,
+    pub read_issues: bool,
+    pub write_issues: bool,
+    pub delete_issues: bool,
 }
 
 impl From<&Permissions> for PermissionsPayload {
     fn from(p: &Permissions) -> Self {
         Self {
-            can_write_hits: p.contains(Permissions::CAN_WRITE_HITS),
-            can_write_packs: p.contains(Permissions::CAN_WRITE_PACKS),
+            write_hits: p.contains(Permissions::WRITE_HITS),
+            write_packs: p.contains(Permissions::WRITE_PACKS),
+            read_issues: p.contains(Permissions::READ_ISSUES),
+            write_issues: p.contains(Permissions::WRITE_ISSUES),
+            delete_issues: p.contains(Permissions::DELETE_ISSUES),
         }
     }
 }

@@ -12,8 +12,11 @@ function createPaginatedResponseSchema<ItemType extends z.ZodTypeAny>(
 }
 
 export const Permissions = z.object({
-    can_write_hits: z.boolean(),
-    can_write_packs: z.boolean(),
+    write_hits: z.boolean(),
+    write_packs: z.boolean(),
+    read_issues: z.boolean(),
+    write_issues: z.boolean(),
+    delete_issues: z.boolean(),
 })
 
 export type Permissions = z.infer<typeof Permissions>

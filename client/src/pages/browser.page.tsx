@@ -580,7 +580,7 @@ export default function Browser() {
                     ) : (
                         ""
                     )}
-                    {user?.permissions.can_write_hits ? (
+                    {user?.permissions.write_hits ? (
                         <>
                             <Link to="/hits/create">{t("createHit")}</Link>
                             <Button

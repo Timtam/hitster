@@ -42,6 +42,13 @@ pub async fn list(url: &str) -> bool {
     }
 }
 
+pub fn list_permissions() {
+    println!("available permissions:");
+    for flag in Permissions::all().iter_names() {
+        println!("\t{}: {}", flag.0.to_lowercase(), flag.1.bits());
+    }
+}
+
 pub async fn edit(url: &str, id: &str, args: EditArgs) -> bool {
     let permissions = if args.admin {
         Permissions::all()
@@ -104,7 +111,7 @@ pub async fn create(url: &str, name: &str, args: EditArgs) -> bool {
     } else if let Some(p) = args.permissions {
         Permissions::from_bits_truncate(p)
     } else {
-        Permissions::from_bits(0).unwrap()
+        Permissions::default()
     };
 
     if let Ok(pool) = SqlitePool::connect(url).await {

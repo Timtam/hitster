@@ -40,6 +40,27 @@ mod hitster_core {
         pub downloaded: bool,
     }
 
+    #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize)]
+    #[serde(rename_all = "snake_case")]
+    pub enum HitIssueType {
+        Auto,
+        Custom,
+    }
+
+    #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize)]
+    pub struct HitIssue {
+        pub id: Uuid,
+        pub hit_id: Uuid,
+        pub r#type: HitIssueType,
+        pub message: String,
+        #[serde(with = "time::serde::rfc3339")]
+        #[serde(default = "OffsetDateTime::now_utc")]
+        pub created_at: OffsetDateTime,
+        #[serde(with = "time::serde::rfc3339")]
+        #[serde(default = "OffsetDateTime::now_utc")]
+        pub last_modified: OffsetDateTime,
+    }
+
     impl Hit {
         pub fn download_dir() -> String {
             env::var("DOWNLOAD_DIRECTORY").unwrap_or("./hits".to_string())
@@ -271,14 +292,17 @@ mod hitster_core {
     bitflags! {
         #[derive(Clone, Debug, Eq, Hash, PartialEq)]
         pub struct Permissions: u32 {
-            const CAN_WRITE_HITS = 0b01;
-            const CAN_WRITE_PACKS = 0b10;
+            const WRITE_HITS = 0b01;
+            const WRITE_PACKS = 0b10;
+            const READ_ISSUES = 0b100;
+            const WRITE_ISSUES = 0b1000;
+            const DELETE_ISSUES = 0b10000;
         }
     }
 
     impl Default for Permissions {
         fn default() -> Self {
-            Self::from_bits(0).unwrap()
+            Permissions::WRITE_ISSUES
         }
     }
 
@@ -328,8 +352,29 @@ mod hitster_core {
             })
         }
     }
+
+    impl FromRow<'_, SqliteRow> for HitIssue {
+        fn from_row(row: &SqliteRow) -> sqlx::Result<Self> {
+            let issue_type = row.try_get::<String, &str>("type")?;
+            let issue_type = match issue_type.as_str() {
+                "auto" => HitIssueType::Auto,
+                "custom" => HitIssueType::Custom,
+                _ => panic!("invalid hit issue type: {issue_type}"),
+            };
+
+            Ok(Self {
+                id: Uuid::parse_str(&row.try_get::<String, &str>("id")?).unwrap(),
+                hit_id: Uuid::parse_str(&row.try_get::<String, &str>("hit_id")?).unwrap(),
+                r#type: issue_type,
+                message: row.try_get("message")?,
+                created_at: row.try_get::<OffsetDateTime, &str>("created_at")?,
+                last_modified: row.try_get::<OffsetDateTime, &str>("last_modified")?,
+            })
+        }
+    }
 }
 
 pub use hitster_core::{
-    Hit, HitId, HitsterData, HitsterFileFormat, Pack, Permissions, Token, User,
+    Hit, HitId, HitIssue, HitIssueType, HitsterData, HitsterFileFormat, Pack, Permissions, Token,
+    User,
 };

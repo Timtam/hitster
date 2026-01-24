@@ -87,7 +87,7 @@ export default function Hit() {
             <FA>
                 <h2>{`${hit.artist}: ${hit.title}`}</h2>
             </FA>
-            {!editing && user?.permissions.can_write_hits ? (
+            {!editing && user?.permissions.write_hits ? (
                 <>
                     <Button
                         onClick={() => {

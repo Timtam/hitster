@@ -522,7 +522,7 @@ pub async fn register(
     .bind(credentials.username.as_str())
     .bind(credentials.password.as_str())
     .bind(serde_json::to_string(&user.0.tokens).unwrap())
-    .bind(0)
+    .bind(Permissions::default().bits())
     .execute(&mut **db)
     .await
     .is_ok()
@@ -530,7 +530,7 @@ pub async fn register(
         user.0.name.clone_from(&credentials.username);
         user.0.password.clone_from(&credentials.password);
         user.0.r#virtual = false;
-        user.0.permissions = Permissions::from_bits(0).unwrap();
+        user.0.permissions = Permissions::default();
 
         let token = cookies
             .get_private("id")
