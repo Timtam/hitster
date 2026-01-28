@@ -1,7 +1,9 @@
 use crate::{
     HitsterConfig,
     games::PackPayload,
-    hits::{CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery},
+    hits::{
+        CreatePackPayload, FullHitPayload, HitPartsQuery, HitPayload, HitQueryPart, HitSearchQuery,
+    },
     responses::{
         CreateHitError, CreatePackError, DeleteHitError, DeletePackError, ExportHitsError,
         GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError,
@@ -10,7 +12,7 @@ use crate::{
     services::ServiceStore,
     users::UserAuthenticator,
 };
-use hitster_core::{Hit, HitId, HitsterData, Pack, Permissions};
+use hitster_core::{Hit, HitId, HitIssue, HitsterData, Pack, Permissions};
 use rocket::{State, serde::json::Json};
 use rocket_db_pools::{
     Connection,
@@ -20,6 +22,10 @@ use rocket_okapi::openapi;
 use std::collections::HashMap;
 use time::OffsetDateTime;
 use uuid::Uuid;
+
+fn includes_part(parts: &Option<Vec<HitQueryPart>>, part: HitQueryPart) -> bool {
+    parts.as_ref().map(|p| p.contains(&part)).unwrap_or(false)
+}
 
 #[derive(FromRow)]
 struct HitRow {
@@ -68,52 +74,129 @@ pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
 ///
 /// Search for hits in the database. The search will be executed using fuzzy search, so approximated results will be returned as well.
 /// The results will be paginated, use the parameters to specify the page size.
+/// Use the optional `parts` parameter to include additional hit data in the response.
+/// Supported values are `issues` and `downloaded`.
+/// Issue data is only returned if the caller has the `READ_ISSUES` permission.
 
 #[openapi(tag = "Hits")]
 #[get("/hits/search?<query..>")]
-pub fn search_hits(
+pub async fn search_hits(
     query: HitSearchQuery,
     svc: &State<ServiceStore>,
+    user: Option<UserAuthenticator>,
+    mut db: Connection<HitsterConfig>,
 ) -> Json<PaginatedResponse<HitPayload>> {
     let hs = svc.hit_service();
+    let res = hs.lock().search_hits(&query);
+    let include_download_status = includes_part(&query.parts, HitQueryPart::Downloaded);
+    let include_issues = includes_part(&query.parts, HitQueryPart::Issues);
+    let can_read_issues = user
+        .as_ref()
+        .map(|u| u.0.permissions.contains(Permissions::READ_ISSUES))
+        .unwrap_or(false);
 
-    Json(
-        Some(hs.lock().search_hits(&query))
-            .map(|res| PaginatedResponse {
-                results: res
-                    .results
-                    .into_iter()
-                    .map(|h| (&h).into())
-                    .collect::<Vec<_>>(),
-                total: res.total,
-                start: res.start,
-                end: res.end,
+    let issues_by_hit = if include_issues && can_read_issues {
+        let hit_ids = res.results.iter().map(|h| h.id).collect::<Vec<_>>();
+        if hit_ids.is_empty() {
+            HashMap::new()
+        } else {
+            let mut qb = sqlx::QueryBuilder::<sqlx::Sqlite>::new(
+                "SELECT id, hit_id, type, message, created_at, last_modified FROM hit_issues WHERE hit_id IN (",
+            );
+            let mut separated = qb.separated(", ");
+            for hit_id in hit_ids.iter() {
+                separated.push_bind(hit_id);
+            }
+            separated.push_unseparated(") ORDER BY created_at ASC");
+
+            qb.build_query_as::<HitIssue>()
+                .fetch_all(&mut **db)
+                .await
+                .unwrap_or_default()
+                .into_iter()
+                .fold(HashMap::<Uuid, Vec<HitIssue>>::new(), |mut map, issue| {
+                    map.entry(issue.hit_id).or_default().push(issue);
+                    map
+                })
+        }
+    } else {
+        HashMap::new()
+    };
+
+    Json(PaginatedResponse {
+        results: res
+            .results
+            .into_iter()
+            .map(|h| {
+                let mut payload: HitPayload = (&h).into();
+                if include_download_status {
+                    payload.downloaded = Some(h.downloaded);
+                }
+                if include_issues && can_read_issues {
+                    payload.issues = Some(issues_by_hit.get(&h.id).cloned().unwrap_or_default());
+                }
+                payload
             })
-            .unwrap(),
-    )
+            .collect::<Vec<_>>(),
+        total: res.total,
+        start: res.start,
+        end: res.end,
+    })
 }
 
 /// # Get detailed hit information
 ///
 /// Retrieve all information about a hit independent from a game.
+/// Use the optional `parts` parameter to include additional hit data in the response.
+/// Supported values are `issues` and `downloaded`.
+/// Issue data is only returned if the caller has the `READ_ISSUES` permission.
 
 #[openapi(tag = "Hits")]
-#[get("/hits/<hit_id>")]
-pub fn get_hit(
+#[get("/hits/<hit_id>?<query..>")]
+pub async fn get_hit(
     hit_id: &str,
+    query: HitPartsQuery,
     svc: &State<ServiceStore>,
+    user: Option<UserAuthenticator>,
+    mut db: Connection<HitsterConfig>,
 ) -> Result<Json<FullHitPayload>, GetHitError> {
     let hs = svc.hit_service();
-    let hsl = hs.lock();
+    let hit = {
+        let hsl = hs.lock();
+        Uuid::parse_str(hit_id)
+            .ok()
+            .and_then(|hit_id| hsl.get_hit(&HitId::Id(hit_id)).cloned())
+    }
+    .ok_or(GetHitError {
+        message: "hit id not found".into(),
+        http_status_code: 404,
+    })?;
 
-    Uuid::parse_str(hit_id)
-        .ok()
-        .and_then(|hit_id| hsl.get_hit(&HitId::Id(hit_id)))
-        .map(|h| Json(h.into()))
-        .ok_or(GetHitError {
-            message: "hit id not found".into(),
-            http_status_code: 404,
-        })
+    let include_download_status = includes_part(&query.parts, HitQueryPart::Downloaded);
+    let include_issues = includes_part(&query.parts, HitQueryPart::Issues);
+    let can_read_issues = user
+        .as_ref()
+        .map(|u| u.0.permissions.contains(Permissions::READ_ISSUES))
+        .unwrap_or(false);
+
+    let mut payload: FullHitPayload = (&hit).into();
+
+    if include_download_status {
+        payload.downloaded = Some(hit.downloaded);
+    }
+
+    if include_issues && can_read_issues {
+        let issues = sqlx::query_as::<sqlx::Sqlite, HitIssue>(
+            "SELECT id, hit_id, type, message, created_at, last_modified FROM hit_issues WHERE hit_id = ? ORDER BY created_at ASC",
+        )
+        .bind(hit.id)
+        .fetch_all(&mut **db)
+        .await
+        .unwrap_or_default();
+        payload.issues = Some(issues);
+    }
+
+    Ok(Json(payload))
 }
 
 /// # Update a hit

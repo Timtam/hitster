@@ -2,6 +2,7 @@ mod hitster_core {
     use bitflags::bitflags;
     use deunicode::deunicode;
     use multi_key_map::MultiKeyMap;
+    use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
     use simsearch::{SearchOptions, SimSearch};
     use sqlx::{FromRow, Row, sqlite::SqliteRow};
@@ -40,24 +41,24 @@ mod hitster_core {
         pub downloaded: bool,
     }
 
-    #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize)]
+    #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize, JsonSchema)]
     #[serde(rename_all = "snake_case")]
     pub enum HitIssueType {
         Auto,
         Custom,
     }
 
-    #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize)]
+    #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize, JsonSchema)]
     pub struct HitIssue {
         pub id: Uuid,
         pub hit_id: Uuid,
         pub r#type: HitIssueType,
         pub message: String,
         #[serde(with = "time::serde::rfc3339")]
-        #[serde(default = "OffsetDateTime::now_utc")]
+        #[schemars(with = "String")]
         pub created_at: OffsetDateTime,
         #[serde(with = "time::serde::rfc3339")]
-        #[serde(default = "OffsetDateTime::now_utc")]
+        #[schemars(with = "String")]
         pub last_modified: OffsetDateTime,
     }
 

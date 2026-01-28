@@ -1,6 +1,7 @@
 import queryString from "query-string"
 import {
     FullHit,
+    HitQueryPart,
     HitSearchQuery,
     Pack,
     PacksResponse,
@@ -26,8 +27,11 @@ export default class HitService {
         return PaginatedHitsResponse.parse(await res.json())
     }
 
-    async get(id: string): Promise<FullHit | undefined> {
-        const res = await fetch(`/api/hits/${id}`, {
+    async get(id: string, parts?: HitQueryPart[]): Promise<FullHit | undefined> {
+        const query = parts?.length
+            ? "?" + queryString.stringify({ parts })
+            : ""
+        const res = await fetch(`/api/hits/${id}${query}`, {
             method: "GET",
         })
 

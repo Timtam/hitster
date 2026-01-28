@@ -1748,6 +1748,7 @@ dependencies = [
  "deunicode",
  "multi_key_map",
  "natord",
+ "schemars",
  "serde",
  "serde_json",
  "simsearch",

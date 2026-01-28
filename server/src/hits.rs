@@ -1,6 +1,6 @@
 use crate::{GlobalEvent, HitsterConfig, services::ServiceStore};
 use async_process::Command;
-use hitster_core::{Hit, HitId, HitsterData, Pack};
+use hitster_core::{Hit, HitId, HitIssue, HitsterData, Pack};
 use rocket::{
     Orbit, Rocket,
     fairing::{Fairing, Info, Kind},
@@ -68,6 +68,12 @@ pub struct HitPayload {
     pub packs: Vec<Uuid>,
     /// the unique hit id
     pub id: Uuid,
+    /// whether the hit has been downloaded
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub downloaded: Option<bool>,
+    /// any issues reported for the hit
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub issues: Option<Vec<HitIssue>>,
 }
 
 impl From<&Hit> for HitPayload {
@@ -79,6 +85,8 @@ impl From<&Hit> for HitPayload {
             year: hit.year,
             packs: hit.packs.clone(),
             id: hit.id,
+            downloaded: None,
+            issues: None,
         }
     }
 }
@@ -104,6 +112,12 @@ pub struct FullHitPayload {
     pub id: Option<Uuid>,
     /// the YouTube video ID
     pub yt_id: String,
+    /// whether the hit has been downloaded
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub downloaded: Option<bool>,
+    /// any issues reported for the hit
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub issues: Option<Vec<HitIssue>>,
 }
 
 impl From<&Hit> for FullHitPayload {
@@ -117,8 +131,19 @@ impl From<&Hit> for FullHitPayload {
             id: Some(hit.id),
             yt_id: hit.yt_id.clone(),
             playback_offset: hit.playback_offset,
+            downloaded: None,
+            issues: None,
         }
     }
+}
+
+#[derive(Copy, Clone, Deserialize, Eq, JsonSchema, PartialEq, FromFormField, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum HitQueryPart {
+    #[field(value = "issues")]
+    Issues,
+    #[field(value = "downloaded")]
+    Downloaded,
 }
 
 pub fn get_hitster_data() -> &'static HitsterData {
@@ -168,6 +193,8 @@ pub struct HitSearchQuery {
     pub start: Option<usize>,
     /// amount of search results you want to get
     pub amount: Option<usize>,
+    /// optional parts to include in the response
+    pub parts: Option<Vec<HitQueryPart>>,
 }
 
 impl Default for HitSearchQuery {
@@ -179,8 +206,15 @@ impl Default for HitSearchQuery {
             packs: Some(vec![]),
             start: Some(1),
             amount: Some(50),
+            parts: None,
         }
     }
+}
+
+#[derive(Deserialize, JsonSchema, FromForm)]
+pub struct HitPartsQuery {
+    /// optional parts to include in the response
+    pub parts: Option<Vec<HitQueryPart>>,
 }
 
 #[derive(Clone, Debug)]
