@@ -13,6 +13,7 @@ pub struct HitService {
     processing: bool,
     dl_sender: Option<Sender<Hit>>,
     process_sender: Option<Sender<DownloadHitData>>,
+    availability_sender: Option<Sender<Hit>>,
 }
 
 impl HitService {
@@ -23,6 +24,7 @@ impl HitService {
             processing: false,
             dl_sender: None,
             process_sender: None,
+            availability_sender: None,
         }
     }
 
@@ -96,6 +98,10 @@ impl HitService {
     ) {
         self.dl_sender = Some(dl_sender);
         self.process_sender = Some(process_sender);
+    }
+
+    pub fn set_availability_sender(&mut self, availability_sender: Sender<Hit>) {
+        self.availability_sender = Some(availability_sender);
     }
 
     pub fn get_hit(&self, hit_id: &HitId) -> Option<&Hit> {
@@ -188,6 +194,12 @@ impl HitService {
 
     pub fn download_hit(&self, hit: Hit) {
         let _ = self.dl_sender.as_ref().unwrap().send(hit);
+    }
+
+    pub fn queue_availability_check(&self, hit: Hit) {
+        if let Some(sender) = &self.availability_sender {
+            let _ = sender.send(hit);
+        }
     }
 }
 

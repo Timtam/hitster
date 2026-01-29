@@ -6,7 +6,10 @@ use rocket::{
     fairing::{Fairing, Info, Kind},
     tokio::{
         select,
-        sync::broadcast::{Sender, channel, error::RecvError},
+        sync::{
+            Mutex, Semaphore,
+            broadcast::{Sender, channel, error::RecvError},
+        },
     },
 };
 use rocket_db_pools::Database;
@@ -223,8 +226,135 @@ pub struct DownloadHitData {
     hit: Hit,
 }
 
+const UNAVAILABLE_ISSUE_MESSAGE: &str = "youtube video is unavailable";
+
 #[derive(Default)]
 pub struct HitDownloadService {}
+
+#[cfg(feature = "yt_dl")]
+async fn check_hit_availability(hit: &Hit) -> Result<bool, String> {
+    let mut command = Command::new("yt-dlp");
+    command
+        .current_dir(env::current_dir().unwrap())
+        .args(["--skip-download", "--no-warnings", "--no-progress"])
+        .args(["--extractor-args", "youtube:player-client=default,mweb"])
+        .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
+
+    match command.output().await {
+        Ok(output) => {
+            if output.status.success() {
+                Ok(true)
+            } else {
+                let stderr = String::from_utf8_lossy(&output.stderr);
+                let stdout = String::from_utf8_lossy(&output.stdout);
+                let combined = format!("{stderr}\n{stdout}");
+                let unavailable_markers = [
+                    "Video unavailable",
+                    "This video is unavailable",
+                    "Private video",
+                    "This video is private",
+                ];
+                if unavailable_markers.iter().any(|m| combined.contains(m)) {
+                    Ok(false)
+                } else {
+                    Err(combined)
+                }
+            }
+        }
+        Err(err) => Err(err.to_string()),
+    }
+}
+
+#[cfg(all(not(feature = "yt_dl"), feature = "native_dl"))]
+async fn check_hit_availability(hit: &Hit) -> Result<bool, String> {
+    use rusty_ytdl::{Video, VideoError};
+
+    let video = Video::new(hit.yt_id.as_str()).map_err(|e| e.to_string())?;
+
+    match video.get_basic_info().await {
+        Ok(_) => Ok(true),
+        Err(VideoError::VideoNotFound)
+        | Err(VideoError::VideoSourceNotFound)
+        | Err(VideoError::VideoIsPrivate) => Ok(false),
+        Err(err) => Err(err.to_string()),
+    }
+}
+
+#[cfg(all(not(feature = "yt_dl"), not(feature = "native_dl")))]
+async fn check_hit_availability(_hit: &Hit) -> Result<bool, String> {
+    Err("no youtube availability checker configured".to_string())
+}
+
+async fn upsert_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
+    let now = OffsetDateTime::now_utc();
+    let existing = sqlx::query_scalar::<_, String>(
+        "SELECT id FROM hit_issues WHERE hit_id = ? AND type = 'auto' AND message = ?",
+    )
+    .bind(hit_id)
+    .bind(UNAVAILABLE_ISSUE_MESSAGE)
+    .fetch_optional(db)
+    .await;
+
+    match existing {
+        Ok(Some(issue_id)) => {
+            if let Err(err) = sqlx::query("UPDATE hit_issues SET last_modified = ? WHERE id = ?")
+                .bind(now)
+                .bind(issue_id)
+                .execute(db)
+                .await
+            {
+                rocket::warn!(
+                    "Failed to update auto hit issue for {hit_id}: {err}",
+                    hit_id = hit_id,
+                    err = err
+                );
+            }
+        }
+        Ok(None) => {
+            if let Err(err) = sqlx::query(
+                "INSERT INTO hit_issues (id, hit_id, type, message, created_at, last_modified) VALUES (?, ?, ?, ?, ?, ?)",
+            )
+            .bind(Uuid::new_v4())
+            .bind(hit_id)
+            .bind("auto")
+            .bind(UNAVAILABLE_ISSUE_MESSAGE)
+            .bind(now)
+            .bind(now)
+            .execute(db)
+            .await
+            {
+                rocket::warn!(
+                    "Failed to insert auto hit issue for {hit_id}: {err}",
+                    hit_id = hit_id,
+                    err = err
+                );
+            }
+        }
+        Err(err) => {
+            rocket::warn!(
+                "Failed to query hit issues for {hit_id}: {err}",
+                hit_id = hit_id,
+                err = err
+            );
+        }
+    }
+}
+
+async fn clear_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
+    if let Err(err) =
+        sqlx::query("DELETE FROM hit_issues WHERE hit_id = ? AND type = 'auto' AND message = ?")
+            .bind(hit_id)
+            .bind(UNAVAILABLE_ISSUE_MESSAGE)
+            .execute(db)
+            .await
+    {
+        rocket::warn!(
+            "Failed to clear auto hit issue for {hit_id}: {err}",
+            hit_id = hit_id,
+            err = err
+        );
+    }
+}
 
 #[rocket::async_trait]
 impl Fairing for HitDownloadService {
@@ -240,12 +370,16 @@ impl Fairing for HitDownloadService {
         let hit_service = Arc::new(rocket.state::<ServiceStore>().unwrap().hit_service());
         let dl_sender = channel::<Hit>(100000).0;
         let process_sender = channel::<DownloadHitData>(100000).0;
+        let availability_sender = channel::<Hit>(100000).0;
         let event_sender = Arc::new(rocket.state::<Sender<GlobalEvent>>().unwrap().clone());
         let _ = create_dir_all(Hit::download_dir().as_str());
 
         hit_service
             .lock()
             .set_download_info(dl_sender.clone(), process_sender.clone());
+        hit_service
+            .lock()
+            .set_availability_sender(availability_sender.clone());
 
         rocket::tokio::spawn({
             let db = db.clone();
@@ -382,6 +516,64 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                         Hit::download_dir().as_str(),
                         file.as_str()
                     ));
+                }
+            }
+        });
+
+        rocket::tokio::spawn({
+            let db = db.clone();
+            let mut rx = availability_sender.subscribe();
+            let in_flight: Arc<Mutex<HashSet<Uuid>>> = Arc::new(Mutex::new(HashSet::new()));
+            let max_checks = std::thread::available_parallelism()
+                .map(|n| n.get())
+                .unwrap_or(4);
+            let semaphore = Arc::new(Semaphore::new(max_checks));
+
+            async move {
+                loop {
+                    let hit = select! {
+                        hit = rx.recv() => match hit {
+                            Ok(hit) => hit,
+                            Err(RecvError::Closed) => break,
+                            Err(RecvError::Lagged(_)) => continue,
+                        },
+                    };
+
+                    {
+                        let mut guard = in_flight.lock().await;
+                        if !guard.insert(hit.id) {
+                            continue;
+                        }
+                    }
+
+                    let db = db.clone();
+                    let in_flight = Arc::clone(&in_flight);
+                    let permit = semaphore.clone().acquire_owned().await.unwrap();
+
+                    rocket::tokio::spawn(async move {
+                        let _permit = permit;
+                        let hit_id = hit.id;
+                        let result = check_hit_availability(&hit).await;
+
+                        match result {
+                            Ok(true) => {
+                                clear_unavailable_issue(&db, hit_id).await;
+                            }
+                            Ok(false) => {
+                                upsert_unavailable_issue(&db, hit_id).await;
+                            }
+                            Err(err) => {
+                                rocket::warn!(
+                                    "Availability check failed for {hit_id}: {err}",
+                                    hit_id = hit_id,
+                                    err = err
+                                );
+                            }
+                        }
+
+                        let mut guard = in_flight.lock().await;
+                        guard.remove(&hit_id);
+                    });
                 }
             }
         });
