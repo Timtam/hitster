@@ -7,12 +7,13 @@ import { useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import Modal from "react-bootstrap/Modal"
+import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router"
 import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
-import { FullHit, Pack } from "../entities"
+import { FullHit, HitIssueType, Pack } from "../entities"
 import { Events } from "../events"
 import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
@@ -352,6 +353,51 @@ export default function Hit() {
                     ""
                 )}
             </Form>
+            {user?.permissions.read_issues ? (
+                <>
+                    <h3>
+                        {t("issuesHeading", {
+                            count: hit.issues ? hit.issues.length : 0,
+                        })}
+                    </h3>
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>{t("type")}</th>
+                                <th>{t("message")}</th>
+                                <th>{t("createdAt")}</th>
+                                <th>{t("lastModified")}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {hit.issues && hit.issues.length > 0 ? (
+                                hit.issues.map((issue) => (
+                                    <tr key={issue.id}>
+                                        <td>
+                                            {issue.type === HitIssueType.Auto
+                                                ? t("automatic")
+                                                : t("custom")}
+                                        </td>
+                                        <td>{issue.message}</td>
+                                        <td>
+                                            {issue.created_at.toLocaleString()}
+                                        </td>
+                                        <td>
+                                            {issue.last_modified.toLocaleString()}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={4}>{t("noIssues")}</td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
+                </>
+            ) : (
+                ""
+            )}
         </>
     )
 }

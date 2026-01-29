@@ -27,7 +27,10 @@ export default class HitService {
         return PaginatedHitsResponse.parse(await res.json())
     }
 
-    async get(id: string, parts?: HitQueryPart[]): Promise<FullHit | undefined> {
+    async get(
+        id: string,
+        parts?: HitQueryPart[],
+    ): Promise<FullHit | undefined> {
         const query = parts?.length
             ? "?" + queryString.stringify({ parts })
             : ""

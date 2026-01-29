@@ -33,8 +33,10 @@ confirmYes: Titel und Interpret des Hits wurde richtig erraten
 createHit: Hit erstellen
 createNewGame: Spiel erstellen
 createPack: Pack erstellen
+createdAt: Erstellt
 creator: Ersteller
 current: (aktuell)
+custom: Benutzerdefiniert
 dark: Dunkel
 delete: Löschen
 deleteAccount: Benutzerkonto löschen
@@ -127,6 +129,7 @@ howToPlay: Wie wird gespielt?
 issue: >-
     Für Lob, Kritik oder Fehlermeldungen, eröffne bitte ein <0>Issue auf
     GitHub</0>.
+issuesHeading: Fehler ({{count}})
 joinGame: Spiel beitreten
 joinGameShortcut: Alt+Umschalt+J
 keyboardShortcut_one: Tastenkombination
@@ -135,6 +138,7 @@ kick: Kicken
 knownAs: Du bist derzeit bekannt als {{username}}
 language: Sprache
 last: Letzte
+lastModified: Zuletzt geändert
 leaveGame: Spiel verlassen
 leaveGameQuestion: Möchtest du das Spiel wirklich verlassen, während es noch läuft?
 leaveGameShortcut: Alt+Umschalt+Q
@@ -181,6 +185,7 @@ manualBasic: >
     schau dir doch einfach die erweiterten Funktionen an, indem du die
     Registerkarten wechselst.
 manualBasicTitle: Einfach
+message: Nachricht
 mode: Modus
 musicVolume: Musiklautstärke
 name: Name
@@ -188,6 +193,7 @@ navigation: Navigation
 next: Nächste
 "no": Nein
 noHitAvailable: Kein Hit verfügbar
+noIssues: Keine Fehler gemeldet.
 noShortcut: Alt+Umschalt+N
 noone: niemand
 nooneWins: Niemand hat dieses Spiel gewonnen.
@@ -292,6 +298,7 @@ submitGuessShortcut: Alt+Umschalt+Enter
 title: Titel
 token_one: Chip
 token_other: Chips
+type: Typ
 username: Benutzername
 version: "Version: {{version}}"
 volume: Lautstärke
