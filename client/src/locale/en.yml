@@ -126,6 +126,8 @@ hit_other: Hits
 hitsForPlayer: Hits for {{player}}
 howToPlay: How to play the game
 issue: For bug reports and general feedback please open a <0>GitHub issue</0>.
+issueMessageLabel: Issue message
+issueMessagePlaceholder: Describe the problem with this hit.
 issuesHeading: Issues ({{count}})
 joinGame: Join game
 joinGameShortcut: Alt+Shift+J
@@ -249,6 +251,7 @@ reorderInstructions: >-
     space or enter again to drop the item in its new position, or press escape
     to cancel.
 repeatPassword: Repeat password
+reportIssue: Report issue
 running: Running
 save: Save
 search: Search
@@ -291,6 +294,8 @@ stopGameShortcut: Alt+Shift+S
 stopHit: Stop hit
 submitGuess: Submit guess
 submitGuessShortcut: Alt+Shift+Return
+submitIssue: Submit issue
+submitting: Submitting...
 title: Title
 token_one: Token
 token_other: Tokens

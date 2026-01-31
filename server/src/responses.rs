@@ -1472,6 +1472,98 @@ impl<'r> Responder<'r, 'static> for CreateHitError {
     }
 }
 
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct CreateHitIssueError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for CreateHitIssueError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "400".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [400 Bad Request](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/400)\n\
+                The issue message is empty or invalid.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "401".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [401 Unauthorized](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/401)\n\
+                This endpoint is only usable by an authenticated user who has write permissions for issues.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "403".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [403 Forbidden](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/403)\n\
+                Captcha not solved correctly.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                A hit with that ID doesn't exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        responses.insert(
+            "500".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [500 Internal Server Error](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/500)\n\
+                The issue could not be created.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for CreateHitIssueError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Create hit issue error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for CreateHitIssueError {}
+
+impl<'r> Responder<'r, 'static> for CreateHitIssueError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
+        // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
 #[derive(Responder)]
 #[response(status = 200, content_type = "application/x-yaml")]
 pub struct Yaml(pub String);

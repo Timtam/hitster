@@ -17,6 +17,7 @@ import { FullHit, HitIssueType, Pack } from "../entities"
 import { Events } from "../events"
 import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
+import ReportHitIssueModal from "../modals/report-hit-issue"
 import HitService from "../services/hits.service"
 import { RE_YOUTUBE } from "../utils"
 
@@ -73,6 +74,7 @@ export default function Hit() {
     const [youtubeUrl, setYoutubeUrl] = useState("")
     const [isUrlValid, setIsUrlValid] = useState(true)
     const [showDeleteHitModal, setShowDeleteHitModal] = useState(false)
+    const [showReportIssueModal, setShowReportIssueModal] = useState(false)
     const reload = useRevalidate()
     const navigate = useNavigate()
 
@@ -140,6 +142,24 @@ export default function Hit() {
                 >
                     {t("cancel")}
                 </Button>
+            ) : (
+                ""
+            )}
+            {user?.permissions.write_issues ? (
+                <>
+                    <Button
+                        className={user?.permissions.write_hits ? "ms-2" : ""}
+                        onClick={() => setShowReportIssueModal(true)}
+                    >
+                        {t("reportIssue")}
+                    </Button>
+                    <ReportHitIssueModal
+                        show={showReportIssueModal}
+                        hitId={hit.id ?? ""}
+                        onHide={() => setShowReportIssueModal(false)}
+                        onSubmitted={reload}
+                    />
+                </>
             ) : (
                 ""
             )}

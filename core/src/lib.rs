@@ -48,6 +48,16 @@ mod hitster_core {
         Custom,
     }
 
+    impl From<String> for HitIssueType {
+        fn from(value: String) -> Self {
+            match value.as_str() {
+                "auto" => HitIssueType::Auto,
+                "custom" => HitIssueType::Custom,
+                _ => panic!("invalid hit issue type: {value}"),
+            }
+        }
+    }
+
     #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize, JsonSchema)]
     pub struct HitIssue {
         pub id: Uuid,
@@ -356,16 +366,11 @@ mod hitster_core {
 
     impl FromRow<'_, SqliteRow> for HitIssue {
         fn from_row(row: &SqliteRow) -> sqlx::Result<Self> {
-            let issue_type = row.try_get::<String, &str>("type")?;
-            let issue_type = match issue_type.as_str() {
-                "auto" => HitIssueType::Auto,
-                "custom" => HitIssueType::Custom,
-                _ => panic!("invalid hit issue type: {issue_type}"),
-            };
+            let issue_type = HitIssueType::from(row.try_get::<String, &str>("type")?);
 
             Ok(Self {
-                id: Uuid::parse_str(&row.try_get::<String, &str>("id")?).unwrap(),
-                hit_id: Uuid::parse_str(&row.try_get::<String, &str>("hit_id")?).unwrap(),
+                id: row.try_get::<Uuid, &str>("id")?,
+                hit_id: row.try_get::<Uuid, &str>("hit_id")?,
                 r#type: issue_type,
                 message: row.try_get("message")?,
                 created_at: row.try_get::<OffsetDateTime, &str>("created_at")?,

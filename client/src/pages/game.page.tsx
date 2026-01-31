@@ -42,6 +42,7 @@ import {
 } from "../events"
 import FA from "../focus-anchor"
 import { useModalShown } from "../hooks"
+import ReportHitIssueModal from "../modals/report-hit-issue"
 import GameService from "../services/games.service"
 import AddLocalPlayerScreen from "./game/add-local-player"
 import GameEndScreen from "./game/end-screen"
@@ -62,6 +63,7 @@ export default function Game() {
     )
     const [showSettings, setShowSettings] = useImmer<boolean>(false)
     const [showAddPlayer, setShowAddPlayer] = useImmer(false)
+    const [showReportIssueModal, setShowReportIssueModal] = useImmer(false)
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [winner, setWinner] = useImmer<Player | null>(null)
@@ -631,6 +633,25 @@ export default function Game() {
                     />
                 )}
             </p>
+            {user?.permissions.write_issues &&
+            game.state !== GameState.Open &&
+            game.hit !== null ? (
+                <>
+                    <Button
+                        className="me-2"
+                        onClick={() => setShowReportIssueModal(true)}
+                    >
+                        {t("reportIssue")}
+                    </Button>
+                    <ReportHitIssueModal
+                        show={showReportIssueModal}
+                        hitId={game.hit.id}
+                        onHide={() => setShowReportIssueModal(false)}
+                    />
+                </>
+            ) : (
+                ""
+            )}
             <HitPlayer
                 src={hitSrc}
                 duration={

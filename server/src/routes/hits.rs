@@ -5,20 +5,23 @@ use crate::{
         CreatePackPayload, FullHitPayload, HitPartsQuery, HitPayload, HitQueryPart, HitSearchQuery,
     },
     responses::{
-        CreateHitError, CreatePackError, DeleteHitError, DeletePackError, ExportHitsError,
-        GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError,
-        UpdatePackError, Yaml,
+        CreateHitError, CreateHitIssueError, CreatePackError, DeleteHitError, DeletePackError,
+        ExportHitsError, GetHitError, MessageResponse, PacksResponse, PaginatedResponse,
+        UpdateHitError, UpdatePackError, Yaml,
     },
+    routes::captcha::verify_captcha,
     services::ServiceStore,
     users::UserAuthenticator,
 };
-use hitster_core::{Hit, HitId, HitIssue, HitsterData, Pack, Permissions};
+use hitster_core::{Hit, HitId, HitIssue, HitIssueType, HitsterData, Pack, Permissions};
 use rocket::{State, serde::json::Json};
 use rocket_db_pools::{
     Connection,
     sqlx::{self, FromRow},
 };
+use rocket_okapi::okapi::schemars::JsonSchema;
 use rocket_okapi::openapi;
+use serde::Deserialize;
 use std::collections::HashMap;
 use time::OffsetDateTime;
 use uuid::Uuid;
@@ -43,6 +46,12 @@ struct HitPackRow {
     pack_id: Uuid,
     custom: bool,
     marked_for_deletion: bool,
+}
+
+#[derive(Deserialize, JsonSchema)]
+pub struct CreateHitIssuePayload {
+    pub message: String,
+    pub altcha_token: String,
 }
 
 /// # Get all packs
@@ -96,29 +105,24 @@ pub async fn search_hits(
         .unwrap_or(false);
 
     let issues_by_hit = if include_issues && can_read_issues {
-        let hit_ids = res.results.iter().map(|h| h.id).collect::<Vec<_>>();
-        if hit_ids.is_empty() {
-            HashMap::new()
-        } else {
-            let mut qb = sqlx::QueryBuilder::<sqlx::Sqlite>::new(
-                "SELECT id, hit_id, type, message, created_at, last_modified FROM hit_issues WHERE hit_id IN (",
-            );
-            let mut separated = qb.separated(", ");
-            for hit_id in hit_ids.iter() {
-                separated.push_bind(hit_id);
-            }
-            separated.push_unseparated(") ORDER BY created_at ASC");
+        let mut qb = sqlx::QueryBuilder::<sqlx::Sqlite>::new(
+            "SELECT id, hit_id, type, message, created_at, last_modified FROM hit_issues WHERE hit_id IN (",
+        );
+        let mut separated = qb.separated(", ");
+        res.results.iter().for_each(|hit| {
+            separated.push_bind(hit.id);
+        });
+        separated.push_unseparated(") ORDER BY created_at ASC");
 
-            qb.build_query_as::<HitIssue>()
-                .fetch_all(&mut **db)
-                .await
-                .unwrap_or_default()
-                .into_iter()
-                .fold(HashMap::<Uuid, Vec<HitIssue>>::new(), |mut map, issue| {
-                    map.entry(issue.hit_id).or_default().push(issue);
-                    map
-                })
-        }
+        qb.build_query_as::<HitIssue>()
+            .fetch_all(&mut **db)
+            .await
+            .unwrap_or_default()
+            .into_iter()
+            .fold(HashMap::<Uuid, Vec<HitIssue>>::new(), |mut map, issue| {
+                map.entry(issue.hit_id).or_default().push(issue);
+                map
+            })
     } else {
         HashMap::new()
     };
@@ -186,10 +190,19 @@ pub async fn get_hit(
     }
 
     if include_issues && can_read_issues {
-        let issues = sqlx::query_as::<sqlx::Sqlite, HitIssue>(
-            "SELECT id, hit_id, type, message, created_at, last_modified FROM hit_issues WHERE hit_id = ? ORDER BY created_at ASC",
+        let issues = sqlx::query_as!(
+            HitIssue,
+            r#"
+SELECT 
+    id AS "id: Uuid", 
+    hit_id AS "hit_id: Uuid", 
+    type, 
+    message, 
+    created_at AS "created_at: OffsetDateTime", 
+    last_modified AS "last_modified: OffsetDateTime" 
+FROM hit_issues WHERE hit_id = ? ORDER BY created_at ASC"#,
+            hit.id
         )
-        .bind(hit.id)
         .fetch_all(&mut **db)
         .await
         .unwrap_or_default();
@@ -197,6 +210,82 @@ pub async fn get_hit(
     }
 
     Ok(Json(payload))
+}
+
+/// # Create a new hit issue
+///
+/// Report an issue for a hit. The authenticated user needs to have issue write permissions.
+
+#[openapi(tag = "Hits")]
+#[post("/hits/<hit_id>/issues", format = "json", data = "<issue>")]
+pub async fn create_hit_issue(
+    hit_id: Uuid,
+    issue: Json<CreateHitIssuePayload>,
+    user: UserAuthenticator,
+    serv: &State<ServiceStore>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<HitIssue>, CreateHitIssueError> {
+    if !user.0.permissions.contains(Permissions::WRITE_ISSUES) {
+        return Err(CreateHitIssueError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    if !verify_captcha(&issue.altcha_token) {
+        return Err(CreateHitIssueError {
+            message: "altcha solution incorrect".into(),
+            http_status_code: 403,
+        });
+    }
+
+    let message = issue.message.trim();
+    if message.is_empty() {
+        return Err(CreateHitIssueError {
+            message: "issue message is required".into(),
+            http_status_code: 400,
+        });
+    }
+
+    let hs = serv.hit_service();
+
+    if hs.lock().get_hit(&HitId::Id(hit_id)).is_none() {
+        return Err(CreateHitIssueError {
+            message: "hit not found".into(),
+            http_status_code: 404,
+        });
+    }
+
+    let now = OffsetDateTime::now_utc();
+    let new_issue = HitIssue {
+        id: Uuid::new_v4(),
+        hit_id,
+        r#type: HitIssueType::Custom,
+        message: message.to_string(),
+        created_at: now,
+        last_modified: now,
+    };
+
+    if sqlx::query(
+        "INSERT INTO hit_issues (id, hit_id, type, message, created_at, last_modified) VALUES (?, ?, ?, ?, ?, ?)",
+    )
+    .bind(new_issue.id)
+    .bind(new_issue.hit_id)
+    .bind("custom")
+    .bind(&new_issue.message)
+    .bind(new_issue.created_at)
+    .bind(new_issue.last_modified)
+    .execute(&mut **db)
+    .await
+    .is_err()
+    {
+        return Err(CreateHitIssueError {
+            message: "failed to create issue".into(),
+            http_status_code: 500,
+        });
+    }
+
+    Ok(Json(new_issue))
 }
 
 /// # Update a hit

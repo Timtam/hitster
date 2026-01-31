@@ -148,6 +148,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 games_routes::stop_game,
                 games_routes::update_game,
                 hits_routes::create_hit,
+                hits_routes::create_hit_issue,
                 hits_routes::create_pack,
                 hits_routes::delete_hit,
                 hits_routes::delete_pack,

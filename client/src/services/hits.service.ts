@@ -1,6 +1,7 @@
 import queryString from "query-string"
 import {
     FullHit,
+    HitIssue,
     HitQueryPart,
     HitSearchQuery,
     Pack,
@@ -135,6 +136,24 @@ export default class HitService {
         )
 
         if (res.status == 200) return await res.text()
+        throw { message: (await res.json()).message, status: res.status }
+    }
+
+    async createIssue(
+        hitId: string,
+        message: string,
+        altchaToken: string,
+    ): Promise<HitIssue> {
+        const res = await fetchAuth(`/api/hits/${hitId}/issues`, {
+            body: JSON.stringify({ message, altcha_token: altchaToken }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status === 200) return HitIssue.parse(await res.json())
         throw { message: (await res.json()).message, status: res.status }
     }
 }
