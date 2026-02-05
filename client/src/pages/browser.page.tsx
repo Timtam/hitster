@@ -31,6 +31,7 @@ import { Link, useLoaderData, useSearchParams } from "react-router"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import {
+    HitQueryPart,
     HitSearchQuery,
     Pack,
     PaginatedHitsResponse,
@@ -101,13 +102,24 @@ export default function Browser() {
     const [showPackFilter, setShowPackFilter] = useState(false)
     const revalidate = useRevalidate()
     const { user } = useContext()
+    const canReadIssues = useMemo(
+        () => user?.permissions.read_issues === true,
+        [user],
+    )
+    const issueParts = useMemo(
+        () => (canReadIssues ? [HitQueryPart.Issues] : undefined),
+        [canReadIssues],
+    )
     const [searchParams, setSearchParams] = useSearchParams()
     const [page, setPage] = useState(1)
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
             setSearching(true)
-            const results = await hitService.searchHits(query)
+            const results = await hitService.searchHits({
+                ...query,
+                parts: issueParts,
+            })
             EventManager.publish(Events.notification, {
                 toast: false,
                 interruptTts: true,
@@ -123,7 +135,14 @@ export default function Browser() {
                 Array.from({ length: results.results.length }, () => false),
             )
         },
-        [hitService, setSearching, setHitResults, setShowPacksModal, t],
+        [
+            hitService,
+            setSearching,
+            setHitResults,
+            setShowPacksModal,
+            t,
+            issueParts,
+        ],
     )
 
     const getPageCount = useCallback(
@@ -229,7 +248,7 @@ export default function Browser() {
                 packs: packs,
             } satisfies HitSearchQuery)
         })()
-    }, [setQuery, setPacks, setSortDirection, setSortByItems, setPage])
+    }, [setQuery, setPacks, setSortDirection, setSortByItems, setPage, search])
 
     return (
         <>
@@ -612,6 +631,7 @@ export default function Browser() {
                                 <th>{t("artist")}</th>
                                 <th>{t("year")}</th>
                                 <th>{t("belongsTo")}</th>
+                                {canReadIssues ? <th>{t("issues")}</th> : null}
                                 <th>{t("pack", { count: 2 })}</th>
                             </tr>
                         </thead>
@@ -626,6 +646,9 @@ export default function Browser() {
                                     <td>{hit.artist}</td>
                                     <td>{hit.year}</td>
                                     <td>{hit.belongs_to}</td>
+                                    {canReadIssues ? (
+                                        <td>{hit.issues?.length ?? 0}</td>
+                                    ) : null}
                                     <td>
                                         <Button
                                             aria-expanded={false}

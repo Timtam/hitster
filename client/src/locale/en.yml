@@ -128,6 +128,7 @@ howToPlay: How to play the game
 issue: For bug reports and general feedback please open a <0>GitHub issue</0>.
 issueMessageLabel: Issue message
 issueMessagePlaceholder: Describe the problem with this hit.
+issues: Issues
 issuesHeading: Issues ({{count}})
 joinGame: Join game
 joinGameShortcut: Alt+Shift+J

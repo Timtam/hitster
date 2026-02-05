@@ -131,6 +131,7 @@ issue: >-
     GitHub</0>.
 issueMessageLabel: Problembeschreibung
 issueMessagePlaceholder: Beschreibe das Problem mit diesem Hit.
+issues: Probleme
 issuesHeading: Probleme ({{count}})
 joinGame: Spiel beitreten
 joinGameShortcut: Alt+Umschalt+J
