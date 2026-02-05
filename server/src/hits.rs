@@ -265,6 +265,34 @@ async fn check_hit_availability(hit: &Hit) -> Result<bool, String> {
     }
 }
 
+#[cfg(feature = "yt_dl")]
+async fn ensure_yt_dlp_is_updated(update_time: &Arc<Mutex<OffsetDateTime>>) {
+    let mut last_update_time = update_time.lock().await;
+    let now = OffsetDateTime::now_utc();
+
+    if *last_update_time + Duration::hours(12) >= now {
+        return;
+    }
+
+    let mut command = Command::new("yt-dlp");
+    command.current_dir(env::current_dir().unwrap()).arg("-U");
+
+    let output = command.output().await;
+
+    if let Ok(ref output_res) = output
+        && !output_res.status.success()
+    {
+        rocket::warn!(
+            "Error updating yt-dlp. error: {error}",
+            error = String::from_utf8_lossy(&output_res.stderr)
+        );
+    } else if output.is_err() {
+        rocket::warn!("error when trying to run yt-dlp. Maybe it isn't installed?");
+    }
+
+    *last_update_time = OffsetDateTime::now_utc();
+}
+
 #[cfg(all(not(feature = "yt_dl"), feature = "native_dl"))]
 async fn check_hit_availability(hit: &Hit) -> Result<bool, String> {
     use rusty_ytdl::{Video, VideoError};
@@ -372,6 +400,8 @@ impl Fairing for HitDownloadService {
         let process_sender = channel::<DownloadHitData>(100000).0;
         let availability_sender = channel::<Hit>(100000).0;
         let event_sender = Arc::new(rocket.state::<Sender<GlobalEvent>>().unwrap().clone());
+        #[cfg(feature = "yt_dl")]
+        let yt_dlp_update_time = Arc::new(Mutex::new(OffsetDateTime::UNIX_EPOCH));
         let _ = create_dir_all(Hit::download_dir().as_str());
 
         hit_service
@@ -528,6 +558,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                 .map(|n| n.get())
                 .unwrap_or(4);
             let semaphore = Arc::new(Semaphore::new(max_checks));
+            #[cfg(feature = "yt_dl")]
+            let yt_dlp_update_time = Arc::clone(&yt_dlp_update_time);
 
             async move {
                 loop {
@@ -549,10 +581,14 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     let db = db.clone();
                     let in_flight = Arc::clone(&in_flight);
                     let permit = semaphore.clone().acquire_owned().await.unwrap();
+                    #[cfg(feature = "yt_dl")]
+                    let yt_dlp_update_time = Arc::clone(&yt_dlp_update_time);
 
                     rocket::tokio::spawn(async move {
                         let _permit = permit;
                         let hit_id = hit.id;
+                        #[cfg(feature = "yt_dl")]
+                        ensure_yt_dlp_is_updated(&yt_dlp_update_time).await;
                         let result = check_hit_availability(&hit).await;
 
                         match result {
@@ -583,11 +619,11 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
             let event_sender = Arc::clone(&event_sender);
             let hit_service = Arc::clone(&hit_service);
             let process_sender = process_sender.clone();
+            #[cfg(feature = "yt_dl")]
+            let yt_dlp_update_time = Arc::clone(&yt_dlp_update_time);
             async move {
                 rocket::info!("Starting background download of hits");
                 let mut rx = dl_sender.subscribe();
-                #[cfg(feature = "yt_dl")]
-                let mut yt_dlp_update_time = OffsetDateTime::UNIX_EPOCH;
 
                 loop {
                     let hit = select! {
@@ -672,26 +708,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
 
                     #[cfg(feature = "yt_dl")]
                     {
-                        if yt_dlp_update_time + Duration::hours(12) < OffsetDateTime::now_utc() {
-                            let mut command = Command::new("yt-dlp");
-                            command.current_dir(env::current_dir().unwrap()).arg("-U");
-
-                            let output = command.output().await;
-
-                            if let Ok(ref output_res) = output
-                                && !output_res.status.success()
-                            {
-                                rocket::warn!(
-                                    "Error updating yt-dlp. error: {error}",
-                                    error = String::from_utf8_lossy(&output_res.stderr)
-                                );
-                            } else if output.is_err() {
-                                rocket::warn!(
-                                    "error when trying to run yt-dlp. Maybe it isn't installed?"
-                                );
-                            }
-                            yt_dlp_update_time = OffsetDateTime::now_utc();
-                        }
+                        ensure_yt_dlp_is_updated(&yt_dlp_update_time).await;
                         let in_file =
                             Path::new(&Hit::download_dir()).join(format!("{}.m4a", hit.yt_id));
 
