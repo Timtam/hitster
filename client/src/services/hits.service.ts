@@ -156,4 +156,14 @@ export default class HitService {
         if (res.status === 200) return HitIssue.parse(await res.json())
         throw { message: (await res.json()).message, status: res.status }
     }
+
+    async deleteIssue(hitId: string, issueId: string) {
+        const res = await fetchAuth(`/api/hits/${hitId}/issues/${issueId}`, {
+            method: "DELETE",
+            credentials: "include",
+        })
+
+        if (res.status === 200) return
+        throw { message: (await res.json()).message, status: res.status }
+    }
 }

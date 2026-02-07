@@ -5,9 +5,9 @@ use crate::{
         CreatePackPayload, FullHitPayload, HitPartsQuery, HitPayload, HitQueryPart, HitSearchQuery,
     },
     responses::{
-        CreateHitError, CreateHitIssueError, CreatePackError, DeleteHitError, DeletePackError,
-        ExportHitsError, GetHitError, MessageResponse, PacksResponse, PaginatedResponse,
-        UpdateHitError, UpdatePackError, Yaml,
+        CreateHitError, CreateHitIssueError, CreatePackError, DeleteHitError, DeleteHitIssueError,
+        DeletePackError, ExportHitsError, GetHitError, MessageResponse, PacksResponse,
+        PaginatedResponse, UpdateHitError, UpdatePackError, Yaml,
     },
     routes::captcha::verify_captcha,
     services::ServiceStore,
@@ -286,6 +286,47 @@ pub async fn create_hit_issue(
     }
 
     Ok(Json(new_issue))
+}
+
+/// # Delete a hit issue
+///
+/// Delete an issue for a hit. The authenticated user needs to have issue delete permissions.
+
+#[openapi(tag = "Hits")]
+#[delete("/hits/<hit_id>/issues/<issue_id>")]
+pub async fn delete_hit_issue(
+    hit_id: Uuid,
+    issue_id: Uuid,
+    user: UserAuthenticator,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<MessageResponse>, DeleteHitIssueError> {
+    if !user.0.permissions.contains(Permissions::DELETE_ISSUES) {
+        return Err(DeleteHitIssueError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    let query_result = sqlx::query("DELETE FROM hit_issues WHERE hit_id = ? AND id = ?")
+        .bind(hit_id)
+        .bind(issue_id)
+        .execute(&mut **db)
+        .await;
+
+    match query_result {
+        Ok(result) if result.rows_affected() > 0 => Ok(Json(MessageResponse {
+            message: "issue deleted successfully".into(),
+            r#type: "success".into(),
+        })),
+        Ok(_) => Err(DeleteHitIssueError {
+            message: "issue not found".into(),
+            http_status_code: 404,
+        }),
+        Err(_) => Err(DeleteHitIssueError {
+            message: "failed to delete issue".into(),
+            http_status_code: 500,
+        }),
+    }
 }
 
 /// # Update a hit

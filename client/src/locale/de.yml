@@ -42,6 +42,8 @@ delete: Löschen
 deleteAccount: Benutzerkonto löschen
 deleteHit: Hit löschen
 deleteHitQuestion: Möchtest du den Hit wirklich löschen?
+deleteIssue: Problem löschen
+deleteIssueQuestion: Möchtest du dieses Problem wirklich löschen?
 deletePack: Pack löschen
 deletePackQuestion: Möchtest du das Pack wirklich löschen?
 descending: Absteigend
