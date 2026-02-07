@@ -227,6 +227,7 @@ pub struct DownloadHitData {
 }
 
 const UNAVAILABLE_ISSUE_MESSAGE: &str = "youtube video is unavailable";
+const DOWNLOAD_FAILED_ISSUE_MESSAGE: &str = "hit failed to download";
 
 #[derive(Default)]
 pub struct HitDownloadService {}
@@ -313,13 +314,13 @@ async fn check_hit_availability(_hit: &Hit) -> Result<bool, String> {
     Err("no youtube availability checker configured".to_string())
 }
 
-async fn upsert_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
+async fn upsert_auto_issue(db: &sqlx::SqlitePool, hit_id: Uuid, message: &str) {
     let now = OffsetDateTime::now_utc();
     let existing = sqlx::query_scalar::<_, String>(
         "SELECT id FROM hit_issues WHERE hit_id = ? AND type = 'auto' AND message = ?",
     )
     .bind(hit_id)
-    .bind(UNAVAILABLE_ISSUE_MESSAGE)
+    .bind(message)
     .fetch_optional(db)
     .await;
 
@@ -345,7 +346,7 @@ async fn upsert_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
             .bind(Uuid::new_v4())
             .bind(hit_id)
             .bind("auto")
-            .bind(UNAVAILABLE_ISSUE_MESSAGE)
+            .bind(message)
             .bind(now)
             .bind(now)
             .execute(db)
@@ -368,11 +369,11 @@ async fn upsert_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
     }
 }
 
-async fn clear_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
+async fn clear_auto_issue(db: &sqlx::SqlitePool, hit_id: Uuid, message: &str) {
     if let Err(err) =
         sqlx::query("DELETE FROM hit_issues WHERE hit_id = ? AND type = 'auto' AND message = ?")
             .bind(hit_id)
-            .bind(UNAVAILABLE_ISSUE_MESSAGE)
+            .bind(message)
             .execute(db)
             .await
     {
@@ -382,6 +383,22 @@ async fn clear_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
             err = err
         );
     }
+}
+
+async fn upsert_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
+    upsert_auto_issue(db, hit_id, UNAVAILABLE_ISSUE_MESSAGE).await;
+}
+
+async fn clear_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
+    clear_auto_issue(db, hit_id, UNAVAILABLE_ISSUE_MESSAGE).await;
+}
+
+async fn upsert_download_failed_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
+    upsert_auto_issue(db, hit_id, DOWNLOAD_FAILED_ISSUE_MESSAGE).await;
+}
+
+async fn clear_download_failed_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
+    clear_auto_issue(db, hit_id, DOWNLOAD_FAILED_ISSUE_MESSAGE).await;
 }
 
 #[rocket::async_trait]
@@ -615,6 +632,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
         });
 
         rocket::tokio::spawn({
+            let db = db.clone();
             let dl_sender = dl_sender.clone();
             let event_sender = Arc::clone(&event_sender);
             let hit_service = Arc::clone(&hit_service);
@@ -677,11 +695,12 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                 if let Err(in_dl) = in_dl {
                                     rocket::warn!(
                                         "Error downloading hit with rusty_ytdl: {artist}: {title}, error: {error}",
-                                        artist = hit.artist,
-                                        title = hit.title,
+                                        artist = &hit.artist,
+                                        title = &hit.title,
                                         error = in_dl
                                     );
                                 }
+                                upsert_download_failed_issue(&db, hit.id).await;
                                 if in_file.is_file() {
                                     remove_file(&in_file).unwrap();
                                 }
@@ -703,6 +722,13 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                 });
                                 continue;
                             }
+                        } else {
+                            rocket::warn!(
+                                "Error initializing rusty_ytdl for {artist}: {title}",
+                                artist = &hit.artist,
+                                title = &hit.title
+                            );
+                            upsert_download_failed_issue(&db, hit.id).await;
                         }
                     }
 
@@ -722,23 +748,25 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
 
                         let output = command.output().await;
 
-                        if let Ok(ref output_res) = output
-                            && !output_res.status.success()
-                        {
-                            rocket::warn!(
-                                "Error downloading hit with yt-dlp: {artist}: {title}, error: {error}",
-                                artist = hit.artist,
-                                title = hit.title,
-                                error = String::from_utf8_lossy(&output_res.stderr)
-                            );
-                        } else if output.is_err() {
+                        if let Ok(ref output_res) = output {
+                            if !output_res.status.success() {
+                                rocket::warn!(
+                                    "Error downloading hit with yt-dlp: {artist}: {title}, error: {error}",
+                                    artist = &hit.artist,
+                                    title = &hit.title,
+                                    error = String::from_utf8_lossy(&output_res.stderr)
+                                );
+                                upsert_download_failed_issue(&db, hit.id).await;
+                            } else {
+                                process_sender
+                                    .send(DownloadHitData { in_file, hit })
+                                    .unwrap();
+                            }
+                        } else {
                             rocket::warn!(
                                 "error when trying to run yt-dlp. Maybe it isn't installed?"
                             );
-                        } else {
-                            process_sender
-                                .send(DownloadHitData { in_file, hit })
-                                .unwrap();
+                            upsert_download_failed_issue(&db, hit.id).await;
                         }
                     }
                     hit_service.lock().set_downloading(!dl_sender.is_empty());
@@ -824,6 +852,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     )
                     .execute(&db)
                     .await;
+                    clear_unavailable_issue(&db, hit_data.hit.id).await;
+                    clear_download_failed_issue(&db, hit_data.hit.id).await;
                     hit_data.hit.downloaded = true;
                     let mut hs = hit_service.lock();
                     if hs.remove_hit(&HitId::Id(hit_data.hit.id)) {
