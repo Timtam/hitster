@@ -1,6 +1,6 @@
 use crate::{GlobalEvent, HitsterConfig, services::ServiceStore};
 use async_process::Command;
-use hitster_core::{Hit, HitId, HitIssue, HitsterData, Pack};
+use hitster_core::{Hit, HitId, HitIssue, HitIssueType, HitsterData, Pack};
 use rocket::{
     Orbit, Rocket,
     fairing::{Fairing, Info, Kind},
@@ -314,7 +314,12 @@ async fn check_hit_availability(_hit: &Hit) -> Result<bool, String> {
     Err("no youtube availability checker configured".to_string())
 }
 
-async fn upsert_auto_issue(db: &sqlx::SqlitePool, hit_id: Uuid, message: &str) {
+async fn upsert_auto_issue(
+    db: &sqlx::SqlitePool,
+    event_sender: &Sender<GlobalEvent>,
+    hit_id: Uuid,
+    message: &str,
+) {
     let now = OffsetDateTime::now_utc();
     let existing = sqlx::query_scalar::<_, String>(
         "SELECT id FROM hit_issues WHERE hit_id = ? AND type = 'auto' AND message = ?",
@@ -340,10 +345,18 @@ async fn upsert_auto_issue(db: &sqlx::SqlitePool, hit_id: Uuid, message: &str) {
             }
         }
         Ok(None) => {
+            let new_issue = HitIssue {
+                id: Uuid::new_v4(),
+                hit_id,
+                r#type: HitIssueType::Auto,
+                message: message.to_string(),
+                created_at: now,
+                last_modified: now,
+            };
             if let Err(err) = sqlx::query(
                 "INSERT INTO hit_issues (id, hit_id, type, message, created_at, last_modified) VALUES (?, ?, ?, ?, ?, ?)",
             )
-            .bind(Uuid::new_v4())
+            .bind(new_issue.id)
             .bind(hit_id)
             .bind("auto")
             .bind(message)
@@ -357,6 +370,8 @@ async fn upsert_auto_issue(db: &sqlx::SqlitePool, hit_id: Uuid, message: &str) {
                     hit_id = hit_id,
                     err = err
                 );
+            } else {
+                let _ = event_sender.send(GlobalEvent::CreateHitIssue(new_issue));
             }
         }
         Err(err) => {
@@ -369,36 +384,96 @@ async fn upsert_auto_issue(db: &sqlx::SqlitePool, hit_id: Uuid, message: &str) {
     }
 }
 
-async fn clear_auto_issue(db: &sqlx::SqlitePool, hit_id: Uuid, message: &str) {
-    if let Err(err) =
-        sqlx::query("DELETE FROM hit_issues WHERE hit_id = ? AND type = 'auto' AND message = ?")
-            .bind(hit_id)
-            .bind(message)
-            .execute(db)
-            .await
+async fn clear_auto_issue(
+    db: &sqlx::SqlitePool,
+    event_sender: &Sender<GlobalEvent>,
+    hit_id: Uuid,
+    message: &str,
+) {
+    match sqlx::query_scalar::<_, String>(
+        "SELECT id FROM hit_issues WHERE hit_id = ? AND type = 'auto' AND message = ?",
+    )
+    .bind(hit_id)
+    .bind(message)
+    .fetch_all(db)
+    .await
     {
-        rocket::warn!(
-            "Failed to clear auto hit issue for {hit_id}: {err}",
-            hit_id = hit_id,
-            err = err
-        );
+        Ok(issue_ids) => {
+            for issue_id in issue_ids {
+                match sqlx::query("DELETE FROM hit_issues WHERE hit_id = ? AND id = ?")
+                    .bind(hit_id)
+                    .bind(&issue_id)
+                    .execute(db)
+                    .await
+                {
+                    Ok(result) if result.rows_affected() > 0 => match Uuid::parse_str(&issue_id) {
+                        Ok(issue_uuid) => {
+                            let _ = event_sender.send(GlobalEvent::DeleteHitIssue {
+                                hit_id,
+                                issue_id: issue_uuid,
+                            });
+                        }
+                        Err(err) => {
+                            rocket::warn!(
+                                "Failed to parse auto hit issue id {issue_id} for {hit_id}: {err}",
+                                issue_id = issue_id,
+                                hit_id = hit_id,
+                                err = err
+                            );
+                        }
+                    },
+                    Ok(_) => {}
+                    Err(err) => {
+                        rocket::warn!(
+                            "Failed to clear auto hit issue {issue_id} for {hit_id}: {err}",
+                            issue_id = issue_id,
+                            hit_id = hit_id,
+                            err = err
+                        );
+                    }
+                }
+            }
+        }
+        Err(err) => {
+            rocket::warn!(
+                "Failed to query auto hit issues for {hit_id}: {err}",
+                hit_id = hit_id,
+                err = err
+            );
+        }
     }
 }
 
-async fn upsert_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
-    upsert_auto_issue(db, hit_id, UNAVAILABLE_ISSUE_MESSAGE).await;
+async fn upsert_unavailable_issue(
+    db: &sqlx::SqlitePool,
+    event_sender: &Sender<GlobalEvent>,
+    hit_id: Uuid,
+) {
+    upsert_auto_issue(db, event_sender, hit_id, UNAVAILABLE_ISSUE_MESSAGE).await;
 }
 
-async fn clear_unavailable_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
-    clear_auto_issue(db, hit_id, UNAVAILABLE_ISSUE_MESSAGE).await;
+async fn clear_unavailable_issue(
+    db: &sqlx::SqlitePool,
+    event_sender: &Sender<GlobalEvent>,
+    hit_id: Uuid,
+) {
+    clear_auto_issue(db, event_sender, hit_id, UNAVAILABLE_ISSUE_MESSAGE).await;
 }
 
-async fn upsert_download_failed_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
-    upsert_auto_issue(db, hit_id, DOWNLOAD_FAILED_ISSUE_MESSAGE).await;
+async fn upsert_download_failed_issue(
+    db: &sqlx::SqlitePool,
+    event_sender: &Sender<GlobalEvent>,
+    hit_id: Uuid,
+) {
+    upsert_auto_issue(db, event_sender, hit_id, DOWNLOAD_FAILED_ISSUE_MESSAGE).await;
 }
 
-async fn clear_download_failed_issue(db: &sqlx::SqlitePool, hit_id: Uuid) {
-    clear_auto_issue(db, hit_id, DOWNLOAD_FAILED_ISSUE_MESSAGE).await;
+async fn clear_download_failed_issue(
+    db: &sqlx::SqlitePool,
+    event_sender: &Sender<GlobalEvent>,
+    hit_id: Uuid,
+) {
+    clear_auto_issue(db, event_sender, hit_id, DOWNLOAD_FAILED_ISSUE_MESSAGE).await;
 }
 
 #[rocket::async_trait]
@@ -575,6 +650,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                 .map(|n| n.get())
                 .unwrap_or(4);
             let semaphore = Arc::new(Semaphore::new(max_checks));
+            let event_sender = Arc::clone(&event_sender);
             #[cfg(feature = "yt_dl")]
             let yt_dlp_update_time = Arc::clone(&yt_dlp_update_time);
 
@@ -597,6 +673,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
 
                     let db = db.clone();
                     let in_flight = Arc::clone(&in_flight);
+                    let event_sender = Arc::clone(&event_sender);
                     let permit = semaphore.clone().acquire_owned().await.unwrap();
                     #[cfg(feature = "yt_dl")]
                     let yt_dlp_update_time = Arc::clone(&yt_dlp_update_time);
@@ -610,10 +687,10 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
 
                         match result {
                             Ok(true) => {
-                                clear_unavailable_issue(&db, hit_id).await;
+                                clear_unavailable_issue(&db, event_sender.as_ref(), hit_id).await;
                             }
                             Ok(false) => {
-                                upsert_unavailable_issue(&db, hit_id).await;
+                                upsert_unavailable_issue(&db, event_sender.as_ref(), hit_id).await;
                             }
                             Err(err) => {
                                 rocket::warn!(
@@ -700,7 +777,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                         error = in_dl
                                     );
                                 }
-                                upsert_download_failed_issue(&db, hit.id).await;
+                                upsert_download_failed_issue(&db, event_sender.as_ref(), hit.id)
+                                    .await;
                                 if in_file.is_file() {
                                     remove_file(&in_file).unwrap();
                                 }
@@ -728,7 +806,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                 artist = &hit.artist,
                                 title = &hit.title
                             );
-                            upsert_download_failed_issue(&db, hit.id).await;
+                            upsert_download_failed_issue(&db, event_sender.as_ref(), hit.id).await;
                         }
                     }
 
@@ -756,7 +834,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                                     title = &hit.title,
                                     error = String::from_utf8_lossy(&output_res.stderr)
                                 );
-                                upsert_download_failed_issue(&db, hit.id).await;
+                                upsert_download_failed_issue(&db, event_sender.as_ref(), hit.id)
+                                    .await;
                             } else {
                                 process_sender
                                     .send(DownloadHitData { in_file, hit })
@@ -766,7 +845,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             rocket::warn!(
                                 "error when trying to run yt-dlp. Maybe it isn't installed?"
                             );
-                            upsert_download_failed_issue(&db, hit.id).await;
+                            upsert_download_failed_issue(&db, event_sender.as_ref(), hit.id).await;
                         }
                     }
                     hit_service.lock().set_downloading(!dl_sender.is_empty());
@@ -852,8 +931,8 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                     )
                     .execute(&db)
                     .await;
-                    clear_unavailable_issue(&db, hit_data.hit.id).await;
-                    clear_download_failed_issue(&db, hit_data.hit.id).await;
+                    clear_unavailable_issue(&db, event_sender.as_ref(), hit_data.hit.id).await;
+                    clear_download_failed_issue(&db, event_sender.as_ref(), hit_data.hit.id).await;
                     hit_data.hit.downloaded = true;
                     let mut hs = hit_service.lock();
                     if hs.remove_hit(&HitId::Id(hit_data.hit.id)) {

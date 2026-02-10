@@ -38,7 +38,12 @@ import {
     SortBy,
     SortDirection,
 } from "../entities"
-import { Events, NotificationData } from "../events"
+import {
+    Events,
+    IssueCreatedData,
+    IssueDeletedData,
+    NotificationData,
+} from "../events"
 import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
 import HitService from "../services/hits.service"
@@ -249,6 +254,82 @@ export default function Browser() {
             } satisfies HitSearchQuery)
         })()
     }, [setQuery, setPacks, setSortDirection, setSortByItems, setPage, search])
+
+    useEffect(() => {
+        if (!canReadIssues) return
+
+        const unsubscribeIssueCreated = EventManager.subscribe(
+            Events.issueCreated,
+            (e: IssueCreatedData) => {
+                setHitResults((current) => {
+                    const resultIndex = current.results.findIndex(
+                        (hit) => hit.id === e.issue.hit_id,
+                    )
+
+                    if (resultIndex === -1) return current
+
+                    const hit = current.results[resultIndex]
+                    const existingIssues = hit.issues ?? []
+
+                    if (
+                        existingIssues.some((issue) => issue.id === e.issue.id)
+                    ) {
+                        return current
+                    }
+
+                    const results = [...current.results]
+                    results[resultIndex] = {
+                        ...hit,
+                        issues: [...existingIssues, e.issue],
+                    }
+
+                    return {
+                        ...current,
+                        results,
+                    }
+                })
+            },
+        )
+
+        const unsubscribeIssueDeleted = EventManager.subscribe(
+            Events.issueDeleted,
+            (e: IssueDeletedData) => {
+                setHitResults((current) => {
+                    const resultIndex = current.results.findIndex(
+                        (hit) => hit.id === e.hitId,
+                    )
+
+                    if (resultIndex === -1) return current
+
+                    const hit = current.results[resultIndex]
+                    const existingIssues = hit.issues ?? []
+                    const issues = existingIssues.filter(
+                        (issue) => issue.id !== e.issueId,
+                    )
+
+                    if (issues.length === existingIssues.length) {
+                        return current
+                    }
+
+                    const results = [...current.results]
+                    results[resultIndex] = {
+                        ...hit,
+                        issues,
+                    }
+
+                    return {
+                        ...current,
+                        results,
+                    }
+                })
+            },
+        )
+
+        return () => {
+            unsubscribeIssueCreated()
+            unsubscribeIssueDeleted()
+        }
+    }, [canReadIssues])
 
     return (
         <>

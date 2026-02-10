@@ -3,7 +3,8 @@ pub mod games;
 pub mod hits;
 pub mod users;
 
-use crate::{GlobalEvent, services::ServiceStore};
+use crate::{GlobalEvent, services::ServiceStore, users::UserAuthenticator};
+use hitster_core::Permissions;
 use rocket::{
     Shutdown, State,
     futures::stream::Stream,
@@ -53,6 +54,22 @@ use rocket_okapi::openapi;
 ///       <td></td>
 ///       <td>ID of the game that was removed</td>
 ///     </tr>
+///     <tr>
+///       <td>create_hit_issue</td>
+///       <td></td>
+///       <td>Issue object of the issue that was just created</td>
+///     </tr>
+///     <tr>
+///       <th rowSpan="3">delete_hit_issue</th>
+///     </tr>
+///     <tr>
+///       <td>hit_id</td>
+///       <td>ID of the hit the issue was deleted from</td>
+///     </tr>
+///     <tr>
+///       <td>issue_id</td>
+///       <td>ID of the deleted issue</td>
+///     </tr>
 ///   </tbody>
 /// </table>
 
@@ -61,6 +78,7 @@ use rocket_okapi::openapi;
 pub async fn events(
     svc: &State<ServiceStore>,
     queue: &State<Sender<GlobalEvent>>,
+    user: Option<UserAuthenticator>,
     mut end: Shutdown,
 ) -> EventStream<impl Stream<Item = Event>> {
     let hs = svc.hit_service();
@@ -71,6 +89,10 @@ pub async fn events(
     let available = hsl.get_hits().iter().filter(|h| h.downloaded).count();
     let downloading = hsl.downloading();
     let processing = hsl.processing();
+    let can_read_issues = user
+        .as_ref()
+        .map(|u| u.0.permissions.contains(Permissions::READ_ISSUES))
+        .unwrap_or(false);
 
     drop(hsl);
 
@@ -92,6 +114,15 @@ pub async fn events(
                 },
                 _ = &mut end => break,
             };
+
+            if !can_read_issues
+                && matches!(
+                    msg,
+                    GlobalEvent::CreateHitIssue(_) | GlobalEvent::DeleteHitIssue { .. }
+                )
+            {
+                continue;
+            }
 
             yield Event::json(&msg).event(msg.get_name());
         }

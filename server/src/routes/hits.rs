@@ -1,5 +1,5 @@
 use crate::{
-    HitsterConfig,
+    GlobalEvent, HitsterConfig,
     games::PackPayload,
     hits::{
         CreatePackPayload, FullHitPayload, HitPartsQuery, HitPayload, HitQueryPart, HitSearchQuery,
@@ -14,7 +14,7 @@ use crate::{
     users::UserAuthenticator,
 };
 use hitster_core::{Hit, HitId, HitIssue, HitIssueType, HitsterData, Pack, Permissions};
-use rocket::{State, serde::json::Json};
+use rocket::{State, serde::json::Json, tokio::sync::broadcast::Sender};
 use rocket_db_pools::{
     Connection,
     sqlx::{self, FromRow},
@@ -223,6 +223,7 @@ pub async fn create_hit_issue(
     issue: Json<CreateHitIssuePayload>,
     user: UserAuthenticator,
     serv: &State<ServiceStore>,
+    queue: &State<Sender<GlobalEvent>>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<HitIssue>, CreateHitIssueError> {
     if !user.0.permissions.contains(Permissions::WRITE_ISSUES) {
@@ -285,6 +286,8 @@ pub async fn create_hit_issue(
         });
     }
 
+    let _ = queue.send(GlobalEvent::CreateHitIssue(new_issue.clone()));
+
     Ok(Json(new_issue))
 }
 
@@ -298,6 +301,7 @@ pub async fn delete_hit_issue(
     hit_id: Uuid,
     issue_id: Uuid,
     user: UserAuthenticator,
+    queue: &State<Sender<GlobalEvent>>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, DeleteHitIssueError> {
     if !user.0.permissions.contains(Permissions::DELETE_ISSUES) {
@@ -314,10 +318,13 @@ pub async fn delete_hit_issue(
         .await;
 
     match query_result {
-        Ok(result) if result.rows_affected() > 0 => Ok(Json(MessageResponse {
-            message: "issue deleted successfully".into(),
-            r#type: "success".into(),
-        })),
+        Ok(result) if result.rows_affected() > 0 => {
+            let _ = queue.send(GlobalEvent::DeleteHitIssue { hit_id, issue_id });
+            Ok(Json(MessageResponse {
+                message: "issue deleted successfully".into(),
+                r#type: "success".into(),
+            }))
+        }
         Ok(_) => Err(DeleteHitIssueError {
             message: "issue not found".into(),
             http_status_code: 404,

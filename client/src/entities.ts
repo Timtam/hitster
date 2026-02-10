@@ -195,6 +195,21 @@ export const ProcessHitsEvent = z.object({
 
 export type ProcessHitsEvent = z.infer<typeof ProcessHitsEvent>
 
+export const CreateHitIssueEvent = z.object({
+    create_hit_issue: HitIssue,
+})
+
+export type CreateHitIssueEvent = z.infer<typeof CreateHitIssueEvent>
+
+export const DeleteHitIssueEvent = z.object({
+    delete_hit_issue: z.object({
+        hit_id: z.uuid(),
+        issue_id: z.uuid(),
+    }),
+})
+
+export type DeleteHitIssueEvent = z.infer<typeof DeleteHitIssueEvent>
+
 export const PaginatedHitsResponse = createPaginatedResponseSchema(Hit)
 
 export type PaginatedHitsResponse = z.infer<typeof PaginatedHitsResponse>

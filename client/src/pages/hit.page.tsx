@@ -14,7 +14,7 @@ import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import { FullHit, HitIssueType, Pack } from "../entities"
-import { Events } from "../events"
+import { Events, IssueCreatedData, IssueDeletedData } from "../events"
 import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
 import ReportHitIssueModal from "../modals/report-hit-issue"
@@ -115,10 +115,36 @@ export default function Hit() {
         () => user?.permissions.delete_issues === true,
         [user],
     )
+    const canReadIssues = useMemo(
+        () => user?.permissions.read_issues === true,
+        [user],
+    )
 
     useEffect(() => {
         setIsUrlValid(RE_YOUTUBE.test(youtubeUrl))
     }, [youtubeUrl, setIsUrlValid])
+
+    useEffect(() => {
+        if (!canReadIssues || !hit.id) return
+
+        const unsubscribeIssueCreated = EventManager.subscribe(
+            Events.issueCreated,
+            (e: IssueCreatedData) => {
+                if (e.issue.hit_id === hit.id) reload()
+            },
+        )
+        const unsubscribeIssueDeleted = EventManager.subscribe(
+            Events.issueDeleted,
+            (e: IssueDeletedData) => {
+                if (e.hitId === hit.id) reload()
+            },
+        )
+
+        return () => {
+            unsubscribeIssueCreated()
+            unsubscribeIssueDeleted()
+        }
+    }, [canReadIssues, hit.id, reload])
 
     return (
         <>
@@ -195,7 +221,6 @@ export default function Hit() {
                         show={showReportIssueModal}
                         hitId={hit.id ?? ""}
                         onHide={() => setShowReportIssueModal(false)}
-                        onSubmitted={reload}
                     />
                 </>
             ) : (
@@ -435,7 +460,7 @@ export default function Hit() {
                     ""
                 )}
             </Form>
-            {user?.permissions.read_issues ? (
+            {canReadIssues ? (
                 <>
                     <h3>
                         {t("issuesHeading", {

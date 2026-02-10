@@ -1,5 +1,5 @@
 import { JSX } from "react"
-import { Game, GameMode, Hit, Player, Slot } from "./entities"
+import { Game, GameMode, Hit, HitIssue, Player, Slot } from "./entities"
 
 export enum Sfx {
     joinGame,
@@ -104,6 +104,15 @@ export interface HitsProgressUpdateData {
     processing: number
 }
 
+export interface IssueCreatedData {
+    issue: HitIssue
+}
+
+export interface IssueDeletedData {
+    hitId: string
+    issueId: string
+}
+
 export enum Events {
     claimedHit = "Claimed hit",
     downloadStarted = "Download started",
@@ -115,6 +124,8 @@ export enum Events {
     hitCreated = "Hit created",
     hitRevealed = "Hit revealed",
     hitsProgressUpdate = "Hits progress update",
+    issueCreated = "Issue created",
+    issueDeleted = "Issue deleted",
     joinedGame = "Joined",
     leftGame = "Left",
     notification = "Notification",

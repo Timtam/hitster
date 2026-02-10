@@ -9,6 +9,7 @@ mod users;
 use dotenvy::dotenv;
 use games::{GameEvent, GamePayload};
 use hits::HitDownloadService;
+use hitster_core::HitIssue;
 use merge_db::MergeDbService;
 use rocket::{
     Build, Config, Rocket,
@@ -46,10 +47,15 @@ extern crate rocket;
 #[serde(rename_all = "snake_case")]
 pub enum GlobalEvent {
     CreateGame(GamePayload),
+    CreateHitIssue(HitIssue),
     ProcessHits {
         available: usize,
         downloading: usize,
         processing: usize,
+    },
+    DeleteHitIssue {
+        hit_id: uuid::Uuid,
+        issue_id: uuid::Uuid,
     },
     RemoveGame(String),
 }
@@ -58,7 +64,9 @@ impl GlobalEvent {
     pub fn get_name(&self) -> String {
         match self {
             Self::CreateGame(_) => String::from("create_game"),
+            Self::CreateHitIssue(_) => String::from("create_hit_issue"),
             Self::ProcessHits { .. } => String::from("process_hits"),
+            Self::DeleteHitIssue { .. } => String::from("delete_hit_issue"),
             Self::RemoveGame(_) => String::from("remove_game"),
         }
     }
