@@ -1,0 +1,50 @@
+{
+  "db_name": "SQLite",
+  "query": "\nSELECT \n    id AS \"id: Uuid\", \n    hit_id AS \"hit_id: Uuid\", \n    type, \n    message, \n    created_at AS \"created_at: OffsetDateTime\", \n    last_modified AS \"last_modified: OffsetDateTime\" \nFROM hit_issues WHERE hit_id = ? ORDER BY created_at ASC",
+  "describe": {
+    "columns": [
+      {
+        "name": "id: Uuid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "hit_id: Uuid",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "type",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "message",
+        "ordinal": 3,
+        "type_info": "Text"
+      },
+      {
+        "name": "created_at: OffsetDateTime",
+        "ordinal": 4,
+        "type_info": "Text"
+      },
+      {
+        "name": "last_modified: OffsetDateTime",
+        "ordinal": 5,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "d593d54b220bfe659f8433ec3869e147e6f91d61999516f46a18ddcb0d54dcb2"
+}

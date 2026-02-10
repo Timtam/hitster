@@ -33,13 +33,17 @@ confirmYes: title and artist of the hit was guessed correctly
 createHit: Create hit
 createNewGame: Create new game
 createPack: Create pack
+createdAt: Created
 creator: creator
 current: (current)
+custom: Custom
 dark: Dark
 delete: Delete
 deleteAccount: Delete account
 deleteHit: Delete hit
 deleteHitQuestion: Do you really want to delete this hit?
+deleteIssue: Delete issue
+deleteIssueQuestion: Do you really want to delete this issue?
 deletePack: Delete pack
 deletePackQuestion: Do you really want to delete this pack?
 descending: Descending
@@ -97,6 +101,7 @@ gameSettingsNotCreator: Only the creator can edit the game settings
 gameSettingsPacks: "Check all the packs you want to use in this game:"
 gameSettingsShortcut: Alt+Shift+E
 gameSettingsStartTokens: How many tokens should every player get when starting a game?
+hasIssues: Only hits with issues
 game_one: Game
 goal: Goal
 guess: "{{player}} guesses: {{guess}}"
@@ -124,6 +129,10 @@ hit_other: Hits
 hitsForPlayer: Hits for {{player}}
 howToPlay: How to play the game
 issue: For bug reports and general feedback please open a <0>GitHub issue</0>.
+issueMessageLabel: Issue message
+issueMessagePlaceholder: Describe the problem with this hit.
+issues: Issues
+issuesHeading: Issues ({{count}})
 joinGame: Join game
 joinGameShortcut: Alt+Shift+J
 keyboardShortcut_one: Keyboard shortcut
@@ -132,6 +141,7 @@ kick: Kick
 knownAs: You are currently known as {{username}}
 language: Language
 last: Last
+lastModified: Last modified
 leaveGame: Leave game
 leaveGameQuestion: Do you want to leave the game while it's still running?
 leaveGameShortcut: Alt+Shift+Q
@@ -177,6 +187,7 @@ manualBasic: >
     If you enjoy the game and already know how it works, feel free to check out
     the advanced features by switching tabs.
 manualBasicTitle: Basic
+message: Message
 mode: Mode
 musicVolume: Music volume
 name: Name
@@ -184,6 +195,7 @@ navigation: Navigation
 next: Next
 "no": "No"
 noHitAvailable: No hit available
+noIssues: No issues reported.
 noShortcut: Alt+Shift+N
 noone: noone
 nooneWins: Noone won this game.
@@ -243,6 +255,7 @@ reorderInstructions: >-
     space or enter again to drop the item in its new position, or press escape
     to cancel.
 repeatPassword: Repeat password
+reportIssue: Report issue
 running: Running
 save: Save
 search: Search
@@ -285,9 +298,12 @@ stopGameShortcut: Alt+Shift+S
 stopHit: Stop hit
 submitGuess: Submit guess
 submitGuessShortcut: Alt+Shift+Return
+submitIssue: Submit issue
+submitting: Submitting...
 title: Title
 token_one: Token
 token_other: Tokens
+type: Type
 username: Username
 version: "Version: {{version}}"
 volume: Volume

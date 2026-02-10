@@ -1,6 +1,8 @@
 import queryString from "query-string"
 import {
     FullHit,
+    HitIssue,
+    HitQueryPart,
     HitSearchQuery,
     Pack,
     PacksResponse,
@@ -26,8 +28,14 @@ export default class HitService {
         return PaginatedHitsResponse.parse(await res.json())
     }
 
-    async get(id: string): Promise<FullHit | undefined> {
-        const res = await fetch(`/api/hits/${id}`, {
+    async get(
+        id: string,
+        parts?: HitQueryPart[],
+    ): Promise<FullHit | undefined> {
+        const query = parts?.length
+            ? "?" + queryString.stringify({ parts })
+            : ""
+        const res = await fetch(`/api/hits/${id}${query}`, {
             method: "GET",
         })
 
@@ -128,6 +136,34 @@ export default class HitService {
         )
 
         if (res.status == 200) return await res.text()
+        throw { message: (await res.json()).message, status: res.status }
+    }
+
+    async createIssue(
+        hitId: string,
+        message: string,
+        altchaToken: string,
+    ): Promise<HitIssue> {
+        const res = await fetchAuth(`/api/hits/${hitId}/issues`, {
+            body: JSON.stringify({ message, altcha_token: altchaToken }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            method: "POST",
+            credentials: "include",
+        })
+
+        if (res.status === 200) return HitIssue.parse(await res.json())
+        throw { message: (await res.json()).message, status: res.status }
+    }
+
+    async deleteIssue(hitId: string, issueId: string) {
+        const res = await fetchAuth(`/api/hits/${hitId}/issues/${issueId}`, {
+            method: "DELETE",
+            credentials: "include",
+        })
+
+        if (res.status === 200) return
         throw { message: (await res.json()).message, status: res.status }
     }
 }

@@ -206,7 +206,7 @@ export default function PacksModal({
         <Modal show={show} onHide={() => onHide(selectedPacks)}>
             <Modal.Header closeButton closeLabel={t("close")} />
             <Modal.Body>
-                {selected && user?.permissions.can_write_packs ? (
+                {selected && user?.permissions.write_packs ? (
                     <>
                         <Button
                             aria-expanded={false}
@@ -266,7 +266,7 @@ export default function PacksModal({
                                             }
                                         />
                                     </Col>
-                                    {user?.permissions.can_write_packs ? (
+                                    {user?.permissions.write_packs ? (
                                         <>
                                             <Col sm={2}>
                                                 <Button

@@ -2,6 +2,7 @@ mod hitster_core {
     use bitflags::bitflags;
     use deunicode::deunicode;
     use multi_key_map::MultiKeyMap;
+    use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
     use simsearch::{SearchOptions, SimSearch};
     use sqlx::{FromRow, Row, sqlite::SqliteRow};
@@ -38,6 +39,37 @@ mod hitster_core {
         pub last_modified: OffsetDateTime,
         #[serde(skip)]
         pub downloaded: bool,
+    }
+
+    #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize, JsonSchema)]
+    #[serde(rename_all = "snake_case")]
+    pub enum HitIssueType {
+        Auto,
+        Custom,
+    }
+
+    impl From<String> for HitIssueType {
+        fn from(value: String) -> Self {
+            match value.as_str() {
+                "auto" => HitIssueType::Auto,
+                "custom" => HitIssueType::Custom,
+                _ => panic!("invalid hit issue type: {value}"),
+            }
+        }
+    }
+
+    #[derive(Clone, Eq, PartialEq, Debug, Serialize, Deserialize, JsonSchema)]
+    pub struct HitIssue {
+        pub id: Uuid,
+        pub hit_id: Uuid,
+        pub r#type: HitIssueType,
+        pub message: String,
+        #[serde(with = "time::serde::rfc3339")]
+        #[schemars(with = "String")]
+        pub created_at: OffsetDateTime,
+        #[serde(with = "time::serde::rfc3339")]
+        #[schemars(with = "String")]
+        pub last_modified: OffsetDateTime,
     }
 
     impl Hit {
@@ -271,14 +303,17 @@ mod hitster_core {
     bitflags! {
         #[derive(Clone, Debug, Eq, Hash, PartialEq)]
         pub struct Permissions: u32 {
-            const CAN_WRITE_HITS = 0b01;
-            const CAN_WRITE_PACKS = 0b10;
+            const WRITE_HITS = 0b01;
+            const WRITE_PACKS = 0b10;
+            const READ_ISSUES = 0b100;
+            const WRITE_ISSUES = 0b1000;
+            const DELETE_ISSUES = 0b10000;
         }
     }
 
     impl Default for Permissions {
         fn default() -> Self {
-            Self::from_bits(0).unwrap()
+            Permissions::WRITE_ISSUES
         }
     }
 
@@ -328,8 +363,24 @@ mod hitster_core {
             })
         }
     }
+
+    impl FromRow<'_, SqliteRow> for HitIssue {
+        fn from_row(row: &SqliteRow) -> sqlx::Result<Self> {
+            let issue_type = HitIssueType::from(row.try_get::<String, &str>("type")?);
+
+            Ok(Self {
+                id: row.try_get::<Uuid, &str>("id")?,
+                hit_id: row.try_get::<Uuid, &str>("hit_id")?,
+                r#type: issue_type,
+                message: row.try_get("message")?,
+                created_at: row.try_get::<OffsetDateTime, &str>("created_at")?,
+                last_modified: row.try_get::<OffsetDateTime, &str>("last_modified")?,
+            })
+        }
+    }
 }
 
 pub use hitster_core::{
-    Hit, HitId, HitsterData, HitsterFileFormat, Pack, Permissions, Token, User,
+    Hit, HitId, HitIssue, HitIssueType, HitsterData, HitsterFileFormat, Pack, Permissions, Token,
+    User,
 };

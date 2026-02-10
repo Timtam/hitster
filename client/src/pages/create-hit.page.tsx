@@ -38,7 +38,7 @@ export default function CreateHit() {
         setIsUrlValid(RE_YOUTUBE.test(youtubeUrl))
     }, [youtubeUrl, setIsUrlValid])
 
-    return !user?.permissions.can_write_hits ? (
+    return !user?.permissions.write_hits ? (
         <Navigate to="/hits" />
     ) : (
         <>

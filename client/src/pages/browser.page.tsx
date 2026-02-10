@@ -31,13 +31,20 @@ import { Link, useLoaderData, useSearchParams } from "react-router"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import {
+    HitSearchFilter,
+    HitQueryPart,
     HitSearchQuery,
     Pack,
     PaginatedHitsResponse,
     SortBy,
     SortDirection,
 } from "../entities"
-import { Events, NotificationData } from "../events"
+import {
+    Events,
+    IssueCreatedData,
+    IssueDeletedData,
+    NotificationData,
+} from "../events"
 import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
 import HitService from "../services/hits.service"
@@ -98,16 +105,28 @@ export default function Browser() {
     const [sortDirection, setSortDirection] = useState(SortDirection.Ascending)
     const [showPacksModal, setShowPacksModal] = useImmer<boolean[]>([])
     const [packs, setPacks] = useState<string[]>([])
+    const [filters, setFilters] = useState<HitSearchFilter[]>([])
     const [showPackFilter, setShowPackFilter] = useState(false)
     const revalidate = useRevalidate()
     const { user } = useContext()
+    const canReadIssues = useMemo(
+        () => user?.permissions.read_issues === true,
+        [user],
+    )
+    const issueParts = useMemo(
+        () => (canReadIssues ? [HitQueryPart.Issues] : undefined),
+        [canReadIssues],
+    )
     const [searchParams, setSearchParams] = useSearchParams()
     const [page, setPage] = useState(1)
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
             setSearching(true)
-            const results = await hitService.searchHits(query)
+            const results = await hitService.searchHits({
+                ...query,
+                parts: issueParts,
+            })
             EventManager.publish(Events.notification, {
                 toast: false,
                 interruptTts: true,
@@ -123,7 +142,14 @@ export default function Browser() {
                 Array.from({ length: results.results.length }, () => false),
             )
         },
-        [hitService, setSearching, setHitResults, setShowPacksModal, t],
+        [
+            hitService,
+            setSearching,
+            setHitResults,
+            setShowPacksModal,
+            t,
+            issueParts,
+        ],
     )
 
     const getPageCount = useCallback(
@@ -172,6 +198,7 @@ export default function Browser() {
                         sort_by: sortBy.map((i) => SORT_BY_INDEX[i]),
                         sort_direction: sortDirection,
                         packs: packs,
+                        filters: filters,
                     } satisfies HitSearchQuery))()
                 setSortByItems(sortBy)
             }
@@ -183,6 +210,7 @@ export default function Browser() {
             query,
             sortDirection,
             packs,
+            filters,
             setSearchParams,
         ],
     )
@@ -191,6 +219,18 @@ export default function Browser() {
         const p: string = searchParams.get("p") ?? `${page}`
         const q: string = searchParams.get("q") ?? query
         const packs = searchParams.getAll("pack")
+        const parsedFilters = searchParams.getAll("filter").reduce((acc, i) => {
+            const filter =
+                HitSearchFilter[
+                    toPascalCase(i) as keyof typeof HitSearchFilter
+                ]
+            if (filter) acc.push(filter)
+            return acc
+        }, [] as HitSearchFilter[])
+        const activeFilters = parsedFilters.filter(
+            (filter) =>
+                filter !== HitSearchFilter.HasIssues || canReadIssues,
+        )
         const sortDirection =
             SortDirection[
                 toPascalCase(
@@ -212,6 +252,7 @@ export default function Browser() {
         setPacks(
             availablePacks.filter((p) => packs.includes(p.id)).map((p) => p.id),
         )
+        setFilters(activeFilters)
         setSortDirection(sortDirection)
         setSortByItems(
             (sortCriteria as SortBy[]).map(
@@ -227,9 +268,95 @@ export default function Browser() {
                 sort_direction: sortDirection,
                 query: q,
                 packs: packs,
+                filters: activeFilters,
             } satisfies HitSearchQuery)
         })()
-    }, [setQuery, setPacks, setSortDirection, setSortByItems, setPage])
+    }, [
+        setQuery,
+        setPacks,
+        setFilters,
+        setSortDirection,
+        setSortByItems,
+        setPage,
+        search,
+        canReadIssues,
+    ])
+
+    useEffect(() => {
+        if (!canReadIssues) return
+
+        const unsubscribeIssueCreated = EventManager.subscribe(
+            Events.issueCreated,
+            (e: IssueCreatedData) => {
+                setHitResults((current) => {
+                    const resultIndex = current.results.findIndex(
+                        (hit) => hit.id === e.issue.hit_id,
+                    )
+
+                    if (resultIndex === -1) return current
+
+                    const hit = current.results[resultIndex]
+                    const existingIssues = hit.issues ?? []
+
+                    if (
+                        existingIssues.some((issue) => issue.id === e.issue.id)
+                    ) {
+                        return current
+                    }
+
+                    const results = [...current.results]
+                    results[resultIndex] = {
+                        ...hit,
+                        issues: [...existingIssues, e.issue],
+                    }
+
+                    return {
+                        ...current,
+                        results,
+                    }
+                })
+            },
+        )
+
+        const unsubscribeIssueDeleted = EventManager.subscribe(
+            Events.issueDeleted,
+            (e: IssueDeletedData) => {
+                setHitResults((current) => {
+                    const resultIndex = current.results.findIndex(
+                        (hit) => hit.id === e.hitId,
+                    )
+
+                    if (resultIndex === -1) return current
+
+                    const hit = current.results[resultIndex]
+                    const existingIssues = hit.issues ?? []
+                    const issues = existingIssues.filter(
+                        (issue) => issue.id !== e.issueId,
+                    )
+
+                    if (issues.length === existingIssues.length) {
+                        return current
+                    }
+
+                    const results = [...current.results]
+                    results[resultIndex] = {
+                        ...hit,
+                        issues,
+                    }
+
+                    return {
+                        ...current,
+                        results,
+                    }
+                })
+            },
+        )
+
+        return () => {
+            unsubscribeIssueCreated()
+            unsubscribeIssueDeleted()
+        }
+    }, [canReadIssues])
 
     return (
         <>
@@ -272,6 +399,7 @@ export default function Browser() {
                                                     sort_direction:
                                                         sortDirection,
                                                     packs: packs,
+                                                    filters: filters,
                                                 } satisfies HitSearchQuery)
                                                 setSearchTimer(null)
                                             }, SEARCH_DELAY),
@@ -459,6 +587,7 @@ export default function Browser() {
                                                         sort_direction:
                                                             SortDirection.Ascending,
                                                         packs: packs,
+                                                        filters: filters,
                                                     } satisfies HitSearchQuery))()
                                             }}
                                         />
@@ -505,6 +634,7 @@ export default function Browser() {
                                                         sort_direction:
                                                             SortDirection.Descending,
                                                         packs: packs,
+                                                        filters: filters,
                                                     } satisfies HitSearchQuery))()
                                             }}
                                         />
@@ -517,6 +647,74 @@ export default function Browser() {
                                     </div>
                                 </fieldset>
                             </Form.Group>
+                            {canReadIssues ? (
+                                <Form.Group className="mb-2">
+                                    <div className="form-check">
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            id="filter-has-issues"
+                                            checked={filters.includes(
+                                                HitSearchFilter.HasIssues,
+                                            )}
+                                            onChange={() => {
+                                                const hasIssuesFilterEnabled =
+                                                    filters.includes(
+                                                        HitSearchFilter.HasIssues,
+                                                    )
+                                                const updatedFilters =
+                                                    hasIssuesFilterEnabled
+                                                        ? filters.filter(
+                                                              (filter) =>
+                                                                  filter !==
+                                                                  HitSearchFilter.HasIssues,
+                                                          )
+                                                        : [
+                                                              ...filters,
+                                                              HitSearchFilter.HasIssues,
+                                                          ]
+
+                                                setFilters(updatedFilters)
+                                                setSearchParams((p) => {
+                                                    p.delete("filter")
+                                                    updatedFilters.forEach(
+                                                        (filter) =>
+                                                            p.append(
+                                                                "filter",
+                                                                filter,
+                                                            ),
+                                                    )
+                                                    p.set("p", "1")
+                                                    return p
+                                                })
+                                                ;(async () =>
+                                                    await search({
+                                                        query: query,
+                                                        start: 1,
+                                                        amount: PAGE_SIZE,
+                                                        sort_by:
+                                                            sortByItems.map(
+                                                                (i) =>
+                                                                    SORT_BY_INDEX[
+                                                                        i
+                                                                    ],
+                                                            ),
+                                                        sort_direction:
+                                                            sortDirection,
+                                                        packs: packs,
+                                                        filters: updatedFilters,
+                                                    } satisfies HitSearchQuery))()
+                                            }}
+                                        />
+                                        <label
+                                            htmlFor="filter-has-issues"
+                                            className="form-check-label"
+                                        >
+                                            {t("hasIssues")}
+                                        </label>
+                                    </div>
+                                </Form.Group>
+                            ) : null}
                             <Form.Group className="mb-2">
                                 <Button
                                     aria-expanded={false}
@@ -561,6 +759,7 @@ export default function Browser() {
                                                 ),
                                                 sort_direction: sortDirection,
                                                 packs: selected,
+                                                filters: filters,
                                             } satisfies HitSearchQuery))()
                                     }}
                                 />
@@ -580,7 +779,7 @@ export default function Browser() {
                     ) : (
                         ""
                     )}
-                    {user?.permissions.can_write_hits ? (
+                    {user?.permissions.write_hits ? (
                         <>
                             <Link to="/hits/create">{t("createHit")}</Link>
                             <Button
@@ -612,6 +811,7 @@ export default function Browser() {
                                 <th>{t("artist")}</th>
                                 <th>{t("year")}</th>
                                 <th>{t("belongsTo")}</th>
+                                {canReadIssues ? <th>{t("issues")}</th> : null}
                                 <th>{t("pack", { count: 2 })}</th>
                             </tr>
                         </thead>
@@ -626,6 +826,9 @@ export default function Browser() {
                                     <td>{hit.artist}</td>
                                     <td>{hit.year}</td>
                                     <td>{hit.belongs_to}</td>
+                                    {canReadIssues ? (
+                                        <td>{hit.issues?.length ?? 0}</td>
+                                    ) : null}
                                     <td>
                                         <Button
                                             aria-expanded={false}
@@ -675,6 +878,7 @@ export default function Browser() {
                                     sort_direction: sortDirection,
                                     query: query,
                                     packs: packs,
+                                    filters: filters,
                                 } satisfies HitSearchQuery)
                             }}
                         >
@@ -697,6 +901,7 @@ export default function Browser() {
                                     sort_direction: sortDirection,
                                     query: query,
                                     packs: packs,
+                                    filters: filters,
                                 } satisfies HitSearchQuery)
                                 setPage(page - 1)
                             }}
@@ -733,6 +938,7 @@ export default function Browser() {
                                                 sort_direction: sortDirection,
                                                 query: query,
                                                 packs: packs,
+                                                filters: filters,
                                             } satisfies HitSearchQuery)
                                             setPage(i + 1)
                                         }}
@@ -773,6 +979,7 @@ export default function Browser() {
                                     sort_direction: sortDirection,
                                     query: query,
                                     packs: packs,
+                                    filters: filters,
                                 } satisfies HitSearchQuery)
                                 setPage(page + 1)
                             }}
@@ -796,6 +1003,7 @@ export default function Browser() {
                                     sort_direction: sortDirection,
                                     query: query,
                                     packs: packs,
+                                    filters: filters,
                                 } satisfies HitSearchQuery)
                                 setPage(getPageCount())
                             }}

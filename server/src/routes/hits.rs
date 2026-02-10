@@ -1,25 +1,42 @@
 use crate::{
-    HitsterConfig,
+    GlobalEvent, HitsterConfig,
     games::PackPayload,
-    hits::{CreatePackPayload, FullHitPayload, HitPayload, HitSearchQuery},
-    responses::{
-        CreateHitError, CreatePackError, DeleteHitError, DeletePackError, ExportHitsError,
-        GetHitError, MessageResponse, PacksResponse, PaginatedResponse, UpdateHitError,
-        UpdatePackError, Yaml,
+    hits::{
+        CreatePackPayload, FullHitPayload, HitPartsQuery, HitPayload, HitQueryPart,
+        HitSearchFilter, HitSearchQuery,
     },
+    responses::{
+        CreateHitError, CreateHitIssueError, CreatePackError, DeleteHitError, DeleteHitIssueError,
+        DeletePackError, ExportHitsError, GetHitError, MessageResponse, PacksResponse,
+        PaginatedResponse, UpdateHitError, UpdatePackError, Yaml,
+    },
+    routes::captcha::verify_captcha,
     services::ServiceStore,
     users::UserAuthenticator,
 };
-use hitster_core::{Hit, HitId, HitsterData, Pack, Permissions};
-use rocket::{State, serde::json::Json};
+use hitster_core::{Hit, HitId, HitIssue, HitIssueType, HitsterData, Pack, Permissions};
+use rocket::{State, serde::json::Json, tokio::sync::broadcast::Sender};
 use rocket_db_pools::{
     Connection,
     sqlx::{self, FromRow},
 };
+use rocket_okapi::okapi::schemars::JsonSchema;
 use rocket_okapi::openapi;
-use std::collections::HashMap;
+use serde::Deserialize;
+use std::collections::{HashMap, HashSet};
 use time::OffsetDateTime;
 use uuid::Uuid;
+
+fn includes_part(parts: &Option<Vec<HitQueryPart>>, part: HitQueryPart) -> bool {
+    parts.as_ref().map(|p| p.contains(&part)).unwrap_or(false)
+}
+
+fn includes_filter(filters: &Option<Vec<HitSearchFilter>>, filter: HitSearchFilter) -> bool {
+    filters
+        .as_ref()
+        .map(|all_filters| all_filters.contains(&filter))
+        .unwrap_or(false)
+}
 
 #[derive(FromRow)]
 struct HitRow {
@@ -37,6 +54,12 @@ struct HitPackRow {
     pack_id: Uuid,
     custom: bool,
     marked_for_deletion: bool,
+}
+
+#[derive(Deserialize, JsonSchema)]
+pub struct CreateHitIssuePayload {
+    pub message: String,
+    pub altcha_token: String,
 }
 
 /// # Get all packs
@@ -68,52 +91,279 @@ pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
 ///
 /// Search for hits in the database. The search will be executed using fuzzy search, so approximated results will be returned as well.
 /// The results will be paginated, use the parameters to specify the page size.
+/// Use the optional `parts` parameter to include additional hit data in the response.
+/// Supported values are `issues` and `downloaded`.
+/// Use the optional `filters` parameter to narrow down results.
+/// Supported values are `has_issues`.
+/// Issue data is only returned if the caller has the `READ_ISSUES` permission.
+/// The `has_issues` filter is only applied if the caller has the `READ_ISSUES` permission.
 
 #[openapi(tag = "Hits")]
 #[get("/hits/search?<query..>")]
-pub fn search_hits(
+pub async fn search_hits(
     query: HitSearchQuery,
     svc: &State<ServiceStore>,
+    user: Option<UserAuthenticator>,
+    mut db: Connection<HitsterConfig>,
 ) -> Json<PaginatedResponse<HitPayload>> {
+    let can_read_issues = user
+        .as_ref()
+        .map(|u| u.0.permissions.contains(Permissions::READ_ISSUES))
+        .unwrap_or(false);
+    let include_download_status = includes_part(&query.parts, HitQueryPart::Downloaded);
+    let include_issues = includes_part(&query.parts, HitQueryPart::Issues);
+    let include_has_issues_filter =
+        can_read_issues && includes_filter(&query.filters, HitSearchFilter::HasIssues);
+    let hits_with_issues = if include_has_issues_filter {
+        sqlx::query_scalar::<_, Uuid>("SELECT DISTINCT hit_id FROM hit_issues")
+            .fetch_all(&mut **db)
+            .await
+            .unwrap_or_default()
+            .into_iter()
+            .collect::<HashSet<Uuid>>()
+    } else {
+        HashSet::new()
+    };
     let hs = svc.hit_service();
+    let res = hs.lock().search_hits(
+        &query,
+        if include_has_issues_filter {
+            Some(&hits_with_issues)
+        } else {
+            None
+        },
+    );
 
-    Json(
-        Some(hs.lock().search_hits(&query))
-            .map(|res| PaginatedResponse {
-                results: res
-                    .results
-                    .into_iter()
-                    .map(|h| (&h).into())
-                    .collect::<Vec<_>>(),
-                total: res.total,
-                start: res.start,
-                end: res.end,
+    let issues_by_hit = if include_issues && can_read_issues {
+        let mut qb = sqlx::QueryBuilder::<sqlx::Sqlite>::new(
+            "SELECT id, hit_id, type, message, created_at, last_modified FROM hit_issues WHERE hit_id IN (",
+        );
+        let mut separated = qb.separated(", ");
+        res.results.iter().for_each(|hit| {
+            separated.push_bind(hit.id);
+        });
+        separated.push_unseparated(") ORDER BY created_at ASC");
+
+        qb.build_query_as::<HitIssue>()
+            .fetch_all(&mut **db)
+            .await
+            .unwrap_or_default()
+            .into_iter()
+            .fold(HashMap::<Uuid, Vec<HitIssue>>::new(), |mut map, issue| {
+                map.entry(issue.hit_id).or_default().push(issue);
+                map
             })
-            .unwrap(),
-    )
+    } else {
+        HashMap::new()
+    };
+
+    Json(PaginatedResponse {
+        results: res
+            .results
+            .into_iter()
+            .map(|h| {
+                let mut payload: HitPayload = (&h).into();
+                if include_download_status {
+                    payload.downloaded = Some(h.downloaded);
+                }
+                if include_issues && can_read_issues {
+                    payload.issues = Some(issues_by_hit.get(&h.id).cloned().unwrap_or_default());
+                }
+                payload
+            })
+            .collect::<Vec<_>>(),
+        total: res.total,
+        start: res.start,
+        end: res.end,
+    })
 }
 
 /// # Get detailed hit information
 ///
 /// Retrieve all information about a hit independent from a game.
+/// Use the optional `parts` parameter to include additional hit data in the response.
+/// Supported values are `issues` and `downloaded`.
+/// Issue data is only returned if the caller has the `READ_ISSUES` permission.
 
 #[openapi(tag = "Hits")]
-#[get("/hits/<hit_id>")]
-pub fn get_hit(
+#[get("/hits/<hit_id>?<query..>")]
+pub async fn get_hit(
     hit_id: &str,
+    query: HitPartsQuery,
     svc: &State<ServiceStore>,
+    user: Option<UserAuthenticator>,
+    mut db: Connection<HitsterConfig>,
 ) -> Result<Json<FullHitPayload>, GetHitError> {
     let hs = svc.hit_service();
-    let hsl = hs.lock();
+    let hit = {
+        let hsl = hs.lock();
+        Uuid::parse_str(hit_id)
+            .ok()
+            .and_then(|hit_id| hsl.get_hit(&HitId::Id(hit_id)).cloned())
+    }
+    .ok_or(GetHitError {
+        message: "hit id not found".into(),
+        http_status_code: 404,
+    })?;
 
-    Uuid::parse_str(hit_id)
-        .ok()
-        .and_then(|hit_id| hsl.get_hit(&HitId::Id(hit_id)))
-        .map(|h| Json(h.into()))
-        .ok_or(GetHitError {
-            message: "hit id not found".into(),
+    let include_download_status = includes_part(&query.parts, HitQueryPart::Downloaded);
+    let include_issues = includes_part(&query.parts, HitQueryPart::Issues);
+    let can_read_issues = user
+        .as_ref()
+        .map(|u| u.0.permissions.contains(Permissions::READ_ISSUES))
+        .unwrap_or(false);
+
+    let mut payload: FullHitPayload = (&hit).into();
+
+    if include_download_status {
+        payload.downloaded = Some(hit.downloaded);
+    }
+
+    if include_issues && can_read_issues {
+        let issues = sqlx::query_as!(
+            HitIssue,
+            r#"
+SELECT 
+    id AS "id: Uuid", 
+    hit_id AS "hit_id: Uuid", 
+    type, 
+    message, 
+    created_at AS "created_at: OffsetDateTime", 
+    last_modified AS "last_modified: OffsetDateTime" 
+FROM hit_issues WHERE hit_id = ? ORDER BY created_at ASC"#,
+            hit.id
+        )
+        .fetch_all(&mut **db)
+        .await
+        .unwrap_or_default();
+        payload.issues = Some(issues);
+    }
+
+    Ok(Json(payload))
+}
+
+/// # Create a new hit issue
+///
+/// Report an issue for a hit. The authenticated user needs to have issue write permissions.
+
+#[openapi(tag = "Hits")]
+#[post("/hits/<hit_id>/issues", format = "json", data = "<issue>")]
+pub async fn create_hit_issue(
+    hit_id: Uuid,
+    issue: Json<CreateHitIssuePayload>,
+    user: UserAuthenticator,
+    serv: &State<ServiceStore>,
+    queue: &State<Sender<GlobalEvent>>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<HitIssue>, CreateHitIssueError> {
+    if !user.0.permissions.contains(Permissions::WRITE_ISSUES) {
+        return Err(CreateHitIssueError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    if !verify_captcha(&issue.altcha_token) {
+        return Err(CreateHitIssueError {
+            message: "altcha solution incorrect".into(),
+            http_status_code: 403,
+        });
+    }
+
+    let message = issue.message.trim();
+    if message.is_empty() {
+        return Err(CreateHitIssueError {
+            message: "issue message is required".into(),
+            http_status_code: 400,
+        });
+    }
+
+    let hs = serv.hit_service();
+
+    if hs.lock().get_hit(&HitId::Id(hit_id)).is_none() {
+        return Err(CreateHitIssueError {
+            message: "hit not found".into(),
             http_status_code: 404,
-        })
+        });
+    }
+
+    let now = OffsetDateTime::now_utc();
+    let new_issue = HitIssue {
+        id: Uuid::new_v4(),
+        hit_id,
+        r#type: HitIssueType::Custom,
+        message: message.to_string(),
+        created_at: now,
+        last_modified: now,
+    };
+
+    if sqlx::query(
+        "INSERT INTO hit_issues (id, hit_id, type, message, created_at, last_modified) VALUES (?, ?, ?, ?, ?, ?)",
+    )
+    .bind(new_issue.id)
+    .bind(new_issue.hit_id)
+    .bind("custom")
+    .bind(&new_issue.message)
+    .bind(new_issue.created_at)
+    .bind(new_issue.last_modified)
+    .execute(&mut **db)
+    .await
+    .is_err()
+    {
+        return Err(CreateHitIssueError {
+            message: "failed to create issue".into(),
+            http_status_code: 500,
+        });
+    }
+
+    let _ = queue.send(GlobalEvent::CreateHitIssue(new_issue.clone()));
+
+    Ok(Json(new_issue))
+}
+
+/// # Delete a hit issue
+///
+/// Delete an issue for a hit. The authenticated user needs to have issue delete permissions.
+
+#[openapi(tag = "Hits")]
+#[delete("/hits/<hit_id>/issues/<issue_id>")]
+pub async fn delete_hit_issue(
+    hit_id: Uuid,
+    issue_id: Uuid,
+    user: UserAuthenticator,
+    queue: &State<Sender<GlobalEvent>>,
+    mut db: Connection<HitsterConfig>,
+) -> Result<Json<MessageResponse>, DeleteHitIssueError> {
+    if !user.0.permissions.contains(Permissions::DELETE_ISSUES) {
+        return Err(DeleteHitIssueError {
+            message: "permission denied".into(),
+            http_status_code: 401,
+        });
+    }
+
+    let query_result = sqlx::query("DELETE FROM hit_issues WHERE hit_id = ? AND id = ?")
+        .bind(hit_id)
+        .bind(issue_id)
+        .execute(&mut **db)
+        .await;
+
+    match query_result {
+        Ok(result) if result.rows_affected() > 0 => {
+            let _ = queue.send(GlobalEvent::DeleteHitIssue { hit_id, issue_id });
+            Ok(Json(MessageResponse {
+                message: "issue deleted successfully".into(),
+                r#type: "success".into(),
+            }))
+        }
+        Ok(_) => Err(DeleteHitIssueError {
+            message: "issue not found".into(),
+            http_status_code: 404,
+        }),
+        Err(_) => Err(DeleteHitIssueError {
+            message: "failed to delete issue".into(),
+            http_status_code: 500,
+        }),
+    }
 }
 
 /// # Update a hit
@@ -130,7 +380,7 @@ pub async fn update_hit(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, UpdateHitError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+    if !user.0.permissions.contains(Permissions::WRITE_HITS) {
         return Err(UpdateHitError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -297,7 +547,7 @@ pub async fn delete_hit(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, DeleteHitError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+    if !user.0.permissions.contains(Permissions::WRITE_HITS) {
         return Err(DeleteHitError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -355,7 +605,7 @@ pub async fn delete_pack(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, DeletePackError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_PACKS) {
+    if !user.0.permissions.contains(Permissions::WRITE_PACKS) {
         return Err(DeletePackError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -413,7 +663,7 @@ pub async fn create_pack(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<PackPayload>, CreatePackError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_PACKS) {
+    if !user.0.permissions.contains(Permissions::WRITE_PACKS) {
         return Err(CreatePackError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -476,7 +726,7 @@ pub async fn update_pack(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<MessageResponse>, UpdatePackError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_PACKS) {
+    if !user.0.permissions.contains(Permissions::WRITE_PACKS) {
         return Err(UpdatePackError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -532,7 +782,7 @@ pub async fn create_hit(
     serv: &State<ServiceStore>,
     mut db: Connection<HitsterConfig>,
 ) -> Result<Json<FullHitPayload>, CreateHitError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+    if !user.0.permissions.contains(Permissions::WRITE_HITS) {
         return Err(CreateHitError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -643,7 +893,7 @@ pub async fn export_hits(
     user: UserAuthenticator,
     serv: &State<ServiceStore>,
 ) -> Result<Yaml, ExportHitsError> {
-    if !user.0.permissions.contains(Permissions::CAN_WRITE_HITS) {
+    if !user.0.permissions.contains(Permissions::WRITE_HITS) {
         return Err(ExportHitsError {
             message: "permission denied".into(),
             http_status_code: 401,
@@ -661,7 +911,7 @@ pub async fn export_hits(
         ..Default::default()
     };
 
-    let results = hsl.search_hits(&hsq);
+    let results = hsl.search_hits(&hsq, None);
 
     let mut data = HitsterData::new(vec![], vec![]);
 

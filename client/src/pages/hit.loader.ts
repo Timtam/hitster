@@ -1,5 +1,5 @@
 import type { LoaderFunction } from "react-router"
-import { FullHit, Pack } from "../entities"
+import { FullHit, HitQueryPart, Pack } from "../entities"
 import HitService from "../services/hits.service"
 
 const loader: LoaderFunction = async ({
@@ -8,7 +8,7 @@ const loader: LoaderFunction = async ({
     const hs = new HitService()
 
     if (params.hitId !== undefined) {
-        const hit = await hs.get(params.hitId)
+        const hit = await hs.get(params.hitId, [HitQueryPart.Issues])
 
         if (hit === undefined)
             throw { message: "hit id not found", status: 404 }

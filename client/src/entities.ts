@@ -12,8 +12,11 @@ function createPaginatedResponseSchema<ItemType extends z.ZodTypeAny>(
 }
 
 export const Permissions = z.object({
-    can_write_hits: z.boolean(),
-    can_write_packs: z.boolean(),
+    write_hits: z.boolean(),
+    write_packs: z.boolean(),
+    read_issues: z.boolean(),
+    write_issues: z.boolean(),
+    delete_issues: z.boolean(),
 })
 
 export type Permissions = z.infer<typeof Permissions>
@@ -28,6 +31,22 @@ export const User = z.object({
 
 export type User = z.infer<typeof User>
 
+export enum HitIssueType {
+    Auto = "auto",
+    Custom = "custom",
+}
+
+export const HitIssue = z.object({
+    id: z.uuid(),
+    hit_id: z.uuid(),
+    type: z.nativeEnum(HitIssueType),
+    message: z.string(),
+    created_at: z.coerce.date(),
+    last_modified: z.coerce.date(),
+})
+
+export type HitIssue = z.infer<typeof HitIssue>
+
 export const Hit = z.object({
     artist: z.string(),
     title: z.string(),
@@ -35,6 +54,8 @@ export const Hit = z.object({
     packs: z.array(z.string()),
     belongs_to: z.string(),
     id: z.uuid(),
+    downloaded: z.optional(z.boolean()),
+    issues: z.optional(z.array(HitIssue)),
 })
 
 export type Hit = z.infer<typeof Hit>
@@ -48,6 +69,8 @@ export const FullHit = z.object({
     id: z.optional(z.uuid()),
     yt_id: z.string(),
     playback_offset: z.number(),
+    downloaded: z.optional(z.boolean()),
+    issues: z.optional(z.array(HitIssue)),
 })
 
 export type FullHit = z.infer<typeof FullHit>
@@ -172,6 +195,21 @@ export const ProcessHitsEvent = z.object({
 
 export type ProcessHitsEvent = z.infer<typeof ProcessHitsEvent>
 
+export const CreateHitIssueEvent = z.object({
+    create_hit_issue: HitIssue,
+})
+
+export type CreateHitIssueEvent = z.infer<typeof CreateHitIssueEvent>
+
+export const DeleteHitIssueEvent = z.object({
+    delete_hit_issue: z.object({
+        hit_id: z.uuid(),
+        issue_id: z.uuid(),
+    }),
+})
+
+export type DeleteHitIssueEvent = z.infer<typeof DeleteHitIssueEvent>
+
 export const PaginatedHitsResponse = createPaginatedResponseSchema(Hit)
 
 export type PaginatedHitsResponse = z.infer<typeof PaginatedHitsResponse>
@@ -188,6 +226,15 @@ export enum SortDirection {
     Descending = "descending",
 }
 
+export enum HitQueryPart {
+    Issues = "issues",
+    Downloaded = "downloaded",
+}
+
+export enum HitSearchFilter {
+    HasIssues = "has_issues",
+}
+
 export const HitSearchQuery = z.object({
     sort_by: z.optional(z.array(z.nativeEnum(SortBy))),
     sort_direction: z.optional(z.nativeEnum(SortDirection)),
@@ -195,6 +242,8 @@ export const HitSearchQuery = z.object({
     packs: z.optional(z.array(z.uuid())),
     start: z.optional(z.number()),
     amount: z.optional(z.number()),
+    parts: z.optional(z.array(z.nativeEnum(HitQueryPart))),
+    filters: z.optional(z.array(z.nativeEnum(HitSearchFilter))),
 })
 
 export type HitSearchQuery = z.infer<typeof HitSearchQuery>

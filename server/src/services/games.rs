@@ -29,6 +29,12 @@ pub struct GameService {
 }
 
 impl GameService {
+    fn enqueue_availability_check(&self, hit: Option<Hit>) {
+        if let Some(hit) = hit {
+            self.hit_service.lock().queue_availability_check(hit);
+        }
+    }
+
     pub fn new(hit_service: ServiceHandle<HitService>) -> Self {
         Self {
             hit_service,
@@ -338,6 +344,8 @@ impl GameService {
                     player.tokens = game.start_tokens;
                     player.slots = self.get_slots(&player.hits);
                 }
+
+                self.enqueue_availability_check(game.hits_remaining.front().cloned());
 
                 Ok(game.clone())
             }
@@ -722,6 +730,8 @@ impl GameService {
                     .collect::<Vec<_>>();
             }
 
+            self.enqueue_availability_check(game.hits_remaining.front().cloned());
+
             Ok(game.clone())
         } else {
             Err(ConfirmSlotError {
@@ -803,6 +813,8 @@ impl GameService {
                     .collect::<Vec<_>>();
             }
 
+            self.enqueue_availability_check(game.hits_remaining.front().cloned());
+
             Ok((game.clone(), hit))
         } else {
             Err(SkipHitError {
@@ -883,6 +895,8 @@ impl GameService {
             player.hits.push(hit.clone());
             player.slots = self.get_slots(&player.hits);
             game.remembered_hits.push(hit.clone());
+
+            self.enqueue_availability_check(Some(hit.clone()));
 
             Ok((game.clone(), hit))
         } else {

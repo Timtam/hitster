@@ -10,6 +10,7 @@ multi_key_map = { workspace = true }
 natord = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
+schemars = { workspace = true }
 simsearch = "0.3.0"
 sqlx = { workspace = true }
 time = { workspace = true }

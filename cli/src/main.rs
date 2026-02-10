@@ -46,6 +46,8 @@ enum UsersCommands {
     Edit(UsersEditArgs),
     /// list all users currently in the database
     List {},
+    /// list all available permissions and their bit values
+    Permissions {},
 }
 
 #[derive(Args)]
@@ -143,6 +145,9 @@ async fn main() -> Result<ExitCode, Box<dyn Error>> {
                     if !success {
                         return Ok(ExitCode::from(1));
                     }
+                }
+                UsersCommands::Permissions {} => {
+                    users::list_permissions();
                 }
             }
         }

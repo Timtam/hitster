@@ -7,15 +7,17 @@ import { useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import Modal from "react-bootstrap/Modal"
+import Table from "react-bootstrap/Table"
 import { useTranslation } from "react-i18next"
 import { Link, useLoaderData, useNavigate } from "react-router"
 import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
-import { FullHit, Pack } from "../entities"
-import { Events } from "../events"
+import { FullHit, HitIssueType, Pack } from "../entities"
+import { Events, IssueCreatedData, IssueDeletedData } from "../events"
 import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
+import ReportHitIssueModal from "../modals/report-hit-issue"
 import HitService from "../services/hits.service"
 import { RE_YOUTUBE } from "../utils"
 
@@ -52,6 +54,39 @@ function DeleteHitModal({
     )
 }
 
+function DeleteIssueModal({
+    show,
+    onHide,
+}: {
+    show: boolean
+    onHide: (yes: boolean) => void
+}) {
+    const { t } = useTranslation()
+
+    useEffect(() => {
+        if (show) EventManager.publish(Events.popup)
+    }, [show])
+
+    return (
+        <Modal show={show} onHide={() => {}}>
+            <Modal.Header>
+                <Modal.Title>{t("deleteIssue")}</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {show ? (
+                    <>
+                        <h2>{t("deleteIssueQuestion")}</h2>
+                        <Button onClick={() => onHide(false)}>{t("no")}</Button>
+                        <Button onClick={() => onHide(true)}>{t("yes")}</Button>
+                    </>
+                ) : (
+                    ""
+                )}
+            </Modal.Body>
+        </Modal>
+    )
+}
+
 export default function Hit() {
     const hitService = useMemo(() => new HitService(), [])
     const sorter = useMemo(() => natsort(), [])
@@ -72,12 +107,44 @@ export default function Hit() {
     const [youtubeUrl, setYoutubeUrl] = useState("")
     const [isUrlValid, setIsUrlValid] = useState(true)
     const [showDeleteHitModal, setShowDeleteHitModal] = useState(false)
+    const [showReportIssueModal, setShowReportIssueModal] = useState(false)
+    const [issueToDelete, setIssueToDelete] = useState<string | undefined>()
     const reload = useRevalidate()
     const navigate = useNavigate()
+    const canDeleteIssues = useMemo(
+        () => user?.permissions.delete_issues === true,
+        [user],
+    )
+    const canReadIssues = useMemo(
+        () => user?.permissions.read_issues === true,
+        [user],
+    )
 
     useEffect(() => {
         setIsUrlValid(RE_YOUTUBE.test(youtubeUrl))
     }, [youtubeUrl, setIsUrlValid])
+
+    useEffect(() => {
+        if (!canReadIssues || !hit.id) return
+
+        const unsubscribeIssueCreated = EventManager.subscribe(
+            Events.issueCreated,
+            (e: IssueCreatedData) => {
+                if (e.issue.hit_id === hit.id) reload()
+            },
+        )
+        const unsubscribeIssueDeleted = EventManager.subscribe(
+            Events.issueDeleted,
+            (e: IssueDeletedData) => {
+                if (e.hitId === hit.id) reload()
+            },
+        )
+
+        return () => {
+            unsubscribeIssueCreated()
+            unsubscribeIssueDeleted()
+        }
+    }, [canReadIssues, hit.id, reload])
 
     return (
         <>
@@ -87,7 +154,7 @@ export default function Hit() {
             <FA>
                 <h2>{`${hit.artist}: ${hit.title}`}</h2>
             </FA>
-            {!editing && user?.permissions.can_write_hits ? (
+            {!editing && user?.permissions.write_hits ? (
                 <>
                     <Button
                         onClick={() => {
@@ -142,6 +209,47 @@ export default function Hit() {
             ) : (
                 ""
             )}
+            {user?.permissions.write_issues ? (
+                <>
+                    <Button
+                        className={user?.permissions.write_hits ? "ms-2" : ""}
+                        onClick={() => setShowReportIssueModal(true)}
+                    >
+                        {t("reportIssue")}
+                    </Button>
+                    <ReportHitIssueModal
+                        show={showReportIssueModal}
+                        hitId={hit.id ?? ""}
+                        onHide={() => setShowReportIssueModal(false)}
+                    />
+                </>
+            ) : (
+                ""
+            )}
+            <DeleteIssueModal
+                show={issueToDelete !== undefined}
+                onHide={(yes) => {
+                    const issueId = issueToDelete
+                    if (yes && issueId) {
+                        ;(async () => {
+                            try {
+                                if (!hit.id) {
+                                    showError(t("error"))
+                                    setIssueToDelete(undefined)
+                                    return
+                                }
+                                await hitService.deleteIssue(hit.id, issueId)
+                                reload()
+                            } catch (e) {
+                                showError((e as any).message)
+                            }
+                            setIssueToDelete(undefined)
+                        })()
+                    } else {
+                        setIssueToDelete(undefined)
+                    }
+                }}
+            />
             <Form onSubmit={(e) => e.preventDefault()}>
                 <Form.Group className="mb-2">
                     {editing ? (
@@ -352,6 +460,69 @@ export default function Hit() {
                     ""
                 )}
             </Form>
+            {canReadIssues ? (
+                <>
+                    <h3>
+                        {t("issuesHeading", {
+                            count: hit.issues ? hit.issues.length : 0,
+                        })}
+                    </h3>
+                    <Table responsive>
+                        <thead>
+                            <tr>
+                                <th>{t("type")}</th>
+                                <th>{t("message")}</th>
+                                <th>{t("createdAt")}</th>
+                                <th>{t("lastModified")}</th>
+                                {canDeleteIssues ? (
+                                    <th>{t("action")}</th>
+                                ) : null}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {hit.issues && hit.issues.length > 0 ? (
+                                hit.issues.map((issue) => (
+                                    <tr key={issue.id}>
+                                        <td>
+                                            {issue.type === HitIssueType.Auto
+                                                ? t("automatic")
+                                                : t("custom")}
+                                        </td>
+                                        <td>{issue.message}</td>
+                                        <td>
+                                            {issue.created_at.toLocaleString()}
+                                        </td>
+                                        <td>
+                                            {issue.last_modified.toLocaleString()}
+                                        </td>
+                                        {canDeleteIssues ? (
+                                            <td>
+                                                <Button
+                                                    onClick={() =>
+                                                        setIssueToDelete(
+                                                            issue.id,
+                                                        )
+                                                    }
+                                                >
+                                                    {t("delete")}
+                                                </Button>
+                                            </td>
+                                        ) : null}
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={canDeleteIssues ? 5 : 4}>
+                                        {t("noIssues")}
+                                    </td>
+                                </tr>
+                            )}
+                        </tbody>
+                    </Table>
+                </>
+            ) : (
+                ""
+            )}
         </>
     )
 }

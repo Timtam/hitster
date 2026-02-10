@@ -33,13 +33,17 @@ confirmYes: Titel und Interpret des Hits wurde richtig erraten
 createHit: Hit erstellen
 createNewGame: Spiel erstellen
 createPack: Pack erstellen
+createdAt: Erstellt
 creator: Ersteller
 current: (aktuell)
+custom: Benutzerdefiniert
 dark: Dunkel
 delete: Löschen
 deleteAccount: Benutzerkonto löschen
 deleteHit: Hit löschen
 deleteHitQuestion: Möchtest du den Hit wirklich löschen?
+deleteIssue: Problem löschen
+deleteIssueQuestion: Möchtest du dieses Problem wirklich löschen?
 deletePack: Pack löschen
 deletePackQuestion: Möchtest du das Pack wirklich löschen?
 descending: Absteigend
@@ -97,6 +101,7 @@ gameSettingsNotCreator: Nur der Ersteller des Spiels kann es bearbeiten
 gameSettingsPacks: "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:"
 gameSettingsShortcut: Alt+Umschalt+E
 gameSettingsStartTokens: Wie viele Chips bekommt jeder Spieler zu Beginn des Spiels?
+hasIssues: Nur Hits mit Problemen
 game_one: Spiel
 goal: Ziel
 guess: "{{player}} vermutet: {{guess}}"
@@ -127,6 +132,10 @@ howToPlay: Wie wird gespielt?
 issue: >-
     Für Lob, Kritik oder Fehlermeldungen, eröffne bitte ein <0>Issue auf
     GitHub</0>.
+issueMessageLabel: Problembeschreibung
+issueMessagePlaceholder: Beschreibe das Problem mit diesem Hit.
+issues: Probleme
+issuesHeading: Probleme ({{count}})
 joinGame: Spiel beitreten
 joinGameShortcut: Alt+Umschalt+J
 keyboardShortcut_one: Tastenkombination
@@ -135,6 +144,7 @@ kick: Kicken
 knownAs: Du bist derzeit bekannt als {{username}}
 language: Sprache
 last: Letzte
+lastModified: Zuletzt geändert
 leaveGame: Spiel verlassen
 leaveGameQuestion: Möchtest du das Spiel wirklich verlassen, während es noch läuft?
 leaveGameShortcut: Alt+Umschalt+Q
@@ -181,6 +191,7 @@ manualBasic: >
     schau dir doch einfach die erweiterten Funktionen an, indem du die
     Registerkarten wechselst.
 manualBasicTitle: Einfach
+message: Nachricht
 mode: Modus
 musicVolume: Musiklautstärke
 name: Name
@@ -188,6 +199,7 @@ navigation: Navigation
 next: Nächste
 "no": Nein
 noHitAvailable: Kein Hit verfügbar
+noIssues: Keine Probleme gemeldet.
 noShortcut: Alt+Umschalt+N
 noone: niemand
 nooneWins: Niemand hat dieses Spiel gewonnen.
@@ -247,6 +259,7 @@ reorderInstructions: >-
     bewegen. Drücke die Leertaste oder Enter, um den Eintrag zu platzieren, oder
     Escape, um abzubrechen.
 repeatPassword: Passwort wiederholen
+reportIssue: Problem melden
 running: läuft
 save: Speichern
 search: Suche
@@ -289,9 +302,12 @@ stopGameShortcut: Alt+Umschalt+S
 stopHit: Hit stoppen
 submitGuess: Vermutung abschicken
 submitGuessShortcut: Alt+Umschalt+Enter
+submitIssue: Problem senden
+submitting: Wird gesendet...
 title: Titel
 token_one: Chip
 token_other: Chips
+type: Typ
 username: Benutzername
 version: "Version: {{version}}"
 volume: Lautstärke

@@ -13,11 +13,19 @@ import usePrefersColorScheme from "use-prefers-color-scheme"
 import type { Context } from "./context"
 import {
     CreateGameEvent,
+    CreateHitIssueEvent,
+    DeleteHitIssueEvent,
     ProcessHitsEvent,
     RemoveGameEvent,
     User,
 } from "./entities"
-import { Events, GameCreatedData, GameRemovedData } from "./events"
+import {
+    Events,
+    GameCreatedData,
+    GameRemovedData,
+    IssueCreatedData,
+    IssueDeletedData,
+} from "./events"
 import ErrorModal from "./modals/error"
 import WelcomeModal from "./modals/welcome"
 import Navigation from "./navigation"
@@ -107,6 +115,23 @@ export default function Layout() {
                     Events.hitsProgressUpdate,
                     ProcessHitsEvent.parse(JSON.parse(e.data)).process_hits,
                 )
+            })
+
+            eventSource.addEventListener("create_hit_issue", (e) => {
+                EventManager.publish(Events.issueCreated, {
+                    issue: CreateHitIssueEvent.parse(JSON.parse(e.data))
+                        .create_hit_issue,
+                } satisfies IssueCreatedData)
+            })
+
+            eventSource.addEventListener("delete_hit_issue", (e) => {
+                const data = DeleteHitIssueEvent.parse(
+                    JSON.parse(e.data),
+                ).delete_hit_issue
+                EventManager.publish(Events.issueDeleted, {
+                    hitId: data.hit_id,
+                    issueId: data.issue_id,
+                } satisfies IssueDeletedData)
             })
         }
 

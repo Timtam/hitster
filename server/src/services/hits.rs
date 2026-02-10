@@ -1,11 +1,21 @@
 use crate::{
-    hits::{DownloadHitData, HitSearchQuery, SortBy, SortDirection},
+    hits::{DownloadHitData, HitSearchFilter, HitSearchQuery, SortBy, SortDirection},
     responses::PaginatedResponse,
 };
 use hitster_core::{Hit, HitId, HitsterData, Pack};
 use rocket::tokio::sync::broadcast::Sender;
-use std::{cmp::Ordering, collections::HashMap};
+use std::{
+    cmp::Ordering,
+    collections::{HashMap, HashSet},
+};
 use uuid::Uuid;
+
+fn includes_filter(filters: &Option<Vec<HitSearchFilter>>, filter: HitSearchFilter) -> bool {
+    filters
+        .as_ref()
+        .map(|f| f.contains(&filter))
+        .unwrap_or(false)
+}
 
 pub struct HitService {
     hitster_data: HitsterData,
@@ -13,6 +23,7 @@ pub struct HitService {
     processing: bool,
     dl_sender: Option<Sender<Hit>>,
     process_sender: Option<Sender<DownloadHitData>>,
+    availability_sender: Option<Sender<Hit>>,
 }
 
 impl HitService {
@@ -23,6 +34,7 @@ impl HitService {
             processing: false,
             dl_sender: None,
             process_sender: None,
+            availability_sender: None,
         }
     }
 
@@ -98,6 +110,10 @@ impl HitService {
         self.process_sender = Some(process_sender);
     }
 
+    pub fn set_availability_sender(&mut self, availability_sender: Sender<Hit>) {
+        self.availability_sender = Some(availability_sender);
+    }
+
     pub fn get_hit(&self, hit_id: &HitId) -> Option<&Hit> {
         self.hitster_data.get_hit(hit_id)
     }
@@ -106,7 +122,11 @@ impl HitService {
         self.hitster_data.remove_hit(hit)
     }
 
-    pub fn search_hits(&self, query: &HitSearchQuery) -> PaginatedResponse<Hit> {
+    pub fn search_hits(
+        &self,
+        query: &HitSearchQuery,
+        hits_with_issues: Option<&HashSet<Uuid>>,
+    ) -> PaginatedResponse<Hit> {
         let def = HitSearchQuery::default();
         let start = query.start.or(def.start).unwrap();
         let mut amount = query.amount.or(def.amount).unwrap();
@@ -144,6 +164,12 @@ impl HitService {
                 )
                 .into_values()
                 .collect::<Vec<_>>();
+        }
+
+        if includes_filter(&query.filters, HitSearchFilter::HasIssues)
+            && let Some(hits_with_issues) = hits_with_issues
+        {
+            hits.retain(|hit| hits_with_issues.contains(&hit.id));
         }
 
         let total = hits.len();
@@ -188,6 +214,12 @@ impl HitService {
 
     pub fn download_hit(&self, hit: Hit) {
         let _ = self.dl_sender.as_ref().unwrap().send(hit);
+    }
+
+    pub fn queue_availability_check(&self, hit: Hit) {
+        if let Some(sender) = &self.availability_sender {
+            let _ = sender.send(hit);
+        }
     }
 }
 
