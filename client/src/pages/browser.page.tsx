@@ -31,6 +31,7 @@ import { Link, useLoaderData, useSearchParams } from "react-router"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import {
+    HitSearchFilter,
     HitQueryPart,
     HitSearchQuery,
     Pack,
@@ -104,6 +105,7 @@ export default function Browser() {
     const [sortDirection, setSortDirection] = useState(SortDirection.Ascending)
     const [showPacksModal, setShowPacksModal] = useImmer<boolean[]>([])
     const [packs, setPacks] = useState<string[]>([])
+    const [filters, setFilters] = useState<HitSearchFilter[]>([])
     const [showPackFilter, setShowPackFilter] = useState(false)
     const revalidate = useRevalidate()
     const { user } = useContext()
@@ -196,6 +198,7 @@ export default function Browser() {
                         sort_by: sortBy.map((i) => SORT_BY_INDEX[i]),
                         sort_direction: sortDirection,
                         packs: packs,
+                        filters: filters,
                     } satisfies HitSearchQuery))()
                 setSortByItems(sortBy)
             }
@@ -207,6 +210,7 @@ export default function Browser() {
             query,
             sortDirection,
             packs,
+            filters,
             setSearchParams,
         ],
     )
@@ -215,6 +219,18 @@ export default function Browser() {
         const p: string = searchParams.get("p") ?? `${page}`
         const q: string = searchParams.get("q") ?? query
         const packs = searchParams.getAll("pack")
+        const parsedFilters = searchParams.getAll("filter").reduce((acc, i) => {
+            const filter =
+                HitSearchFilter[
+                    toPascalCase(i) as keyof typeof HitSearchFilter
+                ]
+            if (filter) acc.push(filter)
+            return acc
+        }, [] as HitSearchFilter[])
+        const activeFilters = parsedFilters.filter(
+            (filter) =>
+                filter !== HitSearchFilter.HasIssues || canReadIssues,
+        )
         const sortDirection =
             SortDirection[
                 toPascalCase(
@@ -236,6 +252,7 @@ export default function Browser() {
         setPacks(
             availablePacks.filter((p) => packs.includes(p.id)).map((p) => p.id),
         )
+        setFilters(activeFilters)
         setSortDirection(sortDirection)
         setSortByItems(
             (sortCriteria as SortBy[]).map(
@@ -251,9 +268,19 @@ export default function Browser() {
                 sort_direction: sortDirection,
                 query: q,
                 packs: packs,
+                filters: activeFilters,
             } satisfies HitSearchQuery)
         })()
-    }, [setQuery, setPacks, setSortDirection, setSortByItems, setPage, search])
+    }, [
+        setQuery,
+        setPacks,
+        setFilters,
+        setSortDirection,
+        setSortByItems,
+        setPage,
+        search,
+        canReadIssues,
+    ])
 
     useEffect(() => {
         if (!canReadIssues) return
@@ -372,6 +399,7 @@ export default function Browser() {
                                                     sort_direction:
                                                         sortDirection,
                                                     packs: packs,
+                                                    filters: filters,
                                                 } satisfies HitSearchQuery)
                                                 setSearchTimer(null)
                                             }, SEARCH_DELAY),
@@ -559,6 +587,7 @@ export default function Browser() {
                                                         sort_direction:
                                                             SortDirection.Ascending,
                                                         packs: packs,
+                                                        filters: filters,
                                                     } satisfies HitSearchQuery))()
                                             }}
                                         />
@@ -605,6 +634,7 @@ export default function Browser() {
                                                         sort_direction:
                                                             SortDirection.Descending,
                                                         packs: packs,
+                                                        filters: filters,
                                                     } satisfies HitSearchQuery))()
                                             }}
                                         />
@@ -617,6 +647,74 @@ export default function Browser() {
                                     </div>
                                 </fieldset>
                             </Form.Group>
+                            {canReadIssues ? (
+                                <Form.Group className="mb-2">
+                                    <div className="form-check">
+                                        <input
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            id="filter-has-issues"
+                                            checked={filters.includes(
+                                                HitSearchFilter.HasIssues,
+                                            )}
+                                            onChange={() => {
+                                                const hasIssuesFilterEnabled =
+                                                    filters.includes(
+                                                        HitSearchFilter.HasIssues,
+                                                    )
+                                                const updatedFilters =
+                                                    hasIssuesFilterEnabled
+                                                        ? filters.filter(
+                                                              (filter) =>
+                                                                  filter !==
+                                                                  HitSearchFilter.HasIssues,
+                                                          )
+                                                        : [
+                                                              ...filters,
+                                                              HitSearchFilter.HasIssues,
+                                                          ]
+
+                                                setFilters(updatedFilters)
+                                                setSearchParams((p) => {
+                                                    p.delete("filter")
+                                                    updatedFilters.forEach(
+                                                        (filter) =>
+                                                            p.append(
+                                                                "filter",
+                                                                filter,
+                                                            ),
+                                                    )
+                                                    p.set("p", "1")
+                                                    return p
+                                                })
+                                                ;(async () =>
+                                                    await search({
+                                                        query: query,
+                                                        start: 1,
+                                                        amount: PAGE_SIZE,
+                                                        sort_by:
+                                                            sortByItems.map(
+                                                                (i) =>
+                                                                    SORT_BY_INDEX[
+                                                                        i
+                                                                    ],
+                                                            ),
+                                                        sort_direction:
+                                                            sortDirection,
+                                                        packs: packs,
+                                                        filters: updatedFilters,
+                                                    } satisfies HitSearchQuery))()
+                                            }}
+                                        />
+                                        <label
+                                            htmlFor="filter-has-issues"
+                                            className="form-check-label"
+                                        >
+                                            {t("hasIssues")}
+                                        </label>
+                                    </div>
+                                </Form.Group>
+                            ) : null}
                             <Form.Group className="mb-2">
                                 <Button
                                     aria-expanded={false}
@@ -661,6 +759,7 @@ export default function Browser() {
                                                 ),
                                                 sort_direction: sortDirection,
                                                 packs: selected,
+                                                filters: filters,
                                             } satisfies HitSearchQuery))()
                                     }}
                                 />
@@ -779,6 +878,7 @@ export default function Browser() {
                                     sort_direction: sortDirection,
                                     query: query,
                                     packs: packs,
+                                    filters: filters,
                                 } satisfies HitSearchQuery)
                             }}
                         >
@@ -801,6 +901,7 @@ export default function Browser() {
                                     sort_direction: sortDirection,
                                     query: query,
                                     packs: packs,
+                                    filters: filters,
                                 } satisfies HitSearchQuery)
                                 setPage(page - 1)
                             }}
@@ -837,6 +938,7 @@ export default function Browser() {
                                                 sort_direction: sortDirection,
                                                 query: query,
                                                 packs: packs,
+                                                filters: filters,
                                             } satisfies HitSearchQuery)
                                             setPage(i + 1)
                                         }}
@@ -877,6 +979,7 @@ export default function Browser() {
                                     sort_direction: sortDirection,
                                     query: query,
                                     packs: packs,
+                                    filters: filters,
                                 } satisfies HitSearchQuery)
                                 setPage(page + 1)
                             }}
@@ -900,6 +1003,7 @@ export default function Browser() {
                                     sort_direction: sortDirection,
                                     query: query,
                                     packs: packs,
+                                    filters: filters,
                                 } satisfies HitSearchQuery)
                                 setPage(getPageCount())
                             }}

@@ -101,6 +101,7 @@ gameSettingsNotCreator: Only the creator can edit the game settings
 gameSettingsPacks: "Check all the packs you want to use in this game:"
 gameSettingsShortcut: Alt+Shift+E
 gameSettingsStartTokens: How many tokens should every player get when starting a game?
+hasIssues: Only hits with issues
 game_one: Game
 goal: Goal
 guess: "{{player}} guesses: {{guess}}"

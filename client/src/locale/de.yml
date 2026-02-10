@@ -101,6 +101,7 @@ gameSettingsNotCreator: Nur der Ersteller des Spiels kann es bearbeiten
 gameSettingsPacks: "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:"
 gameSettingsShortcut: Alt+Umschalt+E
 gameSettingsStartTokens: Wie viele Chips bekommt jeder Spieler zu Beginn des Spiels?
+hasIssues: Nur Hits mit Problemen
 game_one: Spiel
 goal: Ziel
 guess: "{{player}} vermutet: {{guess}}"

@@ -231,6 +231,10 @@ export enum HitQueryPart {
     Downloaded = "downloaded",
 }
 
+export enum HitSearchFilter {
+    HasIssues = "has_issues",
+}
+
 export const HitSearchQuery = z.object({
     sort_by: z.optional(z.array(z.nativeEnum(SortBy))),
     sort_direction: z.optional(z.nativeEnum(SortDirection)),
@@ -239,6 +243,7 @@ export const HitSearchQuery = z.object({
     start: z.optional(z.number()),
     amount: z.optional(z.number()),
     parts: z.optional(z.array(z.nativeEnum(HitQueryPart))),
+    filters: z.optional(z.array(z.nativeEnum(HitSearchFilter))),
 })
 
 export type HitSearchQuery = z.infer<typeof HitSearchQuery>

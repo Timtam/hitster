@@ -2,7 +2,8 @@ use crate::{
     GlobalEvent, HitsterConfig,
     games::PackPayload,
     hits::{
-        CreatePackPayload, FullHitPayload, HitPartsQuery, HitPayload, HitQueryPart, HitSearchQuery,
+        CreatePackPayload, FullHitPayload, HitPartsQuery, HitPayload, HitQueryPart,
+        HitSearchFilter, HitSearchQuery,
     },
     responses::{
         CreateHitError, CreateHitIssueError, CreatePackError, DeleteHitError, DeleteHitIssueError,
@@ -22,12 +23,19 @@ use rocket_db_pools::{
 use rocket_okapi::okapi::schemars::JsonSchema;
 use rocket_okapi::openapi;
 use serde::Deserialize;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use time::OffsetDateTime;
 use uuid::Uuid;
 
 fn includes_part(parts: &Option<Vec<HitQueryPart>>, part: HitQueryPart) -> bool {
     parts.as_ref().map(|p| p.contains(&part)).unwrap_or(false)
+}
+
+fn includes_filter(filters: &Option<Vec<HitSearchFilter>>, filter: HitSearchFilter) -> bool {
+    filters
+        .as_ref()
+        .map(|all_filters| all_filters.contains(&filter))
+        .unwrap_or(false)
 }
 
 #[derive(FromRow)]
@@ -85,7 +93,10 @@ pub fn get_all_packs(serv: &State<ServiceStore>) -> Json<PacksResponse> {
 /// The results will be paginated, use the parameters to specify the page size.
 /// Use the optional `parts` parameter to include additional hit data in the response.
 /// Supported values are `issues` and `downloaded`.
+/// Use the optional `filters` parameter to narrow down results.
+/// Supported values are `has_issues`.
 /// Issue data is only returned if the caller has the `READ_ISSUES` permission.
+/// The `has_issues` filter is only applied if the caller has the `READ_ISSUES` permission.
 
 #[openapi(tag = "Hits")]
 #[get("/hits/search?<query..>")]
@@ -95,14 +106,33 @@ pub async fn search_hits(
     user: Option<UserAuthenticator>,
     mut db: Connection<HitsterConfig>,
 ) -> Json<PaginatedResponse<HitPayload>> {
-    let hs = svc.hit_service();
-    let res = hs.lock().search_hits(&query);
-    let include_download_status = includes_part(&query.parts, HitQueryPart::Downloaded);
-    let include_issues = includes_part(&query.parts, HitQueryPart::Issues);
     let can_read_issues = user
         .as_ref()
         .map(|u| u.0.permissions.contains(Permissions::READ_ISSUES))
         .unwrap_or(false);
+    let include_download_status = includes_part(&query.parts, HitQueryPart::Downloaded);
+    let include_issues = includes_part(&query.parts, HitQueryPart::Issues);
+    let include_has_issues_filter =
+        can_read_issues && includes_filter(&query.filters, HitSearchFilter::HasIssues);
+    let hits_with_issues = if include_has_issues_filter {
+        sqlx::query_scalar::<_, Uuid>("SELECT DISTINCT hit_id FROM hit_issues")
+            .fetch_all(&mut **db)
+            .await
+            .unwrap_or_default()
+            .into_iter()
+            .collect::<HashSet<Uuid>>()
+    } else {
+        HashSet::new()
+    };
+    let hs = svc.hit_service();
+    let res = hs.lock().search_hits(
+        &query,
+        if include_has_issues_filter {
+            Some(&hits_with_issues)
+        } else {
+            None
+        },
+    );
 
     let issues_by_hit = if include_issues && can_read_issues {
         let mut qb = sqlx::QueryBuilder::<sqlx::Sqlite>::new(
@@ -881,7 +911,7 @@ pub async fn export_hits(
         ..Default::default()
     };
 
-    let results = hsl.search_hits(&hsq);
+    let results = hsl.search_hits(&hsq, None);
 
     let mut data = HitsterData::new(vec![], vec![]);
 

@@ -180,6 +180,15 @@ pub enum SortBy {
     BelongsTo,
 }
 
+/// optional filters for searching hits
+
+#[derive(Copy, Clone, Deserialize, Eq, JsonSchema, PartialEq, FromFormField, Debug)]
+#[serde(rename_all = "snake_case")]
+pub enum HitSearchFilter {
+    #[field(value = "has_issues")]
+    HasIssues,
+}
+
 /// a search query for searching hits
 
 #[derive(Deserialize, JsonSchema, FromForm)]
@@ -198,6 +207,8 @@ pub struct HitSearchQuery {
     pub amount: Option<usize>,
     /// optional parts to include in the response
     pub parts: Option<Vec<HitQueryPart>>,
+    /// optional filters to apply before pagination
+    pub filters: Option<Vec<HitSearchFilter>>,
 }
 
 impl Default for HitSearchQuery {
@@ -210,6 +221,7 @@ impl Default for HitSearchQuery {
             start: Some(1),
             amount: Some(50),
             parts: None,
+            filters: None,
         }
     }
 }

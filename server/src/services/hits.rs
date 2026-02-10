@@ -1,11 +1,21 @@
 use crate::{
-    hits::{DownloadHitData, HitSearchQuery, SortBy, SortDirection},
+    hits::{DownloadHitData, HitSearchFilter, HitSearchQuery, SortBy, SortDirection},
     responses::PaginatedResponse,
 };
 use hitster_core::{Hit, HitId, HitsterData, Pack};
 use rocket::tokio::sync::broadcast::Sender;
-use std::{cmp::Ordering, collections::HashMap};
+use std::{
+    cmp::Ordering,
+    collections::{HashMap, HashSet},
+};
 use uuid::Uuid;
+
+fn includes_filter(filters: &Option<Vec<HitSearchFilter>>, filter: HitSearchFilter) -> bool {
+    filters
+        .as_ref()
+        .map(|f| f.contains(&filter))
+        .unwrap_or(false)
+}
 
 pub struct HitService {
     hitster_data: HitsterData,
@@ -112,7 +122,11 @@ impl HitService {
         self.hitster_data.remove_hit(hit)
     }
 
-    pub fn search_hits(&self, query: &HitSearchQuery) -> PaginatedResponse<Hit> {
+    pub fn search_hits(
+        &self,
+        query: &HitSearchQuery,
+        hits_with_issues: Option<&HashSet<Uuid>>,
+    ) -> PaginatedResponse<Hit> {
         let def = HitSearchQuery::default();
         let start = query.start.or(def.start).unwrap();
         let mut amount = query.amount.or(def.amount).unwrap();
@@ -150,6 +164,12 @@ impl HitService {
                 )
                 .into_values()
                 .collect::<Vec<_>>();
+        }
+
+        if includes_filter(&query.filters, HitSearchFilter::HasIssues)
+            && let Some(hits_with_issues) = hits_with_issues
+        {
+            hits.retain(|hit| hits_with_issues.contains(&hit.id));
         }
 
         let total = hits.len();
