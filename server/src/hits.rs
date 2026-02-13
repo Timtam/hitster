@@ -402,7 +402,7 @@ async fn clear_auto_issue(
     hit_id: Uuid,
     message: &str,
 ) {
-    match sqlx::query_scalar::<_, String>(
+    match sqlx::query_scalar::<_, Uuid>(
         "SELECT id FROM hit_issues WHERE hit_id = ? AND type = 'auto' AND message = ?",
     )
     .bind(hit_id)
@@ -414,26 +414,13 @@ async fn clear_auto_issue(
             for issue_id in issue_ids {
                 match sqlx::query("DELETE FROM hit_issues WHERE hit_id = ? AND id = ?")
                     .bind(hit_id)
-                    .bind(&issue_id)
+                    .bind(issue_id)
                     .execute(db)
                     .await
                 {
-                    Ok(result) if result.rows_affected() > 0 => match Uuid::parse_str(&issue_id) {
-                        Ok(issue_uuid) => {
-                            let _ = event_sender.send(GlobalEvent::DeleteHitIssue {
-                                hit_id,
-                                issue_id: issue_uuid,
-                            });
-                        }
-                        Err(err) => {
-                            rocket::warn!(
-                                "Failed to parse auto hit issue id {issue_id} for {hit_id}: {err}",
-                                issue_id = issue_id,
-                                hit_id = hit_id,
-                                err = err
-                            );
-                        }
-                    },
+                    Ok(result) if result.rows_affected() > 0 => {
+                        let _ = event_sender.send(GlobalEvent::DeleteHitIssue { hit_id, issue_id });
+                    }
                     Ok(_) => {}
                     Err(err) => {
                         rocket::warn!(
