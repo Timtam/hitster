@@ -460,7 +460,7 @@ export default function Hit() {
                     ""
                 )}
             </Form>
-            {canReadIssues ? (
+            {canReadIssues && !editing ? (
                 <>
                     <h3>
                         {t("issuesHeading", {
