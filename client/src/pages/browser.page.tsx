@@ -31,8 +31,8 @@ import { Link, useLoaderData, useSearchParams } from "react-router"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
 import {
-    HitSearchFilter,
     HitQueryPart,
+    HitSearchFilter,
     HitSearchQuery,
     Pack,
     PaginatedHitsResponse,
@@ -221,15 +221,12 @@ export default function Browser() {
         const packs = searchParams.getAll("pack")
         const parsedFilters = searchParams.getAll("filter").reduce((acc, i) => {
             const filter =
-                HitSearchFilter[
-                    toPascalCase(i) as keyof typeof HitSearchFilter
-                ]
+                HitSearchFilter[toPascalCase(i) as keyof typeof HitSearchFilter]
             if (filter) acc.push(filter)
             return acc
         }, [] as HitSearchFilter[])
         const activeFilters = parsedFilters.filter(
-            (filter) =>
-                filter !== HitSearchFilter.HasIssues || canReadIssues,
+            (filter) => filter !== HitSearchFilter.HasIssues || canReadIssues,
         )
         const sortDirection =
             SortDirection[

@@ -1,7 +1,7 @@
 import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import boolifyString from "boolify-string"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Col from "react-bootstrap/Col"
 import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
@@ -31,11 +31,20 @@ import WelcomeModal from "./modals/welcome"
 import Navigation from "./navigation"
 import NotificationPlayer from "./notification-player"
 import SfxPlayer from "./sfx-player"
+import { refreshUserAuth } from "./user-auth"
 
-const updateUserAuth = async () => {
-    await fetch("/api/users/auth", {
-        credentials: "include",
-    })
+function hasSamePermissions(a: User["permissions"], b: User["permissions"]) {
+    const keys = Object.keys(a) as Array<keyof User["permissions"]>
+    return keys.every((key) => a[key] === b[key])
+}
+
+function hasSameUserIdentity(a: User, b: User) {
+    return (
+        a.id === b.id &&
+        a.name === b.name &&
+        a.virtual === b.virtual &&
+        hasSamePermissions(a.permissions, b.permissions)
+    )
 }
 
 export default function Layout() {
@@ -45,21 +54,26 @@ export default function Layout() {
     } = useTranslation()
     const [cookies] = useCookies(["user"])
     const [user, setUser] = useState<User | null>(null)
-    const [loading, setLoading] = useState(true)
+    const [userValidUntil, setUserValidUntil] = useState<number | null>(null)
     const [colorScheme] = useLocalStorage("colorScheme", "auto")
     const [welcome, setWelcome] = useLocalStorage("welcome")
     const prefersColorScheme = usePrefersColorScheme()
     const [error, setError] = useState<string | undefined>(undefined)
     const [navHeight, setNavHeight] = useState(50)
+    const hasValidatedStartupAuth = useRef(false)
 
     useEffect(() => {
-        let timer: ReturnType<typeof setTimeout> | null = null
+        if (hasValidatedStartupAuth.current || cookies.user === undefined)
+            return
 
+        hasValidatedStartupAuth.current = true
+        void refreshUserAuth()
+    }, [cookies.user])
+
+    useEffect(() => {
         if (cookies.user !== undefined) {
-            if (timer !== null) clearTimeout(timer)
-
             try {
-                const user = User.parse({
+                const nextUser = User.parse({
                     name: cookies.user.name,
                     id: cookies.user.id,
                     virtual: cookies.user.virtual,
@@ -67,35 +81,43 @@ export default function Layout() {
                     permissions: cookies.user.permissions,
                 })
 
-                setUser(user)
-
-                timer = setTimeout(
-                    async () => {
-                        setLoading(false)
-                        await updateUserAuth()
-                    },
-                    Math.max(
-                        loading ? 0 : user.valid_until.getTime() - Date.now(),
-                        0,
-                    ),
+                setUserValidUntil(nextUser.valid_until.getTime())
+                setUser((current) =>
+                    current !== null && hasSameUserIdentity(current, nextUser)
+                        ? current
+                        : nextUser,
                 )
             } catch {
                 setUser(null)
-                updateUserAuth()
+                setUserValidUntil(null)
+                void refreshUserAuth()
             }
         } else {
-            updateUserAuth()
+            setUser(null)
+            setUserValidUntil(null)
+            void refreshUserAuth()
         }
+    }, [cookies.user])
+
+    useEffect(() => {
+        if (userValidUntil === null) return
+
+        const timer = setTimeout(
+            () => {
+                void refreshUserAuth()
+            },
+            Math.max(userValidUntil - Date.now(), 0),
+        )
 
         return () => {
-            if (timer !== null) clearTimeout(timer)
+            clearTimeout(timer)
         }
-    }, [cookies, loading])
+    }, [userValidUntil])
 
     useEffect(() => {
         let eventSource: EventSource | undefined
 
-        if (!loading) {
+        if (user !== null) {
             eventSource = new EventSource("/api/events")
 
             eventSource.addEventListener("create_game", (e) => {
@@ -138,7 +160,7 @@ export default function Layout() {
         return () => {
             if (eventSource) eventSource.close()
         }
-    }, [loading])
+    }, [user])
 
     useEffect(() => {
         document.documentElement.lang = language

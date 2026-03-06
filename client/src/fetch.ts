@@ -1,3 +1,5 @@
+import { refreshUserAuth } from "./user-auth"
+
 export default async function fetchAuth(
     url: string,
     options?: Parameters<typeof fetch>[1],
@@ -5,9 +7,7 @@ export default async function fetchAuth(
     const res = await fetch(url, options)
 
     if (res.status === 401) {
-        await fetch("/api/users/auth", {
-            credentials: "include",
-        })
+        await refreshUserAuth()
         return await fetchAuth(url, options)
     }
     return res
