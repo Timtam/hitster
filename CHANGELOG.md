@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 -   [added confirmation popup when deleting a hit (#44)](https://github.com/Timtam/hitster/issues/44)
+-   [added issue system for hits (#47)](https://github.com/Timtam/hitster/issues/47)
+    -   new permissions (use hitster-cli to manage permissions):
+        -   WRITE_ISSUES: allows to create new issues, dfault permissions for every user, even virtual ones
+        -   DELETE_ISSUES: allows to delete issues, not set by default, needs to be assigned manually
+        -   READ_ISSUES: allows to read existing issues, not assigned by default, needs to be assigned manually
+    -   allow to read and edit issues on hits page if permissions are set
+    -   allow to create issues from hits page and within a game if permissions are set
+    -   filter hits with issues within the hits browser if permissions are set
+    -   automatically generate issues if a hit cannot be downloaded, making it easier to detect failing hit downloads
+    -   when hits are played in games, automatically run a background check wether the hit is still available or not, and generate issues if the hit isn't available anymore
 
 ### Changed
 
