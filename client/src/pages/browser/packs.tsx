@@ -1,6 +1,6 @@
 import EventManager from "@lomray/event-manager"
 import natsort from "natsort"
-import { useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Col from "react-bootstrap/Col"
 import Form from "react-bootstrap/Form"
@@ -183,12 +183,15 @@ export default function PacksModal({
     const [packs, setPacks] = useImmer<Pack[]>([])
     const [selectedPacks, setSelectedPacks] = useImmer<string[]>([])
     const [showCreatePackModal, setShowCreatePackModal] = useState(false)
+    const selectAllPacks = useRef<HTMLInputElement | null>(null)
     const { t } = useTranslation()
     const { user, showError } = useContext()
     const [showDeletePackModal, setShowDeletePackModal] = useImmer<boolean[]>(
         [],
     )
     const [showEditPackModal, setShowEditPackModal] = useImmer<boolean[]>([])
+    const allPacksSelected =
+        packs.length > 0 && selectedPacks.length === packs.length
 
     useEffect(() => {
         setShowDeletePackModal(
@@ -198,9 +201,16 @@ export default function PacksModal({
     }, [packs, setShowDeletePackModal, setShowEditPackModal])
 
     useEffect(() => {
-        if (selected) setSelectedPacks(selected)
-        if (initialPacks.length > 0) setPacks(Array.from(initialPacks))
+        setSelectedPacks(selected ? Array.from(selected) : [])
+        setPacks(Array.from(initialPacks))
     }, [selected, setSelectedPacks, initialPacks, setPacks])
+
+    useEffect(() => {
+        if (selectAllPacks.current === null) return
+        selectAllPacks.current.checked = allPacksSelected
+        selectAllPacks.current.indeterminate =
+            selectedPacks.length > 0 && selectedPacks.length !== packs.length
+    }, [allPacksSelected, packs.length, selectedPacks.length, show])
 
     return (
         <Modal show={show} onHide={() => onHide(selectedPacks)}>
@@ -217,10 +227,19 @@ export default function PacksModal({
                         <CreatePackModal
                             show={showCreatePackModal}
                             onHide={(pack) => {
-                                if (pack)
+                                if (pack) {
+                                    const hadAllPacksSelected =
+                                        selectedPacks.length === packs.length
+
                                     setPacks((packs) => {
                                         packs.push(pack)
                                     })
+                                    if (hadAllPacksSelected) {
+                                        setSelectedPacks((selectedPacks) => {
+                                            selectedPacks.push(pack.id)
+                                        })
+                                    }
+                                }
                                 setShowCreatePackModal(false)
                             }}
                         />
@@ -229,6 +248,28 @@ export default function PacksModal({
                     ""
                 )}
                 <Form>
+                    {selected ? (
+                        <Form.Group as={Row} className="mb-3">
+                            <Col sm={10}>
+                                <Form.Check
+                                    ref={selectAllPacks}
+                                    type="checkbox"
+                                    checked={allPacksSelected}
+                                    label={t("selectAll")}
+                                    id="filter-select-all-packs"
+                                    onChange={(e) => {
+                                        if (e.currentTarget.checked) {
+                                            setSelectedPacks(
+                                                packs.map((pack) => pack.id),
+                                            )
+                                        } else {
+                                            setSelectedPacks([])
+                                        }
+                                    }}
+                                />
+                            </Col>
+                        </Form.Group>
+                    ) : null}
                     {packs
                         .toSorted((a, b) => sorter(a.name, b.name))
                         .map((p, i) =>
@@ -254,7 +295,7 @@ export default function PacksModal({
                                             checked={selectedPacks.includes(
                                                 p.id,
                                             )}
-                                            onChange={() =>
+                                            onChange={() => {
                                                 setSelectedPacks((packs) => {
                                                     if (packs.includes(p.id))
                                                         packs.splice(
@@ -263,7 +304,7 @@ export default function PacksModal({
                                                         )
                                                     else packs.push(p.id)
                                                 })
-                                            }
+                                            }}
                                         />
                                     </Col>
                                     {user?.permissions.write_packs ? (
@@ -335,6 +376,26 @@ export default function PacksModal({
                                                                 await hitService.deletePack(
                                                                     p.id,
                                                                 )
+                                                                setSelectedPacks(
+                                                                    (
+                                                                        selectedPacks,
+                                                                    ) => {
+                                                                        const index =
+                                                                            selectedPacks.indexOf(
+                                                                                p.id,
+                                                                            )
+
+                                                                        if (
+                                                                            index !==
+                                                                            -1
+                                                                        ) {
+                                                                            selectedPacks.splice(
+                                                                                index,
+                                                                                1,
+                                                                            )
+                                                                        }
+                                                                    },
+                                                                )
                                                                 setPacks(
                                                                     (packs) => {
                                                                         packs.splice(
@@ -371,7 +432,7 @@ export default function PacksModal({
                                     key={`pack-${p.id}`}
                                 >
                                     <Col sm={10}>
-                                        <Link to={`/hits/?pack=${p.id}`}>
+                                        <Link to={`/hits/?packs=${p.id}`}>
                                             {`${p.name}`}
                                         </Link>
                                     </Col>

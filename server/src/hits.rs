@@ -14,7 +14,7 @@ use rocket::{
 };
 use rocket_db_pools::Database;
 use rocket_okapi::okapi::schemars::JsonSchema;
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize};
 use sqlx::FromRow;
 use std::{
     collections::{HashMap, HashSet},
@@ -189,6 +189,42 @@ pub enum HitSearchFilter {
     HasIssues,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum HitSearchPack {
+    Unpacked,
+    Pack(Uuid),
+}
+
+impl<'de> Deserialize<'de> for HitSearchPack {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        let value = String::deserialize(deserializer)?;
+
+        if value.is_empty() {
+            Ok(Self::Unpacked)
+        } else {
+            Uuid::parse_str(&value)
+                .map(Self::Pack)
+                .map_err(serde::de::Error::custom)
+        }
+    }
+}
+
+#[rocket::async_trait]
+impl<'v> rocket::form::FromFormField<'v> for HitSearchPack {
+    fn from_value(field: rocket::form::ValueField<'v>) -> rocket::form::Result<'v, Self> {
+        if field.value.is_empty() {
+            Ok(Self::Unpacked)
+        } else {
+            Ok(Uuid::parse_str(field.value)
+                .map(Self::Pack)
+                .map_err(|_| rocket::form::Error::validation("invalid pack id"))?)
+        }
+    }
+}
+
 /// a search query for searching hits
 
 #[derive(Deserialize, JsonSchema, FromForm)]
@@ -199,8 +235,9 @@ pub struct HitSearchQuery {
     pub sort_direction: Option<SortDirection>,
     /// a text to search for in title, artist and belongs to fields. fuzzy search is applied so the result might not be 100% accurate on purpose.
     pub query: Option<String>,
-    /// the packs that you want to limit the search to
-    pub packs: Option<Vec<Uuid>>,
+    /// the packs that you want to limit the search to. Use `packs=` to search only hits without any pack.
+    #[schemars(with = "Option<Vec<String>>")]
+    pub packs: Option<Vec<HitSearchPack>>,
     /// the start of the pagination (default 1)
     pub start: Option<usize>,
     /// amount of search results you want to get
@@ -209,6 +246,15 @@ pub struct HitSearchQuery {
     pub parts: Option<Vec<HitQueryPart>>,
     /// optional filters to apply before pagination
     pub filters: Option<Vec<HitSearchFilter>>,
+}
+
+#[derive(Deserialize, JsonSchema, FromForm)]
+pub struct ExportHitsQuery {
+    /// a text to search for in title, artist and belongs to fields. fuzzy search is applied so the result might not be 100% accurate on purpose.
+    pub query: Option<String>,
+    /// the packs that you want to limit the export to. Use `pack=` to export only hits without any pack.
+    #[schemars(with = "Option<Vec<String>>")]
+    pub pack: Option<Vec<HitSearchPack>>,
 }
 
 impl Default for HitSearchQuery {

@@ -33,7 +33,6 @@
         "js-convert-case": "^4.2.0",
         "natsort": "^2.0.3",
         "pick-random": "^4.0.0",
-        "query-string": "^9.2.2",
         "react": "^19.1.0",
         "react-bootstrap": "^2.10.9",
         "react-cookie": "^8.0.1",

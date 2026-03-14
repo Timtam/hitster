@@ -1,4 +1,3 @@
-import queryString from "query-string"
 import {
     FullHit,
     HitIssue,
@@ -10,6 +9,43 @@ import {
 } from "../entities"
 import fetchAuth from "../fetch"
 
+function buildUrl(path: string, params: URLSearchParams): string {
+    const query = params.toString()
+    return query ? `${path}?${query}` : path
+}
+
+function appendParam(
+    params: URLSearchParams,
+    key: string,
+    value: string | number | undefined,
+) {
+    if (value === undefined) return
+    params.append(key, String(value))
+}
+
+function appendArrayParam(
+    params: URLSearchParams,
+    key: string,
+    values: readonly (string | number)[] | undefined,
+) {
+    values?.forEach((value) => {
+        params.append(key, String(value))
+    })
+}
+
+function appendPackParam(
+    params: URLSearchParams,
+    key: string,
+    values: readonly string[] | undefined,
+) {
+    if (values === undefined) return
+    if (values.length === 0) {
+        params.append(key, "")
+        return
+    }
+    appendArrayParam(params, key, values)
+}
+
 export default class HitService {
     async getAllPacks(): Promise<Pack[]> {
         const res = await fetch("/api/hits/packs", {
@@ -19,12 +55,19 @@ export default class HitService {
     }
 
     async searchHits(query: HitSearchQuery): Promise<PaginatedHitsResponse> {
-        const res = await fetch(
-            "/api/hits/search?" + queryString.stringify(query),
-            {
-                method: "GET",
-            },
-        )
+        const params = new URLSearchParams()
+        appendArrayParam(params, "sort_by", query.sort_by)
+        appendParam(params, "sort_direction", query.sort_direction)
+        appendParam(params, "query", query.query)
+        appendPackParam(params, "packs", query.packs)
+        appendParam(params, "start", query.start)
+        appendParam(params, "amount", query.amount)
+        appendArrayParam(params, "parts", query.parts)
+        appendArrayParam(params, "filters", query.filters)
+
+        const res = await fetch(buildUrl("/api/hits/search", params), {
+            method: "GET",
+        })
         return PaginatedHitsResponse.parse(await res.json())
     }
 
@@ -32,10 +75,10 @@ export default class HitService {
         id: string,
         parts?: HitQueryPart[],
     ): Promise<FullHit | undefined> {
-        const query = parts?.length
-            ? "?" + queryString.stringify({ parts })
-            : ""
-        const res = await fetch(`/api/hits/${id}${query}`, {
+        const params = new URLSearchParams()
+        appendArrayParam(params, "parts", parts)
+
+        const res = await fetch(buildUrl(`/api/hits/${id}`, params), {
             method: "GET",
         })
 
@@ -123,17 +166,14 @@ export default class HitService {
     }
 
     async exportHits(query?: string, packs?: string[]): Promise<string> {
-        const res = await fetchAuth(
-            "/api/hits/export?" +
-                queryString.stringify({
-                    query: query ? query : undefined,
-                    pack: packs,
-                }),
-            {
-                method: "GET",
-                credentials: "include",
-            },
-        )
+        const params = new URLSearchParams()
+        appendParam(params, "query", query || undefined)
+        appendPackParam(params, "pack", packs)
+
+        const res = await fetchAuth(buildUrl("/api/hits/export", params), {
+            method: "GET",
+            credentials: "include",
+        })
 
         if (res.status == 200) return await res.text()
         throw { message: (await res.json()).message, status: res.status }

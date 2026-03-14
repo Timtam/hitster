@@ -9,7 +9,6 @@ import Row from "react-bootstrap/Row"
 import Spinner from "react-bootstrap/Spinner"
 import ToggleButton from "react-bootstrap/ToggleButton"
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup"
-import { BsPrefixRefForwardingComponent } from "react-bootstrap/helpers"
 import { useTranslation } from "react-i18next"
 import slugify from "slugify"
 import { useContext } from "../../context"
@@ -36,10 +35,7 @@ export default function GameSettings({
     const [hitDuration, setHitDuration] = useState(0)
     const [availablePacks, setAvailablePacks] = useState<Pack[]>([])
     const [packs, setPacks] = useState<string[]>([])
-    const selectAllPacks = useRef<
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (HTMLInputElement & BsPrefixRefForwardingComponent<"input", any>) | null
-    >(null)
+    const selectAllPacks = useRef<HTMLInputElement | null>(null)
     const { showError } = useContext()
     const [randomPacks, setRandomPacks] = useState(5)
 

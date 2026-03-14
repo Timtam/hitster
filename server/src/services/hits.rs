@@ -1,5 +1,7 @@
 use crate::{
-    hits::{DownloadHitData, HitSearchFilter, HitSearchQuery, SortBy, SortDirection},
+    hits::{
+        DownloadHitData, HitSearchFilter, HitSearchPack, HitSearchQuery, SortBy, SortDirection,
+    },
     responses::PaginatedResponse,
 };
 use hitster_core::{Hit, HitId, HitsterData, Pack};
@@ -148,22 +150,32 @@ impl HitService {
             self.get_hits()
         };
 
-        if let Some(packs) = query.packs.as_ref()
-            && !packs.is_empty()
-        {
-            hits = packs
+        if let Some(packs) = query.packs.as_ref() {
+            let packs = packs
                 .iter()
-                .fold(
-                    hits.into_iter()
-                        .map(|h| (HitId::Id(h.id), h))
-                        .collect::<HashMap<HitId, &Hit>>(),
-                    |mut hits, p| {
-                        hits.retain(|_, hit| hit.packs.contains(p));
-                        hits
-                    },
-                )
-                .into_values()
+                .filter_map(|pack| match pack {
+                    HitSearchPack::Unpacked => None,
+                    HitSearchPack::Pack(pack_id) => Some(*pack_id),
+                })
                 .collect::<Vec<_>>();
+
+            if packs.is_empty() {
+                hits.retain(|hit| hit.packs.is_empty());
+            } else {
+                hits = packs
+                    .iter()
+                    .fold(
+                        hits.into_iter()
+                            .map(|h| (HitId::Id(h.id), h))
+                            .collect::<HashMap<HitId, &Hit>>(),
+                        |mut hits, p| {
+                            hits.retain(|_, hit| hit.packs.contains(p));
+                            hits
+                        },
+                    )
+                    .into_values()
+                    .collect::<Vec<_>>();
+            }
         }
 
         if includes_filter(&query.filters, HitSearchFilter::HasIssues)

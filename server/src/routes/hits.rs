@@ -2,8 +2,8 @@ use crate::{
     GlobalEvent, HitsterConfig,
     games::PackPayload,
     hits::{
-        CreatePackPayload, FullHitPayload, HitPartsQuery, HitPayload, HitQueryPart,
-        HitSearchFilter, HitSearchQuery,
+        CreatePackPayload, ExportHitsQuery, FullHitPayload, HitPartsQuery, HitPayload,
+        HitQueryPart, HitSearchFilter, HitSearchQuery,
     },
     responses::{
         CreateHitError, CreateHitIssueError, CreatePackError, DeleteHitError, DeleteHitIssueError,
@@ -886,10 +886,9 @@ INSERT INTO hits_packs (
 /// The query and pack parameters behave similarly to those within the /hits/search endpoint.
 
 #[openapi(tag = "Hits")]
-#[get("/hits/export?<query>&<pack>")]
+#[get("/hits/export?<query..>")]
 pub async fn export_hits(
-    query: Option<&str>,
-    pack: Option<Vec<Uuid>>,
+    query: ExportHitsQuery,
     user: UserAuthenticator,
     serv: &State<ServiceStore>,
 ) -> Result<Yaml, ExportHitsError> {
@@ -904,8 +903,8 @@ pub async fn export_hits(
     let hsl = hs.lock();
 
     let hsq = HitSearchQuery {
-        query: query.map(|q| q.to_string()),
-        packs: pack,
+        query: query.query,
+        packs: query.pack,
         start: Some(1),
         amount: Some(hsl.get_hits().len()),
         ..Default::default()

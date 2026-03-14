@@ -104,7 +104,9 @@ export default function Browser() {
     )
     const [sortDirection, setSortDirection] = useState(SortDirection.Ascending)
     const [showPacksModal, setShowPacksModal] = useImmer<boolean[]>([])
-    const [packs, setPacks] = useState<string[]>([])
+    const [packs, setPacks] = useState<string[]>(
+        availablePacks.map((pack) => pack.id),
+    )
     const [filters, setFilters] = useState<HitSearchFilter[]>([])
     const [showPackFilter, setShowPackFilter] = useState(false)
     const revalidate = useRevalidate()
@@ -119,6 +121,22 @@ export default function Browser() {
     )
     const [searchParams, setSearchParams] = useSearchParams()
     const [page, setPage] = useState(1)
+    const availablePackIds = useMemo(
+        () => availablePacks.map((pack) => pack.id),
+        [availablePacks],
+    )
+    const getPacksQuery = useCallback(
+        (selectedPacks: readonly string[]) => {
+            if (selectedPacks.length === availablePackIds.length) return
+            if (selectedPacks.length === 0) return []
+            return Array.from(selectedPacks)
+        },
+        [availablePackIds.length],
+    )
+    const packsQuery = useMemo(
+        () => getPacksQuery(packs),
+        [getPacksQuery, packs],
+    )
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -197,7 +215,7 @@ export default function Browser() {
                         amount: PAGE_SIZE,
                         sort_by: sortBy.map((i) => SORT_BY_INDEX[i]),
                         sort_direction: sortDirection,
-                        packs: packs,
+                        packs: packsQuery,
                         filters: filters,
                     } satisfies HitSearchQuery))()
                 setSortByItems(sortBy)
@@ -209,7 +227,7 @@ export default function Browser() {
             search,
             query,
             sortDirection,
-            packs,
+            packsQuery,
             filters,
             setSearchParams,
         ],
@@ -218,7 +236,16 @@ export default function Browser() {
     useEffect(() => {
         const p: string = searchParams.get("p") ?? `${page}`
         const q: string = searchParams.get("q") ?? query
-        const packs = searchParams.getAll("pack")
+        const packParams = searchParams.getAll("packs")
+        const unpackedOnly =
+            packParams.length > 0 && packParams.every((pack) => pack === "")
+        const selectedPacks = unpackedOnly
+            ? []
+            : packParams.length === 0
+              ? availablePackIds
+              : availablePacks
+                    .filter((pack) => packParams.includes(pack.id))
+                    .map((pack) => pack.id)
         const parsedFilters = searchParams.getAll("filter").reduce((acc, i) => {
             const filter =
                 HitSearchFilter[toPascalCase(i) as keyof typeof HitSearchFilter]
@@ -246,9 +273,7 @@ export default function Browser() {
             }, [] as SortBy[])
 
         setQuery(q)
-        setPacks(
-            availablePacks.filter((p) => packs.includes(p.id)).map((p) => p.id),
-        )
+        setPacks(selectedPacks)
         setFilters(activeFilters)
         setSortDirection(sortDirection)
         setSortByItems(
@@ -264,11 +289,14 @@ export default function Browser() {
                 sort_by: sortCriteria as SortBy[],
                 sort_direction: sortDirection,
                 query: q,
-                packs: packs,
+                packs: unpackedOnly ? [] : getPacksQuery(selectedPacks),
                 filters: activeFilters,
             } satisfies HitSearchQuery)
         })()
     }, [
+        availablePacks,
+        availablePackIds,
+        getPacksQuery,
         setQuery,
         setPacks,
         setFilters,
@@ -395,7 +423,7 @@ export default function Browser() {
                                                     ),
                                                     sort_direction:
                                                         sortDirection,
-                                                    packs: packs,
+                                                    packs: packsQuery,
                                                     filters: filters,
                                                 } satisfies HitSearchQuery)
                                                 setSearchTimer(null)
@@ -583,7 +611,7 @@ export default function Browser() {
                                                             ),
                                                         sort_direction:
                                                             SortDirection.Ascending,
-                                                        packs: packs,
+                                                        packs: packsQuery,
                                                         filters: filters,
                                                     } satisfies HitSearchQuery))()
                                             }}
@@ -630,7 +658,7 @@ export default function Browser() {
                                                             ),
                                                         sort_direction:
                                                             SortDirection.Descending,
-                                                        packs: packs,
+                                                        packs: packsQuery,
                                                         filters: filters,
                                                     } satisfies HitSearchQuery))()
                                             }}
@@ -698,7 +726,7 @@ export default function Browser() {
                                                             ),
                                                         sort_direction:
                                                             sortDirection,
-                                                        packs: packs,
+                                                        packs: packsQuery,
                                                         filters: updatedFilters,
                                                     } satisfies HitSearchQuery))()
                                             }}
@@ -724,25 +752,33 @@ export default function Browser() {
                                         count: availablePacks.length,
                                     }) +
                                         ": " +
-                                        availablePacks.length +
-                                        ", " +
-                                        t("filtered") +
-                                        ": " +
-                                        packs.length}
+                                        `${packs.length} / ${availablePacks.length}`}
                                 </Button>
                                 <PacksModal
                                     selected={packs}
                                     packs={availablePacks}
                                     show={showPackFilter}
                                     onHide={(selected) => {
+                                        const nextPacksQuery =
+                                            getPacksQuery(selected)
+
                                         setPacks(selected)
                                         setShowPackFilter(false)
                                         revalidate()
                                         setSearchParams((p) => {
-                                            p.delete("pack")
-                                            selected.forEach((pack) =>
-                                                p.append("pack", pack),
-                                            )
+                                            p.delete("packs")
+                                            if (
+                                                nextPacksQuery !== undefined &&
+                                                nextPacksQuery.length === 0
+                                            ) {
+                                                p.set("packs", "")
+                                            } else if (
+                                                nextPacksQuery !== undefined
+                                            ) {
+                                                selected.forEach((pack) =>
+                                                    p.append("packs", pack),
+                                                )
+                                            }
                                             p.set("p", "1")
                                             return p
                                         })
@@ -755,7 +791,7 @@ export default function Browser() {
                                                     (i) => SORT_BY_INDEX[i],
                                                 ),
                                                 sort_direction: sortDirection,
-                                                packs: selected,
+                                                packs: nextPacksQuery,
                                                 filters: filters,
                                             } satisfies HitSearchQuery))()
                                     }}
@@ -783,7 +819,7 @@ export default function Browser() {
                                 onClick={async () => {
                                     const yml = await hitService.exportHits(
                                         query,
-                                        packs,
+                                        packsQuery,
                                     )
                                     const elem = document.createElement("a")
                                     elem.setAttribute(
@@ -874,7 +910,7 @@ export default function Browser() {
                                     ),
                                     sort_direction: sortDirection,
                                     query: query,
-                                    packs: packs,
+                                    packs: packsQuery,
                                     filters: filters,
                                 } satisfies HitSearchQuery)
                             }}
@@ -897,7 +933,7 @@ export default function Browser() {
                                     ),
                                     sort_direction: sortDirection,
                                     query: query,
-                                    packs: packs,
+                                    packs: packsQuery,
                                     filters: filters,
                                 } satisfies HitSearchQuery)
                                 setPage(page - 1)
@@ -934,7 +970,7 @@ export default function Browser() {
                                                 ),
                                                 sort_direction: sortDirection,
                                                 query: query,
-                                                packs: packs,
+                                                packs: packsQuery,
                                                 filters: filters,
                                             } satisfies HitSearchQuery)
                                             setPage(i + 1)
@@ -975,7 +1011,7 @@ export default function Browser() {
                                     ),
                                     sort_direction: sortDirection,
                                     query: query,
-                                    packs: packs,
+                                    packs: packsQuery,
                                     filters: filters,
                                 } satisfies HitSearchQuery)
                                 setPage(page + 1)
@@ -999,7 +1035,7 @@ export default function Browser() {
                                     ),
                                     sort_direction: sortDirection,
                                     query: query,
-                                    packs: packs,
+                                    packs: packsQuery,
                                     filters: filters,
                                 } satisfies HitSearchQuery)
                                 setPage(getPageCount())
