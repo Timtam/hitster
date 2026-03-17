@@ -105,7 +105,7 @@ export default function Hit() {
         id: "",
     } satisfies FullHit)
     const [youtubeUrl, setYoutubeUrl] = useState("")
-    const [isUrlValid, setIsUrlValid] = useState(true)
+    const isUrlValid = RE_YOUTUBE.test(youtubeUrl)
     const [showDeleteHitModal, setShowDeleteHitModal] = useState(false)
     const [showReportIssueModal, setShowReportIssueModal] = useState(false)
     const [issueToDelete, setIssueToDelete] = useState<string | undefined>()
@@ -119,10 +119,6 @@ export default function Hit() {
         () => user?.permissions.read_issues === true,
         [user],
     )
-
-    useEffect(() => {
-        setIsUrlValid(RE_YOUTUBE.test(youtubeUrl))
-    }, [youtubeUrl, setIsUrlValid])
 
     useEffect(() => {
         if (!canReadIssues || !hit.id) return

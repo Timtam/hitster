@@ -2,7 +2,7 @@ import { Helmet } from "@dr.pogodin/react-helmet"
 import EventManager from "@lomray/event-manager"
 import classNames from "classnames"
 import natsort from "natsort"
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import Button from "react-bootstrap/Button"
 import Form from "react-bootstrap/Form"
 import { useTranslation } from "react-i18next"
@@ -31,12 +31,8 @@ export default function CreateHit() {
         packs: [],
     } satisfies FullHit)
     const [youtubeUrl, setYoutubeUrl] = useState("")
-    const [isUrlValid, setIsUrlValid] = useState(true)
     const head = useRef<HTMLElement>(null)
-
-    useEffect(() => {
-        setIsUrlValid(RE_YOUTUBE.test(youtubeUrl))
-    }, [youtubeUrl, setIsUrlValid])
+    const isUrlValid = RE_YOUTUBE.test(youtubeUrl)
 
     return !user?.permissions.write_hits ? (
         <Navigate to="/hits" />

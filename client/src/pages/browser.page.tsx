@@ -53,7 +53,7 @@ import PacksModal from "./browser/packs"
 const PAGE_RANGE = 4
 const PAGE_SIZE = 50
 const PAGE_SKIPS = [10, 50, 100, 500, 1000]
-const SEARCH_DELAY = 300
+const SEARCH_DELAY = 500
 const SORT_BY_INDEX: SortBy[] = [
     SortBy.Title,
     SortBy.Artist,
@@ -92,29 +92,20 @@ export default function Browser() {
     const hitService = useMemo(() => new HitService(), [])
     const { t } = useTranslation()
     const [searching, setSearching] = useState(true)
+    const [draftQuery, setDraftQuery] = useState("")
     const [hitResults, setHitResults] = useState<PaginatedHitsResponse>({
         results: [],
         start: 0,
         end: 0,
         total: 0,
     } satisfies PaginatedHitsResponse)
-    const [query, setQuery] = useState("")
-    const [searchTimer, setSearchTimer] = useState<ReturnType<
-        typeof setTimeout
-    > | null>(null)
-    const [sortByItems, setSortByItems] = useState([0, 1, 2, 3])
     const sensors = useSensors(
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         }),
     )
-    const [sortDirection, setSortDirection] = useState(SortDirection.Ascending)
     const [showPacksModal, setShowPacksModal] = useImmer<boolean[]>([])
-    const [packs, setPacks] = useState<string[]>(
-        availablePacks.map((pack) => pack.id),
-    )
-    const [filters, setFilters] = useState<HitSearchFilter[]>([])
     const [showPackFilter, setShowPackFilter] = useState(false)
     const revalidate = useRevalidate()
     const { user } = useContext()
@@ -127,7 +118,6 @@ export default function Browser() {
         [canReadIssues],
     )
     const [searchParams, setSearchParams] = useSearchParams()
-    const [page, setPage] = useState(1)
     const availablePackIds = useMemo(
         () => availablePacks.map((pack) => pack.id),
         [availablePacks],
@@ -140,10 +130,96 @@ export default function Browser() {
         },
         [availablePackIds.length],
     )
-    const packsQuery = useMemo(
-        () => getPacksQuery(packs),
-        [getPacksQuery, packs],
+    const updateSearchParams = useCallback(
+        (
+            update: (params: URLSearchParams) => void,
+            options?: { replace?: boolean },
+        ) => {
+            setSearchParams((current) => {
+                const next = new URLSearchParams(current)
+                update(next)
+                return next
+            }, options)
+        },
+        [setSearchParams],
     )
+    const {
+        filters,
+        packs,
+        packsQuery,
+        page,
+        query,
+        sortBy,
+        sortByItems,
+        sortDirection,
+    } = useMemo(() => {
+        const currentPage = Math.max(
+            parseInt(searchParams.get("p") ?? "1", 10) || 1,
+            1,
+        )
+        const currentQuery = searchParams.get("q") ?? ""
+        const packParams = searchParams.getAll("packs")
+        const unpackedOnly =
+            packParams.length > 0 && packParams.every((pack) => pack === "")
+        const selectedPacks = unpackedOnly
+            ? []
+            : packParams.length === 0
+              ? availablePackIds
+              : availablePacks
+                    .filter((pack) => packParams.includes(pack.id))
+                    .map((pack) => pack.id)
+        const parsedFilters = searchParams
+            .getAll("filter")
+            .reduce((acc, filterKey) => {
+                const filter =
+                    HitSearchFilter[
+                        toPascalCase(filterKey) as keyof typeof HitSearchFilter
+                    ]
+
+                if (filter) acc.push(filter)
+                return acc
+            }, [] as HitSearchFilter[])
+        const activeFilters = parsedFilters.filter(
+            (filter) => filter !== HitSearchFilter.HasIssues || canReadIssues,
+        )
+        const currentSortDirection =
+            SortDirection[
+                toPascalCase(
+                    searchParams.get("sort_direction") ?? "ascending",
+                ) as keyof typeof SortDirection
+            ] ?? SortDirection.Ascending
+
+        let sortCriteria = searchParams.getAll("sort_by")
+
+        if (sortCriteria.length === 0) sortCriteria = SORT_BY_INDEX
+        else
+            sortCriteria = sortCriteria.reduce((acc, sortKey) => {
+                const criteria =
+                    SortBy[toPascalCase(sortKey) as keyof typeof SortBy]
+
+                if (criteria) acc.push(criteria)
+                return acc
+            }, [] as SortBy[])
+
+        return {
+            filters: activeFilters,
+            packs: selectedPacks,
+            packsQuery: unpackedOnly ? [] : getPacksQuery(selectedPacks),
+            page: currentPage,
+            query: currentQuery,
+            sortBy: sortCriteria as SortBy[],
+            sortByItems: (sortCriteria as SortBy[]).map(
+                (criteria) => SORT_BY_INDEX.indexOf(criteria)!,
+            ),
+            sortDirection: currentSortDirection,
+        }
+    }, [
+        searchParams,
+        availablePackIds,
+        availablePacks,
+        canReadIssues,
+        getPacksQuery,
+    ])
 
     const search = useCallback(
         async (query: HitSearchQuery) => {
@@ -207,112 +283,53 @@ export default function Browser() {
 
                 const sortBy = arrayMove(sortByItems, oldIndex, newIndex)
 
-                setSearchParams((p) => {
-                    p.delete("sort_by")
+                updateSearchParams((params) => {
+                    params.delete("sort_by")
                     sortBy
                         .map((i) => SORT_BY_INDEX[i])
-                        .forEach((s) => p.append("sort_by", s))
-                    p.set("p", "1")
-                    return p
+                        .forEach((criteria) =>
+                            params.append("sort_by", criteria),
+                        )
+                    params.set("p", "1")
                 })
-                ;(async () =>
-                    await search({
-                        query: query,
-                        start: 1,
-                        amount: PAGE_SIZE,
-                        sort_by: sortBy.map((i) => SORT_BY_INDEX[i]),
-                        sort_direction: sortDirection,
-                        packs: packsQuery,
-                        filters: filters,
-                    } satisfies HitSearchQuery))()
-                setSortByItems(sortBy)
             }
         },
-        [
-            sortByItems,
-            setSortByItems,
-            search,
-            query,
-            sortDirection,
-            packsQuery,
-            filters,
-            setSearchParams,
-        ],
+        [sortByItems, updateSearchParams],
     )
 
     useEffect(() => {
-        const p: string = searchParams.get("p") ?? `${page}`
-        const q: string = searchParams.get("q") ?? query
-        const packParams = searchParams.getAll("packs")
-        const unpackedOnly =
-            packParams.length > 0 && packParams.every((pack) => pack === "")
-        const selectedPacks = unpackedOnly
-            ? []
-            : packParams.length === 0
-              ? availablePackIds
-              : availablePacks
-                    .filter((pack) => packParams.includes(pack.id))
-                    .map((pack) => pack.id)
-        const parsedFilters = searchParams.getAll("filter").reduce((acc, i) => {
-            const filter =
-                HitSearchFilter[toPascalCase(i) as keyof typeof HitSearchFilter]
-            if (filter) acc.push(filter)
-            return acc
-        }, [] as HitSearchFilter[])
-        const activeFilters = parsedFilters.filter(
-            (filter) => filter !== HitSearchFilter.HasIssues || canReadIssues,
-        )
-        const sortDirection =
-            SortDirection[
-                toPascalCase(
-                    searchParams.get("sort_direction") ?? "ascending",
-                ) as keyof typeof SortDirection
-            ] ?? SortDirection.Ascending
+        void search({
+            start: (page - 1) * PAGE_SIZE + 1,
+            amount: PAGE_SIZE,
+            sort_by: sortBy,
+            sort_direction: sortDirection,
+            query,
+            packs: packsQuery,
+            filters,
+        } satisfies HitSearchQuery)
+    }, [filters, page, packsQuery, query, search, sortBy, sortDirection])
 
-        let sortCriteria = searchParams.getAll("sort_by")
+    useEffect(() => {
+        setDraftQuery(query)
+    }, [query])
 
-        if (sortCriteria.length === 0) sortCriteria = SORT_BY_INDEX
-        else
-            sortCriteria = sortCriteria.reduce((acc, i) => {
-                const crit = SortBy[toPascalCase(i) as keyof typeof SortBy]
-                if (crit) acc.push(crit)
-                return acc
-            }, [] as SortBy[])
+    useEffect(() => {
+        if (draftQuery === query) return
 
-        setQuery(q)
-        setPacks(selectedPacks)
-        setFilters(activeFilters)
-        setSortDirection(sortDirection)
-        setSortByItems(
-            (sortCriteria as SortBy[]).map(
-                (crit) => SORT_BY_INDEX.indexOf(crit)!,
-            ),
-        )
-        setPage(parseInt(p, 10))
-        ;(async () => {
-            await search({
-                start: (parseInt(p, 10) - 1) * PAGE_SIZE + 1,
-                amount: PAGE_SIZE,
-                sort_by: sortCriteria as SortBy[],
-                sort_direction: sortDirection,
-                query: q,
-                packs: unpackedOnly ? [] : getPacksQuery(selectedPacks),
-                filters: activeFilters,
-            } satisfies HitSearchQuery)
-        })()
-    }, [
-        availablePacks,
-        availablePackIds,
-        getPacksQuery,
-        setQuery,
-        setPacks,
-        setFilters,
-        setSortDirection,
-        setSortByItems,
-        setPage,
-        search,
-        canReadIssues,
-    ])
+        const timer = setTimeout(() => {
+            updateSearchParams(
+                (params) => {
+                    params.set("q", draftQuery)
+                    params.set("p", "1")
+                },
+                { replace: true },
+            )
+        }, SEARCH_DELAY)
+
+        return () => {
+            clearTimeout(timer)
+        }
+    }, [draftQuery, query, updateSearchParams])
 
     useEffect(() => {
         if (!canReadIssues) return
@@ -407,35 +424,9 @@ export default function Browser() {
                                 <Form.Control
                                     type="search"
                                     placeholder={t("search")}
-                                    value={query}
+                                    value={draftQuery}
                                     onChange={(e) => {
-                                        e.preventDefault()
-                                        const q = e.currentTarget.value
-                                        setQuery(q)
-                                        if (searchTimer !== null)
-                                            clearTimeout(searchTimer)
-                                        setSearchTimer(
-                                            setTimeout(async () => {
-                                                setSearchParams((p) => {
-                                                    p.set("q", q)
-                                                    p.set("p", "1")
-                                                    return p
-                                                })
-                                                await search({
-                                                    query: q,
-                                                    start: 1,
-                                                    amount: PAGE_SIZE,
-                                                    sort_by: sortByItems.map(
-                                                        (i) => SORT_BY_INDEX[i],
-                                                    ),
-                                                    sort_direction:
-                                                        sortDirection,
-                                                    packs: packsQuery,
-                                                    filters: filters,
-                                                } satisfies HitSearchQuery)
-                                                setSearchTimer(null)
-                                            }, SEARCH_DELAY),
-                                        )
+                                        setDraftQuery(e.currentTarget.value)
                                     }}
                                 />
                             </Form.Group>
@@ -593,34 +584,13 @@ export default function Browser() {
                                                 SortDirection.Ascending
                                             }
                                             onChange={() => {
-                                                setSortDirection(
-                                                    SortDirection.Ascending,
-                                                )
-                                                setSearchParams((p) => {
-                                                    p.set(
+                                                updateSearchParams((params) => {
+                                                    params.set(
                                                         "sort_direction",
                                                         SortDirection.Ascending,
                                                     )
-                                                    p.set("p", "1")
-                                                    return p
+                                                    params.set("p", "1")
                                                 })
-                                                ;(async () =>
-                                                    await search({
-                                                        query: query,
-                                                        start: 1,
-                                                        amount: PAGE_SIZE,
-                                                        sort_by:
-                                                            sortByItems.map(
-                                                                (i) =>
-                                                                    SORT_BY_INDEX[
-                                                                        i
-                                                                    ],
-                                                            ),
-                                                        sort_direction:
-                                                            SortDirection.Ascending,
-                                                        packs: packsQuery,
-                                                        filters: filters,
-                                                    } satisfies HitSearchQuery))()
                                             }}
                                         />
                                         <label
@@ -640,34 +610,13 @@ export default function Browser() {
                                                 SortDirection.Descending
                                             }
                                             onChange={() => {
-                                                setSortDirection(
-                                                    SortDirection.Descending,
-                                                )
-                                                setSearchParams((p) => {
-                                                    p.set(
+                                                updateSearchParams((params) => {
+                                                    params.set(
                                                         "sort_direction",
                                                         SortDirection.Descending,
                                                     )
-                                                    p.set("p", "1")
-                                                    return p
+                                                    params.set("p", "1")
                                                 })
-                                                ;(async () =>
-                                                    await search({
-                                                        query: query,
-                                                        start: 1,
-                                                        amount: PAGE_SIZE,
-                                                        sort_by:
-                                                            sortByItems.map(
-                                                                (i) =>
-                                                                    SORT_BY_INDEX[
-                                                                        i
-                                                                    ],
-                                                            ),
-                                                        sort_direction:
-                                                            SortDirection.Descending,
-                                                        packs: packsQuery,
-                                                        filters: filters,
-                                                    } satisfies HitSearchQuery))()
                                             }}
                                         />
                                         <label
@@ -706,36 +655,17 @@ export default function Browser() {
                                                               HitSearchFilter.HasIssues,
                                                           ]
 
-                                                setFilters(updatedFilters)
-                                                setSearchParams((p) => {
-                                                    p.delete("filter")
+                                                updateSearchParams((params) => {
+                                                    params.delete("filter")
                                                     updatedFilters.forEach(
                                                         (filter) =>
-                                                            p.append(
+                                                            params.append(
                                                                 "filter",
                                                                 filter,
                                                             ),
                                                     )
-                                                    p.set("p", "1")
-                                                    return p
+                                                    params.set("p", "1")
                                                 })
-                                                ;(async () =>
-                                                    await search({
-                                                        query: query,
-                                                        start: 1,
-                                                        amount: PAGE_SIZE,
-                                                        sort_by:
-                                                            sortByItems.map(
-                                                                (i) =>
-                                                                    SORT_BY_INDEX[
-                                                                        i
-                                                                    ],
-                                                            ),
-                                                        sort_direction:
-                                                            sortDirection,
-                                                        packs: packsQuery,
-                                                        filters: updatedFilters,
-                                                    } satisfies HitSearchQuery))()
                                             }}
                                         />
                                         <label
@@ -769,38 +699,27 @@ export default function Browser() {
                                         const nextPacksQuery =
                                             getPacksQuery(selected)
 
-                                        setPacks(selected)
                                         setShowPackFilter(false)
                                         revalidate()
-                                        setSearchParams((p) => {
-                                            p.delete("packs")
+                                        updateSearchParams((params) => {
+                                            params.delete("packs")
                                             if (
                                                 nextPacksQuery !== undefined &&
                                                 nextPacksQuery.length === 0
                                             ) {
-                                                p.set("packs", "")
+                                                params.set("packs", "")
                                             } else if (
                                                 nextPacksQuery !== undefined
                                             ) {
                                                 selected.forEach((pack) =>
-                                                    p.append("packs", pack),
+                                                    params.append(
+                                                        "packs",
+                                                        pack,
+                                                    ),
                                                 )
                                             }
-                                            p.set("p", "1")
-                                            return p
+                                            params.set("p", "1")
                                         })
-                                        ;(async () =>
-                                            await search({
-                                                query: query,
-                                                start: 1,
-                                                amount: PAGE_SIZE,
-                                                sort_by: sortByItems.map(
-                                                    (i) => SORT_BY_INDEX[i],
-                                                ),
-                                                sort_direction: sortDirection,
-                                                packs: nextPacksQuery,
-                                                filters: filters,
-                                            } satisfies HitSearchQuery))()
                                     }}
                                 />
                             </Form.Group>
@@ -904,22 +823,10 @@ export default function Browser() {
                         <Pagination.Item
                             key="page-first"
                             disabled={page === 1}
-                            onClick={async () => {
-                                setSearchParams((p) => {
-                                    p.set("p", "1")
-                                    return p
+                            onClick={() => {
+                                updateSearchParams((params) => {
+                                    params.set("p", "1")
                                 })
-                                await search({
-                                    start: 1,
-                                    amount: PAGE_SIZE,
-                                    sort_by: sortByItems.map(
-                                        (i) => SORT_BY_INDEX[i],
-                                    ),
-                                    sort_direction: sortDirection,
-                                    query: query,
-                                    packs: packsQuery,
-                                    filters: filters,
-                                } satisfies HitSearchQuery)
                             }}
                         >
                             {t("first")}
@@ -927,23 +834,10 @@ export default function Browser() {
                         <Pagination.Item
                             key="page-previous"
                             disabled={page === 1}
-                            onClick={async () => {
-                                setSearchParams((p) => {
-                                    p.set("p", `${page - 1}`)
-                                    return p
+                            onClick={() => {
+                                updateSearchParams((params) => {
+                                    params.set("p", `${page - 1}`)
                                 })
-                                await search({
-                                    start: PAGE_SIZE * (page - 2) + 1,
-                                    amount: PAGE_SIZE,
-                                    sort_by: sortByItems.map(
-                                        (i) => SORT_BY_INDEX[i],
-                                    ),
-                                    sort_direction: sortDirection,
-                                    query: query,
-                                    packs: packsQuery,
-                                    filters: filters,
-                                } satisfies HitSearchQuery)
-                                setPage(page - 1)
                             }}
                         >
                             {t("previous")}
@@ -964,23 +858,10 @@ export default function Browser() {
                                         key={`page-${i + 1}`}
                                         active={i + 1 === page}
                                         activeLabel={t("current")}
-                                        onClick={async () => {
-                                            setSearchParams((p) => {
-                                                p.set("p", `${i + 1}`)
-                                                return p
+                                        onClick={() => {
+                                            updateSearchParams((params) => {
+                                                params.set("p", `${i + 1}`)
                                             })
-                                            await search({
-                                                start: PAGE_SIZE * i + 1,
-                                                amount: PAGE_SIZE,
-                                                sort_by: sortByItems.map(
-                                                    (i) => SORT_BY_INDEX[i],
-                                                ),
-                                                sort_direction: sortDirection,
-                                                query: query,
-                                                packs: packsQuery,
-                                                filters: filters,
-                                            } satisfies HitSearchQuery)
-                                            setPage(i + 1)
                                         }}
                                     >
                                         {i + 1}
@@ -1005,23 +886,10 @@ export default function Browser() {
                         <Pagination.Item
                             key="page-next"
                             disabled={page === getPageCount()}
-                            onClick={async () => {
-                                setSearchParams((p) => {
-                                    p.set("p", `${page + 1}`)
-                                    return p
+                            onClick={() => {
+                                updateSearchParams((params) => {
+                                    params.set("p", `${page + 1}`)
                                 })
-                                await search({
-                                    start: PAGE_SIZE * page + 1,
-                                    amount: PAGE_SIZE,
-                                    sort_by: sortByItems.map(
-                                        (i) => SORT_BY_INDEX[i],
-                                    ),
-                                    sort_direction: sortDirection,
-                                    query: query,
-                                    packs: packsQuery,
-                                    filters: filters,
-                                } satisfies HitSearchQuery)
-                                setPage(page + 1)
                             }}
                         >
                             {t("next")}
@@ -1029,23 +897,10 @@ export default function Browser() {
                         <Pagination.Item
                             key="page-last"
                             disabled={page === getPageCount()}
-                            onClick={async () => {
-                                setSearchParams((p) => {
-                                    p.set("p", `${getPageCount()}`)
-                                    return p
+                            onClick={() => {
+                                updateSearchParams((params) => {
+                                    params.set("p", `${getPageCount()}`)
                                 })
-                                await search({
-                                    start: PAGE_SIZE * (getPageCount() - 1) + 1,
-                                    amount: PAGE_SIZE,
-                                    sort_by: sortByItems.map(
-                                        (i) => SORT_BY_INDEX[i],
-                                    ),
-                                    sort_direction: sortDirection,
-                                    query: query,
-                                    packs: packsQuery,
-                                    filters: filters,
-                                } satisfies HitSearchQuery)
-                                setPage(getPageCount())
                             }}
                         >
                             {t("last")}

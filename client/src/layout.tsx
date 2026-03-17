@@ -1,7 +1,7 @@
 import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
 import boolifyString from "boolify-string"
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useMemo, useRef, useState } from "react"
 import Col from "react-bootstrap/Col"
 import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
@@ -33,18 +33,20 @@ import NotificationPlayer from "./notification-player"
 import SfxPlayer from "./sfx-player"
 import { refreshUserAuth } from "./user-auth"
 
-function hasSamePermissions(a: User["permissions"], b: User["permissions"]) {
-    const keys = Object.keys(a) as Array<keyof User["permissions"]>
-    return keys.every((key) => a[key] === b[key])
-}
+function parseCookieUser(cookieUser: unknown): User | null {
+    if (cookieUser === undefined) return null
 
-function hasSameUserIdentity(a: User, b: User) {
-    return (
-        a.id === b.id &&
-        a.name === b.name &&
-        a.virtual === b.virtual &&
-        hasSamePermissions(a.permissions, b.permissions)
-    )
+    try {
+        return User.parse({
+            name: (cookieUser as User).name,
+            id: (cookieUser as User).id,
+            virtual: (cookieUser as User).virtual,
+            valid_until: (cookieUser as User).valid_until,
+            permissions: (cookieUser as User).permissions,
+        })
+    } catch {
+        return null
+    }
 }
 
 export default function Layout() {
@@ -53,8 +55,10 @@ export default function Layout() {
         i18n: { language },
     } = useTranslation()
     const [cookies] = useCookies(["user"])
-    const [user, setUser] = useState<User | null>(null)
-    const [userValidUntil, setUserValidUntil] = useState<number | null>(null)
+    const cookieUser = cookies.user
+    const user = useMemo(() => parseCookieUser(cookieUser), [cookieUser])
+    const userId = user?.id
+    const userValidUntil = user?.valid_until.getTime() ?? null
     const [colorScheme] = useLocalStorage("colorScheme", "auto")
     const [welcome, setWelcome] = useLocalStorage("welcome")
     const prefersColorScheme = usePrefersColorScheme()
@@ -63,41 +67,17 @@ export default function Layout() {
     const hasValidatedStartupAuth = useRef(false)
 
     useEffect(() => {
-        if (hasValidatedStartupAuth.current || cookies.user === undefined)
-            return
+        if (hasValidatedStartupAuth.current || cookieUser === undefined) return
 
         hasValidatedStartupAuth.current = true
         void refreshUserAuth()
-    }, [cookies.user])
+    }, [cookieUser])
 
     useEffect(() => {
-        if (cookies.user !== undefined) {
-            try {
-                const nextUser = User.parse({
-                    name: cookies.user.name,
-                    id: cookies.user.id,
-                    virtual: cookies.user.virtual,
-                    valid_until: cookies.user.valid_until,
-                    permissions: cookies.user.permissions,
-                })
-
-                setUserValidUntil(nextUser.valid_until.getTime())
-                setUser((current) =>
-                    current !== null && hasSameUserIdentity(current, nextUser)
-                        ? current
-                        : nextUser,
-                )
-            } catch {
-                setUser(null)
-                setUserValidUntil(null)
-                void refreshUserAuth()
-            }
-        } else {
-            setUser(null)
-            setUserValidUntil(null)
+        if (cookieUser === undefined || user === null) {
             void refreshUserAuth()
         }
-    }, [cookies.user])
+    }, [cookieUser, user])
 
     useEffect(() => {
         if (userValidUntil === null) return
@@ -117,7 +97,7 @@ export default function Layout() {
     useEffect(() => {
         let eventSource: EventSource | undefined
 
-        if (user !== null) {
+        if (userId !== undefined) {
             eventSource = new EventSource("/api/events")
 
             eventSource.addEventListener("create_game", (e) => {
@@ -160,7 +140,7 @@ export default function Layout() {
         return () => {
             if (eventSource) eventSource.close()
         }
-    }, [user])
+    }, [userId])
 
     useEffect(() => {
         document.documentElement.lang = language

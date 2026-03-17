@@ -5,7 +5,7 @@ import {
     unbindKeyCombo,
 } from "@rwh/keystrokes"
 import { detect } from "detect-browser"
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import Button from "react-bootstrap/Button"
 import OverlayTrigger from "react-bootstrap/OverlayTrigger"
 import Tooltip from "react-bootstrap/Tooltip"
@@ -18,9 +18,21 @@ import GameService from "../../services/games.service"
 
 export default function SlotSelector({ game }: { game: Game }) {
     const { user } = useContext()
-    const [selectedSlot, setSelectedSlot] = useState("0")
     const [selectedKeySlot, setSelectedKeySlot] = useState("0")
     const { t } = useTranslation()
+    const guessedSlotIds = useMemo(
+        () =>
+            new Set(
+                game.players.flatMap((player) =>
+                    player.guess ? [player.guess.id.toString()] : [],
+                ),
+            ),
+        [game.players],
+    )
+    const selectedSlot =
+        selectedKeySlot !== "0" && !guessedSlotIds.has(selectedKeySlot)
+            ? selectedKeySlot
+            : "0"
 
     const actionPlayer = useCallback((): Player | null => {
         if (game.state === GameState.Open) return null
@@ -91,7 +103,6 @@ export default function SlotSelector({ game }: { game: Game }) {
                 slot,
                 game.mode === GameMode.Local ? actionPlayer()?.id : undefined,
             )
-            setSelectedSlot("0")
             setSelectedKeySlot("0")
         } catch (e) {
             console.log(e)
@@ -104,24 +115,6 @@ export default function SlotSelector({ game }: { game: Game }) {
         game.players,
         selectedSlot,
     ])
-
-    useEffect(() => {
-        game.players.forEach((p) => {
-            if (p.guess?.id.toString() === selectedSlot) {
-                setSelectedSlot("0")
-            }
-        })
-
-        if (
-            selectedSlot === "0" &&
-            selectedKeySlot !== "0" &&
-            !game.players.some(
-                (p) => p.guess?.id.toString() === selectedKeySlot,
-            )
-        ) {
-            setSelectedSlot(selectedKeySlot)
-        }
-    }, [game.players, selectedKeySlot, selectedSlot])
 
     useEffect(() => {
         const handlePreviousSlot = {
@@ -173,8 +166,6 @@ export default function SlotSelector({ game }: { game: Game }) {
                 } satisfies SlotSelectedData)
 
                 setSelectedKeySlot(slot)
-                if (!u) setSelectedSlot(slot)
-                else setSelectedSlot("0")
             },
         }
 
@@ -231,8 +222,6 @@ export default function SlotSelector({ game }: { game: Game }) {
                 } satisfies SlotSelectedData)
 
                 setSelectedKeySlot(slot)
-                if (!u) setSelectedSlot(slot)
-                else setSelectedSlot("0")
             },
         }
 
@@ -241,7 +230,6 @@ export default function SlotSelector({ game }: { game: Game }) {
                 e.finalKeyEvent.preventDefault()
                 if (selectedKeySlot !== "0") {
                     setSelectedKeySlot("0")
-                    setSelectedSlot("0")
 
                     const p = game.players.find((p) => p.turn_player) as Player
 
@@ -464,7 +452,6 @@ export default function SlotSelector({ game }: { game: Game }) {
                                 checked={selectedSlot === "0"}
                                 onChange={(e) => {
                                     setSelectedKeySlot(e.target.value)
-                                    setSelectedSlot(e.target.value)
 
                                     const p = game.players.find(
                                         (p) => p.turn_player,
@@ -598,9 +585,6 @@ export default function SlotSelector({ game }: { game: Game }) {
                                                             } satisfies SlotSelectedData,
                                                         )
                                                         setSelectedKeySlot(
-                                                            e.target.value,
-                                                        )
-                                                        setSelectedSlot(
                                                             e.target.value,
                                                         )
                                                     }}

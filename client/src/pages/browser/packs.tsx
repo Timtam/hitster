@@ -115,12 +115,8 @@ function EditPackModal({
 }) {
     const hitService = useMemo(() => new HitService(), [])
     const { t } = useTranslation()
-    const [name, setName] = useState("")
+    const [name, setName] = useState(pack.name)
     const { showError } = useContext()
-
-    useEffect(() => {
-        setName(pack.name)
-    }, [pack.name])
 
     return (
         <Modal show={show} onHide={onHide}>
@@ -154,7 +150,6 @@ function EditPackModal({
                                         hits: pack.hits,
                                     }),
                                 )
-                                setName("")
                             } catch (e) {
                                 showError(getErrorMessage(e))
                             }
@@ -343,6 +338,7 @@ export default function PacksModal({
                                                 </Button>
                                             </Col>
                                             <EditPackModal
+                                                key={`edit-pack-${p.id}-${p.name}-${showEditPackModal[i]}`}
                                                 pack={p}
                                                 show={showEditPackModal[i]}
                                                 onHide={(pack) => {
