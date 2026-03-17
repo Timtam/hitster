@@ -11,7 +11,7 @@ yt_dl = []
 default = ["native_dl"]
 
 [dependencies]
-altcha-lib-rs = { version = "0.2.0", features = ["json"]}
+altcha-lib-rs = { version = "0.3.2", features = ["json"] }
 argon2 = { workspace = true }
 async-process = "2.4.0"
 base64 = "0.22.1"
@@ -24,8 +24,8 @@ multi_key_map = { workspace = true }
 natord = { workspace = true }
 parking_lot = { version = "0.12.1"}
 petname = {version = "2.0.0-beta.4", default-features = false, features = ["default-rng", "default-words"]}
-rand = "0.9.0"
-rand_chacha = "0.9.0"
+rand = "0.10"
+rand_chacha = "0.10"
 rocket = { version = "0.5.1", features = ["json", "secrets", "uuid"] }
 rocket_async_compression = "0.6.0"
 rocket_db_pools = { version = "0.2.0", default-features = false, features = ["sqlx_sqlite"] }

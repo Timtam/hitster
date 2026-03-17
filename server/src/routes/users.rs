@@ -13,7 +13,7 @@ use argon2::{
 };
 use hitster_core::{Permissions, Token, User};
 use petname::{Generator, Petnames};
-use rand::{RngCore, SeedableRng, rng};
+use rand::{SeedableRng, Rng, rng};
 use rand_chacha::ChaCha8Rng;
 use rocket::{
     State,
