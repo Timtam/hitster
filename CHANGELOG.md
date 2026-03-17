@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+-   [changed pack filter in hits browser to allow filtering for hits without any assigned packs (#48)](https://github.com/Timtam/hitster/issues/48)
 -   [reworked authentification workflow to keep old tokens around for as long as they can still be used to refresh, which hopefully fixes double-authentification errors (#46)](https://github.com/Timtam/hitster/issues/46)
 -   update Rust to v1.94
 
