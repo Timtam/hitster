@@ -38,6 +38,11 @@ export type HitPlayerRef = {
     stop: () => void
 }
 
+function withCacheBust(src: string): string {
+    const separator = src.includes("?") ? "&" : "?"
+    return `${src}${separator}cacheBust=${Math.random()}`
+}
+
 export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
     function HitPlayer(
         { src, duration, onPlay, autoplay, shortcut }: HitPlayerProps,
@@ -60,7 +65,7 @@ export const HitPlayer = forwardRef<HitPlayerRef, HitPlayerProps>(
             }
             player.current?.stop()
             const plr = new Howl({
-                src: [src],
+                src: [withCacheBust(src)],
                 format: "audio/mpeg",
                 html5: true,
                 volume: parseFloat(volume),

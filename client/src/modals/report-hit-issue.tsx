@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next"
 import { useContext } from "../context"
 import { Events } from "../events"
 import HitService from "../services/hits.service"
+import { getErrorMessage } from "../utils"
 
 export default function ReportHitIssueModal({
     show,
@@ -104,7 +105,7 @@ export default function ReportHitIssueModal({
                                 onSubmitted?.()
                                 onHide()
                             } catch (e) {
-                                showError((e as any).message)
+                                showError(getErrorMessage(e))
                             } finally {
                                 setSubmitting(false)
                             }

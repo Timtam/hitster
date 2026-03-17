@@ -63,7 +63,7 @@ export default function HitsView({
                                     <td>{h.belongs_to}</td>
                                     <td>
                                         <HitPlayer
-                                            src={`/api/games/${gameId}/hit/${h.id}?key=${Math.random()}`}
+                                            src={`/api/games/${gameId}/hit/${h.id}`}
                                             autoplay={false}
                                             duration={0}
                                             ref={(e) => {

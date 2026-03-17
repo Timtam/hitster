@@ -14,6 +14,7 @@ import { useContext } from "../../context"
 import { Pack } from "../../entities"
 import { Events } from "../../events"
 import HitService from "../../services/hits.service"
+import { getErrorMessage } from "../../utils"
 
 function DeletePackModal({
     show,
@@ -91,7 +92,7 @@ function CreatePackModal({
                                 onHide(pack)
                                 setName("")
                             } catch (e) {
-                                showError((e as any).message)
+                                showError(getErrorMessage(e))
                             }
                         }}
                     >
@@ -155,7 +156,7 @@ function EditPackModal({
                                 )
                                 setName("")
                             } catch (e) {
-                                showError((e as any).message)
+                                showError(getErrorMessage(e))
                             }
                         }}
                     >
@@ -412,8 +413,9 @@ export default function PacksModal({
                                                                 )
                                                             } catch (e) {
                                                                 showError(
-                                                                    (e as any)
-                                                                        .message,
+                                                                    getErrorMessage(
+                                                                        e,
+                                                                    ),
                                                                 )
                                                             }
                                                         })()

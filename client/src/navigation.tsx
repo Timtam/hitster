@@ -1,6 +1,6 @@
 import EventManager from "@lomray/event-manager"
 import { useLocalStorage } from "@uidotdev/usehooks"
-import { useCallback, useEffect, useRef, useState } from "react"
+import { type MouseEvent, useCallback, useEffect, useRef, useState } from "react"
 import Container from "react-bootstrap/Container"
 import Nav from "react-bootstrap/Nav"
 import NavDropdown from "react-bootstrap/NavDropdown"
@@ -26,7 +26,7 @@ export default function Navigation({
     user: User | null
     onResize: (size: number) => void
 }) {
-    const navRef = useRef<any | null>(null)
+    const navRef = useRef<HTMLElement | null>(null)
     const navigate = useNavigate()
     const { t } = useTranslation()
     const [showSettings, setShowSettings] = useState(false)
@@ -38,8 +38,10 @@ export default function Navigation({
         processing: 0,
     })
     const [, setWelcome] = useLocalStorage("welcome")
-    const [popoverTarget, setPopoverTarget] = useState<any>(null)
-    const popoverRef = useRef(null)
+    const [popoverTarget, setPopoverTarget] = useState<HTMLAnchorElement | null>(
+        null,
+    )
+    const popoverRef = useRef<HTMLDivElement | null>(null)
 
     const handleResize = useCallback(() => {
         onResize(navRef.current!.offsetHeight)
@@ -184,9 +186,9 @@ export default function Navigation({
                             <Nav.Item>
                                 <Nav.Link
                                     aria-expanded={showHitsStatus}
-                                    onClick={(e) => {
+                                    onClick={(e: MouseEvent<HTMLAnchorElement>) => {
                                         setShowHitsStatus(!showHitsStatus)
-                                        setPopoverTarget(e.target as any)
+                                        setPopoverTarget(e.currentTarget)
                                     }}
                                 >
                                     {hitsStatus.downloading > 0 ||

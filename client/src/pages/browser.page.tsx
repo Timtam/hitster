@@ -70,11 +70,18 @@ export function SortableItem(props: { id: number; children: ReactNode }) {
         transform: CSS.Transform.toString(transform),
         transition,
     }
-
-    attributes["aria-roledescription"] = t("sortable")
+    const sortableAttributes = {
+        ...attributes,
+        "aria-roledescription": t("sortable"),
+    }
 
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <div
+            ref={setNodeRef}
+            style={style}
+            {...sortableAttributes}
+            {...listeners}
+        >
             {props.children}
         </div>
     )

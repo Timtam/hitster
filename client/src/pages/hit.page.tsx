@@ -19,7 +19,7 @@ import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
 import ReportHitIssueModal from "../modals/report-hit-issue"
 import HitService from "../services/hits.service"
-import { RE_YOUTUBE } from "../utils"
+import { getErrorMessage, RE_YOUTUBE } from "../utils"
 
 function DeleteHitModal({
     show,
@@ -180,7 +180,7 @@ export default function Hit() {
                                         await hitService.deleteHit(hit.id!)
                                         navigate(-1)
                                     } catch (e) {
-                                        showError((e as any).message)
+                                        showError(getErrorMessage(e))
                                     }
                                 })()
                             }
@@ -241,7 +241,7 @@ export default function Hit() {
                                 await hitService.deleteIssue(hit.id, issueId)
                                 reload()
                             } catch (e) {
-                                showError((e as any).message)
+                                showError(getErrorMessage(e))
                             }
                             setIssueToDelete(undefined)
                         })()
@@ -450,7 +450,7 @@ export default function Hit() {
                                 } satisfies FullHit)
                                 reload()
                             } catch (e) {
-                                showError((e as any).message)
+                                showError(getErrorMessage(e))
                             }
                         }}
                     >

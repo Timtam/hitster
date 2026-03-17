@@ -13,7 +13,7 @@ import { FullHit, Pack } from "../entities"
 import { Events } from "../events"
 import FA from "../focus-anchor"
 import HitService from "../services/hits.service"
-import { RE_YOUTUBE } from "../utils"
+import { getErrorMessage, RE_YOUTUBE } from "../utils"
 
 export default function CreateHit() {
     const hitService = useMemo(() => new HitService(), [])
@@ -194,7 +194,7 @@ export default function CreateHit() {
                             head.current?.focus()
                             EventManager.publish(Events.hitCreated)
                         } catch (e) {
-                            showError((e as any).message)
+                            showError(getErrorMessage(e))
                         }
                     }}
                 >

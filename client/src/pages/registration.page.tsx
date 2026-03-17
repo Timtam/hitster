@@ -17,7 +17,7 @@ export default function Registration() {
     const [password, setPassword] = useState("")
     const [passwordRepetition, setPasswordRepetition] = useState("")
     const { t } = useTranslation()
-    let [altchaVerified, setAltchaVerified] = useState(false)
+    const [altchaVerified, setAltchaVerified] = useState(false)
 
     useEffect(() => {
         import("altcha")
