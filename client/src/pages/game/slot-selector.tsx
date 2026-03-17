@@ -266,6 +266,9 @@ export default function SlotSelector({ game }: { game: Game }) {
         const handleConfirmYes = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
+
+                if (actionRequired() !== PlayerState.Confirming) return
+
                 confirm(true)
             },
         }
@@ -273,6 +276,9 @@ export default function SlotSelector({ game }: { game: Game }) {
         const handleConfirmNo = {
             onPressed: (e: BrowserKeyComboEvent) => {
                 e.finalKeyEvent.preventDefault()
+
+                if (actionRequired() !== PlayerState.Confirming) return
+
                 confirm(false)
             },
         }
@@ -313,10 +319,9 @@ export default function SlotSelector({ game }: { game: Game }) {
             bindKeyCombo("alt + shift + ArrowDown", handleNextSlot)
             bindKeyCombo("alt + shift + Backspace", handleResetSlot)
             bindKeyCombo("alt + shift + Enter", handleGuess)
-        } else if (actionRequired() === PlayerState.Confirming) {
-            bindKeyCombo("alt + shift + y", handleConfirmYes)
-            bindKeyCombo("alt + shift + n", handleConfirmNo)
         }
+        bindKeyCombo("alt + shift + y", handleConfirmYes)
+        bindKeyCombo("alt + shift + n", handleConfirmNo)
 
         return () => {
             unbindKeyCombo("alt + shift + ArrowUp", handlePreviousSlot)
