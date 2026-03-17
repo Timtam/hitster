@@ -50,6 +50,7 @@ export default function CreateHit() {
             </FA>
             <Form onSubmit={(e) => e.preventDefault()}>
                 <Form.Group className="mb-2">
+                    <Form.Label>{t("title")}</Form.Label>
                     <Form.Control
                         type="input"
                         placeholder={t("title")}
@@ -63,6 +64,7 @@ export default function CreateHit() {
                     />
                 </Form.Group>
                 <Form.Group className="mb-2">
+                    <Form.Label>{t("artist")}</Form.Label>
                     <Form.Control
                         type="input"
                         placeholder={t("artist")}
@@ -76,6 +78,7 @@ export default function CreateHit() {
                     />
                 </Form.Group>
                 <Form.Group className="mb-2">
+                    <Form.Label>{t("year")}</Form.Label>
                     <Form.Control
                         type="number"
                         title={t("year")}
@@ -89,6 +92,7 @@ export default function CreateHit() {
                     />
                 </Form.Group>
                 <Form.Group className="mb-2">
+                    <Form.Label>{t("belongsTo")}</Form.Label>
                     <Form.Control
                         type="input"
                         placeholder={t("belongsTo")}
@@ -128,6 +132,7 @@ export default function CreateHit() {
                     </ul>
                 </Form.Group>
                 <Form.Group className="mb-2">
+                    <Form.Label>{t("youtubeUrl")}</Form.Label>
                     <Form.Control
                         type="input"
                         placeholder={t("youtubeUrl")}
@@ -157,6 +162,7 @@ export default function CreateHit() {
                     >
                         {t("youtubeUrlInvalid")}
                     </Form.Text>
+                    <Form.Label>{t("playbackOffset")}</Form.Label>
                     <Form.Control
                         type="number"
                         title={t("playbackOffset")}
