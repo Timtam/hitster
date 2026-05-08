@@ -323,8 +323,14 @@ type: Typ
 userStatsGamesPlayed: Gespielte Spiele
 userStatsGamesWon: Gewonnene Spiele
 userStatsHeading: Statistiken
+userStatsHitSuccessRate: Trefferquote bei Hits
 userStatsHitsGuessedCorrectly: Korrekt erratene Hits
+userStatsHitsGuessedWrong: Falsch erratene Hits
+userStatsHitsStealAttemptsFailed: Gescheiterte Stehlversuche
+userStatsHitsStolenSuccessfully: Erfolgreich gestohlene Hits
+userStatsTokenSuccessRate: Trefferquote bei Chips
 userStatsTokensEarned: Erhaltene Chips
+userStatsTokensMissed: Verpasste Chips
 userStatsWinRate: Siegquote
 username: Benutzername
 version: "Version: {{version}}"

@@ -231,7 +231,7 @@ impl Fairing for UserCleanupService {
                     && before_tokens != updated.tokens
                     && let Ok(tokens_json) = serde_json::to_string(&updated.tokens)
                 {
-                    token_updates.push((updated.id.to_string(), tokens_json));
+                    token_updates.push((updated.id, tokens_json));
                 }
                 if logged_off {
                     for game in games.get_all(Some(user)).iter() {

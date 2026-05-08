@@ -725,15 +725,38 @@ impl GameService {
                         game.last_scored = Some(player.clone());
                     }
 
+                    let scored_id = game.last_scored.as_ref().map(|s| s.id);
+
                     if let Some(scored) = game.last_scored.as_ref() {
                         if let Some(awarded_hit) = scored.hits.last() {
                             self.stats.record_hit_correct_guess(awarded_hit.id);
                         }
-                        let is_virtual = self.stats_is_virtual(scored);
-                        self.stats
-                            .record_user_hit_guessed_correctly(scored.id, is_virtual);
                         if scored.hits.len() >= game.goal as usize {
+                            let is_virtual = self.stats_is_virtual(scored);
                             self.stats.record_user_game_won(scored.id, is_virtual);
+                        }
+                    }
+
+                    for player in game.players.iter() {
+                        if player.guess.is_none() {
+                            continue;
+                        }
+                        let was_awarded = Some(player.id) == scored_id;
+                        let is_turn_player = player.turn_player;
+                        let is_virtual = self.stats_is_virtual(player);
+                        match (was_awarded, is_turn_player) {
+                            (true, true) => self
+                                .stats
+                                .record_user_hit_guessed_correctly(player.id, is_virtual),
+                            (true, false) => self
+                                .stats
+                                .record_user_hit_stolen_successfully(player.id, is_virtual),
+                            (false, true) => self
+                                .stats
+                                .record_user_hit_guessed_wrong(player.id, is_virtual),
+                            (false, false) => self
+                                .stats
+                                .record_user_hit_steal_attempt_failed(player.id, is_virtual),
                         }
                     }
 
@@ -805,6 +828,10 @@ impl GameService {
                 if let Some(hit) = game.hit.as_ref() {
                     self.stats.record_hit_token_earned(hit.id);
                 }
+            } else {
+                let tp = game.players.get(turn_player_pos).unwrap();
+                let is_virtual = self.stats_is_virtual(tp);
+                self.stats.record_user_token_missed(tp.id, is_virtual);
             }
 
             game.hits_remaining.pop_front().unwrap();

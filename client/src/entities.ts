@@ -240,7 +240,11 @@ export const UserStats = z.object({
     games_played: z.number(),
     games_won: z.number(),
     hits_guessed_correctly: z.number(),
+    hits_guessed_wrong: z.number(),
+    hits_stolen_successfully: z.number(),
+    hits_steal_attempts_failed: z.number(),
     tokens_earned: z.number(),
+    tokens_missed: z.number(),
 })
 
 export type UserStats = z.infer<typeof UserStats>
