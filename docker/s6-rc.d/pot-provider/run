@@ -1,2 +1,2 @@
 #!/command/with-contenv sh
-cd /pot-provider && node build/main.js
+cd /pot-provider && node bundle.cjs

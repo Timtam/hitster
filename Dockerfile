@@ -19,7 +19,11 @@ ENV POT_PROVIDER_VERSION ${POT_PROVIDER_VERSION}
 RUN git clone --single-branch --branch ${POT_PROVIDER_VERSION} https://github.com/Brainicism/bgutil-ytdlp-pot-provider.git /pot-provider && \
     cd /pot-provider/server && \
     npm install && \
-    npx tsc
+    npm install --no-save esbuild && \
+    npx esbuild src/main.ts --bundle --platform=node --target=node${NODE_VERSION} --format=cjs --external:canvas --external:jsdom --minify --outfile=bundle.cjs && \
+    node -e "const p=require('./package.json');require('fs').writeFileSync('package.json',JSON.stringify({name:p.name,version:p.version,dependencies:{canvas:p.dependencies.canvas,jsdom:p.dependencies.jsdom}},null,2))" && \
+    rm -rf node_modules package-lock.json build && \
+    npm install --omit=dev --no-fund --no-audit
 
 FROM node:${NODE_VERSION} AS client_build_image
 
@@ -123,15 +127,13 @@ ADD https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLA
 # prepare the OS
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get install -y curl && \
-    curl -sL https://deb.nodesource.com/setup_${NODE_VERSION}.x | bash - && \
     apt-get -y install --no-install-recommends libssl-dev ca-certificates python3 python3-mutagen python3-pip xz-utils && \
     pip3 install --no-cache-dir --break-system-packages ffmpeg-normalize && \
     mkdir /opt/ffmpeg && \
     tar xf /opt/ffmpeg.tar.xz -C /opt/ffmpeg/ --strip-components 1 && \
     tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
     tar -C / -Jxpf /tmp/s6-overlay.tar.xz && \
-    apt-get purge -y --auto-remove python3-pip xz-utils curl && \
+    apt-get purge -y --auto-remove python3-pip xz-utils && \
     apt-get clean && \
     rm /opt/ffmpeg.tar.xz && \
     rm /tmp/s6-overlay-noarch.tar.xz && \
@@ -149,7 +151,7 @@ ADD --chmod=777 https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp
 COPY --from=server_build_image /hitster/target/release/hitster-server /hitster/server
 COPY --from=server_build_image /hitster/target/release/hitster-cli /hitster/cli
 COPY --from=client_build_image /app/dist /hitster/client
-COPY --from=pot_provider_build_image /pot-provider/server/build /pot-provider/build
+COPY --from=pot_provider_build_image /pot-provider/server/bundle.cjs /pot-provider/bundle.cjs
 COPY --from=pot_provider_build_image /pot-provider/server/node_modules /pot-provider/node_modules
 COPY --from=pot_provider_build_image /pot-provider/plugin /etc/yt-dlp/plugins/bgutil-ytdlp-pot-provider
 COPY --from=pot_provider_build_image /usr/local/bin/node /usr/local/bin/node
