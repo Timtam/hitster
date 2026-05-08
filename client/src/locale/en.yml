@@ -319,8 +319,14 @@ type: Type
 userStatsGamesPlayed: Games played
 userStatsGamesWon: Games won
 userStatsHeading: Statistics
+userStatsHitSuccessRate: Hit success rate
 userStatsHitsGuessedCorrectly: Hits guessed correctly
+userStatsHitsGuessedWrong: Hits guessed wrong
+userStatsHitsStealAttemptsFailed: Failed steal attempts
+userStatsHitsStolenSuccessfully: Hits successfully stolen
+userStatsTokenSuccessRate: Token success rate
 userStatsTokensEarned: Tokens earned
+userStatsTokensMissed: Tokens missed
 userStatsWinRate: Win rate
 username: Username
 version: "Version: {{version}}"

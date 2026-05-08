@@ -87,8 +87,9 @@ impl StatsService {
             return UserStatsResponse::default();
         };
         sqlx::query_as::<_, UserStatsResponse>(
-            "SELECT games_played, games_won, hits_guessed_correctly, tokens_earned \
-             FROM user_stats WHERE user_id = ?",
+            "SELECT games_played, games_won, hits_guessed_correctly, hits_guessed_wrong, \
+             hits_stolen_successfully, hits_steal_attempts_failed, \
+             tokens_earned, tokens_missed FROM user_stats WHERE user_id = ?",
         )
         .bind(user_id)
         .fetch_optional(pool)
@@ -156,7 +157,11 @@ impl StatsService {
             VirtualUserField::GamesPlayed => entry.games_played += 1,
             VirtualUserField::GamesWon => entry.games_won += 1,
             VirtualUserField::HitsGuessedCorrectly => entry.hits_guessed_correctly += 1,
+            VirtualUserField::HitsGuessedWrong => entry.hits_guessed_wrong += 1,
+            VirtualUserField::HitsStolenSuccessfully => entry.hits_stolen_successfully += 1,
+            VirtualUserField::HitsStealAttemptsFailed => entry.hits_steal_attempts_failed += 1,
             VirtualUserField::TokensEarned => entry.tokens_earned += 1,
+            VirtualUserField::TokensMissed => entry.tokens_missed += 1,
         }
     }
 
@@ -200,8 +205,24 @@ impl StatsService {
         self.record_user(user_id, is_virtual, VirtualUserField::HitsGuessedCorrectly);
     }
 
+    pub fn record_user_hit_guessed_wrong(&self, user_id: Uuid, is_virtual: bool) {
+        self.record_user(user_id, is_virtual, VirtualUserField::HitsGuessedWrong);
+    }
+
+    pub fn record_user_hit_stolen_successfully(&self, user_id: Uuid, is_virtual: bool) {
+        self.record_user(user_id, is_virtual, VirtualUserField::HitsStolenSuccessfully);
+    }
+
+    pub fn record_user_hit_steal_attempt_failed(&self, user_id: Uuid, is_virtual: bool) {
+        self.record_user(user_id, is_virtual, VirtualUserField::HitsStealAttemptsFailed);
+    }
+
     pub fn record_user_token_earned(&self, user_id: Uuid, is_virtual: bool) {
         self.record_user(user_id, is_virtual, VirtualUserField::TokensEarned);
+    }
+
+    pub fn record_user_token_missed(&self, user_id: Uuid, is_virtual: bool) {
+        self.record_user(user_id, is_virtual, VirtualUserField::TokensMissed);
     }
 }
 
@@ -210,7 +231,11 @@ enum VirtualUserField {
     GamesPlayed,
     GamesWon,
     HitsGuessedCorrectly,
+    HitsGuessedWrong,
+    HitsStolenSuccessfully,
+    HitsStealAttemptsFailed,
     TokensEarned,
+    TokensMissed,
 }
 
 impl VirtualUserField {
@@ -219,7 +244,11 @@ impl VirtualUserField {
             VirtualUserField::GamesPlayed => "games_played",
             VirtualUserField::GamesWon => "games_won",
             VirtualUserField::HitsGuessedCorrectly => "hits_guessed_correctly",
+            VirtualUserField::HitsGuessedWrong => "hits_guessed_wrong",
+            VirtualUserField::HitsStolenSuccessfully => "hits_stolen_successfully",
+            VirtualUserField::HitsStealAttemptsFailed => "hits_steal_attempts_failed",
             VirtualUserField::TokensEarned => "tokens_earned",
+            VirtualUserField::TokensMissed => "tokens_missed",
         }
     }
 }

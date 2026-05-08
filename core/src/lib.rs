@@ -349,7 +349,7 @@ mod hitster_core {
     impl FromRow<'_, SqliteRow> for User {
         fn from_row(row: &SqliteRow) -> sqlx::Result<Self> {
             Ok(Self {
-                id: Uuid::parse_str(&row.try_get::<String, &str>("id")?).unwrap(),
+                id: row.try_get::<Uuid, &str>("id")?,
                 name: row.try_get("name")?,
                 password: row.try_get("password")?,
                 r#virtual: false,

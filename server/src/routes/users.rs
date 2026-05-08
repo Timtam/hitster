@@ -140,7 +140,7 @@ async fn handle_existing_token(
                 if !u.r#virtual {
                     let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
                         .bind(serde_json::to_string(&u.tokens).unwrap())
-                        .bind(u.id.to_string())
+                        .bind(u.id)
                         .execute(&mut **db)
                         .await;
                 }
@@ -247,7 +247,7 @@ async fn handle_existing_token(
 
                 let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
                     .bind(serde_json::to_string(&u.tokens).unwrap())
-                    .bind(u.id.to_string())
+                    .bind(u.id)
                     .execute(&mut **db)
                     .await;
 
@@ -432,7 +432,7 @@ pub async fn login(
 
             let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
                 .bind(serde_json::to_string(&u.tokens).unwrap())
-                .bind(u.id.to_string())
+                .bind(u.id)
                 .execute(&mut **db)
                 .await;
 
@@ -478,7 +478,7 @@ pub async fn login(
 
             let _ = sqlx::query("UPDATE users SET tokens = ? WHERE id = ?")
                 .bind(serde_json::to_string(&u.tokens).unwrap())
-                .bind(u.id.to_string())
+                .bind(u.id)
                 .execute(&mut **db)
                 .await;
 
@@ -547,7 +547,7 @@ pub async fn register(
     } else if sqlx::query(
         "INSERT INTO users (id, name, password, tokens, permissions) VALUES (?, ?, ?, ?, ?)",
     )
-    .bind(user.0.id.to_string())
+    .bind(user.0.id)
     .bind(credentials.username.as_str())
     .bind(credentials.password.as_str())
     .bind(serde_json::to_string(&user.0.tokens).unwrap())

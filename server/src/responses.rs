@@ -54,10 +54,18 @@ pub struct UserStatsResponse {
     pub games_played: i64,
     /// number of games this user won
     pub games_won: i64,
-    /// number of rounds in which this user was awarded the hit
+    /// number of rounds in which this user, as turn player, was awarded the hit
     pub hits_guessed_correctly: i64,
+    /// number of rounds in which this user, as turn player, guessed but didn't get the hit
+    pub hits_guessed_wrong: i64,
+    /// number of rounds in which this user successfully intercepted (stole) a hit
+    pub hits_stolen_successfully: i64,
+    /// number of rounds in which this user attempted an intercept but didn't get the hit
+    pub hits_steal_attempts_failed: i64,
     /// number of tokens this user earned via confirm-true
     pub tokens_earned: i64,
+    /// number of times this user was the turn player on a confirm-false (didn't get a token)
+    pub tokens_missed: i64,
 }
 
 #[derive(Debug, Serialize, JsonSchema)]
