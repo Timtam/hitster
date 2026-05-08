@@ -20,8 +20,12 @@ import LobbyLoader from "./pages/lobby.loader"
 import Lobby from "./pages/lobby.page"
 import LoginAction from "./pages/login.action"
 import Login from "./pages/login.page"
+import PlayerLoader from "./pages/player.loader"
+import Player from "./pages/player.page"
 import RegistrationAction from "./pages/registration.action"
 import Registration from "./pages/registration.page"
+import UserLoader from "./pages/user.loader"
+import User from "./pages/user.page"
 
 const router = createBrowserRouter([
     {
@@ -62,6 +66,16 @@ const router = createBrowserRouter([
                 element: <CreateHit />,
                 path: "/hits/create",
                 loader: CreateHitLoader,
+            },
+            {
+                element: <User />,
+                path: "/users/:userId",
+                loader: UserLoader,
+            },
+            {
+                element: <Player />,
+                path: "/games/:gameId/players/:playerId",
+                loader: PlayerLoader,
             },
         ],
         errorElement: <ErrorPage />,

@@ -314,6 +314,12 @@ title: Titel
 token_one: Chip
 token_other: Chips
 type: Typ
+userStatsGamesPlayed: Gespielte Spiele
+userStatsGamesWon: Gewonnene Spiele
+userStatsHeading: Statistiken
+userStatsHitsGuessedCorrectly: Korrekt erratene Hits
+userStatsTokensEarned: Erhaltene Chips
+userStatsWinRate: Siegquote
 username: Benutzername
 version: "Version: {{version}}"
 volume: Lautstärke

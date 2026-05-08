@@ -5,12 +5,12 @@ use crate::{
         GameSettingsPayload, GameState, SlotPayload,
     },
     responses::{
-        ClaimHitError, ConfirmSlotError, GamesResponse, GetGameError, GuessSlotError, HitError,
-        JoinGameError, LeaveGameError, MessageResponse, SkipHitError, StartGameError,
-        StopGameError, UpdateGameError,
+        ClaimHitError, ConfirmSlotError, GamesResponse, GetGameError, GetPlayerError,
+        GuessSlotError, HitError, JoinGameError, LeaveGameError, MessageResponse, SkipHitError,
+        StartGameError, StopGameError, UpdateGameError, UserStatsResponse,
     },
     services::ServiceStore,
-    users::UserAuthenticator,
+    users::{UserAuthenticator, UserPayload},
 };
 use rocket::{
     Shutdown, State,
@@ -286,6 +286,90 @@ pub fn get_game(
             http_status_code: 404,
         }),
     }
+}
+
+/// # Get info about a player in a game
+///
+/// Returns minimal info (id, name, virtual) for a player participating in the given game.
+/// Works for any kind of player, including bots that have no global User record.
+
+#[openapi(tag = "Games")]
+#[get("/games/<game_id>/players/<player_id>")]
+pub fn get_player(
+    game_id: &str,
+    player_id: &str,
+    user: Option<UserAuthenticator>,
+    serv: &State<ServiceStore>,
+) -> Result<Json<UserPayload>, GetPlayerError> {
+    let player_id = Uuid::parse_str(player_id).map_err(|_| GetPlayerError {
+        message: "player id is not valid".into(),
+        http_status_code: 404,
+    })?;
+
+    let game_svc = serv.game_service();
+    let games = game_svc.lock();
+
+    let game = games.get(game_id, user.map(|u| u.0).as_ref()).ok_or(GetPlayerError {
+        message: "game id not found".into(),
+        http_status_code: 404,
+    })?;
+
+    let player = game
+        .players
+        .iter()
+        .find(|p| p.id == player_id)
+        .ok_or(GetPlayerError {
+            message: "player id not found in this game".into(),
+            http_status_code: 404,
+        })?;
+
+    Ok(Json(UserPayload {
+        id: player.id,
+        name: player.name.clone(),
+        r#virtual: player.r#virtual,
+    }))
+}
+
+/// # Get statistics for a player in a game
+///
+/// Returns lifetime counters for the given player. Works for bots (memory-stored) and
+/// User-backed players (memory or DB depending on whether the User is virtual).
+
+#[openapi(tag = "Games")]
+#[get("/games/<game_id>/players/<player_id>/stats")]
+pub async fn get_player_stats(
+    game_id: &str,
+    player_id: &str,
+    user: Option<UserAuthenticator>,
+    serv: &State<ServiceStore>,
+) -> Result<Json<UserStatsResponse>, GetPlayerError> {
+    let player_id = Uuid::parse_str(player_id).map_err(|_| GetPlayerError {
+        message: "player id is not valid".into(),
+        http_status_code: 404,
+    })?;
+
+    let stats_svc = {
+        let game_svc = serv.game_service();
+        let games = game_svc.lock();
+
+        let game = games
+            .get(game_id, user.map(|u| u.0).as_ref())
+            .ok_or(GetPlayerError {
+                message: "game id not found".into(),
+                http_status_code: 404,
+            })?;
+
+        if !game.players.iter().any(|p| p.id == player_id) {
+            return Err(GetPlayerError {
+                message: "player id not found in this game".into(),
+                http_status_code: 404,
+            });
+        }
+
+        serv.stats_service()
+    };
+
+    Ok(Json(stats_svc.get_user_stats(player_id).await))
 }
 
 /// # Subscribe to game events

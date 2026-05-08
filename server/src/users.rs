@@ -220,6 +220,7 @@ impl Fairing for UserCleanupService {
             let queue = req.guard::<&State<Sender<GlobalEvent>>>().await.unwrap();
             let usvc = svc.user_service();
             let gsvc = svc.game_service();
+            let stats = svc.stats_service();
             let games = gsvc.lock();
             let users = usvc.lock();
 
@@ -241,6 +242,9 @@ impl Fairing for UserCleanupService {
                         {
                             let _ = queue.send(GlobalEvent::RemoveGame(game.id.clone()));
                         }
+                    }
+                    if user.r#virtual {
+                        stats.drop_virtual_user_stats(user.id);
                     }
                     users.remove(user.id);
                 }

@@ -65,12 +65,13 @@ impl ServiceStore {
 
     pub fn game_service(&self) -> ServiceHandle<GameService> {
         let hs = self.hit_service();
+        let us = self.user_service();
         let ss = self.stats_service();
         let mut data = self.data.lock();
 
         if data.game_service.is_none() {
             data.game_service
-                .replace(ServiceHandle::new(GameService::new(hs, ss)));
+                .replace(ServiceHandle::new(GameService::new(hs, us, ss)));
         }
 
         data.game_service.as_ref().cloned().unwrap()

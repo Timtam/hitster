@@ -219,6 +219,23 @@ export const HitStats = z.object({
 
 export type HitStats = z.infer<typeof HitStats>
 
+export const PublicUser = z.object({
+    id: z.uuid(),
+    name: z.string(),
+    virtual: z.boolean(),
+})
+
+export type PublicUser = z.infer<typeof PublicUser>
+
+export const UserStats = z.object({
+    games_played: z.number(),
+    games_won: z.number(),
+    hits_guessed_correctly: z.number(),
+    tokens_earned: z.number(),
+})
+
+export type UserStats = z.infer<typeof UserStats>
+
 export const PaginatedHitsResponse = createPaginatedResponseSchema(Hit)
 
 export type PaginatedHitsResponse = z.infer<typeof PaginatedHitsResponse>

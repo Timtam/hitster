@@ -310,6 +310,12 @@ title: Title
 token_one: Token
 token_other: Tokens
 type: Type
+userStatsGamesPlayed: Games played
+userStatsGamesWon: Games won
+userStatsHeading: Statistics
+userStatsHitsGuessedCorrectly: Hits guessed correctly
+userStatsTokensEarned: Tokens earned
+userStatsWinRate: Win rate
 username: Username
 version: "Version: {{version}}"
 volume: Volume

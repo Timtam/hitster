@@ -1,5 +1,5 @@
 import type { GameMode, GameSettings } from "../entities"
-import { Game, GamesResponse } from "../entities"
+import { Game, GamesResponse, PublicUser, UserStats } from "../entities"
 import fetchAuth from "../fetch"
 
 export default class GameService {
@@ -16,6 +16,33 @@ export default class GameService {
         })
 
         if (res.status == 200) return Game.parse(await res.json())
+    }
+
+    async getPlayer(
+        game_id: string,
+        player_id: string,
+    ): Promise<PublicUser | undefined> {
+        const res = await fetch(
+            `/api/games/${game_id}/players/${player_id}`,
+            {
+                method: "GET",
+            },
+        )
+
+        if (res.status === 200) return PublicUser.parse(await res.json())
+    }
+
+    async getPlayerStats(
+        game_id: string,
+        player_id: string,
+    ): Promise<UserStats> {
+        const res = await fetch(
+            `/api/games/${game_id}/players/${player_id}/stats`,
+            {
+                method: "GET",
+            },
+        )
+        return UserStats.parse(await res.json())
     }
 
     async create(mode: GameMode): Promise<Game> {

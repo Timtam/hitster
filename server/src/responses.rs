@@ -48,7 +48,7 @@ pub struct HitStatsResponse {
 
 /// per-user statistics
 
-#[derive(Serialize, JsonSchema, Default, sqlx::FromRow)]
+#[derive(Serialize, JsonSchema, Default, Clone, sqlx::FromRow)]
 pub struct UserStatsResponse {
     /// number of games this user joined that were started
     pub games_played: i64,
@@ -1089,6 +1089,53 @@ impl std::error::Error for GetGameError {}
 impl<'r> Responder<'r, 'static> for GetGameError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct GetPlayerError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for GetPlayerError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                Either the game or a player with the requested ID inside that game does not exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for GetPlayerError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Get player error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for GetPlayerError {}
+
+impl<'r> Responder<'r, 'static> for GetPlayerError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         let body = serde_json::to_string(&self).unwrap();
         Response::build()
             .sized_body(body.len(), std::io::Cursor::new(body))

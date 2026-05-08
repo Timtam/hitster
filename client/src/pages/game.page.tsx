@@ -494,10 +494,14 @@ export default function Game() {
                         return (
                             <tr key={`player-${p.id}`}>
                                 <td>
-                                    {p.name +
-                                        (p.creator === true
-                                            ? " (" + t("creator") + ")"
-                                            : "")}
+                                    <Link
+                                        to={`/games/${game.id}/players/${p.id}`}
+                                    >
+                                        {p.name}
+                                    </Link>
+                                    {p.creator === true
+                                        ? " (" + t("creator") + ")"
+                                        : ""}
                                 </td>
                                 <td>{p.tokens}</td>
                                 <td>

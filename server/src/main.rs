@@ -149,6 +149,8 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 games_routes::events,
                 games_routes::get_all_games,
                 games_routes::get_game,
+                games_routes::get_player,
+                games_routes::get_player_stats,
                 games_routes::guess_slot,
                 games_routes::hit,
                 games_routes::join_game,

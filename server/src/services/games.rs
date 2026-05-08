@@ -4,7 +4,7 @@ use crate::{
         ClaimHitError, ConfirmSlotError, GuessSlotError, HitError, JoinGameError, LeaveGameError,
         SkipHitError, StartGameError, StopGameError, UpdateGameError,
     },
-    services::{HitService, ServiceHandle, StatsService},
+    services::{HitService, ServiceHandle, StatsService, UserService},
 };
 use hitster_core::{Hit, User};
 use itertools::sorted;
@@ -26,6 +26,7 @@ pub struct GameServiceData {
 pub struct GameService {
     data: Mutex<GameServiceData>,
     hit_service: ServiceHandle<HitService>,
+    user_service: ServiceHandle<UserService>,
     stats: Arc<StatsService>,
 }
 
@@ -36,13 +37,49 @@ impl GameService {
         }
     }
 
-    pub fn new(hit_service: ServiceHandle<HitService>, stats: Arc<StatsService>) -> Self {
+    pub fn new(
+        hit_service: ServiceHandle<HitService>,
+        user_service: ServiceHandle<UserService>,
+        stats: Arc<StatsService>,
+    ) -> Self {
         Self {
             hit_service,
+            user_service,
             stats,
             data: Mutex::new(GameServiceData {
                 games: HashMap::new(),
             }),
+        }
+    }
+
+    /// Stats are stored in memory unless the player is User-backed AND that User is non-virtual.
+    /// Bots have no User; anonymous users have a virtual User; both go to memory.
+    fn stats_is_virtual(&self, player: &Player) -> bool {
+        if player.r#virtual {
+            rocket::debug!(
+                "stats_is_virtual: player.id={} player.virtual=true -> memory",
+                player.id
+            );
+            return true;
+        }
+        let lookup = self.user_service.lock().get_by_id(player.id);
+        match lookup {
+            Some(u) => {
+                rocket::debug!(
+                    "stats_is_virtual: player.id={} player.virtual=false user_found user.virtual={} -> {}",
+                    player.id,
+                    u.r#virtual,
+                    if u.r#virtual { "memory" } else { "db" }
+                );
+                u.r#virtual
+            }
+            None => {
+                rocket::debug!(
+                    "stats_is_virtual: player.id={} player.virtual=false user_NOT_found -> memory",
+                    player.id
+                );
+                true
+            }
         }
     }
 
@@ -252,7 +289,14 @@ impl GameService {
 
                 let plr = game.players.remove(pos);
 
+                if plr.r#virtual {
+                    self.stats.drop_virtual_user_stats(plr.id);
+                }
+
                 if game.players.iter().filter(|p| !p.r#virtual).count() == 0 {
+                    for p in game.players.iter().filter(|p| p.r#virtual) {
+                        self.stats.drop_virtual_user_stats(p.id);
+                    }
                     data.games.remove(game_id);
                 } else if game.players.len() == 1 && game.state != GameState::Open {
                     drop(data);
@@ -349,8 +393,9 @@ impl GameService {
 
                 self.enqueue_availability_check(game.hits_remaining.front().cloned());
 
-                for p in game.players.iter().filter(|p| !p.r#virtual) {
-                    self.stats.record_user_game_played(p.id);
+                for p in game.players.iter() {
+                    self.stats
+                        .record_user_game_played(p.id, self.stats_is_virtual(p));
                 }
 
                 Ok(game.clone())
@@ -644,11 +689,11 @@ impl GameService {
                         if let Some(awarded_hit) = scored.hits.last() {
                             self.stats.record_hit_correct_guess(awarded_hit.id);
                         }
-                        if !scored.r#virtual {
-                            self.stats.record_user_hit_guessed_correctly(scored.id);
-                            if scored.hits.len() >= game.goal as usize {
-                                self.stats.record_user_game_won(scored.id);
-                            }
+                        let is_virtual = self.stats_is_virtual(scored);
+                        self.stats
+                            .record_user_hit_guessed_correctly(scored.id, is_virtual);
+                        if scored.hits.len() >= game.goal as usize {
+                            self.stats.record_user_game_won(scored.id, is_virtual);
                         }
                     }
 
@@ -715,9 +760,8 @@ impl GameService {
             if confirm {
                 let tp = game.players.get_mut(turn_player_pos).unwrap();
                 tp.tokens += 1;
-                if !tp.r#virtual {
-                    self.stats.record_user_token_earned(tp.id);
-                }
+                let is_virtual = self.stats_is_virtual(tp);
+                self.stats.record_user_token_earned(tp.id, is_virtual);
                 if let Some(hit) = game.hit.as_ref() {
                     self.stats.record_hit_token_earned(hit.id);
                 }
