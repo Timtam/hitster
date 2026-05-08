@@ -15,9 +15,9 @@ jobs:
       version: ${{ steps.version.outputs.version }}
       branch: ${{ steps.branch.outputs.branch }}
     steps:
-      - 
+      -
         name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       -
@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
         id: branch
-  
+
   update_changelog:
     needs: ["fetch_version"]
     if: startsWith(github.ref, 'refs/tags') && !github.event_type != 'pull_request'
@@ -49,7 +49,7 @@ jobs:
       statuses: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v5
         with:
           ref: 'main'
       - name: Update changelog
@@ -68,71 +68,121 @@ jobs:
           git commit --message "Prepare release ${{ needs.fetch_version.outputs.version }}"
           git push
 
-  push_release_container:
-    name: Push release container to Docker Hub
-    needs: ["update_changelog", "fetch_version"]
-    runs-on: ubuntu-latest
+  build:
+    name: Build ${{ matrix.slug }}
+    needs: ["fetch_version"]
+    if: |
+      startsWith(github.ref, 'refs/tags') ||
+      github.ref == 'refs/heads/development'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: linux/amd64
+            runner: ubuntu-latest
+            slug: amd64
+          - platform: linux/arm64
+            runner: ubuntu-24.04-arm
+            slug: arm64
+    runs-on: ${{ matrix.runner }}
     steps:
-      - 
+      -
         name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
+        uses: actions/checkout@v5
+      -
+        name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - 
+      -
         name: "Log in to Docker Hub"
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - 
-        name: Build and push Docker stable image
+      -
+        name: Build and push by digest
+        id: build
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: tonironaldbarth/hitster:latest , tonironaldbarth/hitster:${{ needs.fetch_version.outputs.version }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          platforms: ${{ matrix.platform }}
+          outputs: type=image,name=tonironaldbarth/hitster,push-by-digest=true,name-canonical=true,push=true
+          cache-from: type=gha,scope=${{ matrix.slug }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.slug }}
           build-args: |
             HITSTER_VERSION=${{ needs.fetch_version.outputs.version }}
             HITSTER_BRANCH=${{ needs.fetch_version.outputs.branch }}
+      -
+        name: Export digest
+        run: |
+          mkdir -p /tmp/digests
+          digest="${{ steps.build.outputs.digest }}"
+          touch "/tmp/digests/${digest#sha256:}"
+      -
+        name: Upload digest
+        uses: actions/upload-artifact@v4
+        with:
+          name: digests-${{ matrix.slug }}
+          path: /tmp/digests/*
+          if-no-files-found: error
+          retention-days: 1
+
+  push_release_container:
+    name: Push release container to Docker Hub
+    needs: ["build", "update_changelog", "fetch_version"]
+    if: startsWith(github.ref, 'refs/tags')
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Download digests
+        uses: actions/download-artifact@v4
+        with:
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      -
+        name: "Log in to Docker Hub"
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create \
+            -t tonironaldbarth/hitster:latest \
+            -t tonironaldbarth/hitster:${{ needs.fetch_version.outputs.version }} \
+            $(printf 'tonironaldbarth/hitster@sha256:%s ' *)
 
   push_development_container:
     name: Push development container to Docker Hub
-    needs: ["fetch_version"]
-    if: startsWith(github.ref, 'refs/heads/development')
+    needs: ["build", "fetch_version"]
+    if: github.ref == 'refs/heads/development'
     runs-on: ubuntu-latest
     steps:
-      - 
-        name: Checkout
-        uses: actions/checkout@v3
+      -
+        name: Download digests
+        uses: actions/download-artifact@v4
         with:
-          fetch-depth: 0
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
+          path: /tmp/digests
+          pattern: digests-*
+          merge-multiple: true
+      -
+        name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
-      - 
+      -
         name: "Log in to Docker Hub"
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - 
-        name: Build and push Docker dev image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          platforms: linux/amd64,linux/arm64
-          tags: tonironaldbarth/hitster:dev
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          build-args: |
-            HITSTER_VERSION=${{ needs.fetch_version.outputs.version }}
-            HITSTER_BRANCH=${{ needs.fetch_version.outputs.branch }}
+      -
+        name: Create manifest list and push
+        working-directory: /tmp/digests
+        run: |
+          docker buildx imagetools create \
+            -t tonironaldbarth/hitster:dev \
+            $(printf 'tonironaldbarth/hitster@sha256:%s ' *)

@@ -43,33 +43,34 @@ COPY ./client/ /app/
 
 RUN npm run build
 
-FROM rust:${RUST_VERSION}-slim-trixie AS server_build_image
-
-# create a new empty shell project
-RUN apt-get update && apt-get -y install libssl-dev pkg-config && \
-    USER=root mkdir hitster
-
+FROM rust:${RUST_VERSION}-slim-trixie AS chef
+RUN apt-get update && \
+    apt-get -y install libssl-dev pkg-config && \
+    cargo install cargo-chef --locked && \
+    rm -rf /var/lib/apt/lists/*
 WORKDIR /hitster
 
-COPY ./Cargo.lock ./Cargo.lock
-COPY ./Cargo.toml ./Cargo.toml
-RUN USER=root cargo new --bin server && \
-    USER=root cargo new --bin cli && \
-    USER=root cargo new --lib core --name hitster_core
+FROM chef AS planner
+COPY ./Cargo.lock ./Cargo.toml ./
+COPY ./cli/Cargo.toml ./cli/
+COPY ./core/Cargo.toml ./core/
+COPY ./server/Cargo.toml ./server/
+COPY ./cli/src ./cli/src
+COPY ./core/src ./core/src
+COPY ./server/src ./server/src
+RUN cargo chef prepare --recipe-path recipe.json
 
-# copy over your manifests
+FROM chef AS server_build_image
+# build dependencies only — cached unless the dep graph (recipe.json) changes
+COPY --from=planner /hitster/recipe.json recipe.json
+RUN cargo chef cook --release --recipe-path recipe.json --no-default-features --features yt_dl && \
+    cargo chef cook --release --recipe-path recipe.json -p hitster-cli
+
+# now copy real source and build the workspace crates against the cached deps
+COPY ./Cargo.lock ./Cargo.toml ./
 COPY ./cli/Cargo.toml ./cli/Cargo.toml
 COPY ./core/Cargo.toml ./core/Cargo.toml
 COPY ./server/Cargo.toml ./server/Cargo.toml
-
-# this build step will cache your dependencies
-RUN cargo build --release --no-default-features --features yt_dl && \
-    cargo build --release -p hitster-cli && \
-    rm server/src/*.rs && \
-    rm core/src/*.rs && \
-    rm cli/src/*.rs
-
-# copy your source tree
 COPY ./.sqlx ./.sqlx
 COPY ./etc ./etc
 COPY ./server/migrations ./server/migrations
@@ -77,10 +78,7 @@ COPY ./server/src ./server/src
 COPY ./core/src ./core/src
 COPY ./cli/src ./cli/src
 
-# build for release
-RUN rm ./target/release/deps/hitster* && \
-    rm ./target/release/deps/libhitster* && \
-    SQLX_OFFLINE=true cargo build --release --no-default-features --features yt_dl && \
+RUN SQLX_OFFLINE=true cargo build --release --no-default-features --features yt_dl && \
     cargo build --release -p hitster-cli
 
 # our final bases, platform-dependent
