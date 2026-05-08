@@ -7,8 +7,8 @@ use crate::{
     },
     responses::{
         CreateHitError, CreateHitIssueError, CreatePackError, DeleteHitError, DeleteHitIssueError,
-        DeletePackError, ExportHitsError, GetHitError, MessageResponse, PacksResponse,
-        PaginatedResponse, UpdateHitError, UpdatePackError, Yaml,
+        DeletePackError, ExportHitsError, GetHitError, HitStatsResponse, MessageResponse,
+        PacksResponse, PaginatedResponse, UpdateHitError, UpdatePackError, Yaml,
     },
     routes::captcha::verify_captcha,
     services::ServiceStore,
@@ -223,13 +223,13 @@ pub async fn get_hit(
         let issues = sqlx::query_as!(
             HitIssue,
             r#"
-SELECT 
-    id AS "id: Uuid", 
-    hit_id AS "hit_id: Uuid", 
-    type, 
-    message, 
-    created_at AS "created_at: OffsetDateTime", 
-    last_modified AS "last_modified: OffsetDateTime" 
+SELECT
+    id AS "id: Uuid",
+    hit_id AS "hit_id: Uuid",
+    type,
+    message,
+    created_at AS "created_at: OffsetDateTime",
+    last_modified AS "last_modified: OffsetDateTime"
 FROM hit_issues WHERE hit_id = ? ORDER BY created_at ASC"#,
             hit.id
         )
@@ -240,6 +240,19 @@ FROM hit_issues WHERE hit_id = ? ORDER BY created_at ASC"#,
     }
 
     Ok(Json(payload))
+}
+
+/// # Get statistics for a hit
+///
+/// Returns lifetime counters for the given hit. If the hit has no recorded stats yet, all counters are zero.
+
+#[openapi(tag = "Hits")]
+#[get("/hits/<hit_id>/stats")]
+pub async fn get_hit_stats(hit_id: &str, serv: &State<ServiceStore>) -> Json<HitStatsResponse> {
+    let Ok(hit_id) = Uuid::parse_str(hit_id) else {
+        return Json(HitStatsResponse::default());
+    };
+    Json(serv.stats_service().get_hit_stats(hit_id).await)
 }
 
 /// # Create a new hit issue

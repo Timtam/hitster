@@ -3,6 +3,7 @@ import {
     HitIssue,
     HitQueryPart,
     HitSearchQuery,
+    HitStats,
     Pack,
     PacksResponse,
     PaginatedHitsResponse,
@@ -195,6 +196,13 @@ export default class HitService {
 
         if (res.status === 200) return HitIssue.parse(await res.json())
         throw { message: (await res.json()).message, status: res.status }
+    }
+
+    async getStats(hitId: string): Promise<HitStats> {
+        const res = await fetch(`/api/hits/${hitId}/stats`, {
+            method: "GET",
+        })
+        return HitStats.parse(await res.json())
     }
 
     async deleteIssue(hitId: string, issueId: string) {

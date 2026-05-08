@@ -1,10 +1,10 @@
 import type { LoaderFunction } from "react-router"
-import { FullHit, HitQueryPart, Pack } from "../entities"
+import { FullHit, HitQueryPart, HitStats, Pack } from "../entities"
 import HitService from "../services/hits.service"
 
 const loader: LoaderFunction = async ({
     params,
-}): Promise<[FullHit, Pack[]]> => {
+}): Promise<[FullHit, Pack[], HitStats]> => {
     const hs = new HitService()
 
     if (params.hitId !== undefined) {
@@ -13,9 +13,12 @@ const loader: LoaderFunction = async ({
         if (hit === undefined)
             throw { message: "hit id not found", status: 404 }
 
-        const packs = await hs.getAllPacks()
+        const [packs, stats] = await Promise.all([
+            hs.getAllPacks(),
+            hs.getStats(params.hitId),
+        ])
 
-        return [hit, packs]
+        return [hit, packs, stats]
     }
     throw { message: "internal api error", status: 500 }
 }

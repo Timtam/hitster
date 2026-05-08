@@ -14,6 +14,22 @@ pub struct SlotPayload {
     pub id: Option<u8>,
 }
 
+/// strategy for selecting which hits get drawn during a game
+
+#[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug, Copy, Default)]
+#[serde(rename_all = "snake_case")]
+pub enum HitSelection {
+    /// shuffle hits uniformly at random (default)
+    #[default]
+    Random,
+    /// prioritize hits that have rarely been pulled from the stack
+    Rare,
+    /// prioritize hits that are particularly hard to guess (low success rate)
+    Hard,
+    /// prioritize hits that are particularly easy to guess (high success rate)
+    Easy,
+}
+
 /// Game settings
 
 #[derive(Deserialize, Serialize, JsonSchema, Clone, Eq, PartialEq, Debug)]
@@ -30,6 +46,9 @@ pub struct GameSettingsPayload {
     /// packs to draw hits from
     #[serde(skip_serializing_if = "Option::is_none")]
     pub packs: Option<Vec<Uuid>>,
+    /// strategy for selecting hits during the game
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub hit_selection: Option<HitSelection>,
 }
 
 /// options when creating a game
@@ -51,6 +70,7 @@ impl From<Json<GameSettingsPayload>> for GameSettingsPayload {
             hit_duration: src.hit_duration,
             start_tokens: src.start_tokens,
             packs: src.packs.clone(),
+            hit_selection: src.hit_selection,
         }
     }
 }
@@ -105,6 +125,7 @@ pub struct Game {
     pub mode: GameMode,
     pub remembered_hits: Vec<Hit>,
     pub last_scored: Option<Player>,
+    pub hit_selection: HitSelection,
 }
 
 /// all information related to a game
@@ -131,6 +152,8 @@ pub struct GamePayload {
     pub mode: GameMode,
     /// the player who last scored a hit
     pub last_scored: Option<PlayerPayload>,
+    /// strategy for selecting hits during the game
+    pub hit_selection: HitSelection,
 }
 
 impl From<&Game> for GamePayload {
@@ -146,6 +169,7 @@ impl From<&Game> for GamePayload {
             packs: game.packs.clone(),
             mode: game.mode,
             last_scored: game.last_scored.as_ref().map(|p| p.into()),
+            hit_selection: game.hit_selection,
         }
     }
 }

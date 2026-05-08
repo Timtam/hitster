@@ -1,6 +1,9 @@
 use crate::{
     HitsterConfig,
-    responses::{GetUserError, MessageResponse, RegisterUserError, UserLoginError, UsersResponse},
+    responses::{
+        GetUserError, MessageResponse, RegisterUserError, UserLoginError, UserStatsResponse,
+        UsersResponse,
+    },
     routes::captcha::verify_captcha,
     services::ServiceStore,
     users::{
@@ -351,6 +354,32 @@ pub fn get(user_id: &str, serv: &State<ServiceStore>) -> Result<Json<UserPayload
     }
 }
 
+/// # Get statistics for a user
+///
+/// Returns lifetime counters for the given user. 404s if no user with that id exists,
+/// matching the behavior of GET /users/<user_id>.
+
+#[openapi(tag = "Users")]
+#[get("/users/<user_id>/stats")]
+pub async fn get_stats(
+    user_id: &str,
+    serv: &State<ServiceStore>,
+) -> Result<Json<UserStatsResponse>, GetUserError> {
+    let user_id = Uuid::parse_str(user_id).map_err(|_| GetUserError {
+        message: "user id is not valid".into(),
+        http_status_code: 404,
+    })?;
+
+    if serv.user_service().lock().get_by_id(user_id).is_none() {
+        return Err(GetUserError {
+            message: "user id not found".into(),
+            http_status_code: 404,
+        });
+    }
+
+    Ok(Json(serv.stats_service().get_user_stats(user_id).await))
+}
+
 /// # User login
 ///
 /// The user will log in with the provided username and password
@@ -565,8 +594,7 @@ pub async fn logout(
     serv: &State<ServiceStore>,
     cookies: &CookieJar<'_>,
 ) -> Json<MessageResponse> {
-    let game_srv = serv.game_service();
-    let games = game_srv.lock();
+    let games = serv.game_service();
 
     for game in games.get_all(Some(&user.0)).iter() {
         let _ = games.leave(&game.id, &user.0, None);

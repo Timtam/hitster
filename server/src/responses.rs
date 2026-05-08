@@ -32,6 +32,34 @@ pub struct PaginatedResponse<T> {
     pub end: usize,
 }
 
+/// per-hit statistics
+
+#[derive(Serialize, JsonSchema, Default, sqlx::FromRow)]
+pub struct HitStatsResponse {
+    /// number of rounds in which this hit was awarded to the guessing player
+    pub correct_guesses: i64,
+    /// number of times this hit was skipped
+    pub skips: i64,
+    /// number of times the turn player got a token after this hit was revealed
+    pub tokens_earned: i64,
+    /// number of times this hit was pulled from the stack and revealed for guessing
+    pub reveals: i64,
+}
+
+/// per-user statistics
+
+#[derive(Serialize, JsonSchema, Default, Clone, sqlx::FromRow)]
+pub struct UserStatsResponse {
+    /// number of games this user joined that were started
+    pub games_played: i64,
+    /// number of games this user won
+    pub games_won: i64,
+    /// number of rounds in which this user was awarded the hit
+    pub hits_guessed_correctly: i64,
+    /// number of tokens this user earned via confirm-true
+    pub tokens_earned: i64,
+}
+
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct JoinGameError {
     pub message: String,
@@ -1061,6 +1089,53 @@ impl std::error::Error for GetGameError {}
 impl<'r> Responder<'r, 'static> for GetGameError {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         // Convert object to json
+        let body = serde_json::to_string(&self).unwrap();
+        Response::build()
+            .sized_body(body.len(), std::io::Cursor::new(body))
+            .header(ContentType::JSON)
+            .status(Status::new(self.http_status_code))
+            .ok()
+    }
+}
+
+#[derive(Debug, Serialize, JsonSchema)]
+pub struct GetPlayerError {
+    pub message: String,
+    #[serde(skip)]
+    pub http_status_code: u16,
+}
+
+impl OpenApiResponderInner for GetPlayerError {
+    fn responses(_generator: &mut OpenApiGenerator) -> Result<Responses, OpenApiError> {
+        let mut responses = Map::new();
+        responses.insert(
+            "404".to_string(),
+            RefOr::Object(OpenApiResponse {
+                description: "\
+                # [404 Not Found](https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/404)\n\
+                Either the game or a player with the requested ID inside that game does not exist.\
+                "
+                .to_string(),
+                ..Default::default()
+            }),
+        );
+        Ok(Responses {
+            responses,
+            ..Default::default()
+        })
+    }
+}
+
+impl std::fmt::Display for GetPlayerError {
+    fn fmt(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(formatter, "Get player error `{}`", self.message,)
+    }
+}
+
+impl std::error::Error for GetPlayerError {}
+
+impl<'r> Responder<'r, 'static> for GetPlayerError {
+    fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         let body = serde_json::to_string(&self).unwrap();
         Response::build()
             .sized_body(body.len(), std::io::Cursor::new(body))

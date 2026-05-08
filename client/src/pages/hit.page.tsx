@@ -13,7 +13,7 @@ import { Link, useLoaderData, useNavigate } from "react-router"
 import YouTube from "react-youtube"
 import { useImmer } from "use-immer"
 import { useContext } from "../context"
-import { FullHit, HitIssueType, Pack } from "../entities"
+import { FullHit, HitIssueType, HitStats, Pack } from "../entities"
 import { Events, IssueCreatedData, IssueDeletedData } from "../events"
 import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
@@ -91,7 +91,11 @@ export default function Hit() {
     const hitService = useMemo(() => new HitService(), [])
     const sorter = useMemo(() => natsort(), [])
     const { t } = useTranslation()
-    const [hit, availablePacks] = useLoaderData() as [FullHit, Pack[]]
+    const [hit, availablePacks, stats] = useLoaderData() as [
+        FullHit,
+        Pack[],
+        HitStats,
+    ]
     const { user, showError } = useContext()
     const [editing, setEditing] = useState(false)
     const [editingHit, setEditingHit] = useImmer<FullHit>({
@@ -456,6 +460,45 @@ export default function Hit() {
                     ""
                 )}
             </Form>
+            {!editing ? (
+                <>
+                    <h3>{t("statsHeading")}</h3>
+                    <Table responsive>
+                        <tbody>
+                            <tr>
+                                <td>{t("statsReveals")}</td>
+                                <td>{stats.reveals}</td>
+                            </tr>
+                            <tr>
+                                <td>{t("statsCorrectGuesses")}</td>
+                                <td>{stats.correct_guesses}</td>
+                            </tr>
+                            <tr>
+                                <td>{t("statsGuessRate")}</td>
+                                <td>
+                                    {stats.reveals > 0
+                                        ? `${Math.round(
+                                              (stats.correct_guesses /
+                                                  stats.reveals) *
+                                                  100,
+                                          )}%`
+                                        : "-"}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{t("statsSkips")}</td>
+                                <td>{stats.skips}</td>
+                            </tr>
+                            <tr>
+                                <td>{t("statsTokensEarned")}</td>
+                                <td>{stats.tokens_earned}</td>
+                            </tr>
+                        </tbody>
+                    </Table>
+                </>
+            ) : (
+                ""
+            )}
             {canReadIssues && !editing ? (
                 <>
                     <h3>

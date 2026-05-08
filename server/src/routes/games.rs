@@ -5,12 +5,12 @@ use crate::{
         GameSettingsPayload, GameState, SlotPayload,
     },
     responses::{
-        ClaimHitError, ConfirmSlotError, GamesResponse, GetGameError, GuessSlotError, HitError,
-        JoinGameError, LeaveGameError, MessageResponse, SkipHitError, StartGameError,
-        StopGameError, UpdateGameError,
+        ClaimHitError, ConfirmSlotError, GamesResponse, GetGameError, GetPlayerError,
+        GuessSlotError, HitError, JoinGameError, LeaveGameError, MessageResponse, SkipHitError,
+        StartGameError, StopGameError, UpdateGameError, UserStatsResponse,
     },
     services::ServiceStore,
-    users::UserAuthenticator,
+    users::{UserAuthenticator, UserPayload},
 };
 use rocket::{
     Shutdown, State,
@@ -43,8 +43,7 @@ pub fn create_game(
     serv: &State<ServiceStore>,
     queue: &State<Sender<GlobalEvent>>,
 ) -> Created<Json<GamePayload>> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
     let mode = if let Some(data) = data.as_ref() {
         data.mode.unwrap_or(GameMode::Public)
     } else {
@@ -88,7 +87,6 @@ pub fn get_all_games(
     Json(GamesResponse {
         games: serv
             .game_service()
-            .lock()
             .get_all(user.map(|u| u.0).as_ref())
             .into_iter()
             .map(|g| (&g).into())
@@ -112,8 +110,7 @@ pub async fn join_game(
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, JoinGameError> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
 
     games
         .join(
@@ -152,8 +149,7 @@ pub async fn leave_game(
     game_event_queue: &State<Sender<GameEvent>>,
     global_event_queue: &State<Sender<GlobalEvent>>,
 ) -> Result<Json<MessageResponse>, LeaveGameError> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
     let old_mode = games
         .get(game_id, Some(&user.0))
         .map(|g| g.mode)
@@ -214,10 +210,9 @@ pub async fn start_game(
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, StartGameError> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
 
-    games.start(game_id, &user.0).map(|g| {
+    games.start(game_id, &user.0).await.map(|g| {
         let _ = queue.send(GameEvent {
             game_id: game_id.into(),
             event: "change_state".into(),
@@ -246,7 +241,6 @@ pub async fn stop_game(
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, StopGameError> {
     serv.game_service()
-        .lock()
         .stop(game_id, Some(&user.0))
         .map(|g| {
             let _ = queue.send(GameEvent {
@@ -276,8 +270,7 @@ pub fn get_game(
     user: Option<UserAuthenticator>,
     serv: &State<ServiceStore>,
 ) -> Result<Json<GamePayload>, GetGameError> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
 
     match games.get(game_id, user.map(|u| u.0).as_ref()) {
         Some(g) => Ok(Json((&g).into())),
@@ -286,6 +279,88 @@ pub fn get_game(
             http_status_code: 404,
         }),
     }
+}
+
+/// # Get info about a player in a game
+///
+/// Returns minimal info (id, name, virtual) for a player participating in the given game.
+/// Works for any kind of player, including bots that have no global User record.
+
+#[openapi(tag = "Games")]
+#[get("/games/<game_id>/players/<player_id>")]
+pub fn get_player(
+    game_id: &str,
+    player_id: &str,
+    user: Option<UserAuthenticator>,
+    serv: &State<ServiceStore>,
+) -> Result<Json<UserPayload>, GetPlayerError> {
+    let player_id = Uuid::parse_str(player_id).map_err(|_| GetPlayerError {
+        message: "player id is not valid".into(),
+        http_status_code: 404,
+    })?;
+
+    let games = serv.game_service();
+
+    let game = games.get(game_id, user.map(|u| u.0).as_ref()).ok_or(GetPlayerError {
+        message: "game id not found".into(),
+        http_status_code: 404,
+    })?;
+
+    let player = game
+        .players
+        .iter()
+        .find(|p| p.id == player_id)
+        .ok_or(GetPlayerError {
+            message: "player id not found in this game".into(),
+            http_status_code: 404,
+        })?;
+
+    Ok(Json(UserPayload {
+        id: player.id,
+        name: player.name.clone(),
+        r#virtual: player.r#virtual,
+    }))
+}
+
+/// # Get statistics for a player in a game
+///
+/// Returns lifetime counters for the given player. Works for bots (memory-stored) and
+/// User-backed players (memory or DB depending on whether the User is virtual).
+
+#[openapi(tag = "Games")]
+#[get("/games/<game_id>/players/<player_id>/stats")]
+pub async fn get_player_stats(
+    game_id: &str,
+    player_id: &str,
+    user: Option<UserAuthenticator>,
+    serv: &State<ServiceStore>,
+) -> Result<Json<UserStatsResponse>, GetPlayerError> {
+    let player_id = Uuid::parse_str(player_id).map_err(|_| GetPlayerError {
+        message: "player id is not valid".into(),
+        http_status_code: 404,
+    })?;
+
+    let stats_svc = {
+        let games = serv.game_service();
+
+        let game = games
+            .get(game_id, user.map(|u| u.0).as_ref())
+            .ok_or(GetPlayerError {
+                message: "game id not found".into(),
+                http_status_code: 404,
+            })?;
+
+        if !game.players.iter().any(|p| p.id == player_id) {
+            return Err(GetPlayerError {
+                message: "player id not found in this game".into(),
+                http_status_code: 404,
+            });
+        }
+
+        serv.stats_service()
+    };
+
+    Ok(Json(stats_svc.get_user_stats(player_id).await))
 }
 
 /// # Subscribe to game events
@@ -408,7 +483,7 @@ pub async fn hit(
     hit_id: PathBuf,
     serv: &State<ServiceStore>,
 ) -> Result<NamedFile, HitError> {
-    let hit = serv.game_service().lock().get_hit(
+    let hit = serv.game_service().get_hit(
         game_id,
         hit_id.to_str().and_then(|h| Uuid::parse_str(h).ok()),
     );
@@ -447,7 +522,6 @@ pub fn guess_slot(
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     let outcome = serv
         .game_service()
-        .lock()
         .guess(game_id, &user.0, slot.id, player_id)?;
 
     let _ = queue.send(GameEvent {
@@ -508,7 +582,6 @@ pub fn confirm_slot(
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, ConfirmSlotError> {
     serv.game_service()
-        .lock()
         .confirm(game_id, &user.0, confirmation.confirm)
         .map(|game| {
             let _ = queue.send(GameEvent {
@@ -542,7 +615,6 @@ pub fn skip_hit(
 ) -> Result<Json<MessageResponse>, SkipHitError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     serv.game_service()
-        .lock()
         .skip(game_id, &user.0, player_id)
         .map(|(game, hit)| {
             let _ = queue.send(GameEvent {
@@ -581,7 +653,6 @@ pub fn claim_hit(
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     let res = serv
         .game_service()
-        .lock()
         .claim(game_id, &user.0, player_id);
 
     res.map(|(mut game, hit)| {
@@ -597,10 +668,10 @@ pub fn claim_hit(
             ..Default::default()
         });
 
-        let winner = serv.game_service().lock().get_winner(&game);
+        let winner = serv.game_service().get_winner(&game);
 
         if winner.is_some() {
-            game = serv.game_service().lock().stop(game_id, None).unwrap();
+            game = serv.game_service().stop(game_id, None).unwrap();
 
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
@@ -633,7 +704,6 @@ pub fn update_game(
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, UpdateGameError> {
     serv.game_service()
-        .lock()
         .update(game_id, &user.0, &settings)
         .map(|_| {
             let _ = queue.send(GameEvent {

@@ -1,10 +1,10 @@
 use crate::{
-    games::{Game, GameMode, GameSettingsPayload, GameState, Player, PlayerState, Slot},
+    games::{Game, GameMode, GameSettingsPayload, GameState, HitSelection, Player, PlayerState, Slot},
     responses::{
-        ClaimHitError, ConfirmSlotError, GuessSlotError, HitError, JoinGameError, LeaveGameError,
-        SkipHitError, StartGameError, StopGameError, UpdateGameError,
+        ClaimHitError, ConfirmSlotError, GuessSlotError, HitError, HitStatsResponse, JoinGameError,
+        LeaveGameError, SkipHitError, StartGameError, StopGameError, UpdateGameError,
     },
-    services::{HitService, ServiceHandle},
+    services::{HitService, ServiceHandle, StatsService, UserService},
 };
 use hitster_core::{Hit, User};
 use itertools::sorted;
@@ -14,16 +14,60 @@ use rand::{
     rng,
 };
 use parking_lot::Mutex;
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::{
+    collections::{HashMap, HashSet, VecDeque},
+    sync::Arc,
+};
 use uuid::Uuid;
 
 pub struct GameServiceData {
     games: HashMap<String, Game>,
 }
 
+fn hit_success_rate(stats: Option<&HitStatsResponse>) -> f64 {
+    match stats {
+        Some(s) if s.reveals > 0 => s.correct_guesses as f64 / s.reveals as f64,
+        _ => 0.5,
+    }
+}
+
+fn order_hits_for_selection(
+    mut hits: Vec<Hit>,
+    selection: HitSelection,
+    hit_stats: &HashMap<Uuid, HitStatsResponse>,
+    rng: &mut impl rand::Rng,
+) -> VecDeque<Hit> {
+    use std::cmp::Ordering;
+    // shuffle first so ties within the same score get random ordering
+    hits.shuffle(rng);
+    match selection {
+        HitSelection::Random => {}
+        HitSelection::Rare => {
+            hits.sort_by_key(|h| hit_stats.get(&h.id).map(|s| s.reveals).unwrap_or(0));
+        }
+        HitSelection::Hard => {
+            hits.sort_by(|a, b| {
+                let ra = hit_success_rate(hit_stats.get(&a.id));
+                let rb = hit_success_rate(hit_stats.get(&b.id));
+                ra.partial_cmp(&rb).unwrap_or(Ordering::Equal)
+            });
+        }
+        HitSelection::Easy => {
+            hits.sort_by(|a, b| {
+                let ra = hit_success_rate(hit_stats.get(&a.id));
+                let rb = hit_success_rate(hit_stats.get(&b.id));
+                rb.partial_cmp(&ra).unwrap_or(Ordering::Equal)
+            });
+        }
+    }
+    hits.into_iter().collect()
+}
+
 pub struct GameService {
     data: Mutex<GameServiceData>,
     hit_service: ServiceHandle<HitService>,
+    user_service: ServiceHandle<UserService>,
+    stats: Arc<StatsService>,
 }
 
 pub struct GuessOutcome {
@@ -41,12 +85,49 @@ impl GameService {
         }
     }
 
-    pub fn new(hit_service: ServiceHandle<HitService>) -> Self {
+    pub fn new(
+        hit_service: ServiceHandle<HitService>,
+        user_service: ServiceHandle<UserService>,
+        stats: Arc<StatsService>,
+    ) -> Self {
         Self {
             hit_service,
+            user_service,
+            stats,
             data: Mutex::new(GameServiceData {
                 games: HashMap::new(),
             }),
+        }
+    }
+
+    /// Stats are stored in memory unless the player is User-backed AND that User is non-virtual.
+    /// Bots have no User; anonymous users have a virtual User; both go to memory.
+    fn stats_is_virtual(&self, player: &Player) -> bool {
+        if player.r#virtual {
+            rocket::debug!(
+                "stats_is_virtual: player.id={} player.virtual=true -> memory",
+                player.id
+            );
+            return true;
+        }
+        let lookup = self.user_service.lock().get_by_id(player.id);
+        match lookup {
+            Some(u) => {
+                rocket::debug!(
+                    "stats_is_virtual: player.id={} player.virtual=false user_found user.virtual={} -> {}",
+                    player.id,
+                    u.r#virtual,
+                    if u.r#virtual { "memory" } else { "db" }
+                );
+                u.r#virtual
+            }
+            None => {
+                rocket::debug!(
+                    "stats_is_virtual: player.id={} player.virtual=false user_NOT_found -> memory",
+                    player.id
+                );
+                true
+            }
         }
     }
 
@@ -81,6 +162,7 @@ impl GameService {
             mode,
             remembered_hits: vec![],
             last_scored: None,
+            hit_selection: HitSelection::default(),
         };
 
         drop(hs);
@@ -254,7 +336,14 @@ impl GameService {
 
                 let plr = game.players.remove(pos);
 
+                if plr.r#virtual {
+                    self.stats.drop_virtual_user_stats(plr.id);
+                }
+
                 if game.players.iter().filter(|p| !p.r#virtual).count() == 0 {
+                    for p in game.players.iter().filter(|p| p.r#virtual) {
+                        self.stats.drop_virtual_user_stats(p.id);
+                    }
                     data.games.remove(game_id);
                 } else if game.players.len() == 1 && game.state != GameState::Open {
                     drop(data);
@@ -271,7 +360,8 @@ impl GameService {
         }
     }
 
-    pub fn start(&self, game_id: &str, user: &User) -> Result<Game, StartGameError> {
+    pub async fn start(&self, game_id: &str, user: &User) -> Result<Game, StartGameError> {
+        let hit_stats = self.stats.get_all_hit_stats().await;
         let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -306,31 +396,30 @@ impl GameService {
                     .collect::<Vec<_>>();
                 let remembered_hits_count = remembered_hits.len();
 
-                let mut hits_remaining: VecDeque<Hit> = self
+                let hits: Vec<Hit> = self
                     .hit_service
                     .lock()
                     .get_hits_for_packs(&game.packs)
                     .into_iter()
                     .filter(|h| h.downloaded && !remembered_hits.contains(h))
                     .cloned()
-                    .collect::<_>();
+                    .collect();
 
-                if hits_remaining.len() + remembered_hits_count
+                if hits.len() + remembered_hits_count
                     < (game.players.len() * game.goal as usize * 2)
                 {
                     return Err(StartGameError {
                         http_status_code: 409,
                         message: format!(
                             "There aren't enough hits available to start a game ({} individual hits in the currently selected packs, {} hits are required)",
-                            hits_remaining.len() + remembered_hits_count,
+                            hits.len() + remembered_hits_count,
                             game.players.len() * game.goal as usize * 2
                         ),
                     });
                 }
 
-                hits_remaining.make_contiguous().shuffle(&mut rng);
-
-                game.hits_remaining = hits_remaining;
+                game.hits_remaining =
+                    order_hits_for_selection(hits, game.hit_selection, &hit_stats, &mut rng);
 
                 game.remembered_hits = remembered_hits;
 
@@ -350,6 +439,11 @@ impl GameService {
                 }
 
                 self.enqueue_availability_check(game.hits_remaining.front().cloned());
+
+                for p in game.players.iter() {
+                    self.stats
+                        .record_user_game_played(p.id, self.stats_is_virtual(p));
+                }
 
                 Ok(game.clone())
             }
@@ -645,11 +739,26 @@ impl GameService {
                         game.last_scored = Some(player.clone());
                     }
 
+                    if let Some(scored) = game.last_scored.as_ref() {
+                        if let Some(awarded_hit) = scored.hits.last() {
+                            self.stats.record_hit_correct_guess(awarded_hit.id);
+                        }
+                        let is_virtual = self.stats_is_virtual(scored);
+                        self.stats
+                            .record_user_hit_guessed_correctly(scored.id, is_virtual);
+                        if scored.hits.len() >= game.goal as usize {
+                            self.stats.record_user_game_won(scored.id, is_virtual);
+                        }
+                    }
+
                     game.remembered_hits
                         .push(game.hits_remaining.front().cloned().unwrap());
 
                     game.state = GameState::Confirming;
                     game.hit = game.hits_remaining.front().cloned();
+                    if let Some(hit) = game.hit.as_ref() {
+                        self.stats.record_hit_reveal(hit.id);
+                    }
                     if game.mode == GameMode::Local {
                         let creator_pos = game.players.iter().position(|p| p.creator).unwrap();
                         game.players.get_mut(creator_pos).unwrap().state = PlayerState::Confirming;
@@ -731,7 +840,13 @@ impl GameService {
             }
 
             if confirm {
-                game.players.get_mut(turn_player_pos).unwrap().tokens += 1;
+                let tp = game.players.get_mut(turn_player_pos).unwrap();
+                tp.tokens += 1;
+                let is_virtual = self.stats_is_virtual(tp);
+                self.stats.record_user_token_earned(tp.id, is_virtual);
+                if let Some(hit) = game.hit.as_ref() {
+                    self.stats.record_hit_token_earned(hit.id);
+                }
             }
 
             game.hits_remaining.pop_front().unwrap();
@@ -853,6 +968,8 @@ impl GameService {
             }
 
             self.enqueue_availability_check(game.hits_remaining.front().cloned());
+
+            self.stats.record_hit_skip(hit.id);
 
             Ok((game.clone(), hit))
         } else {
@@ -996,6 +1113,7 @@ impl GameService {
             game.start_tokens = settings.start_tokens.unwrap_or(game.start_tokens);
             game.goal = settings.goal.unwrap_or(game.goal);
             game.hit_duration = settings.hit_duration.unwrap_or(game.hit_duration);
+            game.hit_selection = settings.hit_selection.unwrap_or(game.hit_selection);
 
             Ok(game.clone())
         } else {

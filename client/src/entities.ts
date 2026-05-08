@@ -96,6 +96,13 @@ export enum GameMode {
     Local = "Local",
 }
 
+export enum HitSelection {
+    Random = "random",
+    Rare = "rare",
+    Hard = "hard",
+    Easy = "easy",
+}
+
 export enum PlayerState {
     Waiting = "Waiting",
     Guessing = "Guessing",
@@ -129,6 +136,7 @@ export const Game = z.object({
     packs: z.array(z.string()),
     mode: z.nativeEnum(GameMode),
     last_scored: z.nullable(Player),
+    hit_selection: z.nativeEnum(HitSelection),
 })
 
 export type Game = z.infer<typeof Game>
@@ -144,6 +152,7 @@ export const GameSettings = z.object({
     hit_duration: z.optional(z.number()),
     goal: z.optional(z.number()),
     packs: z.optional(z.array(z.string())),
+    hit_selection: z.optional(z.nativeEnum(HitSelection)),
 })
 
 export type GameSettings = z.infer<typeof GameSettings>
@@ -209,6 +218,32 @@ export const DeleteHitIssueEvent = z.object({
 })
 
 export type DeleteHitIssueEvent = z.infer<typeof DeleteHitIssueEvent>
+
+export const HitStats = z.object({
+    correct_guesses: z.number(),
+    skips: z.number(),
+    tokens_earned: z.number(),
+    reveals: z.number(),
+})
+
+export type HitStats = z.infer<typeof HitStats>
+
+export const PublicUser = z.object({
+    id: z.uuid(),
+    name: z.string(),
+    virtual: z.boolean(),
+})
+
+export type PublicUser = z.infer<typeof PublicUser>
+
+export const UserStats = z.object({
+    games_played: z.number(),
+    games_won: z.number(),
+    hits_guessed_correctly: z.number(),
+    tokens_earned: z.number(),
+})
+
+export type UserStats = z.infer<typeof UserStats>
 
 export const PaginatedHitsResponse = createPaginatedResponseSchema(Hit)
 

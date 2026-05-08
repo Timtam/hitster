@@ -1,10 +1,12 @@
 mod games;
 mod hits;
+mod stats;
 mod users;
 
 pub use games::GameService;
 pub use hits::HitService;
 use parking_lot::{MappedMutexGuard, Mutex, MutexGuard};
+pub use stats::{StatsService, StatsServiceFairing};
 use std::{default::Default, sync::Arc};
 pub use users::UserService;
 
@@ -28,9 +30,10 @@ impl<T> Clone for ServiceHandle<T> {
 
 #[derive(Default)]
 pub struct ServiceStoreData {
-    game_service: Option<ServiceHandle<GameService>>,
+    game_service: Option<Arc<GameService>>,
     hit_service: Option<ServiceHandle<HitService>>,
     user_service: Option<ServiceHandle<UserService>>,
+    stats_service: Option<Arc<StatsService>>,
 }
 
 pub struct ServiceStore {
@@ -60,16 +63,29 @@ impl ServiceStore {
         data.user_service.as_ref().cloned().unwrap()
     }
 
-    pub fn game_service(&self) -> ServiceHandle<GameService> {
+    pub fn game_service(&self) -> Arc<GameService> {
         let hs = self.hit_service();
+        let us = self.user_service();
+        let ss = self.stats_service();
         let mut data = self.data.lock();
 
         if data.game_service.is_none() {
             data.game_service
-                .replace(ServiceHandle::new(GameService::new(hs)));
+                .replace(Arc::new(GameService::new(hs, us, ss)));
         }
 
-        data.game_service.as_ref().cloned().unwrap()
+        Arc::clone(data.game_service.as_ref().unwrap())
+    }
+
+    pub fn stats_service(&self) -> Arc<StatsService> {
+        let mut data = self.data.lock();
+
+        if data.stats_service.is_none() {
+            data.stats_service
+                .replace(Arc::new(StatsService::default()));
+        }
+
+        Arc::clone(data.stats_service.as_ref().unwrap())
     }
 }
 

@@ -13,7 +13,11 @@ import { useTranslation } from "react-i18next"
 import slugify from "slugify"
 import { useContext } from "../../context"
 import type { Game, Pack } from "../../entities"
-import { GameSettings as GameSettingsEntity, GameState } from "../../entities"
+import {
+    GameSettings as GameSettingsEntity,
+    GameState,
+    HitSelection,
+} from "../../entities"
 import GameService from "../../services/games.service"
 import HitService from "../../services/hits.service"
 
@@ -33,6 +37,9 @@ export default function GameSettings({
     const [goal, setGoal] = useState(0)
     const [startTokens, setStartTokens] = useState(0)
     const [hitDuration, setHitDuration] = useState(0)
+    const [hitSelection, setHitSelection] = useState<HitSelection>(
+        HitSelection.Random,
+    )
     const [availablePacks, setAvailablePacks] = useState<Pack[]>([])
     const [packs, setPacks] = useState<string[]>([])
     const selectAllPacks = useRef<HTMLInputElement | null>(null)
@@ -45,6 +52,7 @@ export default function GameSettings({
             setStartTokens(game.start_tokens)
             setHitDuration(game.hit_duration)
             setPacks(game.packs)
+            setHitSelection(game.hit_selection)
         }
     }, [game, show])
 
@@ -177,6 +185,39 @@ export default function GameSettings({
                                                 }
                                             />
                                         </Form.Group>
+                                        <p>
+                                            {t("gameSettingsHitSelection")}
+                                        </p>
+                                        <Form.Group className="mb-2">
+                                            <Form.Label>
+                                                {t("hitSelection")}
+                                            </Form.Label>
+                                            {(
+                                                [
+                                                    HitSelection.Random,
+                                                    HitSelection.Rare,
+                                                    HitSelection.Hard,
+                                                    HitSelection.Easy,
+                                                ] as const
+                                            ).map((mode) => (
+                                                <Form.Check
+                                                    key={`hit-selection-${mode}`}
+                                                    type="radio"
+                                                    name="hit-selection"
+                                                    id={`hit-selection-${mode}`}
+                                                    label={t(
+                                                        `hitSelection_${mode}`,
+                                                    )}
+                                                    checked={
+                                                        hitSelection === mode
+                                                    }
+                                                    disabled={!editable}
+                                                    onChange={() =>
+                                                        setHitSelection(mode)
+                                                    }
+                                                />
+                                            ))}
+                                        </Form.Group>
                                     </Form>
                                     <hr />
                                 </Col>
@@ -290,6 +331,8 @@ export default function GameSettings({
                                                         start_tokens:
                                                             startTokens,
                                                         packs: packs,
+                                                        hit_selection:
+                                                            hitSelection,
                                                     }),
                                                 )
                                                 onHide()
