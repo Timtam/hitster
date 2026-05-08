@@ -1,5 +1,6 @@
 use hitster_core::User;
-use std::{collections::HashMap, sync::Mutex};
+use parking_lot::Mutex;
+use std::collections::HashMap;
 use time::{Duration, OffsetDateTime};
 use uuid::Uuid;
 
@@ -21,14 +22,13 @@ impl UserService {
     }
 
     pub fn add(&self, user: User) {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
         data.users.insert(user.id, user);
     }
 
     pub fn get_all(&self) -> Vec<User> {
         self.data
             .lock()
-            .unwrap()
             .users
             .clone()
             .into_values()
@@ -36,13 +36,12 @@ impl UserService {
     }
 
     pub fn get_by_id(&self, id: Uuid) -> Option<User> {
-        self.data.lock().unwrap().users.get(&id).cloned()
+        self.data.lock().users.get(&id).cloned()
     }
 
     pub fn get_by_username(&self, username: &str) -> Option<User> {
         self.data
             .lock()
-            .unwrap()
             .users
             .values()
             .find(|u| u.name == username)
@@ -50,11 +49,11 @@ impl UserService {
     }
 
     pub fn remove(&self, id: Uuid) {
-        self.data.lock().unwrap().users.remove(&id);
+        self.data.lock().users.remove(&id);
     }
 
     pub fn cleanup_tokens(&self, user: Uuid) -> bool {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(u) = data.users.get_mut(&user) {
             u.tokens = u

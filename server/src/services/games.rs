@@ -13,10 +13,8 @@ use rand::{
     prelude::SliceRandom,
     rng,
 };
-use std::{
-    collections::{HashMap, HashSet, VecDeque},
-    sync::Mutex,
-};
+use parking_lot::Mutex;
+use std::collections::{HashMap, HashSet, VecDeque};
 use uuid::Uuid;
 
 pub struct GameServiceData {
@@ -26,6 +24,14 @@ pub struct GameServiceData {
 pub struct GameService {
     data: Mutex<GameServiceData>,
     hit_service: ServiceHandle<HitService>,
+}
+
+pub struct GuessOutcome {
+    pub game: Game,
+    pub state_changed: bool,
+    pub hit: Option<Hit>,
+    pub last_scored: Option<Player>,
+    pub winner: Option<Player>,
 }
 
 impl GameService {
@@ -45,7 +51,7 @@ impl GameService {
     }
 
     pub fn add(&self, creator: &User, mode: GameMode) -> Game {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
         let mut player: Player = creator.into();
 
         player.creator = true;
@@ -87,7 +93,6 @@ impl GameService {
     pub fn get_all(&self, user: Option<&User>) -> Vec<Game> {
         self.data
             .lock()
-            .unwrap()
             .games
             .clone()
             .into_values()
@@ -107,7 +112,6 @@ impl GameService {
     pub fn get(&self, id: &str, user: Option<&User>) -> Option<Game> {
         self.data
             .lock()
-            .unwrap()
             .games
             .get(id)
             .cloned()
@@ -126,7 +130,7 @@ impl GameService {
         user: &User,
         player: Option<&str>,
     ) -> Result<Player, JoinGameError> {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if game.state != GameState::Open {
@@ -188,7 +192,7 @@ impl GameService {
         user: &User,
         player_id: Option<Uuid>,
     ) -> Result<Player, LeaveGameError> {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
@@ -268,7 +272,7 @@ impl GameService {
     }
 
     pub fn start(&self, game_id: &str, user: &User) -> Result<Game, StartGameError> {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if game.players.len() < 2 {
@@ -358,7 +362,7 @@ impl GameService {
     }
 
     pub fn stop(&self, game_id: &str, user: Option<&User>) -> Result<Game, StopGameError> {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if let Some(u) = user
@@ -404,7 +408,7 @@ impl GameService {
     }
 
     pub fn get_hit(&self, game_id: &str, hit_id: Option<Uuid>) -> Result<Hit, HitError> {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if game.state == GameState::Open {
@@ -473,10 +477,12 @@ impl GameService {
         user: &User,
         slot_id: Option<u8>,
         player_id: Option<Uuid>,
-    ) -> Result<Game, GuessSlotError> {
-        let mut data = self.data.lock().unwrap();
+    ) -> Result<GuessOutcome, GuessSlotError> {
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
+            let initial_state = game.state;
+
             if !game.players.iter().any(|p| p.id == user.id) {
                 return Err(GuessSlotError {
                     message: "user is not part of this game".into(),
@@ -504,7 +510,12 @@ impl GameService {
             }
 
             let player_id = player_id.unwrap_or(user.id);
-            let turn_player_pos = game.players.iter().position(|p| p.turn_player).unwrap();
+            let Some(turn_player_pos) = game.players.iter().position(|p| p.turn_player) else {
+                return Err(GuessSlotError {
+                    message: "no turn player is set for this game".into(),
+                    http_status_code: 409,
+                });
+            };
             let pos = game.players.iter().position(|p| p.id == player_id).unwrap();
 
             if game.players.get(pos).unwrap().state != PlayerState::Guessing
@@ -651,7 +662,35 @@ impl GameService {
                 }
             }
 
-            Ok(game.clone())
+            let state_changed = initial_state != game.state;
+            let hit = game.hits_remaining.front().cloned();
+            let last_scored = game.last_scored.clone();
+            let winner = game
+                .players
+                .iter()
+                .find(|p| p.hits.len() >= game.goal as usize)
+                .cloned();
+
+            if winner.is_some() {
+                game.state = GameState::Open;
+                game.last_scored = None;
+                game.hits_remaining.clear();
+                for p in game.players.iter_mut() {
+                    p.state = PlayerState::Waiting;
+                    p.tokens = 0;
+                    p.hits.clear();
+                    p.turn_player = false;
+                    p.guess = None;
+                }
+            }
+
+            Ok(GuessOutcome {
+                game: game.clone(),
+                state_changed,
+                hit,
+                last_scored,
+                winner,
+            })
         } else {
             Err(GuessSlotError {
                 message: "game not found".into(),
@@ -666,7 +705,7 @@ impl GameService {
         user: &User,
         confirm: bool,
     ) -> Result<Game, ConfirmSlotError> {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
@@ -747,7 +786,7 @@ impl GameService {
         user: &User,
         player_id: Option<Uuid>,
     ) -> Result<(Game, Hit), SkipHitError> {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
@@ -830,7 +869,7 @@ impl GameService {
         user: &User,
         player_id: Option<Uuid>,
     ) -> Result<(Game, Hit), ClaimHitError> {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {
@@ -913,7 +952,7 @@ impl GameService {
         user: &User,
         settings: &GameSettingsPayload,
     ) -> Result<Game, UpdateGameError> {
-        let mut data = self.data.lock().unwrap();
+        let mut data = self.data.lock();
 
         if let Some(game) = data.games.get_mut(game_id) {
             if !game.players.iter().any(|p| p.id == user.id) {

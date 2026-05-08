@@ -445,61 +445,53 @@ pub fn guess_slot(
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, GuessSlotError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
-    let state = serv
+    let outcome = serv
         .game_service()
         .lock()
-        .get(game_id, Some(&user.0))
-        .map(|g| g.state)
-        .unwrap_or(GameState::Guessing);
-    let game = serv
-        .game_service()
-        .lock()
-        .guess(game_id, &user.0, slot.id, player_id);
+        .guess(game_id, &user.0, slot.id, player_id)?;
 
-    game.map(|mut game| {
+    let _ = queue.send(GameEvent {
+        game_id: game_id.into(),
+        event: "guess".into(),
+        players: outcome
+            .game
+            .players
+            .iter()
+            .find(|p| p.id == player_id.unwrap_or(user.0.id))
+            .map(|p| vec![p.into()]),
+        ..Default::default()
+    });
+
+    if outcome.state_changed {
         let _ = queue.send(GameEvent {
             game_id: game_id.into(),
-            event: "guess".into(),
-            players: game
-                .players
-                .iter()
-                .find(|p| p.id == player_id.unwrap_or(user.0.id))
-                .map(|p| vec![p.into()]),
+            event: "change_state".into(),
+            state: Some(outcome.game.state),
+            players: Some(
+                outcome
+                    .game
+                    .players
+                    .iter()
+                    .map(|p| p.into())
+                    .collect::<Vec<_>>(),
+            ),
+            hit: outcome.hit.and_then(|h| {
+                if outcome.game.state == GameState::Intercepting {
+                    None
+                } else {
+                    Some((&h).into())
+                }
+            }),
+            last_scored: outcome.last_scored.map(|p| (&p).into()),
+            winner: outcome.winner.as_ref().map(|p| p.into()),
             ..Default::default()
         });
+    }
 
-        if state != game.state {
-            let last_scored = game.last_scored.clone();
-            let hit = game.hits_remaining.front().cloned();
-            let winner = serv.game_service().lock().get_winner(&game);
-
-            if winner.is_some() {
-                game = serv.game_service().lock().stop(&game.id, None).unwrap();
-            }
-
-            let _ = queue.send(GameEvent {
-                game_id: game_id.into(),
-                event: "change_state".into(),
-                state: Some(game.state),
-                players: Some(game.players.iter().map(|p| p.into()).collect::<Vec<_>>()),
-                hit: hit.and_then(|h| {
-                    if game.state == GameState::Intercepting {
-                        None
-                    } else {
-                        Some((&h).into())
-                    }
-                }),
-                last_scored: last_scored.map(|p| (&p).into()),
-                winner: winner.as_ref().map(|p| p.into()),
-                ..Default::default()
-            });
-        }
-
-        Json(MessageResponse {
-            message: "guess submitted successfully".into(),
-            r#type: "success".into(),
-        })
-    })
+    Ok(Json(MessageResponse {
+        message: "guess submitted successfully".into(),
+        r#type: "success".into(),
+    }))
 }
 
 /// # Confirm a guess

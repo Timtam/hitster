@@ -1,12 +1,9 @@
 use altcha_lib_rs::{Challenge, ChallengeOptions};
 use base64::{Engine, prelude::BASE64_STANDARD};
 use chrono::Utc;
+use parking_lot::RwLock;
 use rocket::{http::Status, serde::json::Json};
-use std::{
-    env,
-    sync::{OnceLock, RwLock},
-    time::Duration,
-};
+use std::{env, sync::OnceLock, time::Duration};
 use timed_set::TimedSet;
 
 pub fn verify_captcha(payload: &str) -> bool {
@@ -14,7 +11,7 @@ pub fn verify_captcha(payload: &str) -> bool {
 
     let tokens = TOKENS.get_or_init(|| RwLock::new(TimedSet::new(Duration::from_mins(15))));
 
-    if !tokens.read().unwrap().contains(&payload.to_string()) {
+    if !tokens.read().contains(&payload.to_string()) {
         let decoded_payload = BASE64_STANDARD.decode(payload);
         if let Ok(decoded_payload) = decoded_payload {
             let string_payload = std::str::from_utf8(decoded_payload.as_slice());
@@ -23,7 +20,7 @@ pub fn verify_captcha(payload: &str) -> bool {
                 if hmac.is_empty() {
                     false
                 } else if altcha_lib_rs::verify_json_solution(string_payload, &hmac, true).is_ok() {
-                    tokens.write().unwrap().add(payload.to_string());
+                    tokens.write().add(payload.to_string());
                     true
                 } else {
                     false
