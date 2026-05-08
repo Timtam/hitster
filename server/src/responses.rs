@@ -32,6 +32,34 @@ pub struct PaginatedResponse<T> {
     pub end: usize,
 }
 
+/// per-hit statistics
+
+#[derive(Serialize, JsonSchema, Default, sqlx::FromRow)]
+pub struct HitStatsResponse {
+    /// number of rounds in which this hit was awarded to the guessing player
+    pub correct_guesses: i64,
+    /// number of times this hit was skipped
+    pub skips: i64,
+    /// number of times the turn player got a token after this hit was revealed
+    pub tokens_earned: i64,
+    /// number of times this hit was pulled from the stack and revealed for guessing
+    pub reveals: i64,
+}
+
+/// per-user statistics
+
+#[derive(Serialize, JsonSchema, Default, sqlx::FromRow)]
+pub struct UserStatsResponse {
+    /// number of games this user joined that were started
+    pub games_played: i64,
+    /// number of games this user won
+    pub games_won: i64,
+    /// number of rounds in which this user was awarded the hit
+    pub hits_guessed_correctly: i64,
+    /// number of tokens this user earned via confirm-true
+    pub tokens_earned: i64,
+}
+
 #[derive(Debug, Serialize, JsonSchema)]
 pub struct JoinGameError {
     pub message: String,

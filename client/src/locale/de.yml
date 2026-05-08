@@ -291,6 +291,12 @@ startGameNotEnoughPlayers: Ein Spiel benötigt mindestens zwei Mitspieler
 startGameShortcut: Alt+Umschalt+S
 startTokens: Start-Chips
 state: Status
+statsCorrectGuesses: Richtig erraten
+statsGuessRate: Erratene Trefferquote
+statsHeading: Statistiken
+statsReveals: Aufgedeckt
+statsSkips: Übersprungen
+statsTokensEarned: Erhaltene Chips
 statusHeading: Hitster ist derzeit nicht verfügbar
 statusPreparingText: >-
     Hitster bereitet gerade die Hits vor. Du wirst automatisch weitergeleitet,

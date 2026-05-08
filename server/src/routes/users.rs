@@ -1,6 +1,9 @@
 use crate::{
     HitsterConfig,
-    responses::{GetUserError, MessageResponse, RegisterUserError, UserLoginError, UsersResponse},
+    responses::{
+        GetUserError, MessageResponse, RegisterUserError, UserLoginError, UserStatsResponse,
+        UsersResponse,
+    },
     routes::captcha::verify_captcha,
     services::ServiceStore,
     users::{
@@ -349,6 +352,19 @@ pub fn get(user_id: &str, serv: &State<ServiceStore>) -> Result<Json<UserPayload
             http_status_code: 404,
         })
     }
+}
+
+/// # Get statistics for a user
+///
+/// Returns lifetime counters for the given user. If the user has no recorded stats yet, all counters are zero.
+
+#[openapi(tag = "Users")]
+#[get("/users/<user_id>/stats")]
+pub async fn get_stats(user_id: &str, serv: &State<ServiceStore>) -> Json<UserStatsResponse> {
+    let Ok(user_id) = Uuid::parse_str(user_id) else {
+        return Json(UserStatsResponse::default());
+    };
+    Json(serv.stats_service().get_user_stats(user_id).await)
 }
 
 /// # User login

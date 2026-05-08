@@ -33,7 +33,7 @@ use routes::{
     users as users_routes,
 };
 use serde::Serialize;
-use services::ServiceStore;
+use services::{ServiceStore, StatsServiceFairing};
 use std::{
     env,
     path::{Path, PathBuf},
@@ -122,6 +122,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
         .attach(migrations_fairing)
         .attach(MergeDbService::default())
         .attach(HitDownloadService::default())
+        .attach(StatsServiceFairing::default())
         .attach(CachedCompression::path_suffix_fairing(
             CachedCompression::static_paths(vec![".js", ".html", ".htm", ".json", ".opus"]),
         ))
@@ -137,6 +138,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 users_routes::authorize,
                 users_routes::get,
                 users_routes::get_all,
+                users_routes::get_stats,
                 users_routes::login,
                 users_routes::logout,
                 users_routes::register,
@@ -164,6 +166,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 hits_routes::export_hits,
                 hits_routes::get_all_packs,
                 hits_routes::get_hit,
+                hits_routes::get_hit_stats,
                 hits_routes::search_hits,
                 hits_routes::update_hit,
                 hits_routes::update_pack,

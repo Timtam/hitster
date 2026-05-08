@@ -1,10 +1,12 @@
 mod games;
 mod hits;
+mod stats;
 mod users;
 
 pub use games::GameService;
 pub use hits::HitService;
 use parking_lot::{MappedMutexGuard, Mutex, MutexGuard};
+pub use stats::{StatsService, StatsServiceFairing};
 use std::{default::Default, sync::Arc};
 pub use users::UserService;
 
@@ -31,6 +33,7 @@ pub struct ServiceStoreData {
     game_service: Option<ServiceHandle<GameService>>,
     hit_service: Option<ServiceHandle<HitService>>,
     user_service: Option<ServiceHandle<UserService>>,
+    stats_service: Option<Arc<StatsService>>,
 }
 
 pub struct ServiceStore {
@@ -62,14 +65,26 @@ impl ServiceStore {
 
     pub fn game_service(&self) -> ServiceHandle<GameService> {
         let hs = self.hit_service();
+        let ss = self.stats_service();
         let mut data = self.data.lock();
 
         if data.game_service.is_none() {
             data.game_service
-                .replace(ServiceHandle::new(GameService::new(hs)));
+                .replace(ServiceHandle::new(GameService::new(hs, ss)));
         }
 
         data.game_service.as_ref().cloned().unwrap()
+    }
+
+    pub fn stats_service(&self) -> Arc<StatsService> {
+        let mut data = self.data.lock();
+
+        if data.stats_service.is_none() {
+            data.stats_service
+                .replace(Arc::new(StatsService::default()));
+        }
+
+        Arc::clone(data.stats_service.as_ref().unwrap())
     }
 }
 

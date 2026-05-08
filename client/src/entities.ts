@@ -210,6 +210,15 @@ export const DeleteHitIssueEvent = z.object({
 
 export type DeleteHitIssueEvent = z.infer<typeof DeleteHitIssueEvent>
 
+export const HitStats = z.object({
+    correct_guesses: z.number(),
+    skips: z.number(),
+    tokens_earned: z.number(),
+    reveals: z.number(),
+})
+
+export type HitStats = z.infer<typeof HitStats>
+
 export const PaginatedHitsResponse = createPaginatedResponseSchema(Hit)
 
 export type PaginatedHitsResponse = z.infer<typeof PaginatedHitsResponse>

@@ -4,7 +4,7 @@ use crate::{
         ClaimHitError, ConfirmSlotError, GuessSlotError, HitError, JoinGameError, LeaveGameError,
         SkipHitError, StartGameError, StopGameError, UpdateGameError,
     },
-    services::{HitService, ServiceHandle},
+    services::{HitService, ServiceHandle, StatsService},
 };
 use hitster_core::{Hit, User};
 use itertools::sorted;
@@ -15,7 +15,7 @@ use rand::{
 };
 use std::{
     collections::{HashMap, HashSet, VecDeque},
-    sync::Mutex,
+    sync::{Arc, Mutex},
 };
 use uuid::Uuid;
 
@@ -26,6 +26,7 @@ pub struct GameServiceData {
 pub struct GameService {
     data: Mutex<GameServiceData>,
     hit_service: ServiceHandle<HitService>,
+    stats: Arc<StatsService>,
 }
 
 impl GameService {
@@ -35,9 +36,10 @@ impl GameService {
         }
     }
 
-    pub fn new(hit_service: ServiceHandle<HitService>) -> Self {
+    pub fn new(hit_service: ServiceHandle<HitService>, stats: Arc<StatsService>) -> Self {
         Self {
             hit_service,
+            stats,
             data: Mutex::new(GameServiceData {
                 games: HashMap::new(),
             }),
@@ -347,6 +349,10 @@ impl GameService {
 
                 self.enqueue_availability_check(game.hits_remaining.front().cloned());
 
+                for p in game.players.iter().filter(|p| !p.r#virtual) {
+                    self.stats.record_user_game_played(p.id);
+                }
+
                 Ok(game.clone())
             }
         } else {
@@ -634,11 +640,26 @@ impl GameService {
                         game.last_scored = Some(player.clone());
                     }
 
+                    if let Some(scored) = game.last_scored.as_ref() {
+                        if let Some(awarded_hit) = scored.hits.last() {
+                            self.stats.record_hit_correct_guess(awarded_hit.id);
+                        }
+                        if !scored.r#virtual {
+                            self.stats.record_user_hit_guessed_correctly(scored.id);
+                            if scored.hits.len() >= game.goal as usize {
+                                self.stats.record_user_game_won(scored.id);
+                            }
+                        }
+                    }
+
                     game.remembered_hits
                         .push(game.hits_remaining.front().cloned().unwrap());
 
                     game.state = GameState::Confirming;
                     game.hit = game.hits_remaining.front().cloned();
+                    if let Some(hit) = game.hit.as_ref() {
+                        self.stats.record_hit_reveal(hit.id);
+                    }
                     if game.mode == GameMode::Local {
                         let creator_pos = game.players.iter().position(|p| p.creator).unwrap();
                         game.players.get_mut(creator_pos).unwrap().state = PlayerState::Confirming;
@@ -692,7 +713,14 @@ impl GameService {
             }
 
             if confirm {
-                game.players.get_mut(turn_player_pos).unwrap().tokens += 1;
+                let tp = game.players.get_mut(turn_player_pos).unwrap();
+                tp.tokens += 1;
+                if !tp.r#virtual {
+                    self.stats.record_user_token_earned(tp.id);
+                }
+                if let Some(hit) = game.hit.as_ref() {
+                    self.stats.record_hit_token_earned(hit.id);
+                }
             }
 
             game.hits_remaining.pop_front().unwrap();
@@ -814,6 +842,8 @@ impl GameService {
             }
 
             self.enqueue_availability_check(game.hits_remaining.front().cloned());
+
+            self.stats.record_hit_skip(hit.id);
 
             Ok((game.clone(), hit))
         } else {
