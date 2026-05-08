@@ -1,8 +1,8 @@
 use crate::{
-    games::{Game, GameMode, GameSettingsPayload, GameState, Player, PlayerState, Slot},
+    games::{Game, GameMode, GameSettingsPayload, GameState, HitSelection, Player, PlayerState, Slot},
     responses::{
-        ClaimHitError, ConfirmSlotError, GuessSlotError, HitError, JoinGameError, LeaveGameError,
-        SkipHitError, StartGameError, StopGameError, UpdateGameError,
+        ClaimHitError, ConfirmSlotError, GuessSlotError, HitError, HitStatsResponse, JoinGameError,
+        LeaveGameError, SkipHitError, StartGameError, StopGameError, UpdateGameError,
     },
     services::{HitService, ServiceHandle, StatsService, UserService},
 };
@@ -21,6 +21,45 @@ use uuid::Uuid;
 
 pub struct GameServiceData {
     games: HashMap<String, Game>,
+}
+
+fn hit_success_rate(stats: Option<&HitStatsResponse>) -> f64 {
+    match stats {
+        Some(s) if s.reveals > 0 => s.correct_guesses as f64 / s.reveals as f64,
+        _ => 0.5,
+    }
+}
+
+fn order_hits_for_selection(
+    mut hits: Vec<Hit>,
+    selection: HitSelection,
+    hit_stats: &HashMap<Uuid, HitStatsResponse>,
+    rng: &mut impl rand::Rng,
+) -> VecDeque<Hit> {
+    use std::cmp::Ordering;
+    // shuffle first so ties within the same score get random ordering
+    hits.shuffle(rng);
+    match selection {
+        HitSelection::Random => {}
+        HitSelection::Rare => {
+            hits.sort_by_key(|h| hit_stats.get(&h.id).map(|s| s.reveals).unwrap_or(0));
+        }
+        HitSelection::Hard => {
+            hits.sort_by(|a, b| {
+                let ra = hit_success_rate(hit_stats.get(&a.id));
+                let rb = hit_success_rate(hit_stats.get(&b.id));
+                ra.partial_cmp(&rb).unwrap_or(Ordering::Equal)
+            });
+        }
+        HitSelection::Easy => {
+            hits.sort_by(|a, b| {
+                let ra = hit_success_rate(hit_stats.get(&a.id));
+                let rb = hit_success_rate(hit_stats.get(&b.id));
+                rb.partial_cmp(&ra).unwrap_or(Ordering::Equal)
+            });
+        }
+    }
+    hits.into_iter().collect()
 }
 
 pub struct GameService {
@@ -114,6 +153,7 @@ impl GameService {
             mode,
             remembered_hits: vec![],
             last_scored: None,
+            hit_selection: HitSelection::default(),
         };
 
         drop(hs);
@@ -313,7 +353,8 @@ impl GameService {
         }
     }
 
-    pub fn start(&self, game_id: &str, user: &User) -> Result<Game, StartGameError> {
+    pub async fn start(&self, game_id: &str, user: &User) -> Result<Game, StartGameError> {
+        let hit_stats = self.stats.get_all_hit_stats().await;
         let mut data = self.data.lock().unwrap();
 
         if let Some(game) = data.games.get_mut(game_id) {
@@ -348,31 +389,30 @@ impl GameService {
                     .collect::<Vec<_>>();
                 let remembered_hits_count = remembered_hits.len();
 
-                let mut hits_remaining: VecDeque<Hit> = self
+                let hits: Vec<Hit> = self
                     .hit_service
                     .lock()
                     .get_hits_for_packs(&game.packs)
                     .into_iter()
                     .filter(|h| h.downloaded && !remembered_hits.contains(h))
                     .cloned()
-                    .collect::<_>();
+                    .collect();
 
-                if hits_remaining.len() + remembered_hits_count
+                if hits.len() + remembered_hits_count
                     < (game.players.len() * game.goal as usize * 2)
                 {
                     return Err(StartGameError {
                         http_status_code: 409,
                         message: format!(
                             "There aren't enough hits available to start a game ({} individual hits in the currently selected packs, {} hits are required)",
-                            hits_remaining.len() + remembered_hits_count,
+                            hits.len() + remembered_hits_count,
                             game.players.len() * game.goal as usize * 2
                         ),
                     });
                 }
 
-                hits_remaining.make_contiguous().shuffle(&mut rng);
-
-                game.hits_remaining = hits_remaining;
+                game.hits_remaining =
+                    order_hits_for_selection(hits, game.hit_selection, &hit_stats, &mut rng);
 
                 game.remembered_hits = remembered_hits;
 
@@ -1031,6 +1071,7 @@ impl GameService {
             game.start_tokens = settings.start_tokens.unwrap_or(game.start_tokens);
             game.goal = settings.goal.unwrap_or(game.goal);
             game.hit_duration = settings.hit_duration.unwrap_or(game.hit_duration);
+            game.hit_selection = settings.hit_selection.unwrap_or(game.hit_selection);
 
             Ok(game.clone())
         } else {

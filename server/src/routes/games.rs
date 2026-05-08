@@ -43,8 +43,7 @@ pub fn create_game(
     serv: &State<ServiceStore>,
     queue: &State<Sender<GlobalEvent>>,
 ) -> Created<Json<GamePayload>> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
     let mode = if let Some(data) = data.as_ref() {
         data.mode.unwrap_or(GameMode::Public)
     } else {
@@ -88,7 +87,6 @@ pub fn get_all_games(
     Json(GamesResponse {
         games: serv
             .game_service()
-            .lock()
             .get_all(user.map(|u| u.0).as_ref())
             .into_iter()
             .map(|g| (&g).into())
@@ -112,8 +110,7 @@ pub async fn join_game(
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, JoinGameError> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
 
     games
         .join(
@@ -152,8 +149,7 @@ pub async fn leave_game(
     game_event_queue: &State<Sender<GameEvent>>,
     global_event_queue: &State<Sender<GlobalEvent>>,
 ) -> Result<Json<MessageResponse>, LeaveGameError> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
     let old_mode = games
         .get(game_id, Some(&user.0))
         .map(|g| g.mode)
@@ -214,10 +210,9 @@ pub async fn start_game(
     serv: &State<ServiceStore>,
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, StartGameError> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
 
-    games.start(game_id, &user.0).map(|g| {
+    games.start(game_id, &user.0).await.map(|g| {
         let _ = queue.send(GameEvent {
             game_id: game_id.into(),
             event: "change_state".into(),
@@ -246,7 +241,6 @@ pub async fn stop_game(
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, StopGameError> {
     serv.game_service()
-        .lock()
         .stop(game_id, Some(&user.0))
         .map(|g| {
             let _ = queue.send(GameEvent {
@@ -276,8 +270,7 @@ pub fn get_game(
     user: Option<UserAuthenticator>,
     serv: &State<ServiceStore>,
 ) -> Result<Json<GamePayload>, GetGameError> {
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
 
     match games.get(game_id, user.map(|u| u.0).as_ref()) {
         Some(g) => Ok(Json((&g).into())),
@@ -306,8 +299,7 @@ pub fn get_player(
         http_status_code: 404,
     })?;
 
-    let game_svc = serv.game_service();
-    let games = game_svc.lock();
+    let games = serv.game_service();
 
     let game = games.get(game_id, user.map(|u| u.0).as_ref()).ok_or(GetPlayerError {
         message: "game id not found".into(),
@@ -349,8 +341,7 @@ pub async fn get_player_stats(
     })?;
 
     let stats_svc = {
-        let game_svc = serv.game_service();
-        let games = game_svc.lock();
+        let games = serv.game_service();
 
         let game = games
             .get(game_id, user.map(|u| u.0).as_ref())
@@ -492,7 +483,7 @@ pub async fn hit(
     hit_id: PathBuf,
     serv: &State<ServiceStore>,
 ) -> Result<NamedFile, HitError> {
-    let hit = serv.game_service().lock().get_hit(
+    let hit = serv.game_service().get_hit(
         game_id,
         hit_id.to_str().and_then(|h| Uuid::parse_str(h).ok()),
     );
@@ -531,13 +522,11 @@ pub fn guess_slot(
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     let state = serv
         .game_service()
-        .lock()
         .get(game_id, Some(&user.0))
         .map(|g| g.state)
         .unwrap_or(GameState::Guessing);
     let game = serv
         .game_service()
-        .lock()
         .guess(game_id, &user.0, slot.id, player_id);
 
     game.map(|mut game| {
@@ -555,10 +544,10 @@ pub fn guess_slot(
         if state != game.state {
             let last_scored = game.last_scored.clone();
             let hit = game.hits_remaining.front().cloned();
-            let winner = serv.game_service().lock().get_winner(&game);
+            let winner = serv.game_service().get_winner(&game);
 
             if winner.is_some() {
-                game = serv.game_service().lock().stop(&game.id, None).unwrap();
+                game = serv.game_service().stop(&game.id, None).unwrap();
             }
 
             let _ = queue.send(GameEvent {
@@ -600,7 +589,6 @@ pub fn confirm_slot(
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, ConfirmSlotError> {
     serv.game_service()
-        .lock()
         .confirm(game_id, &user.0, confirmation.confirm)
         .map(|game| {
             let _ = queue.send(GameEvent {
@@ -634,7 +622,6 @@ pub fn skip_hit(
 ) -> Result<Json<MessageResponse>, SkipHitError> {
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     serv.game_service()
-        .lock()
         .skip(game_id, &user.0, player_id)
         .map(|(game, hit)| {
             let _ = queue.send(GameEvent {
@@ -673,7 +660,6 @@ pub fn claim_hit(
     let player_id = player_id.to_str().and_then(|p| Uuid::parse_str(p).ok());
     let res = serv
         .game_service()
-        .lock()
         .claim(game_id, &user.0, player_id);
 
     res.map(|(mut game, hit)| {
@@ -689,10 +675,10 @@ pub fn claim_hit(
             ..Default::default()
         });
 
-        let winner = serv.game_service().lock().get_winner(&game);
+        let winner = serv.game_service().get_winner(&game);
 
         if winner.is_some() {
-            game = serv.game_service().lock().stop(game_id, None).unwrap();
+            game = serv.game_service().stop(game_id, None).unwrap();
 
             let _ = queue.send(GameEvent {
                 game_id: game_id.into(),
@@ -725,7 +711,6 @@ pub fn update_game(
     queue: &State<Sender<GameEvent>>,
 ) -> Result<Json<MessageResponse>, UpdateGameError> {
     serv.game_service()
-        .lock()
         .update(game_id, &user.0, &settings)
         .map(|_| {
             let _ = queue.send(GameEvent {

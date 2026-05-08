@@ -30,7 +30,7 @@ impl<T> Clone for ServiceHandle<T> {
 
 #[derive(Default)]
 pub struct ServiceStoreData {
-    game_service: Option<ServiceHandle<GameService>>,
+    game_service: Option<Arc<GameService>>,
     hit_service: Option<ServiceHandle<HitService>>,
     user_service: Option<ServiceHandle<UserService>>,
     stats_service: Option<Arc<StatsService>>,
@@ -63,7 +63,7 @@ impl ServiceStore {
         data.user_service.as_ref().cloned().unwrap()
     }
 
-    pub fn game_service(&self) -> ServiceHandle<GameService> {
+    pub fn game_service(&self) -> Arc<GameService> {
         let hs = self.hit_service();
         let us = self.user_service();
         let ss = self.stats_service();
@@ -71,10 +71,10 @@ impl ServiceStore {
 
         if data.game_service.is_none() {
             data.game_service
-                .replace(ServiceHandle::new(GameService::new(hs, us, ss)));
+                .replace(Arc::new(GameService::new(hs, us, ss)));
         }
 
-        data.game_service.as_ref().cloned().unwrap()
+        Arc::clone(data.game_service.as_ref().unwrap())
     }
 
     pub fn stats_service(&self) -> Arc<StatsService> {

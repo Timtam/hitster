@@ -97,6 +97,7 @@ gameNotStarted: Das Spiel hat noch nicht begonnen.
 gameSettings: Spieleinstellungen
 gameSettingsHitDuration: Wie viele Sekunden eines Hits werden zu jeder Spielrunde abgespielt?
 gameSettingsHitGoal: Wie viele Hits muss ein Spieler erraten, um das Spiel zu gewinnen?
+gameSettingsHitSelection: Wie sollen Hits aus den ausgewählten Packs gezogen werden?
 gameSettingsNotCreator: Nur der Ersteller des Spiels kann es bearbeiten
 gameSettingsPacks: "Wähle alle die Packs aus, welche in diesem Spiel genutzt werden sollen:"
 gameSettingsShortcut: Alt+Umschalt+E
@@ -109,6 +110,11 @@ guessText: Wo, glaubst du, gehört dieser Hit hin?
 hasIssues: Nur Hits mit Problemen
 hitCreated: Der Hit wurde erfolgreich erstellt.
 hitDuration: Abspielzeit der Hits
+hitSelection: Hit-Auswahl
+hitSelection_easy: Leichte Hits (hohe Trefferquote)
+hitSelection_hard: Schwere Hits (niedrige Trefferquote)
+hitSelection_random: Komplett zufällig
+hitSelection_rare: Selten gespielte Hits
 hitHeading: Was zum Hit?
 hitNoGameRunning: Derzeit läuft kein Spiel, also gibt es auch keinen Hit für dich!
 hitRevealed: >-

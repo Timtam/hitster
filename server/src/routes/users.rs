@@ -594,8 +594,7 @@ pub async fn logout(
     serv: &State<ServiceStore>,
     cookies: &CookieJar<'_>,
 ) -> Json<MessageResponse> {
-    let game_srv = serv.game_service();
-    let games = game_srv.lock();
+    let games = serv.game_service();
 
     for game in games.get_all(Some(&user.0)).iter() {
         let _ = games.leave(&game.id, &user.0, None);

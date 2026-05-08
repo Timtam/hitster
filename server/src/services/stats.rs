@@ -10,6 +10,7 @@ use rocket_db_pools::{
     Database,
     sqlx::{self, SqlitePool},
 };
+use rocket_db_pools::sqlx::Row;
 use std::{
     collections::HashMap,
     sync::{Arc, Mutex, OnceLock},
@@ -27,6 +28,38 @@ pub struct StatsService {
 impl StatsService {
     pub fn set_pool(&self, pool: SqlitePool) {
         let _ = self.pool.set(pool);
+    }
+
+    pub async fn get_all_hit_stats(&self) -> HashMap<Uuid, HitStatsResponse> {
+        let Some(pool) = self.pool.get() else {
+            return HashMap::new();
+        };
+        let rows = match sqlx::query(
+            "SELECT hit_id, correct_guesses, skips, tokens_earned, reveals FROM hit_stats",
+        )
+        .fetch_all(pool)
+        .await
+        {
+            Ok(r) => r,
+            Err(e) => {
+                rocket::error!("get_all_hit_stats: query failed: {}", e);
+                return HashMap::new();
+            }
+        };
+        rows.into_iter()
+            .filter_map(|row| {
+                let hit_id: Uuid = row.try_get("hit_id").ok()?;
+                Some((
+                    hit_id,
+                    HitStatsResponse {
+                        correct_guesses: row.try_get("correct_guesses").unwrap_or(0),
+                        skips: row.try_get("skips").unwrap_or(0),
+                        tokens_earned: row.try_get("tokens_earned").unwrap_or(0),
+                        reveals: row.try_get("reveals").unwrap_or(0),
+                    },
+                ))
+            })
+            .collect()
     }
 
     pub async fn get_hit_stats(&self, hit_id: Uuid) -> HitStatsResponse {

@@ -219,9 +219,8 @@ impl Fairing for UserCleanupService {
             let svc = req.guard::<&State<ServiceStore>>().await.unwrap();
             let queue = req.guard::<&State<Sender<GlobalEvent>>>().await.unwrap();
             let usvc = svc.user_service();
-            let gsvc = svc.game_service();
             let stats = svc.stats_service();
-            let games = gsvc.lock();
+            let games = svc.game_service();
             let users = usvc.lock();
 
             for user in users.get_all().iter() {

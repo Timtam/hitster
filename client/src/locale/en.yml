@@ -97,6 +97,7 @@ gameNotStarted: The game hasn't started yet.
 gameSettings: Game settings
 gameSettingsHitDuration: How many seconds of a hit will every player hear when guessing?
 gameSettingsHitGoal: How many hits do the players need to guess correctly in order to win?
+gameSettingsHitSelection: How should hits be picked from the selected packs?
 gameSettingsNotCreator: Only the creator can edit the game settings
 gameSettingsPacks: "Check all the packs you want to use in this game:"
 gameSettingsShortcut: Alt+Shift+E
@@ -109,6 +110,11 @@ guessText: Where do you think this hit belongs?
 hasIssues: Only hits with issues
 hitCreated: Hit created successfully.
 hitDuration: Hit duration
+hitSelection: Hit selection
+hitSelection_easy: Easy hits (high success rate)
+hitSelection_hard: Hard hits (low success rate)
+hitSelection_random: Entirely random
+hitSelection_rare: Rarely played hits
 hitHeading: What's the hit?
 hitNoGameRunning: No game running, no hit for you!
 hitRevealed: >-

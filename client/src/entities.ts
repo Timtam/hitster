@@ -96,6 +96,13 @@ export enum GameMode {
     Local = "Local",
 }
 
+export enum HitSelection {
+    Random = "random",
+    Rare = "rare",
+    Hard = "hard",
+    Easy = "easy",
+}
+
 export enum PlayerState {
     Waiting = "Waiting",
     Guessing = "Guessing",
@@ -129,6 +136,7 @@ export const Game = z.object({
     packs: z.array(z.string()),
     mode: z.nativeEnum(GameMode),
     last_scored: z.nullable(Player),
+    hit_selection: z.nativeEnum(HitSelection),
 })
 
 export type Game = z.infer<typeof Game>
@@ -144,6 +152,7 @@ export const GameSettings = z.object({
     hit_duration: z.optional(z.number()),
     goal: z.optional(z.number()),
     packs: z.optional(z.array(z.string())),
+    hit_selection: z.optional(z.nativeEnum(HitSelection)),
 })
 
 export type GameSettings = z.infer<typeof GameSettings>
