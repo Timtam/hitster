@@ -439,6 +439,9 @@ impl GameService {
                 }
 
                 self.enqueue_availability_check(game.hits_remaining.front().cloned());
+                if let Some(hit) = game.hits_remaining.front() {
+                    self.stats.record_hit_reveal(hit.id);
+                }
 
                 for p in game.players.iter() {
                     self.stats
@@ -779,9 +782,6 @@ impl GameService {
 
                     game.state = GameState::Confirming;
                     game.hit = game.hits_remaining.front().cloned();
-                    if let Some(hit) = game.hit.as_ref() {
-                        self.stats.record_hit_reveal(hit.id);
-                    }
                     if game.mode == GameMode::Local {
                         let creator_pos = game.players.iter().position(|p| p.creator).unwrap();
                         game.players.get_mut(creator_pos).unwrap().state = PlayerState::Confirming;
@@ -912,6 +912,9 @@ impl GameService {
             }
 
             self.enqueue_availability_check(game.hits_remaining.front().cloned());
+            if let Some(hit) = game.hits_remaining.front() {
+                self.stats.record_hit_reveal(hit.id);
+            }
 
             Ok(game.clone())
         } else {
@@ -995,6 +998,9 @@ impl GameService {
             }
 
             self.enqueue_availability_check(game.hits_remaining.front().cloned());
+            if let Some(next) = game.hits_remaining.front() {
+                self.stats.record_hit_reveal(next.id);
+            }
 
             self.stats.record_hit_skip(hit.id);
 
