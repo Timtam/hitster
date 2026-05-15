@@ -425,13 +425,20 @@ impl GameService {
 
                 game.state = GameState::Guessing;
                 game.players.shuffle(&mut rng);
-                game.players.get_mut(0).unwrap().state = PlayerState::Guessing;
-                game.players.get_mut(0).unwrap().turn_player = true;
 
                 for i in 0..game.players.len() {
                     let player = game.players.get_mut(i).unwrap();
-                    let hit = game.hits_remaining.pop_front().unwrap();
+                    player.hits.clear();
+                    player.slots.clear();
+                    player.guess = None;
+                    player.turn_player = i == 0;
+                    player.state = if i == 0 {
+                        PlayerState::Guessing
+                    } else {
+                        PlayerState::Waiting
+                    };
 
+                    let hit = game.hits_remaining.pop_front().unwrap();
                     player.hits.push(hit.clone());
                     game.remembered_hits.push(hit);
                     player.tokens = game.start_tokens;
@@ -486,14 +493,6 @@ impl GameService {
             game.state = GameState::Open;
             game.last_scored = None;
             game.hits_remaining.clear();
-
-            for p in game.players.iter_mut() {
-                p.state = PlayerState::Waiting;
-                p.tokens = 0;
-                p.hits.clear();
-                p.turn_player = false;
-                p.guess = None;
-            }
 
             Ok(game.clone())
         } else {
@@ -807,13 +806,6 @@ impl GameService {
                 game.state = GameState::Open;
                 game.last_scored = None;
                 game.hits_remaining.clear();
-                for p in game.players.iter_mut() {
-                    p.state = PlayerState::Waiting;
-                    p.tokens = 0;
-                    p.hits.clear();
-                    p.turn_player = false;
-                    p.guess = None;
-                }
             }
 
             Ok(GuessOutcome {

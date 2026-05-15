@@ -27,8 +27,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [prevent alt + shift + n from creating new tabs in Google Chrome while on game screen (#59)](https://github.com/Timtam/hitster/issues/50)
 -   [changed pack filter in hits browser to allow filtering for hits without any assigned packs (#48)](https://github.com/Timtam/hitster/issues/48)
 -   [reworked authentification workflow to keep old tokens around for as long as they can still be used to refresh, which hopefully fixes double-authentification errors (#46)](https://github.com/Timtam/hitster/issues/46)
+-   player hits and tokens are no longer wiped at the end of a game; the final scoreboard now stays visible in the lobby until the next game is started
 -   major refactoring to fix linting errors and harden server against crashes
 -   update Rust to v1.94
+
+### Fixed
+
+-   fixed end-of-game scoreboard showing 0 hits/tokens for some players when their state was reset before the snapshot could be taken
 
 ## [2025.12.16-1] - 2025-12-16
 
