@@ -15,7 +15,7 @@ use crate::{
     users::UserAuthenticator,
 };
 use hitster_core::{Hit, HitId, HitIssue, HitIssueType, HitsterData, Pack, Permissions};
-use rocket::{State, serde::json::Json, tokio::sync::broadcast::Sender};
+use rocket::{State, fs::NamedFile, serde::json::Json, tokio::sync::broadcast::Sender};
 use rocket_db_pools::{
     Connection,
     sqlx::{self, FromRow},
@@ -240,6 +240,35 @@ FROM hit_issues WHERE hit_id = ? ORDER BY created_at ASC"#,
     }
 
     Ok(Json(payload))
+}
+
+/// # Play a hit's downloaded audio
+///
+/// Streams the currently downloaded audio file for the given hit, independent of
+/// any game. Returns 404 if the hit doesn't exist or hasn't been downloaded yet.
+
+#[openapi(tag = "Hits")]
+#[get("/hits/<hit_id>/audio")]
+pub async fn get_hit_audio(
+    hit_id: &str,
+    svc: &State<ServiceStore>,
+) -> Result<NamedFile, GetHitError> {
+    let hs = svc.hit_service();
+    let hit = {
+        let hsl = hs.lock();
+        Uuid::parse_str(hit_id)
+            .ok()
+            .and_then(|hit_id| hsl.get_hit(&HitId::Id(hit_id)).cloned())
+    }
+    .ok_or(GetHitError {
+        message: "hit id not found".into(),
+        http_status_code: 404,
+    })?;
+
+    NamedFile::open(&hit.file()).await.map_err(|_| GetHitError {
+        message: "hit file couldn't be found".into(),
+        http_status_code: 404,
+    })
 }
 
 /// # Get statistics for a hit

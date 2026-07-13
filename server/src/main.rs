@@ -168,6 +168,7 @@ fn rocket_from_config(figment: Figment) -> Rocket<Build> {
                 hits_routes::export_hits,
                 hits_routes::get_all_packs,
                 hits_routes::get_hit,
+                hits_routes::get_hit_audio,
                 hits_routes::get_hit_stats,
                 hits_routes::search_hits,
                 hits_routes::update_hit,

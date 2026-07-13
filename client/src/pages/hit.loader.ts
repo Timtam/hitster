@@ -8,7 +8,10 @@ const loader: LoaderFunction = async ({
     const hs = new HitService()
 
     if (params.hitId !== undefined) {
-        const hit = await hs.get(params.hitId, [HitQueryPart.Issues])
+        const hit = await hs.get(params.hitId, [
+            HitQueryPart.Issues,
+            HitQueryPart.Downloaded,
+        ])
 
         if (hit === undefined)
             throw { message: "hit id not found", status: 404 }

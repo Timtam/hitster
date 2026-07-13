@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+-   the hit editor can now play the currently downloaded audio of a hit, making it easier to verify the download and pick a fitting playback offset
 -   [added confirmation popup when deleting a hit (#44)](https://github.com/Timtam/hitster/issues/44)
 -   [added issue system for hits (#47)](https://github.com/Timtam/hitster/issues/47)
     -   new permissions (use hitster-cli to manage permissions):

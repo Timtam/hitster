@@ -19,6 +19,7 @@ import FA from "../focus-anchor"
 import { useRevalidate } from "../hooks"
 import ReportHitIssueModal from "../modals/report-hit-issue"
 import HitService from "../services/hits.service"
+import { HitPlayer } from "./game/hit-player"
 import { getErrorMessage, RE_YOUTUBE } from "../utils"
 
 function DeleteHitModal({
@@ -430,6 +431,21 @@ export default function Hit() {
                             },
                         }}
                     />
+                )}
+                {editing ? (
+                    <div className="mb-2">
+                        <HitPlayer
+                            src={
+                                hit.downloaded
+                                    ? `/api/hits/${hit.id}/audio`
+                                    : ""
+                            }
+                            duration={0}
+                            autoplay={false}
+                        />
+                    </div>
+                ) : (
+                    ""
                 )}
                 {editing ? (
                     <Button
