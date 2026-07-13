@@ -50,10 +50,7 @@ function parseCookieUser(cookieUser: unknown): User | null {
 }
 
 export default function Layout() {
-    const {
-        t,
-        i18n: { language },
-    } = useTranslation()
+    const { t } = useTranslation()
     const [cookies] = useCookies(["user"])
     const cookieUser = cookies.user
     const user = useMemo(() => parseCookieUser(cookieUser), [cookieUser])
@@ -143,14 +140,13 @@ export default function Layout() {
     }, [userId])
 
     useEffect(() => {
-        document.documentElement.lang = language
         document.documentElement.dataset.bsTheme =
             colorScheme !== "auto"
                 ? colorScheme
                 : prefersColorScheme === "dark"
                   ? "dark"
                   : "light"
-    }, [language, colorScheme, prefersColorScheme])
+    }, [colorScheme, prefersColorScheme])
 
     useEffect(() => {
         document.body.style.paddingTop = navHeight.toString() + "px"

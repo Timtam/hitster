@@ -296,7 +296,7 @@ async fn check_hit_availability(hit: &Hit) -> Result<bool, String> {
     command
         .current_dir(env::current_dir().unwrap())
         .args(["--skip-download", "--no-warnings", "--no-progress"])
-        .args(["--extractor-args", "youtube:player-client=default,mweb"])
+        .args(["--extractor-args", "youtube:player-client=default,web_safari"])
         .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
 
     match command.output().await {
@@ -866,7 +866,7 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                             .current_dir(env::current_dir().unwrap())
                             .args(["-f", "bestaudio[ext=m4a]"])
                             .args(["-o", in_file.to_str().unwrap()])
-                            .args(["--extractor-args", "youtube:player-client=default,mweb"])
+                            .args(["--extractor-args", "youtube:player-client=default,web_safari"])
                             .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
 
                         let output = command.output().await;
