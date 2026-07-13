@@ -2,10 +2,6 @@ mod hitster_core {
     use bitflags::bitflags;
     use deunicode::deunicode;
     use multi_key_map::MultiKeyMap;
-    use nucleo_matcher::{
-        Config, Matcher, Utf32Str,
-        pattern::{CaseMatching, Normalization, Pattern},
-    };
     use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
     use sqlx::{FromRow, Row, sqlite::SqliteRow};
@@ -214,27 +210,19 @@ mod hitster_core {
 
         pub fn search_hits(&self, query: &str) -> Vec<&Hit> {
             let query_norm = normalize_text(query);
+            let words = query_norm.split_whitespace().collect::<Vec<_>>();
 
-            if query_norm.trim().is_empty() {
+            if words.is_empty() {
                 return self.hits.values().collect::<Vec<_>>();
             }
 
-            // Each whitespace-separated word is matched independently and
-            // fuzzily (subsequence, à la fzf), so partial and infix queries are
-            // found (e.g. "westernhagen" -> "Marius Müller-Westernhagen",
-            // "bangarang" -> "Bangaranga"). A hit qualifies when a sufficient
-            // fraction of the words match (OR-ish behaviour), so a query like
-            // "westernhagen freiheit" still finds a hit matching only one word.
-            // The service layer re-sorts the results, so the summed relevance
-            // score is only used as a tie-agnostic ordering here.
-            let words = query_norm
-                .split_whitespace()
-                .map(|word| {
-                    Pattern::parse(word, CaseMatching::Ignore, Normalization::Smart)
-                })
-                .collect::<Vec<_>>();
-
-            // fraction of the words that must match, mirroring earlier behaviour
+            // Each whitespace-separated word must appear as a contiguous
+            // substring of the combined haystack, so partial and infix queries
+            // are found (e.g. "westernhagen" -> "Marius Müller-Westernhagen",
+            // "bangar" -> "Bangaranga") without the false positives a
+            // subsequence match would produce for short queries. A hit qualifies
+            // when a sufficient fraction of the words match (OR-ish behaviour),
+            // so "westernhagen freiheit" still finds a hit matching only one.
             let tolerance = match words.len() {
                 0 | 1 => 0.0,
                 2 => 0.5,
@@ -242,41 +230,22 @@ mod hitster_core {
                 _ => 0.75,
             };
 
-            let mut matcher = Matcher::new(Config::DEFAULT);
-            let mut buf = Vec::new();
-
-            let mut scored = self
-                .hits
+            self.hits
                 .values()
-                .filter_map(|hit| {
+                .filter(|hit| {
                     let haystack = format!(
                         "{} {} {}",
                         normalize_text(&hit.title),
                         normalize_text(&hit.artist),
                         normalize_text(&hit.belongs_to)
                     );
-                    let haystack = Utf32Str::new(&haystack, &mut buf);
 
-                    let mut matched = 0usize;
-                    let mut total_score = 0u32;
+                    let matched =
+                        words.iter().filter(|word| haystack.contains(**word)).count();
 
-                    for word in &words {
-                        if let Some(score) = word.score(haystack, &mut matcher) {
-                            matched += 1;
-                            total_score += score;
-                        }
-                    }
-
-                    if matched > 0 && matched as f32 / words.len() as f32 >= tolerance {
-                        Some((total_score, hit))
-                    } else {
-                        None
-                    }
+                    matched > 0 && matched as f32 / words.len() as f32 >= tolerance
                 })
-                .collect::<Vec<_>>();
-
-            scored.sort_by(|(a, _), (b, _)| b.cmp(a));
-            scored.into_iter().map(|(_, hit)| hit).collect::<Vec<_>>()
+                .collect::<Vec<_>>()
         }
     }
 
