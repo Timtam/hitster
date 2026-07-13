@@ -28,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   [changed pack filter in hits browser to allow filtering for hits without any assigned packs (#48)](https://github.com/Timtam/hitster/issues/48)
 -   [reworked authentification workflow to keep old tokens around for as long as they can still be used to refresh, which hopefully fixes double-authentification errors (#46)](https://github.com/Timtam/hitster/issues/46)
 -   player hits and tokens are no longer wiped at the end of a game; the final scoreboard now stays visible in the lobby until the next game is started
+-   reworked hit search to use fuzzy subsequence matching (nucleo), so partial and infix queries now match (e.g. "westernhagen" finds "Marius Müller-Westernhagen" and "bangarang" finds "Bangaranga")
 -   major refactoring to fix linting errors and harden server against crashes
 -   update Rust to v1.97
 

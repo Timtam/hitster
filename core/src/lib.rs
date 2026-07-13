@@ -2,9 +2,12 @@ mod hitster_core {
     use bitflags::bitflags;
     use deunicode::deunicode;
     use multi_key_map::MultiKeyMap;
+    use nucleo_matcher::{
+        Config, Matcher, Utf32Str,
+        pattern::{CaseMatching, Normalization, Pattern},
+    };
     use schemars::JsonSchema;
     use serde::{Deserialize, Serialize};
-    use simsearch::{SearchOptions, SimSearch};
     use sqlx::{FromRow, Row, sqlite::SqliteRow};
     use std::{
         cmp::PartialEq,
@@ -135,7 +138,6 @@ mod hitster_core {
     pub struct HitsterData {
         hits: MultiKeyMap<HitId, Hit>,
         packs: HashMap<Uuid, Pack>,
-        index: SimSearch<HitId>,
     }
 
     impl HitsterData {
@@ -149,7 +151,6 @@ mod hitster_core {
                     .into_iter()
                     .map(|p| (p.id, p))
                     .collect::<HashMap<Uuid, Pack>>(),
-                index: SimSearch::new_with(SearchOptions::new().levenshtein(true)),
             }
         }
 
@@ -162,15 +163,6 @@ mod hitster_core {
         }
 
         pub fn insert_hit(&mut self, hit: Hit) {
-            self.index.insert(
-                HitId::Id(hit.id),
-                &format!(
-                    "{} {} {}",
-                    normalize_text(&hit.title),
-                    normalize_text(&hit.artist),
-                    normalize_text(&hit.belongs_to)
-                ),
-            );
             self.hits
                 .insert_many(vec![HitId::Id(hit.id), HitId::YtId(hit.yt_id.clone())], hit);
         }
@@ -196,7 +188,6 @@ mod hitster_core {
 
         pub fn remove_hit(&mut self, hit: &HitId) -> bool {
             if let Some(hit) = self.hits.get(hit) {
-                self.index.remove(&HitId::Id(hit.id));
                 self.hits
                     .remove_many([&HitId::Id(hit.id), &HitId::YtId(hit.yt_id.clone())]);
                 true
@@ -223,42 +214,69 @@ mod hitster_core {
 
         pub fn search_hits(&self, query: &str) -> Vec<&Hit> {
             let query_norm = normalize_text(query);
-            let query_words: Vec<&str> = query_norm.split_whitespace().collect();
 
-            let tolerance = match query_words.len() {
+            if query_norm.trim().is_empty() {
+                return self.hits.values().collect::<Vec<_>>();
+            }
+
+            // Each whitespace-separated word is matched independently and
+            // fuzzily (subsequence, à la fzf), so partial and infix queries are
+            // found (e.g. "westernhagen" -> "Marius Müller-Westernhagen",
+            // "bangarang" -> "Bangaranga"). A hit qualifies when a sufficient
+            // fraction of the words match (OR-ish behaviour), so a query like
+            // "westernhagen freiheit" still finds a hit matching only one word.
+            // The service layer re-sorts the results, so the summed relevance
+            // score is only used as a tie-agnostic ordering here.
+            let words = query_norm
+                .split_whitespace()
+                .map(|word| {
+                    Pattern::parse(word, CaseMatching::Ignore, Normalization::Smart)
+                })
+                .collect::<Vec<_>>();
+
+            // fraction of the words that must match, mirroring earlier behaviour
+            let tolerance = match words.len() {
                 0 | 1 => 0.0,
                 2 => 0.5,
                 3 => 0.66,
                 _ => 0.75,
             };
 
-            self.index
-                .search(&query_norm)
-                .into_iter()
-                .filter_map(|id| {
-                    let hit = self.hits.get(&id).unwrap();
-                    let s = format!(
+            let mut matcher = Matcher::new(Config::DEFAULT);
+            let mut buf = Vec::new();
+
+            let mut scored = self
+                .hits
+                .values()
+                .filter_map(|hit| {
+                    let haystack = format!(
                         "{} {} {}",
-                        &normalize_text(&hit.title),
-                        &normalize_text(&hit.artist),
-                        &normalize_text(&hit.belongs_to)
+                        normalize_text(&hit.title),
+                        normalize_text(&hit.artist),
+                        normalize_text(&hit.belongs_to)
                     );
+                    let haystack = Utf32Str::new(&haystack, &mut buf);
 
-                    let mut hits = 0;
+                    let mut matched = 0usize;
+                    let mut total_score = 0u32;
 
-                    for word in query_words.iter() {
-                        if s.contains(word) {
-                            hits += 1;
+                    for word in &words {
+                        if let Some(score) = word.score(haystack, &mut matcher) {
+                            matched += 1;
+                            total_score += score;
                         }
                     }
 
-                    if hits as f32 / query_words.len() as f32 >= tolerance {
-                        Some(hit)
+                    if matched > 0 && matched as f32 / words.len() as f32 >= tolerance {
+                        Some((total_score, hit))
                     } else {
                         None
                     }
                 })
-                .collect::<Vec<_>>()
+                .collect::<Vec<_>>();
+
+            scored.sort_by(|(a, _), (b, _)| b.cmp(a));
+            scored.into_iter().map(|(_, hit)| hit).collect::<Vec<_>>()
         }
     }
 
