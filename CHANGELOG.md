@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 -   changed yt-dlp extractor args (dropped the `mweb` player client, added `web_safari`) to reduce "sign in to confirm you're not a bot" and HTTP 403 download failures
+-   retry sporadic yt-dlp failures (bot detection / rate limiting) for both downloads and availability checks, rotating the player client and pausing between up to 4 attempts, so transient blocks no longer cause spurious download issues or wrong availability results; genuinely unavailable videos still resolve immediately
 -   fixed end-of-game scoreboard showing 0 hits/tokens for some players when their state was reset before the snapshot could be taken
 
 ## [2025.12.16-1] - 2025-12-16

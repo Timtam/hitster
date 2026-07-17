@@ -291,37 +291,94 @@ const DOWNLOAD_FAILED_ISSUE_MESSAGE: &str = "hit failed to download";
 pub struct HitDownloadService {}
 
 #[cfg(feature = "yt_dl")]
-async fn check_hit_availability(hit: &Hit) -> Result<bool, String> {
-    let mut command = Command::new("yt-dlp");
-    command
-        .current_dir(env::current_dir().unwrap())
-        .args(["--skip-download", "--no-warnings", "--no-progress"])
-        .args(["--extractor-args", "youtube:player-client=default,web_safari"])
-        .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
+const YT_DLP_MAX_ATTEMPTS: u32 = 4;
 
-    match command.output().await {
-        Ok(output) => {
-            if output.status.success() {
-                Ok(true)
-            } else {
+#[cfg(feature = "yt_dl")]
+const YT_DLP_RETRY_DELAY_SECS: u64 = 5;
+
+/// Player clients tried in turn across retry attempts. YouTube's bot detection
+/// is client-specific, so a request blocked on one client often succeeds on
+/// another; rotating clients between attempts raises the odds a sporadic block
+/// resolves itself.
+#[cfg(feature = "yt_dl")]
+const YT_DLP_CLIENTS: [&str; 4] = [
+    "youtube:player-client=default,web_safari",
+    "youtube:player-client=tv",
+    "youtube:player-client=ios",
+    "youtube:player-client=web_safari,mweb",
+];
+
+/// Stable markers that mean the video really is gone/unavailable. These won't
+/// change on retry, so the retry loops treat them as a final answer immediately
+/// instead of a transient block worth retrying.
+#[cfg(feature = "yt_dl")]
+const YT_DLP_UNAVAILABLE_MARKERS: [&str; 7] = [
+    "Video unavailable",
+    "This video is unavailable",
+    "Private video",
+    "This video is private",
+    "made this video available in your country",
+    "removed by the uploader",
+    "account associated with this video has been terminated",
+];
+
+#[cfg(feature = "yt_dl")]
+fn yt_dlp_client(attempt: u32) -> &'static str {
+    YT_DLP_CLIENTS[(attempt as usize - 1) % YT_DLP_CLIENTS.len()]
+}
+
+/// Check whether a hit's video is available, retrying sporadic bot-detection /
+/// rate-limit blocks so a transient "Sign in to confirm you're not a bot" isn't
+/// mistaken for a real availability answer. A stable unavailable marker is a
+/// definitive negative result and returns immediately; only indeterminate
+/// failures are retried (with rotating clients and a growing pause). If every
+/// attempt stays inconclusive the result remains unknown (`Err`) and the
+/// caller leaves the hit's issue state untouched.
+#[cfg(feature = "yt_dl")]
+async fn check_hit_availability(hit: &Hit) -> Result<bool, String> {
+    let mut last_error = String::new();
+
+    for attempt in 1..=YT_DLP_MAX_ATTEMPTS {
+        let mut command = Command::new("yt-dlp");
+        command
+            .current_dir(env::current_dir().unwrap())
+            .args(["--skip-download", "--no-warnings", "--no-progress"])
+            .args(["--extractor-args", yt_dlp_client(attempt)])
+            .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
+
+        match command.output().await {
+            Ok(output) if output.status.success() => return Ok(true),
+            Ok(output) => {
                 let stderr = String::from_utf8_lossy(&output.stderr);
                 let stdout = String::from_utf8_lossy(&output.stdout);
                 let combined = format!("{stderr}\n{stdout}");
-                let unavailable_markers = [
-                    "Video unavailable",
-                    "This video is unavailable",
-                    "Private video",
-                    "This video is private",
-                ];
-                if unavailable_markers.iter().any(|m| combined.contains(m)) {
-                    Ok(false)
-                } else {
-                    Err(combined)
+
+                // Definitely unavailable -> this is a real (negative) answer.
+                if YT_DLP_UNAVAILABLE_MARKERS
+                    .iter()
+                    .any(|m| combined.contains(m))
+                {
+                    return Ok(false);
                 }
+
+                // Otherwise the failure is indeterminate (bot check, rate
+                // limit, transient network) -> retry before concluding.
+                last_error = combined;
             }
+            Err(err) => return Err(err.to_string()),
         }
-        Err(err) => Err(err.to_string()),
+
+        if attempt < YT_DLP_MAX_ATTEMPTS {
+            let delay = YT_DLP_RETRY_DELAY_SECS * attempt as u64;
+            rocket::warn!(
+                "yt-dlp availability check attempt {attempt}/{YT_DLP_MAX_ATTEMPTS} inconclusive for {yt_id}, retrying in {delay}s",
+                yt_id = &hit.yt_id,
+            );
+            rocket::tokio::time::sleep(std::time::Duration::from_secs(delay)).await;
+        }
     }
+
+    Err(last_error)
 }
 
 #[cfg(feature = "yt_dl")]
@@ -350,6 +407,60 @@ async fn ensure_yt_dlp_is_updated(update_time: &Arc<Mutex<OffsetDateTime>>) {
     }
 
     *last_update_time = OffsetDateTime::now_utc();
+}
+
+/// Download a hit's audio with yt-dlp, retrying sporadic failures.
+///
+/// yt-dlp intermittently trips YouTube's bot detection / rate limiting ("Sign
+/// in to confirm you're not a bot", HTTP 403) even for perfectly downloadable
+/// videos — the same video usually succeeds moments later (which is why hitting
+/// edit + save on a failed hit tends to work). So on failure we wait and retry a
+/// few times with a growing pause before giving up. Genuinely unavailable videos
+/// (private, removed, geo-blocked) carry a stable error marker and fail fast so
+/// their issue is still raised immediately.
+#[cfg(feature = "yt_dl")]
+async fn download_hit(hit: &Hit, in_file: &Path) -> Result<(), String> {
+    let mut last_error = String::new();
+
+    for attempt in 1..=YT_DLP_MAX_ATTEMPTS {
+        let mut command = Command::new("yt-dlp");
+        command
+            .current_dir(env::current_dir().unwrap())
+            .args(["-f", "bestaudio[ext=m4a]"])
+            .args(["-o", in_file.to_str().unwrap()])
+            .args(["--extractor-args", yt_dlp_client(attempt)])
+            .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
+
+        match command.output().await {
+            Ok(output) if output.status.success() => return Ok(()),
+            Ok(output) => {
+                last_error = String::from_utf8_lossy(&output.stderr).to_string();
+
+                // A stable "unavailable" error won't be fixed by retrying.
+                if YT_DLP_UNAVAILABLE_MARKERS
+                    .iter()
+                    .any(|m| last_error.contains(m))
+                {
+                    return Err(last_error);
+                }
+            }
+            // yt-dlp couldn't be launched at all (e.g. not installed); retrying
+            // won't help.
+            Err(err) => return Err(err.to_string()),
+        }
+
+        if attempt < YT_DLP_MAX_ATTEMPTS {
+            let delay = YT_DLP_RETRY_DELAY_SECS * attempt as u64;
+            rocket::warn!(
+                "yt-dlp download attempt {attempt}/{YT_DLP_MAX_ATTEMPTS} failed for {artist}: {title}, retrying in {delay}s",
+                artist = &hit.artist,
+                title = &hit.title,
+            );
+            rocket::tokio::time::sleep(std::time::Duration::from_secs(delay)).await;
+        }
+    }
+
+    Err(last_error)
 }
 
 #[cfg(all(not(feature = "yt_dl"), feature = "native_dl"))]
@@ -861,36 +972,21 @@ FROM hits_packs WHERE marked_for_deletion = ?"#,
                         let in_file =
                             Path::new(&Hit::download_dir()).join(format!("{}.m4a", hit.yt_id));
 
-                        let mut command = Command::new("yt-dlp");
-                        command
-                            .current_dir(env::current_dir().unwrap())
-                            .args(["-f", "bestaudio[ext=m4a]"])
-                            .args(["-o", in_file.to_str().unwrap()])
-                            .args(["--extractor-args", "youtube:player-client=default,web_safari"])
-                            .arg(format!("https://www.youtube.com/watch?v={}", hit.yt_id));
-
-                        let output = command.output().await;
-
-                        if let Ok(ref output_res) = output {
-                            if !output_res.status.success() {
-                                rocket::warn!(
-                                    "Error downloading hit with yt-dlp: {artist}: {title}, error: {error}",
-                                    artist = &hit.artist,
-                                    title = &hit.title,
-                                    error = String::from_utf8_lossy(&output_res.stderr)
-                                );
-                                upsert_download_failed_issue(&db, event_sender.as_ref(), hit.id)
-                                    .await;
-                            } else {
+                        match download_hit(&hit, &in_file).await {
+                            Ok(()) => {
                                 process_sender
                                     .send(DownloadHitData { in_file, hit })
                                     .unwrap();
                             }
-                        } else {
-                            rocket::warn!(
-                                "error when trying to run yt-dlp. Maybe it isn't installed?"
-                            );
-                            upsert_download_failed_issue(&db, event_sender.as_ref(), hit.id).await;
+                            Err(error) => {
+                                rocket::warn!(
+                                    "Error downloading hit with yt-dlp: {artist}: {title}, error: {error}",
+                                    artist = &hit.artist,
+                                    title = &hit.title,
+                                );
+                                upsert_download_failed_issue(&db, event_sender.as_ref(), hit.id)
+                                    .await;
+                            }
                         }
                     }
                     hit_service.lock().set_downloading(!dl_sender.is_empty());
