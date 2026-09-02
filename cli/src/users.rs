@@ -56,6 +56,13 @@ pub async fn edit(url: &str, id: &str, args: EditArgs) -> bool {
         Permissions::from_bits_truncate(args.permissions.unwrap())
     };
 
+    // user ids are stored as 16-byte blobs (sqlx encodes Uuid as BLOB for SQLite),
+    // so the textual id has to be parsed into a Uuid before it can be compared
+    let Ok(id) = Uuid::parse_str(id) else {
+        println!("`{id}` is not a valid user id");
+        return false;
+    };
+
     if let Ok(pool) = SqlitePool::connect(url).await {
         let mut conn = pool.acquire().await.unwrap();
         if let Some(mut user) = sqlx::query_as::<_, User>("SELECT * FROM users WHERE id = ?")
@@ -149,7 +156,7 @@ pub async fn create(url: &str, name: &str, args: EditArgs) -> bool {
         let _ = sqlx::query(
             "INSERT INTO users (id, name, password, tokens, permissions) VALUES (?, ?, ?, ?, ?)",
         )
-        .bind(id.to_string())
+        .bind(id)
         .bind(name)
         .bind(pw)
         .bind("[]")
