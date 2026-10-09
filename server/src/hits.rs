@@ -299,13 +299,16 @@ const YT_DLP_RETRY_DELAY_SECS: u64 = 5;
 /// Player clients tried in turn across retry attempts. YouTube's bot detection
 /// is client-specific, so a request blocked on one client often succeeds on
 /// another; rotating clients between attempts raises the odds a sporadic block
-/// resolves itself.
+/// resolves itself. Only list clients that can actually serve the m4a audio
+/// we download: `tv` ("The page needs to be reloaded") and `ios` ("Requested
+/// format is not available") failed for every video when last checked, which
+/// wasted half of the attempts.
 #[cfg(feature = "yt_dl")]
 const YT_DLP_CLIENTS: [&str; 4] = [
     "youtube:player-client=default,web_safari",
-    "youtube:player-client=tv",
-    "youtube:player-client=ios",
-    "youtube:player-client=web_safari,mweb",
+    "youtube:player-client=mweb",
+    "youtube:player-client=web_embedded",
+    "youtube:player-client=tv_simply",
 ];
 
 /// Stable markers that mean the video really is gone/unavailable. These won't
