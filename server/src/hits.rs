@@ -493,7 +493,7 @@ async fn upsert_auto_issue(
     message: &str,
 ) {
     let now = OffsetDateTime::now_utc();
-    let existing = sqlx::query_scalar::<_, String>(
+    let existing = sqlx::query_scalar::<_, Uuid>(
         "SELECT id FROM hit_issues WHERE hit_id = ? AND type = 'auto' AND message = ?",
     )
     .bind(hit_id)
