@@ -328,6 +328,7 @@ The following environment variables are available. Required variables are set to
 | ALTCHA_KEY | no | a random secret key necessary to generate altcha challenges, it isn't required to run the server, but it'll be required if you're planning to allow user registration and other form submissions |
 | CLIENT_DIRECTORY | no | specify the location of the compiled client files, usually not needed in Docker, ./client in local mode |
 | DOWNLOAD_DIRECTORY | no | download location of the songs downloaded by the server, /hits in Docker containers by default, ./hits otherwise |
+| POT_PROVIDER_PORT | no | (Docker only) port of the bundled YouTube PO token provider, 4416 by default. It only listens inside the container, but containers sharing one network namespace (e.g. several Hitster instances behind the same VPN container via network_mode: "service:...") must each use a different port |
 
 In addition to those custom environment variables, the server can be further tweaked by populating Rocket-specific environment variables. Some important variables would be ROCKET_ADDRESS to specify the address to bind to the server, as well as ROCKET_PORT to change the port the server is listening on. For a permanently deployed service, we recommend setting the ROCKET_SECRET_KEY environment variable to a randomly generated key, which will allow users to stay logged in even if the server restarts. Please see the [list of rocket environment variables](https://rocket.rs/guide/v0.5/configuration/) on the rocket website.
 

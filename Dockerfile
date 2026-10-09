@@ -114,6 +114,7 @@ ENV CLIENT_DIRECTORY=/hitster/client
 ENV DATABASE_URL=sqlite:///hitster.sqlite
 ENV DOWNLOAD_DIRECTORY=/hits
 ENV NODE_VERSION=${NODE_VERSION}
+ENV POT_PROVIDER_PORT=4416
 ENV PATH="$PATH:/opt/ffmpeg/bin/"
 
 EXPOSE 8000
@@ -140,8 +141,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     rm /tmp/s6-overlay.tar.xz && \
     rm -rf /var/lib/apt/lists/* && \
     mkdir /.cache && \
-    chmod 777 /.cache && \
-    echo "--ffmpeg-location /opt/ffmpeg/bin/ --js-runtimes node" > /etc/yt-dlp.conf
+    chmod 777 /.cache
 
 # yt-dlp
 
@@ -157,6 +157,8 @@ COPY --from=pot_provider_build_image /pot-provider/plugin /etc/yt-dlp/plugins/bg
 COPY --from=pot_provider_build_image /usr/local/bin/node /usr/local/bin/node
 
 # setup s6-overlay
+# /etc/yt-dlp.conf is written by the hitster service on startup, so that it
+# can point the bgutil plugin at POT_PROVIDER_PORT
 COPY ./docker/s6-rc.d /etc/s6-overlay/s6-rc.d
 
 # set the startup command to run your binary

@@ -1,2 +1,4 @@
 #!/command/with-contenv sh
-cd /pot-provider && node bundle.cjs
+# POT_PROVIDER_PORT lets several containers share one network namespace
+# (e.g. network_mode: "service:gluetun") without fighting over port 4416
+cd /pot-provider && exec node bundle.cjs --port "${POT_PROVIDER_PORT:-4416}"

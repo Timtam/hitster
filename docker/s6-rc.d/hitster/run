@@ -1,2 +1,5 @@
 #!/command/with-contenv sh
-/hitster/server
+# point the bgutil yt-dlp plugin at the pot provider of this container, which
+# listens on POT_PROVIDER_PORT (see the pot-provider service)
+echo "--ffmpeg-location /opt/ffmpeg/bin/ --js-runtimes node --extractor-args youtubepot-bgutilhttp:base_url=http://127.0.0.1:${POT_PROVIDER_PORT:-4416}" > /etc/yt-dlp.conf
+exec /hitster/server
