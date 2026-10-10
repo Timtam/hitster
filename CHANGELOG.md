@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -   reworked hit search to match query words as substrings, so partial and infix queries now match (e.g. "westernhagen" finds "Marius Müller-Westernhagen" and "bangar" finds "Bangaranga")
 -   major refactoring to fix linting errors and harden server against crashes
 -   update Rust to v1.97
+-   updated bgutil-pot-provider to 2.0.2, which fixes a remote code execution vulnerability (GHSA-qpv9-8xfj-xx9m) and makes the provider listen on localhost only
 
 ### Fixed
 
